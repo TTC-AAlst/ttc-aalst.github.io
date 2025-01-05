@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactGA from 'react-ga4';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
@@ -19,6 +19,7 @@ export const App = ({Component}: {Component: any}) => {
   const config = useTtcSelector(state => state.config);
   const dispatch = useTtcDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const [navOpen, setNavOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useOnClickOutside(ref, () => setNavOpen(false));
@@ -26,6 +27,12 @@ export const App = ({Component}: {Component: any}) => {
   useEffect(() => {
     ReactGA.send({ hitType: 'pageview', page: location.pathname + location.search });
   }, [location]);
+
+  useEffect(() => {
+    if (location.search.startsWith('?/')) {
+      navigate(location.search.substring(2));
+    }
+  }, []);
 
   if (!config.initialLoadCompleted) {
     return <FullScreenSpinner />;
