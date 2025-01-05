@@ -39,12 +39,14 @@ export const useInitialLoad = () => {
         dispatch(fetchTeams()).unwrap(),
         dispatch(fetchMatches()).unwrap(),
       ]);
+
+      console.log('Initial Load Completing');
+      dispatch(initialLoadCompleted());
     };
 
     try {
       initialLoad().then(() => {
-        console.log('Initial Load Complete');
-        dispatch(initialLoadCompleted());
+        console.log('Initial Load Completed');
       }, err => {
         console.error('Initial Load failed (promise)', err);
       });
@@ -56,12 +58,14 @@ export const useInitialLoad = () => {
   useEffect(() => {
     if (config.initialLoadCompleted) {
       console.log('Secondary load started');
+      console.log('Teams', teams.length);
       teams.forEach(team => {
         if (!team.ranking || team.ranking.length === 0) {
           dispatch(loadTeamRanking({teamId: team.id}));
         }
       });
 
+      console.log('Matches', matches.length);
       matches.forEach(match => {
         dispatch(frenoyMatchSync({match}));
       });
