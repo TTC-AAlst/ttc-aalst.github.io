@@ -40,10 +40,17 @@ export const useInitialLoad = () => {
         dispatch(fetchMatches()).unwrap(),
       ]);
     };
-    initialLoad().then(() => {
-      console.log('Initial Load Complete');
-      dispatch(initialLoadCompleted());
-    });
+
+    try {
+      initialLoad().then(() => {
+        console.log('Initial Load Complete');
+        dispatch(initialLoadCompleted());
+      }, err => {
+        console.error('Initial Load failed (promise)', err);
+      });
+    } catch (err) {
+      console.error('Initial Load failed (catch block)', err);
+    }
   }, [playerId, config.initialLoadStart]);
 
   useEffect(() => {
