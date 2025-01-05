@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/TTC-React-Front/static/css/main.6258748d.css",
-    "main.js": "/TTC-React-Front/static/js/main.c9b16dcc.js",
+    "main.js": "/TTC-React-Front/static/js/main.bb8ef0fc.js",
     "index.html": "/TTC-React-Front/index.html",
     "main.6258748d.css.map": "/TTC-React-Front/static/css/main.6258748d.css.map",
-    "main.c9b16dcc.js.map": "/TTC-React-Front/static/js/main.c9b16dcc.js.map"
+    "main.bb8ef0fc.js.map": "/TTC-React-Front/static/js/main.bb8ef0fc.js.map"
   },
   "entrypoints": [
     "static/css/main.6258748d.css",
-    "static/js/main.c9b16dcc.js"
+    "static/js/main.bb8ef0fc.js"
   ]
 }
