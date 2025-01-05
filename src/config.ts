@@ -1,4 +1,4 @@
 export const config = {
   ga: 'G-DFM5137DWX',
-  backend: `http://${window.location.hostname}`,
+  backend: `https://pongit.synology.me:7201`,
 };
