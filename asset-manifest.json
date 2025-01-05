@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/TTC-React-Front/static/css/main.6258748d.css",
-    "main.js": "/TTC-React-Front/static/js/main.2ccf509d.js",
-    "index.html": "/TTC-React-Front/index.html",
-    "main.6258748d.css.map": "/TTC-React-Front/static/css/main.6258748d.css.map",
-    "main.2ccf509d.js.map": "/TTC-React-Front/static/js/main.2ccf509d.js.map"
+    "main.css": "/static/css/main.6258748d.css",
+    "main.js": "/static/js/main.2ccf509d.js",
+    "index.html": "/index.html",
+    "main.6258748d.css.map": "/static/css/main.6258748d.css.map",
+    "main.2ccf509d.js.map": "/static/js/main.2ccf509d.js.map"
   },
   "entrypoints": [
     "static/css/main.6258748d.css",
