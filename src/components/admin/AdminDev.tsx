@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ButtonStack } from '../controls/Buttons/ButtonStack';
 import { Icon } from '../controls/Icons/Icon';
 import { useTtcSelector } from '../../utils/hooks/storeHooks';
+import { config } from '../../config';
 
 const AdminDev = () => {
   const storeState = useTtcSelector(state => state);
@@ -14,7 +15,7 @@ const AdminDev = () => {
       <div className="pull-right">
         <a href="http://ttc-aalst.be/tabtapi-test/" target="_blank" rel="noopener noreferrer">Goto TabT test site</a>
         <br />
-        <a href="http://ttc-aalst.be/api/config/log/Get" target="_blank" rel="noopener noreferrer">Goto log dump</a>
+        <a href={`${config.backend}/api/config/Log/Get`} target="_blank" rel="noopener noreferrer">Goto log dump</a>
       </div>
       <ButtonStack
         config={viewsConfig}
