@@ -236,10 +236,13 @@ const InactivesTable = ({players}: InactivesTableProps) => {
                 type="button"
                 className="btn btn-outline-secondary"
                 onClick={() => {
-                  ply.active = true;
-                  ply.quitYear = null;
-                  ply.security = 'Player';
-                  dispatch(updatePlayer({player: ply, switchActive: true}));
+                  const newPlayer = {
+                    ...ply,
+                    active: true,
+                    quitYear: null,
+                    security: 'Player' as const,
+                  };
+                  dispatch(updatePlayer({player: newPlayer, switchActive: true}));
                 }}
               >
                 Recreant activeren
