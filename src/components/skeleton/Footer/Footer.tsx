@@ -16,7 +16,7 @@ export const Footer = () => {
         <div className="container">
           <div className="row">
             <div className="col-12 logo">
-              <img src="img/footer.png" />
+              <img src="/img/footer.png" />
             </div>
             <div className="col-2 col-md-1"><Icon fa="fa fa-map-marker" /></div>
             <div className="col-10 col-md-5 Footer-text">{params.location}</div>
