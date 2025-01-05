@@ -20,7 +20,7 @@ export const OpponentOverview = () => {
 
   const opponent = {clubId: parseInt(clubId!, 10), teamCode: teamCode!};
   const team = teams.find(tm => tm.competition === competition
-    && tm.ranking.find(x => x.clubId === parseInt(clubId!, 10) && x.teamCode === teamCode));
+    && tm.ranking.find(x => x.clubId === parseInt(clubId!, 10) && (!teamCode || x.teamCode === teamCode)));
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -44,7 +44,7 @@ export const OpponentOverview = () => {
   }, [team?.id]);
 
   const opponentClub = storeUtil.getClub(opponent.clubId);
-  const otherMatches = getOpponentMatchesForTeam(competition as Competition, opponent.clubId, teamCode!);
+  const otherMatches = getOpponentMatchesForTeam(competition as Competition, opponent.clubId, teamCode);
 
   if (!team || !opponentClub || otherMatches.length === 0) {
     return null;

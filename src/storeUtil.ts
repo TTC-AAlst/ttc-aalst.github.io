@@ -19,11 +19,11 @@ export interface IOponnentFormation {
   value: number;
 }
 
-export function getOpponentMatchesForTeam(competition: Competition, clubId: number, teamCode: string): IMatch[] {
+export function getOpponentMatchesForTeam(competition: Competition, clubId: number, teamCode?: string): IMatch[] {
   return store.getState().readonlyMatches
     .filter(m => m.competition === competition)
     .filter(m => m.home && m.away)
-    .filter(m => (m.home.clubId === clubId && m.home.teamCode === teamCode) || (m.away.clubId === clubId && m.away.teamCode === teamCode))
+    .filter(m => !teamCode || (m.home.clubId === clubId && m.home.teamCode === teamCode) || (m.away.clubId === clubId && m.away.teamCode === teamCode))
     .filter(m => m.shouldBePlayed)
     .sort((a, b) => a.date.valueOf() - b.date.valueOf())
     .map(m => new MatchModel(m));
@@ -85,8 +85,8 @@ function getOpponentMatches(match: IMatch, opponentIn?: ITeamOpponent): {home: I
     .filter(x => x.competition === match.competition && x.frenoyDivisionId === match.frenoyDivisionId);
 
   return {
-    home: matches.filter(m => m.home.clubId === opponent.clubId && m.home.teamCode === opponent.teamCode),
-    away: matches.filter(m => m.away.clubId === opponent.clubId && m.away.teamCode === opponent.teamCode),
+    home: matches.filter(m => m.home.clubId === opponent.clubId && (!opponent.teamCode || m.home.teamCode === opponent.teamCode)),
+    away: matches.filter(m => m.away.clubId === opponent.clubId && (!opponent.teamCode || m.away.teamCode === opponent.teamCode)),
   };
 }
 

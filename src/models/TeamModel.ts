@@ -54,7 +54,7 @@ export default class TeamModel implements ITeam {
     if (opponent === 'our-ranking') {
       return this.getDivisionRanking({clubId: this.clubId, teamCode: this.teamCode});
     }
-    const result = this.ranking.find(x => x.clubId === opponent.clubId && x.teamCode === opponent.teamCode);
+    const result = this.ranking.find(x => x.clubId === opponent.clubId && (!opponent.teamCode || x.teamCode === opponent.teamCode));
     if (!result) {
       return {empty: true};
     }

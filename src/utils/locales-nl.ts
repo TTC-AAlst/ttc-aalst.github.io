@@ -41,7 +41,7 @@ export default {
     },
 
     teams: "/ploegen/:competition",
-    opponent: "/tegenstander/:competition/:clubId/:teamCode",
+    opponent: "/tegenstander/:competition/:clubId/:teamCode?",
 
     admin: "/admin",
     links: "/links",
