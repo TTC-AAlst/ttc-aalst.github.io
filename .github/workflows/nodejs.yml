@@ -3,9 +3,8 @@ name: Node CI
 on:
   push:
     branches:
-      - master
-    branches-ignore:
-      - gh-pages
+      - 'master'
+      - '!gh-pages'
 
 jobs:
   build:
