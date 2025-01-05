@@ -71,8 +71,10 @@ export const OpponentOverview = () => {
         <OpponentsFormation match={otherMatches[0]} opponent={opponent} />
       </div>
 
-      <h3>{t('teamCalendar.matches')}</h3>
-      <OpponentMatches team={team} readonlyMatches={otherMatches} roundSwitchButton opponent={opponent} />
+      <div className="col-md-12" style={{marginTop: 20}}>
+        <h3>{t('teamCalendar.matches')}</h3>
+        <OpponentMatches team={team} readonlyMatches={otherMatches} roundSwitchButton opponent={opponent} />
+      </div>
     </div>
   );
 };
