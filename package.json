@@ -2,7 +2,7 @@
   "name": "ttc-front",
   "version": "0.1.0",
   "private": false,
-  "homepage": "https://TTC-Aalst.github.io/TTC-React-Front",
+  "homepage": "https://ttc-aalst.be",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
