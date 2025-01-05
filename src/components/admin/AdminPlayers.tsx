@@ -174,8 +174,11 @@ const ActivesTable = ({players, onEditPlayer}: ActivesTableProps) => {
                   className="btn btn-outline-secondary"
                   style={{marginLeft: 5}}
                   onClick={() => {
-                    ply.hasKey = ply.hasKey === false ? null : !ply.hasKey;
-                    dispatch(updatePlayer({player: ply}));
+                    const newPlayer = {
+                      ...ply,
+                      hasKey: ply.hasKey === false ? null : !ply.hasKey,
+                    };
+                    dispatch(updatePlayer({player: newPlayer}));
                   }}
                 >
                   <Icon fa="fa fa-key fa-2x" color={ply.hasKey ? 'green' : (ply.hasKey === false ? 'red' : undefined)} />
@@ -188,10 +191,13 @@ const ActivesTable = ({players, onEditPlayer}: ActivesTableProps) => {
                   className="btn btn-outline-secondary"
                   style={{marginLeft: 10}}
                   onClick={() => {
-                    ply.active = false;
-                    ply.quitYear = moment().year();
-                    ply.security = 'Player';
-                    dispatch(updatePlayer({player: ply, switchActive: true}));
+                    const newPlayer = {
+                      ...ply,
+                      active: false,
+                      quitYear: moment().year(),
+                      security: 'Player' as const,
+                    };
+                    dispatch(updatePlayer({player: newPlayer, switchActive: true}));
                   }}
                 >
                   <span className="d-none d-xl-inline">Recreant deactiveren</span>

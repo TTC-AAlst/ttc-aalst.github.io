@@ -58,7 +58,6 @@ export const updatePlayer = createAsyncThunk(
     try {
       const response = await http.post<IStorePlayer>('/players/UpdatePlayer', data.player);
       dispatch(showSnackbar(t('player.updatePlayerSuccess')));
-      dispatch(simpleLoaded(response));
       // TODO: need to be broadcasting here...
       // broadcastReload('player', data.player.id);
       return {player: response, switchActive: data.switchActive};
@@ -133,7 +132,13 @@ export const playersSlice = createSlice({
     });
     builder.addCase(updatePlayer.fulfilled, (state, action) => {
       if (action.payload?.switchActive === true) {
+        if (action.payload?.player.active) {
+          return mergeInStore2(state, action.payload.player, p => p.active);
+        }
         return state.filter(p => p.id !== action.payload?.player.id);
+      }
+      if (action.payload?.player) {
+        return mergeInStore2(state, action.payload.player, p => p.active);
       }
       return state;
     });
@@ -152,7 +157,13 @@ export const playersQuittersSlice = createSlice({
     builder.addCase(fetchPlayers.fulfilled, (state, action) => mergeInStore2(state, action.payload, p => !p.active && p.alias !== 'SYSTEM'));
     builder.addCase(updatePlayer.fulfilled, (state, action) => {
       if (action.payload?.switchActive === true) {
+        if (!action.payload?.player.active) {
+          return mergeInStore2(state, action.payload.player, p => !p.active && p.alias !== 'SYSTEM');
+        }
         return state.filter(p => p.id !== action.payload?.player.id);
+      }
+      if (action.payload?.player) {
+        return mergeInStore2(state, action.payload.player, p => !p.active && p.alias !== 'SYSTEM');
       }
       return state;
     });
