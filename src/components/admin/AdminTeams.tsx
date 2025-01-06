@@ -81,6 +81,7 @@ class AdminTeamPlayers extends Component<AdminTeamPlayersProps, AdminTeamPlayers
 
   render() {
     const {team} = this.props;
+    const teamCompetition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
     return (
       <div style={{paddingLeft: 10, paddingRight: 10}}>
         <Paper style={{padding: 20, marginBottom: 20}}>
@@ -108,7 +109,7 @@ class AdminTeamPlayers extends Component<AdminTeamPlayersProps, AdminTeamPlayers
             <PlayerAutoComplete
               selectPlayer={playerId => this._onToggleTeamPlayer(playerId)}
               label="Selecteer speler"
-              competition={team.competition}
+              competition={teamCompetition}
             />
           </div>
         </Paper>
@@ -120,7 +121,8 @@ class AdminTeamPlayers extends Component<AdminTeamPlayersProps, AdminTeamPlayers
 const AdminTeamsToolbar = ({onFilterChange}: {onFilterChange: (comp: Competition) => void}) => (
   <div style={{padding: 10}}>
     <Button variant="info" style={{marginRight: 10}} onClick={() => onFilterChange('Vttl')}>Vttl</Button>
-    <Button variant="info" onClick={() => onFilterChange('Sporta')}>Sporta</Button>
+    <Button variant="info" style={{marginRight: 10}} onClick={() => onFilterChange('Sporta')}>Sporta</Button>
+    <Button variant="info" onClick={() => onFilterChange('Jeugd')}>Jeugd</Button>
   </div>
 );
 

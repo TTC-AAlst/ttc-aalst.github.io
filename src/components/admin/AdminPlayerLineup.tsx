@@ -71,7 +71,8 @@ class AdminPlayerLineupToolbar extends Component<AdminPlayerLineupToolbarProps, 
         />
         <div style={{marginTop: 10}}>
           <Button variant="info" style={{marginRight: 10}} onClick={() => onFilterChange('Vttl', this.state.playerId)}>Vttl</Button>
-          <Button variant="info" onClick={() => onFilterChange('Sporta', this.state.playerId)}>Sporta</Button>
+          <Button variant="info" style={{marginRight: 10}} onClick={() => onFilterChange('Sporta', this.state.playerId)}>Sporta</Button>
+          <Button variant="info" onClick={() => onFilterChange('Jeugd', this.state.playerId)}>Jeugd</Button>
         </div>
       </div>
     );

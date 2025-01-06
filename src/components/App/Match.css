@@ -31,11 +31,13 @@
 }
 
 
-.btn-Vttl {
+.btn-Vttl,
+.btn-Jeugd {
   color: white;
   background-color: #3A5CAA;
 }
-.btn-Vttl:hover {
+.btn-Vttl:hover,
+.btn-Jeugd:hover {
   color: white;
   background-color: #314e91;
   /*border-bottom: 5px solid #0D255D;*/

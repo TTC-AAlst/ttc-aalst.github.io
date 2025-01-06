@@ -18,7 +18,7 @@ export default class TeamModel implements ITeam {
   frenoy: ITeamFrenoy;
 
   constructor(json: IStoreTeam) {
-    this.competition = json.competition; // 'Sporta' or 'Vttl'
+    this.competition = json.competition; // 'Sporta' or 'Vttl' or 'Jeugd'
     this.divisionName = json.divisionName;
     this.id = json.id;
     this.teamCode = json.teamCode;
@@ -30,11 +30,17 @@ export default class TeamModel implements ITeam {
     this.frenoy = new TeamFrenoyModel(json.frenoy, this);
   }
 
-  getTeamPlayerCount(): 3 | 4 {
+  getTeamPlayerCount(): 2 | 3 | 4 {
+    if (this.competition === 'Jeugd') {
+      return 2;
+    }
     return this.competition === 'Vttl' ? 4 : 3;
   }
 
-  getScoreCount(): 16 | 10 {
+  getScoreCount(): 16 | 10 | 5 {
+    if (this.competition === 'Jeugd') {
+      return 5;
+    }
     return this.competition === 'Vttl' ? 16 : 10;
   }
 
@@ -44,6 +50,10 @@ export default class TeamModel implements ITeam {
 
   getDivisionDescription(): string {
     // TODO: put in translations
+    if (this.competition === 'Jeugd') {
+      return `Afdeling ${this.divisionName}`;
+    }
+
     if (!this.divisionName) {
       return 'Ere Afdeling';
     }

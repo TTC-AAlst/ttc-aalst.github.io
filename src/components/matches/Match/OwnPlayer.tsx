@@ -42,7 +42,7 @@ const OwnPlayer = ({match, ply, playerAsBadge = false}: OwnPlayerProps) => {
 };
 
 
-function renderWinsNode(result: RankingResult, teamPlayerCount: 3 | 4) {
+function renderWinsNode(result: RankingResult, teamPlayerCount: 2 | 3 | 4) {
   let winNode: any = '';
   if (result.win.length > 0) {
     const wins = {};

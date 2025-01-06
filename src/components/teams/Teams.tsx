@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { downloadTeamsExcel } from '../../utils/httpClient';
-import {TabbedContainer} from '../controls/TabbedContainer';
+import {TabbedContainer, TabKey} from '../controls/TabbedContainer';
 import {DivisionRanking} from './DivisionRanking';
 import {TeamOverview} from './TeamOverview';
 import {TeamHeader} from './controls/TeamHeader';
@@ -217,7 +217,7 @@ export const Teams = () => {
     }
   };
 
-  const tabConfig = teams.filter(team => team.competition === params.competition).map(team => ({
+  const tabConfig: TabKey[] = teams.filter(team => team.competition === params.competition).map(team => ({
     key: team.teamCode,
     title: '',
     headerChildren: <TeamTabTitle team={team} showRanking={isSmall} />,

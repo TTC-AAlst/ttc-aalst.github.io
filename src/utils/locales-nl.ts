@@ -85,6 +85,7 @@ export default {
       matchesWeek: "Speelweek",
       teamsVttl: "Ploegen Vttl",
       teamsSporta: "Ploegen Sporta",
+      teamsJeugd: "Jeugdploegen",
       players: "Spelers",
       login: "Log in",
       links: "Links",
@@ -117,7 +118,8 @@ export default {
       title: "Tafeltennisclub TTC Aalst",
       text:
         "Een toffe club met ${players} leden. "
-        + "We zijn een groeiende club en spelen met ${teamsVttl} ploegen VTTL & ${teamsSporta} Sporta in competitie verband. "
+        + "We zijn een groeiende club en spelen met ${teamsVttl} ploegen VTTL, ${teamsSporta} Sporta en"
+        + " ${teamsJeugd} jeugdploeg${teamsJeugdAmount} in competitie verband. "
         + "Fairplay en gezelligheid staan centraal bij al onze tafeltennis-activiteiten!",
       matchesToday: "matchen vandaag",
       // trainingToday: 'vandaag training vanaf 19u30',

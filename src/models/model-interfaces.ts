@@ -35,7 +35,7 @@ export type OwnTeamLink = 'main' | 'matches' | 'ranking' | 'players' | 'matchesT
 *                       MATCHES
 **************************************************** */
 
-export type Competition = 'Vttl' | 'Sporta';
+export type Competition = 'Vttl' | 'Sporta' | 'Jeugd';
 
 export type MatchScoreType = 'NotYetPlayed' | 'Won' | 'Lost' | 'Draw' | 'WalkOver' | 'BeingPlayed';
 
@@ -272,8 +272,8 @@ export interface IStoreTeam {
 }
 
 export interface ITeam extends IStoreTeam {
-  getTeamPlayerCount(): 3 | 4;
-  getScoreCount(): 16 | 10;
+  getTeamPlayerCount(): 2 | 3 | 4;
+  getScoreCount(): 16 | 10 | 5;
   renderOwnTeamTitle(): string;
   getDivisionDescription(): string;
   getDivisionRanking(opponent?: 'our-ranking' | ITeamOpponent): ITeamRanking & {empty: false} | {empty: true};

@@ -21,7 +21,7 @@ export class TeamFrenoyModel implements ITeamFrenoy {
   getUrl(type: 'results' | 'ranking'): string {
     const season = this.seasonId;
     const {linkId} = this;
-    if (this.teamCompetition === 'Vttl') {
+    if (this.teamCompetition === 'Vttl' || this.teamCompetition === 'Jeugd') {
       // ATTN: Hardcoded province/club ids here!
       if (type === 'results') {
         return `https://competitie.vttl.be/?menu=4&season=${season}&province=5&club_id=282&perteam=1&div_id=${linkId}`;
@@ -40,7 +40,7 @@ export class TeamFrenoyModel implements ITeamFrenoy {
 
   getWeekUrl(weekName: number): string {
     const paddedWeekName = weekName < 10 ? `0${weekName}` : weekName;
-    if (this.teamCompetition === 'Vttl') {
+    if (this.teamCompetition === 'Vttl' || this.teamCompetition === 'Jeugd') {
       // eslint-disable-next-line
       return `https://competitie.vttl.be/?menu=4&season=${this.seasonId}&province=5&club_id=282&div_id=${this.linkId}&modif=0&week_name=${paddedWeekName}`;
     }

@@ -41,7 +41,7 @@ export default class PlayerModel implements IPlayer {
   }
 
   getCompetition(competition: Competition): IPlayerCompetition {
-    const comp = competition === 'Vttl' ? this.vttl : this.sporta;
+    const comp = competition === 'Vttl' || competition === 'Jeugd' ? this.vttl : this.sporta;
     return comp || {};
   }
 
@@ -110,7 +110,7 @@ export function createFrenoyLink(comp: IPlayerCompetition): string {
   if (!comp.frenoyLink) {
     return createFrenoyLinkByUniqueId(comp.competition, comp.uniqueIndex);
   }
-  if (comp.competition === 'Vttl') {
+  if (comp.competition === 'Vttl' || comp.competition === 'Jeugd') {
     return `https://competitie.vttl.be/?menu=6&result=1&sel=${comp.frenoyLink}`;
   }
   return `https://ttonline.sporta.be/?menu=6&result=1&sel=${comp.frenoyLink}`;
@@ -119,7 +119,7 @@ export function createFrenoyLink(comp: IPlayerCompetition): string {
 
 export function createFrenoyLinkByUniqueId(comp: Competition, uniqueId: number): string {
   // new and restfull but may contains glitches
-  if (comp === 'Vttl') {
+  if (comp === 'Vttl' || comp === 'Jeugd') {
     return `https://competitie.vttl.be/${uniqueId}`;
   }
   return `https://ttonline.sporta.be/${(`000000${uniqueId}`).slice(-6)}`;

@@ -44,7 +44,7 @@ const sportaRankingValues = {
 };
 
 export const getRankingValue = (competition: Competition, ranking: string): number => {
-  if (competition === 'Vttl') {
+  if (competition === 'Vttl' || competition === 'Jeugd') {
     return vttlRankingValues[ranking];
   }
   return sportaRankingValues[ranking];

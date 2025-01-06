@@ -16,8 +16,9 @@ export const TeamMatchesWeek = ({team}: {team: ITeam}) => {
     dispatch(getOpponentMatches({teamId: team.id}));
   }, [team.id]);
 
+  const teamCompetition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
   const otherMatches = readonlyMatches
-    .filter(m => m.competition === team.competition)
+    .filter(m => m.competition === teamCompetition)
     .filter(m => m.frenoyDivisionId === team.frenoy.divisionId)
     .filter(m => m.shouldBePlayed);
 

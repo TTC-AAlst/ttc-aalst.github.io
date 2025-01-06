@@ -20,8 +20,9 @@ export interface IOponnentFormation {
 }
 
 export function getOpponentMatchesForTeam(competition: Competition, clubId: number, teamCode?: string): IMatch[] {
+  const matchesCompetition = competition === 'Sporta' ? 'Sporta' : 'Vttl';
   return store.getState().readonlyMatches
-    .filter(m => m.competition === competition)
+    .filter(m => m.competition === matchesCompetition)
     .filter(m => m.home && m.away)
     .filter(m => !teamCode || (m.home.clubId === clubId && m.home.teamCode === teamCode) || (m.away.clubId === clubId && m.away.teamCode === teamCode))
     .filter(m => m.shouldBePlayed)

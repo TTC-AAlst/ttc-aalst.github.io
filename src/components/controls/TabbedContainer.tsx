@@ -5,7 +5,8 @@ import Accordion from 'react-bootstrap/Accordion';
 import { t } from '../../locales';
 import { useViewport } from '../../utils/hooks/useViewport';
 
-type TabKey = {
+export type TabKey = {
+  /** Url and react key */
   key: string;
   title: string;
   label?: string;

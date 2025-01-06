@@ -35,6 +35,7 @@ export const SelectPlayersForm = ({match}: SelectPlayersFormProps) => {
     dispatch(selectPlayer({matchId: match.id, status: match.block || 'Captain', statusNote: null, playerId}));
   };
 
+  const teamCompetition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
   return (
     <div>
       <PlayerAvatarList players={team.getPlayers('standard')} match={match} />
@@ -45,7 +46,7 @@ export const SelectPlayersForm = ({match}: SelectPlayersFormProps) => {
         selectPlayer={ply => typeof ply === 'number' && onSelectPlayer(ply)}
         style={{marginTop: 15, marginLeft: 15, marginRight: 15}}
         label={t('match.chooseOtherPlayer')}
-        competition={team.competition}
+        competition={teamCompetition}
       />
     </div>
   );

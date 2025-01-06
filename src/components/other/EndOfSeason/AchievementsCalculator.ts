@@ -27,17 +27,17 @@ export class AchievementsCalculator {
     this.teams = teams;
     this.playerStats = getPlayerStats(this.matches, true).filter(x => x.ply.id);
 
-    const vttlMatches = this.matches.filter(m => m.competition === 'Vttl');
+    const vttlMatches = this.matches.filter(m => m.competition === 'Vttl' || m.competition === 'Jeugd');
     this.vttlPlayerStats = getPlayerStats(vttlMatches, true).filter(x => x.ply.id);
 
     const sportaMatches = this.matches.filter(m => m.competition === 'Sporta');
     this.sportaplayerStats = getPlayerStats(sportaMatches, true).filter(x => !x.isDoubles).filter(x => x.ply.id);
 
     // this.sportaTeams = this.teams.filter(t => t.competition === 'Sporta');
-    // this.vttlTeams = this.teams.filter(t => t.competition === 'Vttl');
+    // this.vttlTeams = this.teams.filter(t => t.competition === 'Vttl' || t.competition === 'Jeugd');
 
     this.sportaMatches = this.matches.filter(t => t.competition === 'Sporta');
-    this.vttlMatches = this.matches.filter(t => t.competition === 'Vttl');
+    this.vttlMatches = this.matches.filter(t => t.competition === 'Vttl' || t.competition === 'Jeugd');
 
     // console.log('matches', this.teams);
     // console.log('yaye', this.vttlMatches);
