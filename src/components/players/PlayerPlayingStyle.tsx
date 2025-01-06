@@ -89,10 +89,6 @@ class PlayerPlayingStyleFormComponent extends Component<PlayerPlayingStyleFormPr
     const ply = this.props.player;
 
     const canChangeStyle = this.props.user.playerId && this.props.user.playerId !== ply.id;
-    if (!canChangeStyle) {
-      return <div />;
-    }
-
     let openFormIcon;
     if (this.props.iconStyle === 'avatar') {
       openFormIcon = (

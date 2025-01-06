@@ -17,7 +17,7 @@ export class TeamPlayerAvatars extends Component<TeamPlayerAvatarsProps> {
       .sort((a, b) => getSortKey(a.player, team) - getSortKey(b.player, team));
 
     return (
-      <div style={{textAlign: 'center', ...this.props.style}}>
+      <div style={{justifyContent: 'center', display: 'flex', marginBottom: 16, ...this.props.style}}>
         {teamPlayers.map(ply => {
           let tooltip = ply.player.name;
 
@@ -32,10 +32,9 @@ export class TeamPlayerAvatars extends Component<TeamPlayerAvatarsProps> {
           }
 
           const avatarStyle = {
-            marginLeft: 16,
-            marginBottom: 10,
+            marginRight: 16,
             boxShadow: `3px 3px 3px ${isCaptain ? '#CD7F32' : '#888888'}`,
-            display: 'inline-block',
+            flex: 1,
           };
 
           return (

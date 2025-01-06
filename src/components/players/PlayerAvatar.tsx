@@ -33,14 +33,14 @@ class PlayerAvatar extends Component<PlayerAvatarProps, PlayerAvatarState> {
     const {player, ...props} = this.props;
     if (!this.state.isLoaded) {
       return (
-        <PlayerLink player={player}>
+        <PlayerLink player={player} className="">
           <Avatar {...props}>{player.alias[0]}</Avatar>
         </PlayerLink>
       );
     }
 
     return (
-      <PlayerLink player={player}>
+      <PlayerLink player={player} className="">
         <Avatar {...props} src={this.state.img} />
       </PlayerLink>
     );

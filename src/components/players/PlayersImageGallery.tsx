@@ -76,7 +76,7 @@ export const PlayersImageGallery = ({competition, players, ...props}: PlayersIma
   return (
     <div style={gridStylesRoot}>
       {players.map(ply => (
-        <div key={ply.id} className={cn({'col-xs-6': viewport.width > 420})} style={{padding: 8}}>
+        <div key={ply.id} className="col-6" style={{padding: 8, textAlign: 'center'}}>
           <div className="media">
             <div className="media-left">
               <PlayerPlayingStyleForm player={ply} iconStyle="avatar" />
