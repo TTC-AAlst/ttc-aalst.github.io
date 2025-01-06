@@ -51,7 +51,7 @@ export const Scoresheet = ({match}: {match: IMatch}) => {
               <td>
                 {match.getOwnPlayerModels()
                   .map(player => player.getCompetition(match.competition).rankingValue)
-                  .reduce((prev, cur) => prev + cur)}
+                  .reduce((prev, cur) => prev + cur, 0)}
               </td>
             </tr>
           </tbody>
