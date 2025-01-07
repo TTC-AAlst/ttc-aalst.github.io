@@ -115,23 +115,37 @@ class MatchCard extends Component<MatchCardProps, MatchCardState> {
       show: this.props.user.isDev(),
     }];
 
-    const HeaderComponent = this.props.big ? BigMatchCardHeader : SmallMatchCardHeader;
+    const tabbedContainer = (
+      <TabbedContainer
+        selectedTab={tabEventKeys.players}
+        tabKeys={tabConfig}
+        tabRenderer={evenyKey => this._renderTabContent(evenyKey)}
+        onTabSelect={evenyKey => this._onTabSelect(evenyKey)}
+        route={{base: t.route('match').replace(':matchId', match.id.toString()), subs: 'matchTabs'}}
+        widthTreshold={700}
+      />
+    );
+
+    if (this.props.big) {
+      return (
+        <BigMatchCardHeader
+          {...this.props}
+          match2={this.props.match}
+          isOpen={!!this.props.isOpen}
+        >
+          {tabbedContainer}
+        </BigMatchCardHeader>
+      );
+    }
     return (
-      <HeaderComponent
+      <SmallMatchCardHeader
         {...this.props}
         match2={this.props.match}
         isOpen={!!this.props.isOpen}
-        // TODO: forceEdit={this.state.forceEditPlayers} --> can no longer edit scores or something?
+        forceEdit={this.state.forceEditPlayers}
       >
-        <TabbedContainer
-          selectedTab={tabEventKeys.players}
-          tabKeys={tabConfig}
-          tabRenderer={evenyKey => this._renderTabContent(evenyKey)}
-          onTabSelect={evenyKey => this._onTabSelect(evenyKey)}
-          route={{base: t.route('match').replace(':matchId', match.id.toString()), subs: 'matchTabs'}}
-          widthTreshold={700}
-        />
-      </HeaderComponent>
+        {tabbedContainer}
+      </SmallMatchCardHeader>
     );
   }
 

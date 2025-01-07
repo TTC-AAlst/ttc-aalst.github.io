@@ -13,7 +13,7 @@ import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { clearSnackbar } from '../../reducers/configReducer';
 import { useOnClickOutside } from '../../utils/hooks/useOnClickOutside';
 
-import './App.css';
+import './App.scss';
 
 export const App = ({Component}: {Component: any}) => {
   const config = useTtcSelector(state => state.config);
@@ -42,6 +42,9 @@ export const App = ({Component}: {Component: any}) => {
   const isBigTodayMatches = config.settings.container100PerWidth;
   if (isBigTodayMatches) {
     containerStyle.width = '100%';
+    containerStyle.maxWidth = '100%';
+    containerStyle.paddingLeft = 12;
+    containerStyle.paddingRight = 12;
   }
 
   return (

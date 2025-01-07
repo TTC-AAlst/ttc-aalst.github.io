@@ -65,25 +65,21 @@ class MatchForm extends Component<MatchFormProps, MatchFormState> {
     }
 
     return (
-      <div style={{width: this.props.big ? 280 : 175}}>
+      <div className={`match-manipulator ${this.props.big ? 'big' : ''}`}>
         {isEditable ? (
           <MatchManipulation
             isHome
-            big={this.props.big}
-            style={{float: 'left', marginRight: 5}}
             plusClick={this._onUpdateScore.bind(this, {matchId: match.id, home: score.home + 1, out: score.out})}
             minClick={this._onUpdateScore.bind(this, {matchId: match.id, home: score.home - 1, out: score.out})}
           />
         ) : null}
 
-        <div style={{display: 'inline'}} onClick={e => this._onOpenInputScore(e)} role="button" tabIndex={0}>
+        <div className="score" onClick={e => this._onOpenInputScore(e)} role="button" tabIndex={0}>
           <MatchScore match={match} forceDisplay style={{fontSize: this.props.big ? 46 : 24}} showThrophy={false} />
         </div>
 
         {isEditable ? (
           <MatchManipulation
-            big={this.props.big}
-            style={{float: 'right'}}
             plusClick={this._onUpdateScore.bind(this, {matchId: match.id, home: score.home, out: score.out + 1})}
             minClick={this._onUpdateScore.bind(this, {matchId: match.id, home: score.home, out: score.out - 1})}
           />
@@ -122,33 +118,27 @@ class MatchForm extends Component<MatchFormProps, MatchFormState> {
 
 
 type MatchManipulationProps = {
-  style?: React.CSSProperties;
   plusClick: Function;
   minClick: Function;
-  big?: boolean;
   isHome?: boolean;
 };
 
-const MatchManipulation = ({style, plusClick, minClick, big, isHome}: MatchManipulationProps) => (
-  <div style={{color: '#d3d3d3', marginTop: big ? 0 : -10, ...style}}>
-    <div style={{verticalAlign: 'top'}}>
-      <Icon
-        fa="fa fa-plus-circle fa-2x"
-        onClick={() => plusClick()}
-        translate
-        tooltip={isHome ? 'match.scoreHomeUp' : 'match.scoreOutUp'}
-        tooltipPlacement="left"
-      />
-    </div>
-    <div style={{verticalAlign: 'bottom'}}>
-      <Icon
-        fa="fa fa-minus-circle fa-2x"
-        onClick={() => minClick()}
-        translate
-        tooltip={isHome ? 'match.scoreHomeDown' : 'match.scoreOutDown'}
-        tooltipPlacement="bottom"
-      />
-    </div>
+const MatchManipulation = ({plusClick, minClick, isHome}: MatchManipulationProps) => (
+  <div className="manipulators">
+    <Icon
+      fa="fa fa-plus-circle fa-2x"
+      onClick={e => plusClick(e)}
+      translate
+      tooltip={isHome ? 'match.scoreHomeUp' : 'match.scoreOutUp'}
+      tooltipPlacement="left"
+    />
+    <Icon
+      fa="fa fa-minus-circle fa-2x"
+      onClick={e => minClick(e)}
+      translate
+      tooltip={isHome ? 'match.scoreHomeDown' : 'match.scoreOutDown'}
+      tooltipPlacement="bottom"
+    />
   </div>
 );
 

@@ -45,19 +45,12 @@ export const ThrillerBadge = ({match}: {match: IMatch}) => {
   const team = match.getTeam();
   const thrillerType = team.getThriller(match);
   if (thrillerType) {
-    const thrillerStyle: React.CSSProperties = {
-      position: 'absolute',
-      top: 60,
-      left: 15,
-      fontSize: 16,
-      paddingRight: 13,
-    };
     return (
-      <span className="badge label-as-badge bg-danger" style={thrillerStyle}>
+      <span className="badge label-as-badge bg-danger">
         <ThrillerIcon />
         {t(`match.${thrillerType}`)}
       </span>
     );
   }
-  return <div />;
+  return null;
 };

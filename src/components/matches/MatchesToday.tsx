@@ -25,7 +25,7 @@ export const MatchesToday = () => {
     return (
       <div>
         <BigMatches matches={matchesToday.slice(0, 2)} />
-        {matchesToday.length > 2 && <BigMatches matches={matchesToday.slice(3)} />}
+        {matchesToday.length > 2 && <BigMatches matches={matchesToday.slice(2)} />}
       </div>
     );
   }

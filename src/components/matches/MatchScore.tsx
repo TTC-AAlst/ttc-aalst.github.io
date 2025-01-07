@@ -66,7 +66,7 @@ export const MatchScore = ({showThrophy = true, ...props}: MatchScoreProps) => {
     >
       <span>
         {classColor === 'match-won' && !match.isDerby && viewport.width > 350 && showThrophy ? (
-          <TrophyIcon style={{marginRight: 7, marginTop: 4, fontWeight: 'normal'}} color="#FFE568" />
+          <TrophyIcon style={{marginRight: 7, fontWeight: 'normal'}} color="#FFE568" />
         ) : null}
         {`${score.home} - ${score.out}`}
         {props.showComments && (match.comments.length || match.description) ? (

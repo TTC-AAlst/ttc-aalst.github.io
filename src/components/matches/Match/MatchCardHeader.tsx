@@ -34,11 +34,13 @@ export class BigMatchCardHeader extends Component<BigMatchCardHeaderProps> {
     return (
       <div className="match-card" style={{backgroundColor: '#fafafa'}}>
         <div className="match-card-header">
-          <div className="match-card-score">
+          <span className="big">
+            <ThrillerBadge match={match} />
+            <span className="match-title">{match.isHomeMatch ? `${us} vs ${them}` : `${them} vs ${us}`}</span>
+          </span>
+          <div className="match-card-score big">
             <MatchForm match={match} user={this.props.user} big />
           </div>
-          <span style={{fontSize: 34}}>{match.isHomeMatch ? `${us} vs ${them}` : `${them} vs ${us}`}</span>
-          <ThrillerBadge match={match} />
         </div>
         {this.props.isOpen ? (
           <div className="match-card-body">
@@ -54,7 +56,7 @@ export class BigMatchCardHeader extends Component<BigMatchCardHeaderProps> {
 type SmallMatchCardHeaderProps = Omit<BigMatchCardHeaderProps, 'user'> & {
   noScoreEdit?: boolean;
   width?: number;
-  routed?: boolean;
+  forceEdit?: boolean;
 }
 
 
@@ -82,7 +84,6 @@ type MatchCardHeaderProps = {
   forceEdit?: boolean;
   onOpen: Function;
   noScoreEdit?: boolean;
-  width?: number;
 }
 
 class MatchCardHeader extends Component<MatchCardHeaderProps> {
@@ -94,16 +95,9 @@ class MatchCardHeader extends Component<MatchCardHeaderProps> {
       && (match.isBeingPlayed() || this.props.forceEdit)
       && this.props.user.canChangeMatchScore(this.props.match);
 
-    const smallAndScoring = !!scoreFormVisible && !!this.props.width && this.props.width < 480;
-
     const subtitle: React.ReactNode[] = [];
     subtitle.push(ThrillerIconSpan);
-
-    if (!smallAndScoring) {
-      // The date and scoring form overlapped on small devices
-      // --> ScoreForm is on Today matches, so displaying the date is not really necessary
-      subtitle.push(<span key="2">{t('match.date', match.getDisplayDate())}</span>);
-    }
+    subtitle.push(<span key="2">{t('match.date', match.getDisplayDate())}</span>);
 
     if (match.comments.length || match.description) {
       const {hasNewComment} = this.props;
@@ -115,26 +109,26 @@ class MatchCardHeader extends Component<MatchCardHeaderProps> {
       );
     }
 
-    const matchForm = (
-      <div className={cn({'match-card-score': !smallAndScoring, 'match-card-score-inline': smallAndScoring})}>
-        <MatchForm match={match} user={this.props.user} />
-      </div>
-    );
-
     const canOpen = !!this.props.onOpen && !this.props.isOpen;
     const cardHeaderAsButtonProps = canOpen ? {role: 'button', onClick: e => this._onExpandChange(e)} : undefined;
     return (
       <div className="match-card" style={{backgroundColor: iPlay ? '#F0F0F0' : '#fafafa'}}>
         <div
           className="match-card-header"
-          style={{height: smallAndScoring ? 110 : 60}}
           {...cardHeaderAsButtonProps}
         >
-          {!scoreFormVisible ? <MatchScore match={match} className="match-card-score" /> : null}
-          {scoreFormVisible && !smallAndScoring ? matchForm : null}
-          <MatchCardHeaderSmallTitle match={match} withLinks={this.props.isOpen} />
-          <div className="match-card-header-subtitle">{subtitle}</div>
-          {scoreFormVisible && smallAndScoring ? matchForm : null}
+          <span>
+            <MatchCardHeaderSmallTitle match={match} withLinks={this.props.isOpen} />
+            <div className="match-card-header-subtitle">{subtitle}</div>
+          </span>
+
+          {scoreFormVisible ? (
+            <div className="match-card-score">
+              <MatchForm match={match} user={this.props.user} />
+            </div>
+          ) : (
+            <MatchScore match={match} className="score-as-badge" />
+          )}
         </div>
         {this.props.isOpen ? (
           <div className="match-card-body">
