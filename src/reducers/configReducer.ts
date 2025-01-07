@@ -101,4 +101,5 @@ export const configSlice = createSlice({
 
 export const { initialLoadCompleted, clearSnackbar, showSnackbar, setSetting, setNewMatchComment, setOpponentMatchesLoaded } = configSlice.actions;
 
-export default configSlice.reducer;
+const configReducer = configSlice.reducer;
+export default configReducer;
