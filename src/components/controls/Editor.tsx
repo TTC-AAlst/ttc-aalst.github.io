@@ -59,6 +59,11 @@ const Editor = forwardRef<EditorRef, QuillEditorProps>(
         // quill.setContents(textRef.current);
       }
 
+      if (text) {
+        const delta = quill.clipboard.convert({html: text});
+        quill.setContents(delta);
+      }
+
       quill.on(Quill.events.TEXT_CHANGE, (...args) => {
         // args contains the json delta
         onTextChangeRef.current?.(quill.root.innerHTML);
