@@ -117,39 +117,7 @@ const util = {
     getAllMatches(): IMatch[] {
       return util.getMatches();
     },
-
-    getFormation(match: IMatch, opponent?: ITeamOpponent) {
-      const matches = getOpponentMatches(match, opponent);
-      let opponentPlayers: IMatchPlayer[] = matches.home.map(m => m.players).flat().filter(m => m.home);
-      opponentPlayers = opponentPlayers.concat(matches.away.map(m => m.players).flat().filter(m => !m.home));
-
-      // TODO: this assumes that if you forfeited, you lost that match (ply has won but not lost property)
-      // could be calculated more correctly by looking at the individual match results
-      const result: {[key: number]: IMatchFormation} = {};
-      opponentPlayers.forEach(ply => {
-        if (result[ply.uniqueIndex]) {
-          result[ply.uniqueIndex].count++;
-          result[ply.uniqueIndex].won += +ply.won || 0;
-
-        } else {
-          result[ply.uniqueIndex] = {
-            player: ply,
-            count: 1,
-            won: +ply.won || 0,
-          };
-        }
-      });
-
-      const matchesPerPlayer = match.getTeamPlayerCount();
-      return Object.values(result).map(ply => Object.assign(ply, {lost: (matchesPerPlayer * ply.count) - ply.won}));
-    },
   },
 };
-
-export interface IMatchFormation {
-  player: IMatchPlayer;
-  count: number;
-  won: number;
-}
 
 export default util;
