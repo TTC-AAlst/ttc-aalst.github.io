@@ -1,3 +1,4 @@
+import { config } from '../config';
 import storeUtil from '../storeUtil';
 import {IPlayer, IPlayerContact, IPlayerCompetition, IPlayerStyle, Competition, ITeam, MatchPlayerStatus} from './model-interfaces';
 import { UserRoles } from './UserModel';
@@ -98,10 +99,10 @@ export const playerUtils = {
     };
   },
   getImageUrl(playerId: number): string {
-    return `/img/players/${playerId}.png?4`;
+    return `${config.images}/players/${playerId}.png`;
   },
   getAvatarImageUrl(playerId: number): string {
-    return `/img/players/${playerId}_avatar.png?4`;
+    return `${config.images}/players/${playerId}_avatar.png`;
   },
 };
 
