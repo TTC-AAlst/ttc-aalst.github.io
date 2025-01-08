@@ -6,6 +6,8 @@ import { MatchScore } from '../MatchScore';
 import { IMatch } from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 import storeUtil from '../../../storeUtil';
+import { useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponentMatches';
 
 type ViewMatchDetailsButtonProps = {
   match: IMatch;
@@ -37,32 +39,30 @@ type MatchOtherRoundButtonProps = {
   match: IMatch;
 }
 
-export class MatchOtherRoundButton extends Component<MatchOtherRoundButtonProps> {
-  render() {
-    const matches = storeUtil.matches
-      .getFromOpponent(this.props.match)
-      .filter(match => match.id !== this.props.match.id);
+export const MatchOtherRoundButton = ({match}: MatchOtherRoundButtonProps) => {
+  const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match));
+  const matches = opponentMatches.away.concat(opponentMatches.home)
+    .filter(m => m.id !== match.id);
 
-    const firstRoundMatchInfo = matches.find(match => (
-      (match.home.clubId === OwnClubId && match.home.teamCode === this.props.match.getTeam().teamCode)
-      || (match.away.clubId === OwnClubId && match.away.teamCode === this.props.match.getTeam().teamCode)
-    ));
+  const firstRoundMatchInfo = matches.find(m => (
+    (m.home.clubId === OwnClubId && m.home.teamCode === match.getTeam().teamCode)
+    || (m.away.clubId === OwnClubId && m.away.teamCode === match.getTeam().teamCode)
+  ));
 
-    const firstRoundMatch = firstRoundMatchInfo ? storeUtil.getMatch(firstRoundMatchInfo.id) : null;
-    if (!firstRoundMatch) {
-      return null;
-    }
-
-    const wasPrev = this.props.match.date > firstRoundMatch.date;
-    return (
-      <Link to={t.route('match', {matchId: firstRoundMatch.id})}>
-        <button type="button" className="btn btn-outline-secondary" style={{margin: 7}}>
-          <div>
-            <span style={{marginRight: 6}}>{t(`match.${wasPrev ? 'gotoPreviousEncounter' : 'gotoNextEncounter'}`)}</span>
-            <MatchScore match={firstRoundMatch} forceDisplay />
-          </div>
-        </button>
-      </Link>
-    );
+  const firstRoundMatch = firstRoundMatchInfo ? storeUtil.getMatch(firstRoundMatchInfo.id) : null;
+  if (!firstRoundMatch) {
+    return null;
   }
-}
+
+  const wasPrev = match.date > firstRoundMatch.date;
+  return (
+    <Link to={t.route('match', {matchId: firstRoundMatch.id})}>
+      <button type="button" className="btn btn-outline-secondary" style={{margin: 7}}>
+        <div>
+          <span style={{marginRight: 6}}>{t(`match.${wasPrev ? 'gotoPreviousEncounter' : 'gotoNextEncounter'}`)}</span>
+          <MatchScore match={firstRoundMatch} forceDisplay />
+        </div>
+      </button>
+    </Link>
+  );
+};

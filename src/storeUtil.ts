@@ -1,6 +1,6 @@
 import {store} from './store';
 import {getRankingValue} from './models/utils/playerRankingValueMapper';
-import {ITeam, IClub, IPlayer, IMatch, IMatchPlayer, ITeamOpponent, Competition, IFullMatchOther} from './models/model-interfaces';
+import {ITeam, IClub, IPlayer, IMatch, IMatchPlayer, ITeamOpponent} from './models/model-interfaces';
 import PlayerModel from './models/PlayerModel';
 import TeamModel from './models/TeamModel';
 import MatchModel from './models/MatchModel';
@@ -66,7 +66,6 @@ export function getMatchPlayerRankings(match: IMatch, homeTeam: boolean): IOppon
 
 
 
-
 function getOpponentMatches(match: IMatch, opponentIn?: ITeamOpponent): {home: IMatch[], away: IMatch[]} {
   const opponent = opponentIn || match.opponent;
   const matches = store.getState().readonlyMatches
@@ -113,10 +112,6 @@ const util = {
   matches: {
     getTodayMatches(): IMatch[] {
       return util.getMatches().filter(cal => cal.isBeingPlayed());
-    },
-    getFromOpponent(match: IMatch) {
-      const result = getOpponentMatches(match);
-      return result.away.concat(result.home);
     },
 
     getAllMatches(): IMatch[] {

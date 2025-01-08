@@ -6,7 +6,7 @@ import UserModel from '../../models/UserModel';
 import MatchModel from '../../models/MatchModel';
 import TeamModel from '../../models/TeamModel';
 import PlayerModel from '../../models/PlayerModel';
-import { IMatch, IPlayer, Competition } from '../../models/model-interfaces';
+import { IMatch, IPlayer } from '../../models/model-interfaces';
 
 export const useTtcDispatch = useDispatch.withTypes<AppDispatch>();
 export const useTtcSelector = useSelector.withTypes<RootState>();
