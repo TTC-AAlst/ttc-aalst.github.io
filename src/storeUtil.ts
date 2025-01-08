@@ -64,6 +64,11 @@ export function getMatchPlayerRankings(match: IMatch, homeTeam: boolean): IOppon
   }));
 }
 
+// TODO: This stuff should be done with selectors:
+// Components using these functions will not update
+// when the state changes...
+// Since this stuff does not typically change a lot
+// it's not a big deal.
 
 const util = {
   getTeam(teamId: number): ITeam {
