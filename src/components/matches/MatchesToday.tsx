@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import MatchCard from './Match/MatchCard';
-import storeUtil from '../../storeUtil';
 import { IMatch } from '../../models/model-interfaces';
 import { useViewport } from '../../utils/hooks/useViewport';
-import { useTtcDispatch } from '../../utils/hooks/storeHooks';
+import { selectMatchesBeingPlayed, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { setSetting } from '../../reducers/configReducer';
 
 export const MatchesToday = () => {
@@ -16,7 +15,7 @@ export const MatchesToday = () => {
     };
   }, []);
 
-  const matchesToday = storeUtil.matches.getTodayMatches();
+  const matchesToday = useTtcSelector(selectMatchesBeingPlayed);
   if (matchesToday.length === 0) {
     return <div />;
   }

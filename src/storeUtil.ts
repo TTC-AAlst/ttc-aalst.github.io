@@ -110,10 +110,6 @@ const util = {
   },
 
   matches: {
-    getTodayMatches(): IMatch[] {
-      return util.getMatches().filter(cal => cal.isBeingPlayed());
-    },
-
     getAllMatches(): IMatch[] {
       return util.getMatches();
     },
