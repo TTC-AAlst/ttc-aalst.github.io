@@ -65,18 +65,6 @@ export function getMatchPlayerRankings(match: IMatch, homeTeam: boolean): IOppon
 }
 
 
-
-function getOpponentMatches(match: IMatch, opponentIn?: ITeamOpponent): {home: IMatch[], away: IMatch[]} {
-  const opponent = opponentIn || match.opponent;
-  const matches = store.getState().readonlyMatches
-    .filter(x => x.competition === match.competition && x.frenoyDivisionId === match.frenoyDivisionId);
-
-  return {
-    home: matches.filter(m => m.home.clubId === opponent.clubId && (!opponent.teamCode || m.home.teamCode === opponent.teamCode)),
-    away: matches.filter(m => m.away.clubId === opponent.clubId && (!opponent.teamCode || m.away.teamCode === opponent.teamCode)),
-  };
-}
-
 const util = {
   getTeam(teamId: number): ITeam {
     const {teams} = store.getState();
