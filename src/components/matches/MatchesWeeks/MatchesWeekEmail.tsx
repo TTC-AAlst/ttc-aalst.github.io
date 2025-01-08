@@ -47,7 +47,8 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
       <EmailButton
         onClick={() => {
           setMailFormOpen(!mailFormOpen);
-          setEmail(buildHtml(user, compFilter, matches, prevMatches));
+          const defaultEmail = buildHtml(user, compFilter, matches, prevMatches);
+          setEmail(defaultEmail);
         }}
         tooltip={t('week.emailTitle')}
       />
@@ -55,25 +56,36 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
   }
 
   return (
-    <Modal.Dialog style={{marginTop: 50}}>
-      <Modal.Header>
-        <Modal.Title>{compFilter} {t('week.emailTitle')}</Modal.Title>
+    <Modal
+      size="xl"
+      show
+      onHide={() => setMailFormOpen(false)}
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>
+          {compFilter} {t('week.emailTitle')}
+        </Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
-        <WeekTitle weekCalcer={weekCalcer} style={{marginTop: 0}} />
+      <Modal.Body style={{ height: 420 }}>
+        <WeekTitle weekCalcer={weekCalcer} style={{ marginTop: 0 }} />
         <QuillEditor
           text={email}
-          style={{height: 300, marginRight: 15}}
+          style={{ height: 300 }}
           onChange={value => setEmail(value)}
           readOnly={false}
         />
       </Modal.Body>
 
       <Modal.Footer>
-        <Button onClick={() => setMailFormOpen(false)} style={{marginLeft: 6}}>{t('common.cancel')}</Button>
-        <Button variant="danger" onClick={() => emailFormationWrapper()}>{t('week.sendEmail')}</Button>
+        <Button onClick={() => setMailFormOpen(false)}>
+          {t('common.cancel')}
+        </Button>
+        <Button variant="danger" onClick={() => emailFormationWrapper()}>
+          {t('week.sendEmail')}
+        </Button>
       </Modal.Footer>
-    </Modal.Dialog>
+    </Modal>
   );
 };
