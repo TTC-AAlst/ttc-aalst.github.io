@@ -6,7 +6,7 @@ import UserModel from '../../models/UserModel';
 import MatchModel from '../../models/MatchModel';
 import TeamModel from '../../models/TeamModel';
 import PlayerModel from '../../models/PlayerModel';
-import { IMatch, IPlayer } from '../../models/model-interfaces';
+import { IMatch, IPlayer, Competition } from '../../models/model-interfaces';
 
 export const useTtcDispatch = useDispatch.withTypes<AppDispatch>();
 export const useTtcSelector = useSelector.withTypes<RootState>();
@@ -36,6 +36,26 @@ export const selectReadOnlyMatches = createSelector(
   [(state: RootState) => state.readonlyMatches],
   matches => matches.map(m => new MatchModel(m) as IMatch),
 );
+
+
+
+export const selectOpponentMatchesForTeam = createSelector(
+  [
+    selectReadOnlyMatches,
+    (_, competition: Competition) => competition,
+    (_, competition: Competition, clubId: number) => clubId,
+    (_, competition: Competition, clubId: number, teamCode: string | undefined) => teamCode,
+  ],
+  (matches, competition, clubId, teamCode) => {
+    const matchesCompetition = competition === 'Sporta' ? 'Sporta' : 'Vttl';
+    return matches.filter(m => m.competition === matchesCompetition)
+      .filter(m => m.home && m.away)
+      .filter(m => !teamCode || (m.home.clubId === clubId && m.home.teamCode === teamCode) || (m.away.clubId === clubId && m.away.teamCode === teamCode))
+      .filter(m => m.shouldBePlayed)
+      .sort((a, b) => a.date.valueOf() - b.date.valueOf());
+  },
+);
+
 
 export const selectPlayers = createSelector(
   [(state: RootState) => state.players],

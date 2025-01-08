@@ -1,7 +1,6 @@
 import {store} from './store';
 import {getRankingValue} from './models/utils/playerRankingValueMapper';
 import {ITeam, IClub, IPlayer, IMatch, IMatchPlayer, ITeamOpponent, Competition, IFullMatchOther} from './models/model-interfaces';
-import UserModel, {IUser} from './models/UserModel';
 import PlayerModel from './models/PlayerModel';
 import TeamModel from './models/TeamModel';
 import MatchModel from './models/MatchModel';

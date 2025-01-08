@@ -5,8 +5,7 @@ import { OpponentMatches } from '../matches/Match/OpponentMatches';
 import { OpponentsFormation } from '../matches/Match/OpponentsFormation';
 import { OpponentsTeamFormation } from '../matches/Match/OpponentsTeamFormation';
 import { DivisionHeader } from './controls/DivisionHeader';
-import storeUtil, { getOpponentMatchesForTeam } from '../../storeUtil';
-import { selectTeams, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectOpponentMatchesForTeam, selectTeams, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { t } from '../../locales';
 import { Competition } from '../../models/model-interfaces';
 import { getOpponentMatches } from '../../reducers/readonlyMatchesReducer';
@@ -21,6 +20,9 @@ export const OpponentOverview = () => {
   const opponent = {clubId: parseInt(clubId!, 10), teamCode: teamCode!};
   const team = teams.find(tm => tm.competition === competition
     && tm.ranking.find(x => x.clubId === parseInt(clubId!, 10) && (!teamCode || x.teamCode === teamCode)));
+
+  const opponentClub = useTtcSelector(state => state.clubs.find(club => club.id === opponent.clubId));
+  const otherMatches = useTtcSelector(state => selectOpponentMatchesForTeam(state, competition as Competition, opponent.clubId, teamCode));
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -42,9 +44,6 @@ export const OpponentOverview = () => {
       dispatch(getOpponentMatches({teamId: team.id, opponent}));
     }
   }, [team?.id]);
-
-  const opponentClub = storeUtil.getClub(opponent.clubId);
-  const otherMatches = getOpponentMatchesForTeam(competition as Competition, opponent.clubId, teamCode);
 
   if (!team || !opponentClub || otherMatches.length === 0) {
     return null;
