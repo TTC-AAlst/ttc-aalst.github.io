@@ -28,7 +28,7 @@ export const MatchesWeek = () => {
   };
 
   const onChangeCompetition = (curWeek: number, competition) => {
-    navigate(`${t.route('matchesWeek')}/${curWeek}${competition && competition !== 'all' ? `/${comp}` : ''}`);
+    navigate(`${t.route('matchesWeek')}/${curWeek}${competition && competition !== 'all' ? `/${competition}` : ''}`);
   };
 
   let allMatches = realMatches;
