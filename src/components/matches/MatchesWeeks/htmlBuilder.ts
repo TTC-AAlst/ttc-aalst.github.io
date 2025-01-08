@@ -1,10 +1,12 @@
 /* eslint-disable max-len */
-import { getOpponentFormations, getOpponentMatchesForTeam } from '../../../storeUtil';
+import { getOpponentFormations } from '../../../storeUtil';
 import { getPlayerStats } from '../../../models/TeamModel';
 import { getRankingDestroyer } from '../../other/EndOfSeason/PlayerAchievements';
 import { Competition, IMatch, IPlayer } from '../../../models/model-interfaces';
+import { RootState } from '../../../store';
+import { selectOpponentMatchesForTeam } from '../../../reducers/selectors/selectOpponentMatchesForTeam';
 
-export function buildHtml(user: IPlayer, compFilter: Competition, matches: IMatch[], prevMatches: IMatch[]) {
+export function buildHtml(state: RootState, user: IPlayer, compFilter: Competition, matches: IMatch[], prevMatches: IMatch[]) {
   // console.log('m', matches.sort((a, b) => a.date - b.date).toArray());
 
   let html = getEndearment(compFilter);
@@ -17,7 +19,7 @@ export function buildHtml(user: IPlayer, compFilter: Competition, matches: IMatc
     html += getPrevMatches(prevMatches);
   }
 
-  html += getWhatToExpect(matches);
+  html += getWhatToExpect(state, matches);
 
   // Signature
   // console.log('user', user);
@@ -111,7 +113,7 @@ function getRandomQuote() {
 
 
 
-function getWhatToExpect(matches: IMatch[]) {
+function getWhatToExpect(state: RootState, matches: IMatch[]) {
   let html = '';
   html += '<br><br><br>';
   html += '<b>😂 Wat deze week te verwachten 😱</b>';
@@ -119,7 +121,7 @@ function getWhatToExpect(matches: IMatch[]) {
 
   matches.sort((a, b) => a.getTeam().teamCode.localeCompare(b.getTeam().teamCode)).forEach(match => {
     const {opponent} = match;
-    const theirMatches = getOpponentMatchesForTeam(match.competition, opponent.clubId, opponent.teamCode);
+    const theirMatches = selectOpponentMatchesForTeam(state, match.competition, opponent.clubId, opponent.teamCode);
     const formations = getOpponentFormations(theirMatches, opponent);
 
     if (formations.length) {

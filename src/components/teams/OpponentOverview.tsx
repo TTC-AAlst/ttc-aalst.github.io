@@ -5,10 +5,11 @@ import { OpponentMatches } from '../matches/Match/OpponentMatches';
 import { OpponentsFormation } from '../matches/Match/OpponentsFormation';
 import { OpponentsTeamFormation } from '../matches/Match/OpponentsTeamFormation';
 import { DivisionHeader } from './controls/DivisionHeader';
-import { selectOpponentMatchesForTeam, selectTeams, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectTeams, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { t } from '../../locales';
 import { Competition } from '../../models/model-interfaces';
 import { getOpponentMatches } from '../../reducers/readonlyMatchesReducer';
+import { selectOpponentMatchesForTeam } from '../../reducers/selectors/selectOpponentMatchesForTeam';
 
 
 export const OpponentOverview = () => {

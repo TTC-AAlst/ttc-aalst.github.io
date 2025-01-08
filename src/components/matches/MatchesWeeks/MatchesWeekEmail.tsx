@@ -27,6 +27,7 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
   const players = useTtcSelector(selectPlayers);
   const ownUser = useTtcSelector(selectUser);
   const dispatch = useTtcDispatch();
+  const fullState = useTtcSelector(state => state);
 
   useEffect(() => {
     matches.concat(prevMatches).forEach(match => {
@@ -47,7 +48,7 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
       <EmailButton
         onClick={() => {
           setMailFormOpen(!mailFormOpen);
-          const defaultEmail = buildHtml(user, compFilter, matches, prevMatches);
+          const defaultEmail = buildHtml(fullState, user, compFilter, matches, prevMatches);
           setEmail(defaultEmail);
         }}
         tooltip={t('week.emailTitle')}
