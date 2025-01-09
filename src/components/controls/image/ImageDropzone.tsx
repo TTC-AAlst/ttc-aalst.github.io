@@ -7,13 +7,14 @@ import { t } from '../../../locales';
 type ImageDropzoneProps = {
   fileUploaded: Function;
   type?: string;
+  typeId?: number;
 }
 
 export default class ImageDropzone extends Component<ImageDropzoneProps> {
-  _onDrop(files) {
+  _onDrop(files: File[]) {
     const self = this;
     console.log('uploading', files);
-    http.upload(files, this.props.type)
+    http.upload(files[0], this.props.type, this.props.typeId)
       .then(data => {
         console.log('uploaded', data);
         if (data && data.fileName) {

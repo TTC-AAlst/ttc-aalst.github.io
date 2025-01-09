@@ -46,11 +46,12 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
           borderRadius={this.state.borderRadius}
           image={this.props.image}
           style={{width: this.props.size.width, height: this.props.size.height, cursor: 'hand'}}
+          crossOrigin="anonymous"
         />
 
         <Slider
           value={this.state.scale}
-          min={1}
+          min={0.1}
           max={5}
           step={0.01}
           style={{width: 230, marginBottom: 20, marginTop: 20}}
@@ -62,7 +63,7 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
         <MaterialButton
           label={t('photos.preview')}
           color="secondary"
-          style={{marginTop: -40, marginBottom: 10}}
+          style={{marginBottom: 10}}
           onClick={this.onClickSave}
         />
       </div>

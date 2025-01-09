@@ -15,6 +15,7 @@ import storeUtil from '../../../storeUtil';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { deleteComment, postComment, postReport } from '../../../reducers/matchesReducer';
 import { useViewport } from '../../../utils/hooks/useViewport';
+import { config, getStaticFileUrl } from '../../../config';
 
 function getEmptyComment(matchId: number, playerId: number): IMatchComment {
   return {
@@ -143,7 +144,11 @@ export const MatchReport = ({match}: MatchReportProps) => {
           </div>
         ) : commentImageFormOpen ? (
           <div style={{marginBottom: 12}}>
-            <ImageDropzone fileUploaded={fileName => onCommentImageUploaded(fileName)} type="match" />
+            <ImageDropzone
+              fileUploaded={fileName => onCommentImageUploaded(fileName)}
+              type="match"
+              typeId={match.id}
+            />
           </div>
         ) : null}
 
@@ -244,7 +249,7 @@ const Comment = ({comment}: CommentProps) => {
       </div>
 
       {comment.imageUrl ? (
-        <div><img src={comment.imageUrl} style={{maxWidth: '95%'}} alt="Door de speler opgeladen" /></div>
+        <div><img src={getStaticFileUrl(comment.imageUrl)} style={{maxWidth: '95%'}} alt="Door de speler opgeladen" /></div>
       ) : (
         <div dangerouslySetInnerHTML={{__html: comment.text}} /> // eslint-disable-line
       )}

@@ -3,7 +3,7 @@ import request from 'superagent';
 import moment from 'moment';
 import t from '../locales';
 import { IMatch } from '../models/model-interfaces';
-import { config } from '../config';
+import { config, devUrl } from '../config';
 
 const LogRequestTimes = false;
 
@@ -21,7 +21,7 @@ export function getUrl(path, appendApi = true) {
 
   return window.location.hostname !== 'localhost'
     ? `${config.backend}${path}`
-    : `http://localhost:5193${path}`;
+    : `${devUrl}${path}`;
 }
 
 function bearer(req) {
@@ -74,16 +74,14 @@ const HttpClient = {
       return response.body;
     })();
   },
-  upload: (files, type = 'temp') => new Promise<{fileName?: string}>((resolve, reject) => {
+  upload: (file: File, type = 'temp', typeId = 0) => new Promise<{fileName?: string}>((resolve, reject) => {
     const req = request
       .post(getUrl('/upload'))
       .accept('application/json')
       .use(bearer)
-      .field('uploadType', type);
-
-    files.forEach(file => {
-      req.attach(file.name, file);
-    });
+      .field('uploadType', type)
+      .field('uploadTypeId', typeId)
+      .attach('file', file);
 
     req.end((err, res) => {
       if (err || !res.ok) {

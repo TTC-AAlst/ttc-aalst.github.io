@@ -12,6 +12,7 @@ import { t } from '../../locales';
 import storeUtil from '../../storeUtil';
 import { uploadPlayer } from '../../reducers/userReducer';
 import { selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { getStaticFileUrl } from '../../config';
 
 
 export const ProfilePhotoAvatarForm = () => {
@@ -65,6 +66,7 @@ class ProfilePhotoForm extends Component<ProfilePhotoFormProps, ProfilePhotoForm
       playerId: this.state.playerId || this.props.user.playerId,
       type: this.props.type || '',
     });
+    this.setState({fileName: '', preview: ''});
   }
 
   render() {
@@ -88,11 +90,11 @@ class ProfilePhotoForm extends Component<ProfilePhotoFormProps, ProfilePhotoForm
             <ImageDropzone fileUploaded={fileName => this.setState({fileName})} />
           </div>
           {this.state.fileName ? (
-            <div>
+            <div style={{marginTop: 20}}>
               <h3>{t('photos.adjustTitle')}</h3>
               <ImageEditor
                 size={this.props.size!}
-                image={tmpFileName || ''}
+                image={getStaticFileUrl(tmpFileName)}
                 borderRadius={this.props.borderRadius!}
                 updateImage={(preview, croppingRect) => this.setState({preview: preview.toDataURL()})}
               />
