@@ -17,6 +17,7 @@ export default class PlayerModel implements IPlayer {
   quitYear: number;
   security: UserRoles;
   hasKey: boolean;
+  imageVersion: number;
 
   constructor(json: any = {security: 'Player'}) {
     this.alias = json.alias || json.name || '';
@@ -31,6 +32,7 @@ export default class PlayerModel implements IPlayer {
     this.quitYear = json.quitYear;
     this.security = json.security;
     this.hasKey = json.hasKey;
+    this.imageVersion = json.imageVersion;
   }
 
   get name(): string {
@@ -98,11 +100,11 @@ export const playerUtils = {
       height: 40,
     };
   },
-  getImageUrl(playerId: number): string {
-    return getStaticFileUrl(`/img/players/${playerId}.png`);
+  getImageUrl(playerId: number, version: number): string {
+    return getStaticFileUrl(`/img/players/${playerId}.png?${version}`);
   },
-  getAvatarImageUrl(playerId: number): string {
-    return getStaticFileUrl(`/img/players/${playerId}_avatar.png`);
+  getAvatarImageUrl(playerId: number, version: number): string {
+    return getStaticFileUrl(`/img/players/${playerId}_avatar.png?${version}`);
   },
 };
 

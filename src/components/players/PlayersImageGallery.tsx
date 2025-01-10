@@ -1,15 +1,14 @@
 import React from 'react';
-import cn from 'classnames';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
-import {playerUtils} from '../../models/PlayerModel';
-import {PlayerPlayingStyle, PlayerPlayingStyleForm} from './PlayerPlayingStyle';
-import PlayerImage from './PlayerImage';
-import {PlayerLink} from './controls/PlayerLink';
-import {FrenoyLink} from '../controls/Buttons/FrenoyButton';
-import {Telephone} from '../controls/controls/Telephone';
-import { Competition, IPlayer, IStorePlayer } from '../../models/model-interfaces';
+import { playerUtils } from '../../models/PlayerModel';
+import { PlayerPlayingStyle, PlayerPlayingStyleForm } from './PlayerPlayingStyle';
+import { PlayerImage } from './PlayerImage';
+import { PlayerLink } from './controls/PlayerLink';
+import { FrenoyLink } from '../controls/Buttons/FrenoyButton';
+import { Telephone } from '../controls/controls/Telephone';
+import { Competition, IPlayer } from '../../models/model-interfaces';
 import { useViewport } from '../../utils/hooks/useViewport';
 
 const PlayersImageWidth = playerUtils.getPlayerImageSize().width + 30;

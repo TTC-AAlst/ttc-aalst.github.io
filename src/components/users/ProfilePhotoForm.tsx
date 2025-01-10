@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {MaterialButton} from '../controls/Buttons/MaterialButton';
+import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import ImageEditor from '../controls/image/ImageEditor';
-import {playerUtils} from '../../models/PlayerModel';
+import { playerUtils } from '../../models/PlayerModel';
 import ImageDropzone from '../controls/image/ImageDropzone';
-import {PlayerAutoComplete} from '../players/PlayerAutoComplete';
-import PlayerImage from '../players/PlayerImage';
+import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
+import { PlayerImage } from '../players/PlayerImage';
 import PlayerAvatar from '../players/PlayerAvatar';
-import {IUser} from '../../models/UserModel';
+import { IUser } from '../../models/UserModel';
 import { t } from '../../locales';
 import storeUtil from '../../storeUtil';
 import { uploadPlayer } from '../../reducers/userReducer';
@@ -64,7 +64,7 @@ class ProfilePhotoForm extends Component<ProfilePhotoFormProps, ProfilePhotoForm
     this.props.uploadPlayer({
       imageBase64: this.state.preview,
       playerId: this.state.playerId || this.props.user.playerId,
-      type: this.props.type || '',
+      type: this.props.type ?? 'player-photo',
     });
     this.setState({fileName: '', preview: ''});
   }

@@ -45,6 +45,7 @@ class AdminPlayerForm extends Component<AdminPlayerFormProps, IStorePlayer> {
         quitYear: null,
         security: 'Player' as UserRoles,
         hasKey: null,
+        imageVersion: 0,
       };
     } else {
       this.state = props.player;

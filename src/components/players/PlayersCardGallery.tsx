@@ -1,9 +1,9 @@
 import React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import PlayerImage from './PlayerImage';
-import {PlayerCard} from './PlayerCard';
-import {PlayerLink} from './controls/PlayerLink';
+import { PlayerImage } from './PlayerImage';
+import { PlayerCard } from './PlayerCard';
+import { PlayerLink } from './controls/PlayerLink';
 import { Competition, IPlayer } from '../../models/model-interfaces';
 import { useViewport } from '../../utils/hooks/useViewport';
 

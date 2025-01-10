@@ -21,7 +21,7 @@ class PlayerAvatar extends Component<PlayerAvatarProps, PlayerAvatarState> {
 
     const img = new Image();
     img.onload = () => this.setState({isLoaded: true});
-    img.src = playerUtils.getAvatarImageUrl(this.props.player.id);
+    img.src = playerUtils.getAvatarImageUrl(this.props.player.id, this.props.player.imageVersion);
 
     this.state = {
       isLoaded: false,

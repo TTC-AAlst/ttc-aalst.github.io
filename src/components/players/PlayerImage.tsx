@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import {playerUtils} from '../../models/PlayerModel';
+import React, { useEffect, useState } from 'react';
+import { playerUtils } from '../../models/PlayerModel';
+import { selectPlayers, useTtcSelector } from '../../utils/hooks/storeHooks';
 
 type PlayerImageProps = {
   playerId: number;
@@ -9,48 +10,33 @@ type PlayerImageProps = {
   style?: React.CSSProperties;
 }
 
-type PlayerImageState = {
-  isLoaded: boolean;
-  img: string;
-}
+export const PlayerImage = ({center, playerId, shape, ...props}: PlayerImageProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [img, setImg] = useState('');
+  const player = useTtcSelector(selectPlayers).find(p => p.id === playerId);
 
-export default class PlayerImage extends Component<PlayerImageProps, PlayerImageState> {
-  static defaultProps = {
-    center: true,
-    shape: 'rounded',
-  };
+  useEffect(() => {
+    const image = new Image();
+    image.onload = () => setIsLoaded(true);
+    image.src = playerUtils.getImageUrl(playerId, player?.imageVersion || 0);
+    setImg(image.src);
+  }, [playerId, player]);
 
-  constructor(props) {
-    super(props);
-
-    const img = new Image();
-    img.onload = () => this.setState({isLoaded: true});
-    img.src = playerUtils.getImageUrl(this.props.playerId);
-
-    this.state = {
-      isLoaded: false,
-      img: img.src,
-    };
-  }
-
-  render() {
-    const {center, playerId, shape, ...props} = this.props;
-    const align = center ? 'center' : undefined;
-    if (!this.state.isLoaded) {
-      return (
-        <div style={{textAlign: align, marginTop: 10, opacity: 0.4, height: 189}} {...props}>
-          <span className="fa-stack fa-5x">
-            <i className="fa fa-camera fa-stack-1x" />
-            <i className="fa fa-ban fa-stack-2x text-danger" />
-          </span>
-        </div>
-      );
-    }
-
+  const align = (center ?? true) ? 'center' : undefined;
+  if (!isLoaded) {
     return (
-      <div style={{textAlign: align}} {...props}>
-        <img src={this.state.img} className={`img-${shape}`} style={{height: 200}} alt="Speler" />
+      <div style={{textAlign: align, marginTop: 10, opacity: 0.4, height: 189}} {...props}>
+        <span className="fa-stack fa-5x">
+          <i className="fa fa-camera fa-stack-1x" />
+          <i className="fa fa-ban fa-stack-2x text-danger" />
+        </span>
       </div>
     );
   }
-}
+
+  return (
+    <div style={{textAlign: align}} {...props}>
+      <img src={img} className={`img-${shape ?? 'rounded'}`} style={{height: 200}} alt="Speler" />
+    </div>
+  );
+};

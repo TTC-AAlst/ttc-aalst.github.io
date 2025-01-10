@@ -115,13 +115,15 @@ export const setNewPasswordFromGuid = createAsyncThunk(
 );
 
 export const uploadPlayer = createAsyncThunk(
-  'users/SetNewPasswordFromGuid',
-  async ({imageBase64, playerId, type}: {imageBase64: string, playerId: number, type: string}, { dispatch }) => {
+  'users/uploadPlayer',
+  async ({imageBase64, playerId, type}: {imageBase64: string, playerId: number, type: 'player-photo' | 'player-avatar'}, { dispatch }) => {
     try {
       await http.uploadImage(imageBase64, playerId, type);
       dispatch(showSnackbar(t('common.apiSuccess')));
+      return {playerId};
     } catch (err) {
       dispatch(showSnackbar(t('common.apiFail')));
+      return {playerId};
     }
   },
 );

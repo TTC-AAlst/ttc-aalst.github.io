@@ -4,6 +4,7 @@ import { IPlayerStyle, IStorePlayer } from '../models/model-interfaces';
 import http from '../utils/httpClient';
 import { t } from '../locales';
 import { showSnackbar } from './configReducer';
+import { uploadPlayer } from './userReducer';
 
 export const fetchPlayers = createAsyncThunk(
   'players/Get',
@@ -141,6 +142,12 @@ export const playersSlice = createSlice({
         return mergeInStore2(state, action.payload.player, p => p.active);
       }
       return state;
+    });
+    builder.addCase(uploadPlayer.fulfilled, (state, action) => {
+      const ply = state.find(p => p.id === action.payload.playerId);
+      if (ply) {
+        ply.imageVersion++;
+      }
     });
   },
 });

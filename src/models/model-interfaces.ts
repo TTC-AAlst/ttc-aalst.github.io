@@ -208,6 +208,7 @@ export interface IStorePlayer {
   quitYear: number | null;
   security: UserRoles;
   hasKey: boolean | null;
+  imageVersion: number;
 }
 
 export interface IPlayer extends IStorePlayer {

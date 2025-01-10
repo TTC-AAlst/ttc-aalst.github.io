@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
-import PlayerImage from '../players/PlayerImage';
+import { PlayerImage } from '../players/PlayerImage';
 import { Email } from '../controls/controls/Email';
 import { Telephone } from '../controls/controls/Telephone';
 import { PlayerAddress } from '../players/controls/PlayerAddress';
