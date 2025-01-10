@@ -93,7 +93,7 @@ export const requestResetPasswordLink = createAsyncThunk(
   async ({playerId, email, navigate}: {playerId: string | number, email: string, navigate: NavigateFunction}, { dispatch }) => {
     try {
       await http.post('/users/requestResetPasswordLink', {playerId, email});
-      dispatch(showSnackbar(t('common.fogotMailSent')));
+      dispatch(showSnackbar(t('password.fogotMailSent')));
       navigate(-1);
     } catch (err) {
       dispatch(showSnackbar(t('common.apiFail')));
