@@ -10,7 +10,7 @@ import PlayerAvatar from '../players/PlayerAvatar';
 import { IUser } from '../../models/UserModel';
 import { t } from '../../locales';
 import storeUtil from '../../storeUtil';
-import { uploadPlayer } from '../../reducers/userReducer';
+import { uploadPlayer } from '../../reducers/userActions';
 import { selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { getStaticFileUrl } from '../../config';
 

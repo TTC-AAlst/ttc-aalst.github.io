@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {PlayerAutoComplete} from '../players/PlayerAutoComplete';
 import {MaterialButton} from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
-import { adminSetNewPassword } from '../../reducers/userReducer';
+import { adminSetNewPassword } from '../../reducers/userActions';
 
 type AdminChangePasswordProps = {
   adminSetNewPassword: typeof adminSetNewPassword;

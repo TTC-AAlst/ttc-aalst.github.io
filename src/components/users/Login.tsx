@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
-import { login } from '../../reducers/userReducer';
+import { login } from '../../reducers/userActions';
 import { useTtcDispatch } from '../../utils/hooks/storeHooks';
 
 export const paperStyle = {

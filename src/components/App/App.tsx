@@ -34,7 +34,7 @@ export const App = ({Component}: {Component: any}) => {
     }
   }, []);
 
-  if (!config.initialLoadCompleted) {
+  if (config.initialLoad !== 'done') {
     return <FullScreenSpinner />;
   }
 

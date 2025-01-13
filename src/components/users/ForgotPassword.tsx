@@ -6,7 +6,7 @@ import { paperStyle } from './Login';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
-import { requestResetPasswordLink, setNewPasswordFromGuid } from '../../reducers/userReducer';
+import { requestResetPasswordLink, setNewPasswordFromGuid } from '../../reducers/userActions';
 import { useTtcDispatch } from '../../utils/hooks/storeHooks';
 
 

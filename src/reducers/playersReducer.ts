@@ -4,7 +4,7 @@ import { IPlayerStyle, IStorePlayer } from '../models/model-interfaces';
 import http from '../utils/httpClient';
 import { t } from '../locales';
 import { showSnackbar } from './configReducer';
-import { uploadPlayer } from './userReducer';
+import { uploadPlayer } from './userActions';
 
 export const fetchPlayers = createAsyncThunk(
   'players/Get',

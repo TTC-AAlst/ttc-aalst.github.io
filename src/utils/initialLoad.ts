@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { fetchClubs } from '../reducers/clubsReducer';
 import { useTtcDispatch, useTtcSelector } from './hooks/storeHooks';
-import { fetchConfig, initialLoadCompleted } from '../reducers/configReducer';
+import { fetchConfig, setInitialLoad } from '../reducers/configReducer';
 import { fetchPlayers } from '../reducers/playersReducer';
 import { fetchTeams, loadTeamRanking } from '../reducers/teamsReducer';
 import { fetchMatches, frenoyMatchSync } from '../reducers/matchesReducer';
-import { validateToken } from '../reducers/userReducer';
+import { validateToken } from '../reducers/userActions';
 
 export const useInitialLoad = () => {
   const dispatch = useTtcDispatch();
@@ -16,17 +16,24 @@ export const useInitialLoad = () => {
 
   useEffect(() => {
     const initialLoad = async () => {
+      if (config.initialLoad === 'done') {
+        return;
+      }
+
       const token = localStorage.getItem('token');
+      console.log(`InitialLoadEffect: ${config.initialLoad} for PlayerId=${playerId} with Token=${!!token}`);
+
       if (token && !playerId) {
         console.log('Validating Token');
         try {
+          localStorage.removeItem('token');
           await dispatch(validateToken(token)).unwrap();
         } catch (e) {
           console.error('Token validation failed', e);
         }
       }
 
-      if (token && !config.initialLoadStart) {
+      if (token && config.initialLoad === 'evaluating-start') {
         console.log('Skipping Initial Load');
         return;
       }
@@ -40,23 +47,21 @@ export const useInitialLoad = () => {
         dispatch(fetchMatches()).unwrap(),
       ]);
 
-      console.log('Initial Load Completing');
-      dispatch(initialLoadCompleted());
+      console.log('Initial Load Done');
+      dispatch(setInitialLoad('done'));
     };
 
     try {
-      initialLoad().then(() => {
-        console.log('Initial Load Completed');
-      }, err => {
+      initialLoad().then(() => {}, err => {
         console.error('Initial Load failed (promise)', err);
       });
     } catch (err) {
       console.error('Initial Load failed (catch block)', err);
     }
-  }, [playerId, config.initialLoadStart]);
+  }, [playerId, config.initialLoad]);
 
   useEffect(() => {
-    if (config.initialLoadCompleted) {
+    if (config.initialLoad === 'done') {
       console.log('Secondary load started');
       console.log('Teams', teams.length);
       teams.forEach(team => {
@@ -70,5 +75,5 @@ export const useInitialLoad = () => {
         dispatch(frenoyMatchSync({match}));
       });
     }
-  }, [config.initialLoadCompleted]);
+  }, [config.initialLoad]);
 };

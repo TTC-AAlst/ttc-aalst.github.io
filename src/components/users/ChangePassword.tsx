@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
-import { changePassword } from '../../reducers/userReducer';
+import { changePassword } from '../../reducers/userActions';
 
 export const ChangePassword = () => {
   const user = useTtcSelector(selectUser);

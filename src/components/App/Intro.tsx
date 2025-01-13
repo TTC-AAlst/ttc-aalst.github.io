@@ -31,7 +31,7 @@ const Intro = () => {
           <WeirdLocaleYearInfo params={config.params} />
         </Col>
         <Col md={6}>
-          {!config.initialLoadCompleted ? (
+          {config.initialLoad !== 'done' ? (
             <Loading bigScreen={viewport.width > 768} />
           ) : (
             <div>

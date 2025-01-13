@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import http from '../utils/httpClient';
 import { t } from "../locales";
 import { ITeamOpponent } from '../models/model-interfaces';
-import { validateToken } from "./userReducer";
+import { login, validateToken } from "./userActions";
 
 type IConfig = typeof defaultConfigState.params;
 
@@ -30,10 +30,10 @@ export const saveConfig = createAsyncThunk(
   },
 );
 
+type InitialLoad = 'evaluating-start' | 'should-start' | 'done';
 
 const defaultConfigState = {
-  initialLoadStart: false,
-  initialLoadCompleted: false,
+  initialLoad: 'evaluating-start' as InitialLoad,
   params: {
     email: '', googleMapsUrl: '', location: '', trainingDays: '', competitionDays: '',
     adultMembership: '', youthMembership: '', additionalMembership: '', recreationalMembers: '',
@@ -58,8 +58,8 @@ export const configSlice = createSlice({
   name: 'config',
   initialState: defaultConfigState,
   reducers: {
-    initialLoadCompleted: state => {
-      state.initialLoadCompleted = true;
+    setInitialLoad: (state, action: PayloadAction<InitialLoad>) => {
+      state.initialLoad = action.payload;
     },
     clearSnackbar: state => {
       state.snackbar = '';
@@ -94,12 +94,16 @@ export const configSlice = createSlice({
     });
 
     builder.addCase(validateToken.fulfilled, (state, action) => {
-      state.initialLoadStart = true;
+      state.initialLoad = 'should-start';
+    });
+
+    builder.addCase(login.fulfilled, (state, action) => {
+      state.initialLoad = 'should-start';
     });
   },
 });
 
-export const { initialLoadCompleted, clearSnackbar, showSnackbar, setSetting, setNewMatchComment, setOpponentMatchesLoaded } = configSlice.actions;
+export const { setInitialLoad, clearSnackbar, showSnackbar, setSetting, setNewMatchComment, setOpponentMatchesLoaded } = configSlice.actions;
 
 const configReducer = configSlice.reducer;
 export default configReducer;
