@@ -42,6 +42,7 @@ const defaultConfigState = {
   },
   snackbar: '',
   settings: {
+    /** 100% width container and hides the footer for today matches on big screen */
     container100PerWidth: false,
   },
   newMatchComments: {} as {[matchId: number]: boolean},
