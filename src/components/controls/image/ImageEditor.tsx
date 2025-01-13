@@ -1,15 +1,12 @@
-/* eslint-disable react/no-string-refs */
 import React from 'react';
 import Slider from '@mui/material/Slider';
 import AvatarEditor from 'react-avatar-editor';
-import {MaterialButton} from '../Buttons/MaterialButton';
+import { MaterialButton } from '../Buttons/MaterialButton';
 import { t } from '../../../locales';
-
-// TODO: Check to replace with: http://blog.mmcfarland.net/react-darkroom/
 
 type ImageEditorProps = {
   image: string,
-  updateImage: Function,
+  updateImage: (preview: HTMLCanvasElement) => void,
   size: {
     width: number,
     height: number,
@@ -23,7 +20,7 @@ type ImageEditorState = {
 }
 
 export default class ImageEditor extends React.Component<ImageEditorProps, ImageEditorState> {
-  editor: any;
+  editor?: AvatarEditor | null;
 
   constructor(props) {
     super(props);
@@ -33,19 +30,19 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
     };
   }
 
-  setEditorRef = editor => {
-    this.editor = editor;
-  };
-
   render() {
     return (
       <div style={{display: 'inline-block', width: '100%'}}>
         <AvatarEditor
-          ref={this.setEditorRef}
+          ref={editor => {
+            this.editor = editor;
+          }}
           scale={this.state.scale}
           borderRadius={this.state.borderRadius}
           image={this.props.image}
-          style={{width: this.props.size.width, height: this.props.size.height, cursor: 'hand'}}
+          width={this.props.size.width}
+          height={this.props.size.height}
+          style={{cursor: 'hand'}}
           crossOrigin="anonymous"
         />
 
@@ -54,7 +51,7 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
           min={0.1}
           max={5}
           step={0.01}
-          style={{width: 230, marginBottom: 20, marginTop: 20}}
+          style={{width: '100%', marginBottom: 20, marginTop: 20}}
           onChange={(event, newScale) => this.setState({scale: newScale as number})}
         />
 
@@ -72,13 +69,15 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
 
   onClickSave = () => {
     if (this.editor) {
-      // This returns a HTMLCanvasElement, it can be made into a data URL or a blob,
-      // drawn on another canvas, or added to the DOM.
-      const canvas = this.editor.getImage();
+      const canvas = this.editor.getImageScaledToCanvas();
+      this.props.updateImage(canvas);
 
-      // If you want the image resized to the canvas size (also a HTMLCanvasElement)
-      // const canvasScaled = this.editor.getImageScaledToCanvas();
-      this.props.updateImage(canvas, {});
+      // Also possible to get a blob:
+      // this.editor.getImageScaledToCanvas().toBlob(blob => {
+      //   if (blob) {
+      //     const file = new File([blob], 'updatedImage.png', { type: 'image/png' });
+      //   }
+      // });
     }
   };
 }

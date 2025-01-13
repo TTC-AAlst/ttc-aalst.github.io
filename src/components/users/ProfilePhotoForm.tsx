@@ -72,68 +72,74 @@ class ProfilePhotoForm extends Component<ProfilePhotoFormProps, ProfilePhotoForm
   render() {
     const tmpFileName = this.state.fileName;
     return (
-      <div style={{marginBottom: 10, padding: 10}} className="row">
-        <div className="col-xs-10 col-sm-8 col-lg-6">
-          <h3>
-            {t('photos.uploadNewTitle')}
-            <small> ({this.props.size!.width}px x {this.props.size!.height}px)</small>
-          </h3>
+      <>
+        <div style={{marginBottom: 10, padding: 10}} className="row">
+          <div className="col-xs-10 col-sm-8 col-lg-6">
+            <h3>
+              {t('photos.uploadNewTitle')}
+              <small> ({this.props.size!.width}px x {this.props.size!.height}px)</small>
+            </h3>
 
-          {this.props.user.isAdmin() ? (
-            <PlayerAutoComplete
-              selectPlayer={playerId => this.setState({playerId: playerId === 'system' ? -1 : playerId})}
-              label={t('system.playerSelect')}
-            />
-          ) : null}
-
-          <div style={{marginTop: 16}}>
-            <ImageDropzone fileUploaded={fileName => this.setState({fileName})} />
-          </div>
-          {this.state.fileName ? (
-            <div style={{marginTop: 20}}>
-              <h3>{t('photos.adjustTitle')}</h3>
-              <ImageEditor
-                size={this.props.size!}
-                image={getStaticFileUrl(tmpFileName)}
-                borderRadius={this.props.borderRadius!}
-                updateImage={(preview, croppingRect) => this.setState({preview: preview.toDataURL()})}
+            {this.props.user.isAdmin() ? (
+              <PlayerAutoComplete
+                selectPlayer={playerId => this.setState({playerId: playerId === 'system' ? -1 : playerId})}
+                label={t('system.playerSelect')}
               />
+            ) : null}
+
+            <div style={{marginTop: 16}}>
+              <ImageDropzone fileUploaded={fileName => this.setState({fileName})} />
             </div>
-          ) : null}
+          </div>
         </div>
-        {this.state.preview ? (
-          <div className="col-sm-6">
-            <div className="thumbnail" style={{width: 250, marginTop: 10}}>
-              <img
-                src={this.state.preview}
-                style={{marginTop: 7, borderRadius: 19}}
-                width={this.props.size!.width}
-                height={this.props.size!.height}
-                alt="Preview"
-              />
-
-              <div className="caption" style={{textAlign: 'center', marginTop: 40}}>
-                <MaterialButton
-                  label={t('photos.save')}
-                  color="primary"
-                  style={{marginTop: -40}}
-                  onClick={() => this._saveImage()}
+        <div style={{marginBottom: 10, padding: 10}} className="row">
+          <div className="col-xs-10 col-md-8 col-lg-6">
+            {this.state.fileName ? (
+              <div style={{marginTop: 20}}>
+                <h3>{t('photos.adjustTitle')}</h3>
+                <ImageEditor
+                  size={this.props.size!}
+                  image={getStaticFileUrl(tmpFileName)}
+                  borderRadius={this.props.borderRadius!}
+                  updateImage={preview => this.setState({preview: preview.toDataURL()})}
                 />
               </div>
+            ) : null}
+          </div>
+          {this.state.preview ? (
+            <div className="col-xs-10 col-md-8 col-lg-6">
+              <div className="thumbnail" style={{width: 250, marginTop: 10}}>
+                <img
+                  src={this.state.preview}
+                  style={{marginTop: 7, borderRadius: 19}}
+                  width={this.props.size!.width}
+                  height={this.props.size!.height}
+                  alt="Preview"
+                />
+
+                <div className="caption" style={{textAlign: 'center', marginTop: 40}}>
+                  <MaterialButton
+                    label={t('photos.save')}
+                    color="primary"
+                    style={{marginTop: -40}}
+                    onClick={() => this._saveImage()}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : null}
+          <div style={{marginBottom: 10, padding: 10}} className="row">
+            <div className="col-xs-10 col-md-8 col-lg-6">
+              <h3>{t('photos.existingTitle')}</h3>
+              {this.props.type === 'player-photo' ? (
+                <PlayerImage playerId={this.state.playerId || this.props.user.playerId} />
+              ) : (
+                <PlayerAvatar player={storeUtil.getPlayer(this.props.user.playerId)} />
+              )}
             </div>
           </div>
-        ) : null}
-        {!this.props.user.isAdmin() ? (
-          <div className="col-sm-6">
-            <h3>{t('photos.existingTitle')}</h3>
-            {this.props.type === 'player-photo' ? (
-              <PlayerImage playerId={this.state.playerId || this.props.user.playerId} />
-            ) : (
-              <PlayerAvatar player={storeUtil.getPlayer(this.props.user.playerId)} />
-            )}
-          </div>
-        ) : null}
-      </div>
+        </div>
+      </>
     );
   }
 }
