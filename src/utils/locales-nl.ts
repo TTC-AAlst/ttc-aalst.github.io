@@ -58,6 +58,7 @@ export default {
     common: {
       apiSuccess: "Greato success",
       apiFail: "Oepsie! Mislukt...",
+      crash: 'Oepsie! Er is iets misgegaan...',
 
       save: "Bewaren",
       cancel: "Annuleren",

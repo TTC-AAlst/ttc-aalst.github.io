@@ -12,6 +12,7 @@ import { FullScreenSpinner } from '../controls/controls/Spinner';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { clearSnackbar } from '../../reducers/configReducer';
 import { useOnClickOutside } from '../../utils/hooks/useOnClickOutside';
+import { ErrorBoundary } from './ErrorBoundary';
 
 import './App.scss';
 
@@ -54,7 +55,9 @@ export const App = ({Component}: {Component: any}) => {
           <div className="wrapper">
             <Header navOpen={navOpen} setNavOpen={setNavOpen} />
             <Container style={containerStyle} ref={ref}>
-              <Component />
+              <ErrorBoundary>
+                <Component />
+              </ErrorBoundary>
             </Container>
             <div className="push" />
           </div>
