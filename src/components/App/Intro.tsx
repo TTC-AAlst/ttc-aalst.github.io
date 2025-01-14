@@ -95,7 +95,7 @@ const TodaysEvents = () => {
   const lastPlayedMatches = matches
     .filter(cal => cal.date.isBefore(today, 'day'))
     .sort((a, b) => b.date.valueOf() - a.date.valueOf())
-    .slice(0, 2);
+    .slice(0, 4);
 
   return (
     <div>
