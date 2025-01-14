@@ -377,7 +377,8 @@ export default {
     },
     week: {
       emailTitle: "Opstelling mailen",
-      sendEmail: "Email versturen",
+      sendEmail: "Iedereen mailen",
+      sendTestEmail: "Enkel mezelf mailen",
       prevWeek: "Ga naar de vorige speelweek",
       nextWeek: "Ga naar de volgende speelweek",
       formationMailed: "Speelweek email verstuurd",

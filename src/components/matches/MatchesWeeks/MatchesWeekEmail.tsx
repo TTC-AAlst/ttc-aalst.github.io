@@ -35,10 +35,10 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
     });
   });
 
-  const emailFormationWrapper = () => {
+  const emailFormationWrapper = (justMe: boolean) => {
     const week = weekCalcer.getWeek();
     const title = `${compFilter} Week ${weekCalcer.currentWeek}: ${week.start.format('D/M')} - ${week.end.format('D/M')}`;
-    dispatch(emailFormation({title, email}));
+    dispatch(emailFormation({title, email, justMe}));
     setMailFormOpen(false);
   };
 
@@ -83,8 +83,11 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
         <Button onClick={() => setMailFormOpen(false)}>
           {t('common.cancel')}
         </Button>
-        <Button variant="danger" onClick={() => emailFormationWrapper()}>
+        <Button variant="danger" onClick={() => emailFormationWrapper(false)}>
           {t('week.sendEmail')}
+        </Button>
+        <Button variant="danger" onClick={() => emailFormationWrapper(true)}>
+          {t('week.sendTestEmail')}
         </Button>
       </Modal.Footer>
     </Modal>
