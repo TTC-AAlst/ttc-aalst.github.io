@@ -21,8 +21,19 @@ type PlayerCardProps = {
 export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) => {
   const user = useTtcSelector(selectUser);
   const showAddressBelow = !showSideBySide;
+
+  const bestStroke = player.style.bestStroke ? (
+    <>
+      <span>
+        <span style={{marginRight: 7}}>🔥</span>
+        {player.style.bestStroke}
+      </span>
+      <br />
+    </>
+  ) : null;
+
   return (
-    <Card style={{height: user.playerId && showAddressBelow ? 410 : 300, marginBottom: 20}}>
+    <Card style={{height: user.playerId && showAddressBelow ? 425 : 330, marginBottom: 20}}>
       <Card.Header>
         <div style={{height: 40}}>
           <div style={{float: 'left'}}>
@@ -49,6 +60,7 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
           <div>
             <PlayerImage playerId={player.id} center shape="thumbnail" />
             <br />
+            {bestStroke}
             <PlayerContact player={player} />
           </div>
         ) : (
@@ -57,6 +69,7 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
               <PlayerImage playerId={player.id} shape="thumbnail" className="pull-left" style={{width: 200, marginRight: 12}} />
             </div>
             <div className="media-body">
+              {bestStroke}
               <PlayerContact player={player} />
             </div>
           </div>
