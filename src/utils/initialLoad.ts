@@ -39,15 +39,19 @@ export const useInitialLoad = () => {
       }
 
       console.log('Start Initial Load', playerId);
-      await Promise.all([
-        dispatch(fetchClubs()).unwrap(),
-        dispatch(fetchConfig()).unwrap(),
-        dispatch(fetchPlayers()).unwrap(),
-        dispatch(fetchTeams()).unwrap(),
-        dispatch(fetchMatches()).unwrap(),
-      ]);
+      try {
+        await Promise.all([
+          dispatch(fetchClubs()).unwrap(),
+          dispatch(fetchConfig()).unwrap(),
+          dispatch(fetchPlayers()).unwrap(),
+          dispatch(fetchTeams()).unwrap(),
+          dispatch(fetchMatches()).unwrap(),
+        ]);
+        console.log('Initial Load Done');
+      } catch (err) {
+        console.error('Initial Load failed', err);
+      }
 
-      console.log('Initial Load Done');
       dispatch(setInitialLoad('done'));
     };
 
