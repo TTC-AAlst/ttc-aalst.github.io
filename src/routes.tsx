@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Route, Routes as Switch } from 'react-router-dom';
 import { Competition, ITeam, ITeamOpponent } from './models/model-interfaces';
 import { useInitialLoad } from './utils/initialLoad';
@@ -20,44 +20,14 @@ import { Teams } from './components/teams/Teams';
 import Admin from './components/admin/Admin';
 import { OpponentOverview } from './components/teams/OpponentOverview';
 import Intro from './components/App/Intro';
-
+import { useErrorHandling } from './utils/hooks/useErrorHandling';
 import t from './locales';
-import httpClient from './utils/httpClient';
+import { useSignalR } from './utils/hooks/useSignalR';
 
 const Routes = () => {
   useInitialLoad();
-
-  useEffect(() => {
-    const handleGlobalError = (event: ErrorEvent) => {
-      const errObj = {
-        message: `${event.filename}:${event.lineno}:${event.colno}: ${event.message}`,
-        stack: event.error?.stack,
-        componentStack: null,
-      };
-      httpClient.post('/config/Log', errObj);
-    };
-
-    window.addEventListener('error', handleGlobalError);
-    return () => {
-      window.removeEventListener('error', handleGlobalError);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleRejection = (event: PromiseRejectionEvent) => {
-      const errObj = {
-        message: event.reason?.message || 'Unhandled rejection',
-        stack: event.reason?.stack,
-        componentStack: null,
-      };
-      httpClient.post('/config/Log', errObj);
-    };
-
-    window.addEventListener('unhandledrejection', handleRejection);
-    return () => {
-      window.removeEventListener('unhandledrejection', handleRejection);
-    };
-  }, []);
+  useErrorHandling();
+  useSignalR();
 
   return (
     <BrowserRouter>

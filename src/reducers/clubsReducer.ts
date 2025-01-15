@@ -18,8 +18,7 @@ export const updateClub = createAsyncThunk(
   async (data: {club: IClub}, { dispatch }) => {
     try {
       await http.post('/clubs/UpdateClub', data.club);
-      dispatch(showSnackbar('Parameter saved'));
-      // broadcastReload('club', data.id);
+      dispatch(showSnackbar('Club saved'));
       return data.club;
     } catch (err) {
       dispatch(showSnackbar(t('common.apiFail')));

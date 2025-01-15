@@ -15,6 +15,14 @@ export const fetchMatches = createAsyncThunk(
   },
 );
 
+export const fetchMatch = createAsyncThunk(
+  'matches/GetOne',
+  async ({id}: {id: number}) => {
+    const response = await http.get<IFullStoreMatchOwn>(`/matches/${id}`);
+    return response;
+  },
+);
+
 export const shouldSync = (match: IStoreMatchCommon) => !match.isSyncedWithFrenoy
   && moment().isAfter(match.date)
   && match.shouldBePlayed;
@@ -27,7 +35,6 @@ export const frenoyMatchSync = createAsyncThunk(
       try {
         const newMatch = await http.post<IFullStoreMatchOwn>(`/matches/FrenoyMatchSync?forceSync=${data.forceSync || false}`, {id: data.match.id});
         dispatch(simpleLoaded(newMatch));
-        // broadcastReload('match', data.match.id);
       } catch (err) {
         if (data.forceSync) {
           dispatch(showSnackbar(t('common.apiFail')));
@@ -43,7 +50,6 @@ export const updateScore = createAsyncThunk(
     try {
       const newMatch = await http.post<IFullStoreMatchOwn>('/matches/UpdateScore', data);
       dispatch(simpleLoaded(newMatch));
-      // broadcastReload('match', data.match.id);
     } catch (err) {
       dispatch(showSnackbar(t('common.apiFail')));
     }
@@ -56,7 +62,6 @@ export const postReport = createAsyncThunk(
     try {
       const newMatch = await http.post<IFullStoreMatchOwn>('/matches/Report', report);
       dispatch(simpleLoaded(newMatch));
-      // broadcastReload('match', newMatch.id);
       dispatch(showSnackbar(t('match.report.reportPosted')));
     } catch (err) {
       dispatch(showSnackbar(t('common.apiFail')));
@@ -70,7 +75,6 @@ export const postComment = createAsyncThunk(
     try {
       const newMatch = await http.post<IFullStoreMatchOwn>('/matches/Comment', comment);
       dispatch(simpleLoaded(newMatch));
-      // broadcastReload('match', newMatch.id);
       dispatch(showSnackbar(t('match.report.commentPosted')));
     } catch (err) {
       dispatch(showSnackbar(t('common.apiFail')));
@@ -84,7 +88,6 @@ export const deleteComment = createAsyncThunk(
     try {
       const newMatch = await http.post<IFullStoreMatchOwn>('/matches/DeleteComment', data);
       dispatch(simpleLoaded(newMatch));
-      // broadcastReload('match', newMatch.id);
       dispatch(showSnackbar(t('match.report.commentDeleted')));
     } catch (err) {
       dispatch(showSnackbar(t('common.apiFail')));
@@ -131,7 +134,6 @@ export const selectPlayer = createAsyncThunk(
     try {
       const newMatch = await http.post<IFullStoreMatchOwn>(`/matches/${isMyFormation ? 'SetMyFormation' : 'TogglePlayer'}`, matchPlayer);
       dispatch(simpleLoaded(newMatch));
-      // broadcastReload('match', newMatch.id);
     } catch (err) {
       console.error('selectPlayer', data, err);
     }
@@ -152,11 +154,6 @@ export const editMatchPlayers = createAsyncThunk(
     try {
       const result = await http.post<IFullStoreMatchOwn>('/matches/EditMatchPlayers', data);
       dispatch(simpleLoaded(result));
-      // broadcastReload('match', data.matchId);
-      // if (data.doShowSnackbar) {
-      //   const msg = !data.blockAlso ? 'snackbarSaved' : 'snackbarBlocked';
-      //   dispatch(showSnackbar(t(`match.plys.${msg}`)));
-      // }
       dispatch(showSnackbar(t('common.apiSuccess')));
     } catch (err) {
       console.error('editMatchPlayers', data, err);
@@ -203,6 +200,7 @@ export const matchesSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchMatches.fulfilled, (state, action) => mergeInStore2(state, action.payload, m => m.shouldBePlayed));
+    builder.addCase(fetchMatch.fulfilled, (state, action) => mergeInStore2(state, action.payload, m => m.shouldBePlayed));
   },
 });
 

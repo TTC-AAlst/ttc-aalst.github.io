@@ -15,6 +15,15 @@ export const fetchPlayers = createAsyncThunk(
 );
 
 
+export const fetchPlayer = createAsyncThunk(
+  'players/GetOne',
+  async ({id}: {id: number}) => {
+    const response = await http.get<IStorePlayer>(`/players/${id}`);
+    return response;
+  },
+);
+
+
 export const deletePlayer = createAsyncThunk(
   'players/DeletePlayer',
   async (data: {playerId: number}, { dispatch }) => {
@@ -59,8 +68,6 @@ export const updatePlayer = createAsyncThunk(
     try {
       const response = await http.post<IStorePlayer>('/players/UpdatePlayer', data.player);
       dispatch(showSnackbar(t('player.updatePlayerSuccess')));
-      // TODO: need to be broadcasting here...
-      // broadcastReload('player', data.player.id);
       return {player: response, switchActive: data.switchActive};
     } catch (err) {
       dispatch(showSnackbar(t('player.updatePlayerFail')));
@@ -99,9 +106,8 @@ export const updateStyle = createAsyncThunk(
     try {
       const response = await http.post<IStorePlayer>('/players/UpdateStyle', {playerId: data.player.id, ...data.newStyle});
       dispatch(showSnackbar(t('common.apiSuccess')));
-      // broadcastReload('player', data.player.id);
       // const user = storeUtil.getPlayer(data.updatedBy) || {alias: ''};
-      // broadcastSnackbar(t('player.editStyle.saved', {
+      // TODO: broadcastSnackbar(t('player.editStyle.saved', {
       //   ply: data.player.alias,
       //   by: user.alias,
       //   newStyle: data.newStyle.name + ': ' + data.newStyle.bestStroke
@@ -125,6 +131,10 @@ export const playersSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchPlayers.fulfilled, (state, action) => mergeInStore2(state, action.payload, p => p.active));
+    builder.addCase(fetchPlayer.fulfilled, (state, action) => {
+      const newState = mergeInStore2(state, action.payload, p => p.active);
+      return newState;
+    });
     builder.addCase(updateStyle.fulfilled, (state, action) => {
       if (action.payload) {
         return mergeInStore2(state, action.payload, p => p.active);

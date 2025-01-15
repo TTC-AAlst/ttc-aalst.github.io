@@ -13,12 +13,19 @@ export const fetchTeams = createAsyncThunk(
   },
 );
 
+export const fetchTeam = createAsyncThunk(
+  'teams/GetOne',
+  async ({id}: {id: number}) => {
+    const response = await http.get<IStoreTeam>(`/teams/${id}`);
+    return response;
+  },
+);
+
 export const toggleTeamPlayer = createAsyncThunk(
   'teams/ToggleTeamPlayer',
   async (data: {playerId: number, teamId: number, role: TeamPlayerType}, { dispatch }) => {
     try {
       const response = await http.post<IStoreTeam>('/teams/ToggleTeamPlayer', data);
-      // broadcastReload('team', data.id);
       dispatch(simpleLoaded(response));
       dispatch(showSnackbar(t('common.apiSuccess')));
       return response;
@@ -50,6 +57,7 @@ export const teamsSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchTeams.fulfilled, (state, action) => mergeInStore2(state, action.payload));
+    builder.addCase(fetchTeam.fulfilled, (state, action) => mergeInStore2(state, action.payload));
   },
 });
 
