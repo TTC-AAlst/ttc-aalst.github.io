@@ -87,7 +87,6 @@ class AdminPlayerForm extends Component<AdminPlayerFormProps, IStorePlayer> {
 
             <div style={{maxWidth: 250, marginBottom: 7}}>
               <PlayerStyleAutocomplete
-                t={t}
                 value={player.style.name || ''}
                 onChange={text => this.setState({style: {...player.style, name: text}})}
               />

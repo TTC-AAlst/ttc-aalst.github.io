@@ -89,20 +89,22 @@ class PlayerPlayingStyleFormComponent extends Component<PlayerPlayingStyleFormPr
     const ply = this.props.player;
 
     const canChangeStyle = this.props.user.playerId && this.props.user.playerId !== ply.id;
-    let openFormIcon;
+    let openFormIcon: any = null;
     if (this.props.iconStyle === 'avatar') {
+      // MatchCard (small):
+      // Displays the Avatar but not to edit the style, instead goes to the player page
       openFormIcon = (
         <div
           className="clickable"
           onClick={canChangeStyle ? this._openStyle.bind(this, ply) : undefined}
           style={{display: 'inline-block'}}
-          title={t('player.editStyle.tooltip', ply.alias)}
+          title={canChangeStyle ? t('player.editStyle.tooltip', ply.alias) : undefined}
         >
           <PlayerAvatar player={ply} style={{backgroundColor: 'gold', margin: 0}} />
         </div>
       );
 
-    } else {
+    } else if (canChangeStyle) {
       openFormIcon = (
         <EditIcon
           tooltip={t('player.editStyle.tooltip', ply.alias)}
@@ -144,7 +146,6 @@ class PlayerPlayingStyleFormComponent extends Component<PlayerPlayingStyleFormPr
 
         <DialogContent style={{overflow: 'visible'}}>
           <PlayerStyleAutocomplete
-            t={t}
             value={this.state.newStyle.name || ''}
             onChange={text => this._changeStyle(text)}
           />

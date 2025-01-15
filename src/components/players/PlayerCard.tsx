@@ -38,7 +38,11 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
         </div>
       </Card.Header>
 
-      <PlayerPlayingStyleForm player={player} iconStyle="edit-icon" style={{color: '#d3d3d3', position: 'absolute', top: 75, right: 27}} />
+      <PlayerPlayingStyleForm
+        player={player}
+        iconStyle="edit-icon"
+        style={{color: '#d3d3d3', position: 'absolute', top: 75, right: 27}}
+      />
 
       <Card.Body>
         {!user.playerId || showAddressBelow ? (

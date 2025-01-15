@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import Select from 'react-select';
+import { t } from '../../locales';
 
 type PlayerStyleAutocompleteProps = {
-  t: Function;
-  onChange: Function;
+  onChange: (val: string) => void;
   value?: string;
 }
 
@@ -14,9 +14,9 @@ export default class PlayerStyleAutocomplete extends Component<PlayerStyleAutoco
 
   render() {
     const playingStyles = [
-      this.props.t('player.styles.attacker'),
-      this.props.t('player.styles.defender'),
-      this.props.t('player.styles.allRounder'),
+      t('player.styles.attacker'),
+      t('player.styles.defender'),
+      t('player.styles.allRounder'),
     ];
 
     return (
@@ -24,7 +24,7 @@ export default class PlayerStyleAutocomplete extends Component<PlayerStyleAutoco
         isSearchable
         onChange={option => this._onChange(option)}
         value={({value: this.props.value, label: this.props.value})}
-        placeholder={this.props.t('player.editStyle.style')}
+        placeholder={t('player.editStyle.style')}
         options={playingStyles.map(style => ({label: style, value: style}))}
         classNamePrefix="react-select-fix"
       />
