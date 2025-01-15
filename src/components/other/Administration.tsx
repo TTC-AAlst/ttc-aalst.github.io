@@ -29,6 +29,7 @@ function getManagerDescription(manager: IClubManager) {
 
 export const Administration = () => {
   const club = useTtcSelector(state => state.clubs.find(c => c.id === OwnClubId));
+  const players = useTtcSelector(state => state.players);
   const user = useTtcSelector(selectUser);
   if (!club) {
     return <div />;
@@ -39,24 +40,27 @@ export const Administration = () => {
     <div style={{marginTop: 10}}>
       <h1>{t('clubs.managementTitle')}</h1>
       <div className="row">
-        {managers.slice().sort((a, b) => a.sortOrder - b.sortOrder).map(manager => (
-          <div className="col-lg-4 col-sm-6" key={manager.playerId} style={{paddingBottom: 10}}>
-            <Card>
-              <Card.Header>
-                <span>
-                  <strong>{manager.name}</strong>
-                  <br />
-                  {getManagerDescription(manager)}
-                </span>
-              </Card.Header>
+        {managers.slice().sort((a, b) => a.sortOrder - b.sortOrder).map(manager => {
+          const player = players.find(p => p.id === manager.playerId);
+          return (
+            <div className="col-lg-4 col-sm-6" key={manager.playerId} style={{paddingBottom: 10}}>
+              <Card>
+                <Card.Header>
+                  <span>
+                    <strong>{player?.firstName} {player?.lastName}</strong>
+                    <br />
+                    {getManagerDescription(manager)}
+                  </span>
+                </Card.Header>
 
-              <Card.Body>
-                <PlayerImage playerId={manager.playerId} center shape="circle" />
-                {!!user.playerId && <PlayerDetails playerId={manager.playerId} />}
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
+                <Card.Body>
+                  <PlayerImage playerId={manager.playerId} center shape="circle" />
+                  {!!user.playerId && <PlayerDetails playerId={manager.playerId} />}
+                </Card.Body>
+              </Card>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

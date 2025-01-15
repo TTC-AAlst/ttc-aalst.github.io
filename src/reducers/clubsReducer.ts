@@ -1,14 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mergeInStore2 } from './immutableHelpers';
-import { IClub } from '../models/model-interfaces';
+import { IClub, IClubCache } from '../models/model-interfaces';
 import http from '../utils/httpClient';
 import { showSnackbar } from './configReducer';
 import { t } from '../locales';
+import { RootState } from '../store';
 
 export const fetchClubs = createAsyncThunk(
   'clubs/Get',
-  async () => {
-    const response = await http.get<IClub[]>('/clubs');
+  async (_, { getState }) => {
+    const lastChecked = (getState() as RootState).config.caches.clubs;
+    const response = await http.get<IClubCache>('/clubs', {lastChecked});
     return response;
   },
 );
@@ -27,14 +29,28 @@ export const updateClub = createAsyncThunk(
   },
 );
 
+function getInitialState(): IClub[] {
+  const serializedState = localStorage.getItem("redux_clubs");
+  if (!serializedState) {
+    return [];
+  }
+
+  try {
+    const clubs = JSON.parse(serializedState);
+    return clubs;
+  } catch {
+    return [];
+  }
+}
+
 export const clubsSlice = createSlice({
   name: 'clubs',
-  initialState: [] as IClub[],
+  initialState: getInitialState(),
   reducers: {
     simpleLoaded: (state, action: PayloadAction<IClub | IClub[]>) => mergeInStore2(state, action.payload),
   },
   extraReducers: builder => {
-    builder.addCase(fetchClubs.fulfilled, (state, action) => mergeInStore2(state, action.payload));
+    builder.addCase(fetchClubs.fulfilled, (state, action) => mergeInStore2(state, action.payload.clubs));
     builder.addCase(updateClub.fulfilled, (state, action) => mergeInStore2(state, action.payload));
   },
 });

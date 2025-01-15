@@ -28,8 +28,14 @@ const saveStateToLocalStorage = (state: RootState) => {
     //   const serializedState = JSON.stringify(value);
     //   localStorage.setItem(`redux_${key}`, serializedState);
     // });
-    const serializedState = JSON.stringify(state.config.params);
-    localStorage.setItem("redux_configParams", serializedState);
+    const serializedConfig = JSON.stringify(state.config.params);
+    localStorage.setItem("redux_configParams", serializedConfig);
+
+    const serializedCaches = JSON.stringify(state.config.caches);
+    localStorage.setItem("redux_configCaches", serializedCaches);
+
+    const serializedClubs = JSON.stringify(state.clubs);
+    localStorage.setItem("redux_clubs", serializedClubs);
   } catch (error) {
     console.error("Could not save state", error);
   }

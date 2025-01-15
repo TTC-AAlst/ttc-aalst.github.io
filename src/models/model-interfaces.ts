@@ -351,6 +351,12 @@ export interface ITeamFrenoy {
 **************************************************** */
 
 
+export interface IClubCache {
+  clubs: IClub[];
+  lastChange: string;
+}
+
+
 export interface IClub {
   active: boolean;
   alternativeLocations: any[];
@@ -376,6 +382,5 @@ export interface IClubLocation {
 export interface IClubManager {
   playerId: number;
   description: string;
-  name: string;
   sortOrder: number;
 }

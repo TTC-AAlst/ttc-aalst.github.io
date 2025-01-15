@@ -5,6 +5,7 @@ import { t } from "../locales";
 import { ITeamOpponent } from '../models/model-interfaces';
 import { login, validateToken } from "./userActions";
 import { RootState } from "../store";
+import { fetchClubs } from "./clubsReducer";
 
 type IConfig = typeof defaultConfigState;
 type IConfigParams = typeof defaultConfigState.params;
@@ -36,6 +37,10 @@ export const saveConfig = createAsyncThunk(
 
 type InitialLoad = 'evaluating-start' | 'should-start' | 'done';
 
+const defaultCaches = {
+  clubs: '',
+};
+
 const defaultConfigState = {
   initialLoad: 'evaluating-start' as InitialLoad,
   params: {
@@ -52,6 +57,7 @@ const defaultConfigState = {
   },
   newMatchComments: {} as {[matchId: number]: boolean},
   opponentMatchesLoaded: {} as {[opponentKey: string]: boolean},
+  caches: defaultCaches,
 };
 
 function getDefaultConfig(initialState: IConfig): IConfig {
@@ -60,11 +66,13 @@ function getDefaultConfig(initialState: IConfig): IConfig {
     return initialState;
   }
 
+  const caches = localStorage.getItem("redux_configCaches");
   try {
     const configParams = JSON.parse(serializedState);
     return {
       ...defaultConfigState,
       params: configParams,
+      caches: caches ? JSON.parse(caches) : defaultCaches,
     };
   } catch {
     return initialState;
@@ -127,6 +135,10 @@ export const configSlice = createSlice({
 
     builder.addCase(login.fulfilled, (state, action) => {
       state.initialLoad = 'should-start';
+    });
+
+    builder.addCase(fetchClubs.fulfilled, (state, action) => {
+      state.caches.clubs = action.payload.lastChange;
     });
   },
 });
