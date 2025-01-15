@@ -8,7 +8,13 @@ import { fetchClubs } from "../../reducers/clubsReducer";
 import { fetchTeam } from "../../reducers/teamsReducer";
 import { fetchMatch } from "../../reducers/matchesReducer";
 
-type Entities = "Player" | "Match" | "Team" | "Club" | "Config";
+enum Entities { // eslint-disable-line no-shadow
+  Player,
+  Match,
+  Team,
+  Club,
+  Config,
+}
 
 export const useSignalR = () => {
   const initialLoad = useTtcSelector(state => state.config.initialLoad);
@@ -40,19 +46,19 @@ export const useSignalR = () => {
 
           connection.on("BroadcastReload", (entityType: Entities, id: number) => {
             switch (entityType) {
-              case "Player":
+              case Entities.Player:
                 dispatch(fetchPlayer({id}));
                 break;
-              case "Club":
+              case Entities.Club:
                 dispatch(fetchClubs());
                 break;
-              case "Config":
+              case Entities.Config:
                 dispatch(fetchConfig());
                 break;
-              case "Match":
+              case Entities.Match:
                 dispatch(fetchMatch({id}));
                 break;
-              case "Team":
+              case Entities.Team:
                 dispatch(fetchTeam({id}));
                 break;
               default:
