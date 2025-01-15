@@ -4,13 +4,17 @@ import http from '../utils/httpClient';
 import { t } from "../locales";
 import { ITeamOpponent } from '../models/model-interfaces';
 import { login, validateToken } from "./userActions";
+import { RootState } from "../store";
 
-type IConfig = typeof defaultConfigState.params;
+type IConfig = typeof defaultConfigState;
+type IConfigParams = typeof defaultConfigState.params;
+type IBackendConfigParams = Omit<IConfigParams, 'endOfSeason'> & {endOfSeason: 'true' | 'false'};
 
 export const fetchConfig = createAsyncThunk(
   'config/Get',
-  async () => {
-    const response = await http.get<Omit<IConfig, 'endOfSeason'> & {endOfSeason: 'true' | 'false'}>('/config');
+  async (_, { getState }) => {
+    const lastChecked = (getState() as RootState).config.params.ModifiedOn;
+    const response = await http.get<IBackendConfigParams>('/config', {lastChecked});
     return response;
   },
 );
@@ -39,6 +43,7 @@ const defaultConfigState = {
     adultMembership: '', youthMembership: '', additionalMembership: '', recreationalMembers: '',
     frenoyClubIdVttl: '', frenoyClubIdSporta: '', compBalls: '', clubBankNr: '', clubOrgNr: '',
     year: '', endOfSeason: false,
+    ModifiedOn: '',
   },
   snackbar: '',
   settings: {
@@ -49,6 +54,25 @@ const defaultConfigState = {
   opponentMatchesLoaded: {} as {[opponentKey: string]: boolean},
 };
 
+function getDefaultConfig(initialState: IConfig): IConfig {
+  const serializedState = localStorage.getItem("redux_configParams");
+  if (!serializedState) {
+    return initialState;
+  }
+
+  try {
+    const configParams = JSON.parse(serializedState);
+    return {
+      ...defaultConfigState,
+      params: configParams,
+    };
+  } catch {
+    return initialState;
+  }
+}
+
+
+
 type Settings = typeof defaultConfigState.settings;
 type SettingPair<K extends keyof Settings> = {
   key: K;
@@ -57,7 +81,7 @@ type SettingPair<K extends keyof Settings> = {
 
 export const configSlice = createSlice({
   name: 'config',
-  initialState: defaultConfigState,
+  initialState: getDefaultConfig(defaultConfigState),
   reducers: {
     setInitialLoad: (state, action: PayloadAction<InitialLoad>) => {
       state.initialLoad = action.payload;
@@ -84,6 +108,9 @@ export const configSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchConfig.fulfilled, (state, action) => {
+      if (!action.payload) {
+        return;
+      }
       state.params = {
         ...action.payload,
         endOfSeason: action.payload.endOfSeason === 'true',

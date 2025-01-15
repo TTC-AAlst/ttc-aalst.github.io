@@ -5,16 +5,7 @@ import {Icon} from '../../controls/Icons/Icon';
 import {IUser} from '../../../models/UserModel';
 import {IMatch, IMatchScore} from '../../../models/model-interfaces';
 import { updateScore } from '../../../reducers/matchesReducer';
-
-function debounce(cb: Function, duration: number) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      cb(...args);
-    }, duration);
-  };
-}
+import { debounce } from '../../../utils/debounce';
 
 const scoreOrDefault = (match: IMatch): IMatchScore => match.score || {home: 0, out: 0};
 

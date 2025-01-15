@@ -21,5 +21,26 @@ export const store = configureStore({
   },
 });
 
+
+const saveStateToLocalStorage = (state: RootState) => {
+  try {
+    // Object.entries(state).forEach(([key, value]) => {
+    //   const serializedState = JSON.stringify(value);
+    //   localStorage.setItem(`redux_${key}`, serializedState);
+    // });
+    const serializedState = JSON.stringify(state.config.params);
+    localStorage.setItem("redux_configParams", serializedState);
+  } catch (error) {
+    console.error("Could not save state", error);
+  }
+};
+
+
+store.subscribe(() => {
+  console.log('saving state to localStorage');
+  saveStateToLocalStorage(store.getState());
+});
+
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
