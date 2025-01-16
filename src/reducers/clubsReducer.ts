@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mergeInStore2 } from './immutableHelpers';
-import { IClub, IClubCache } from '../models/model-interfaces';
+import { IClub, ICacheResponse } from '../models/model-interfaces';
 import http from '../utils/httpClient';
 import { showSnackbar } from './configReducer';
 import { t } from '../locales';
@@ -10,7 +10,7 @@ export const fetchClubs = createAsyncThunk(
   'clubs/Get',
   async (_, { getState }) => {
     const lastChecked = (getState() as RootState).config.caches.clubs;
-    const response = await http.get<IClubCache>('/clubs', {lastChecked});
+    const response = await http.get<ICacheResponse<IClub>>('/clubs', {lastChecked});
     return response;
   },
 );
@@ -50,7 +50,7 @@ export const clubsSlice = createSlice({
     simpleLoaded: (state, action: PayloadAction<IClub | IClub[]>) => mergeInStore2(state, action.payload),
   },
   extraReducers: builder => {
-    builder.addCase(fetchClubs.fulfilled, (state, action) => mergeInStore2(state, action.payload.clubs));
+    builder.addCase(fetchClubs.fulfilled, (state, action) => mergeInStore2(state, action.payload.data));
     builder.addCase(updateClub.fulfilled, (state, action) => mergeInStore2(state, action.payload));
   },
 });

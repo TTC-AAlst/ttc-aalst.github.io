@@ -6,6 +6,7 @@ import { ITeamOpponent } from '../models/model-interfaces';
 import { login, validateToken } from "./userActions";
 import { RootState } from "../store";
 import { fetchClubs } from "./clubsReducer";
+import { fetchPlayers } from "./playersReducer";
 
 type IConfig = typeof defaultConfigState;
 type IConfigParams = typeof defaultConfigState.params;
@@ -39,6 +40,7 @@ type InitialLoad = 'evaluating-start' | 'should-start' | 'done';
 
 const defaultCaches = {
   clubs: '',
+  players: '',
 };
 
 const defaultConfigState = {
@@ -139,6 +141,9 @@ export const configSlice = createSlice({
 
     builder.addCase(fetchClubs.fulfilled, (state, action) => {
       state.caches.clubs = action.payload.lastChange;
+    });
+    builder.addCase(fetchPlayers.fulfilled, (state, action) => {
+      state.caches.players = action.payload.lastChange;
     });
   },
 });

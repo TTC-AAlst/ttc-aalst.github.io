@@ -31,6 +31,11 @@ export type Translator = TranslatorFn & {
 
 export type OwnTeamLink = 'main' | 'matches' | 'ranking' | 'players' | 'matchesTable' | 'week';
 
+export interface ICacheResponse<T> {
+  data: T[];
+  lastChange: string;
+}
+
 /* ****************************************************
 *                       MATCHES
 **************************************************** */
@@ -349,12 +354,6 @@ export interface ITeamFrenoy {
 /* ****************************************************
 *                       CLUBS
 **************************************************** */
-
-
-export interface IClubCache {
-  clubs: IClub[];
-  lastChange: string;
-}
 
 
 export interface IClub {

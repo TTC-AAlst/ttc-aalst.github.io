@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
 import TextField from '@mui/material/TextField';
@@ -13,7 +13,7 @@ import {IPlayer, Competition, IStorePlayer} from '../../models/model-interfaces'
 import { displayMobile } from '../../models/PlayerModel';
 import { useViewport } from '../../utils/hooks/useViewport';
 import { selectPlayers, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
-import { deletePlayer, frenoySync, updatePlayer } from '../../reducers/playersReducer';
+import { deletePlayer, fetchQuitters, frenoySync, updatePlayer } from '../../reducers/playersReducer';
 
 const keepTrackOfPlayerKeys = false;
 
@@ -24,7 +24,6 @@ export const AdminPlayers = () => {
   const [playerFilter, setPlayerFilter] = useState('');
   const [selectedPlayer, setSelectedPlayer] = useState<IPlayer | null>(null);
   const players = useTtcSelector(selectPlayers);
-  const playersQuitters = useTtcSelector(state => state.playersQuitters);
   const viewport = useViewport();
   const dispatch = useTtcDispatch();
 
@@ -48,11 +47,7 @@ export const AdminPlayers = () => {
       break;
 
     case 'inactive': {
-      let quitters = playersQuitters;
-      if (filter) {
-        quitters = quitters.filter(x => `${x.firstName} ${x.lastName}`.toLowerCase().includes(playerFilter));
-      }
-      playersContent = <InactivesTable players={quitters} />;
+      playersContent = <InactivesTable filter={playerFilter} />;
       break;
     }
 
@@ -214,12 +209,21 @@ const ActivesTable = ({players, onEditPlayer}: ActivesTableProps) => {
 
 
 type InactivesTableProps = {
-  players: IStorePlayer[];
+  filter: string;
 };
 
 
-const InactivesTable = ({players}: InactivesTableProps) => {
+const InactivesTable = ({filter}: InactivesTableProps) => {
   const dispatch = useTtcDispatch();
+  const playersQuitters = useTtcSelector(state => state.playersQuitters);
+  let quitters = playersQuitters;
+  if (filter) {
+    quitters = quitters.filter(x => `${x.firstName} ${x.lastName}`.toLowerCase().includes(filter));
+  }
+
+  useEffect(() => {
+    dispatch(fetchQuitters());
+  }, []);
 
   return (
     <Table size="sm" hover>
@@ -232,7 +236,7 @@ const InactivesTable = ({players}: InactivesTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {players.sort((a, b) => (b.quitYear || 0) - (a.quitYear || 0)).map(ply => (
+        {quitters.slice().sort((a, b) => (b.quitYear || 0) - (a.quitYear || 0)).map(ply => (
           <tr key={ply.id}>
             <td>{ply.firstName} {ply.lastName}</td>
             <td className="d-none d-sm-table-cell">{ply.alias}</td>

@@ -1,15 +1,25 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mergeInStore2 } from './immutableHelpers';
-import { IPlayerStyle, IStorePlayer } from '../models/model-interfaces';
+import { ICacheResponse, IPlayerStyle, IStorePlayer } from '../models/model-interfaces';
 import http from '../utils/httpClient';
 import { t } from '../locales';
 import { showSnackbar } from './configReducer';
 import { uploadPlayer } from './userActions';
+import { RootState } from '../store';
 
 export const fetchPlayers = createAsyncThunk(
   'players/Get',
+  async (_, { getState }) => {
+    const lastChecked = (getState() as RootState).config.caches.players;
+    const response = await http.get<ICacheResponse<IStorePlayer>>('/players', {lastChecked});
+    return response;
+  },
+);
+
+export const fetchQuitters = createAsyncThunk(
+  'players/GetQuitters',
   async () => {
-    const response = await http.get<IStorePlayer[]>('/players');
+    const response = await http.get<IStorePlayer[]>('/players/Quitters');
     return response;
   },
 );
@@ -120,18 +130,38 @@ export const updateStyle = createAsyncThunk(
   },
 );
 
+function getInitialState(): IStorePlayer[] {
+  const serializedState = localStorage.getItem("redux_players");
+  if (!serializedState) {
+    return [];
+  }
+
+  try {
+    const players = JSON.parse(serializedState);
+    return players;
+  } catch {
+    return [];
+  }
+}
+
 
 export const playersSlice = createSlice({
   name: 'players',
-  initialState: [] as IStorePlayer[],
+  initialState: getInitialState(),
   reducers: {
     simpleLoaded: (state, action: PayloadAction<IStorePlayer | IStorePlayer[]>) => {
       mergeInStore2(state, action.payload, p => p.active);
     },
   },
   extraReducers: builder => {
-    builder.addCase(fetchPlayers.fulfilled, (state, action) => mergeInStore2(state, action.payload, p => p.active));
+    builder.addCase(fetchPlayers.fulfilled, (state, action) => {
+      const newState = mergeInStore2(state, action.payload.data, p => p.active);
+      return newState;
+    });
     builder.addCase(fetchPlayer.fulfilled, (state, action) => {
+      if (!action.payload?.active) {
+        return state.filter(x => x.id !== action.payload.id);
+      }
       const newState = mergeInStore2(state, action.payload, p => p.active);
       return newState;
     });
@@ -171,7 +201,10 @@ export const playersQuittersSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(fetchPlayers.fulfilled, (state, action) => mergeInStore2(state, action.payload, p => !p.active && p.alias !== 'SYSTEM'));
+    builder.addCase(fetchQuitters.fulfilled, (state, action) => {
+      const newState = mergeInStore2(state, action.payload, p => !p.active && p.alias !== 'SYSTEM');
+      return newState;
+    });
     builder.addCase(updatePlayer.fulfilled, (state, action) => {
       if (action.payload?.switchActive === true) {
         if (!action.payload?.player.active) {
