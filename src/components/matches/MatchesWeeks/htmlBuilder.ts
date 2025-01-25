@@ -95,6 +95,14 @@ const quotes = [
   {text: 'The pressure in the table tennis competition is added by yourself.', author: 'Dongxie'},
   {text: 'Even if you are in good luck and good condition, you may still be losing in the game, then you just accept the failure.', author: 'Persson'},
   {text: 'The most correct reason for playing table tennis is that I love table tennis.', author: 'Waldner'},
+  {text: "A champion is afraid of losing. Everyone else is afraid of winning.", author: 'Billie Jean King'},
+  {text: "Table tennis is such an interesting sport. It’s fun to watch but if you actually play, you will understand how great it is", author: 'Ai Fukuhara'},
+  {text: "In Olympic and World Championships, I feel proud as a Japanese, to see the Japanese flag being raised at the award ceremony", author: 'Ai Fukuhara'},
+  {text: "You can’t go to battles with one winning method.", author: 'Li fu jung'},
+  {text: "In spin we trust.", author: ''},
+  {text: "Power from the ground.", author: 'EmRatThich'},
+  {text: "Relax, Explode then Relax.", author: 'EmRatThich'},
+  {text: "Elbow, wide forehand and then wide backhand.", author: 'EmRatThich'},
   // {text: "", author: ''},
 ];
 
