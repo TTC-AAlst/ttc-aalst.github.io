@@ -11,6 +11,7 @@ import { Competition, IMatch } from '../../../models/model-interfaces';
 import { selectPlayers, selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
 import { emailFormation } from '../../../reducers/matchesReducer';
+import httpClient from '../../../utils/httpClient';
 
 type MatchesWeekEmailProps = {
   weekCalcer: WeekCalcer;
@@ -31,7 +32,17 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
 
   useEffect(() => {
     matches.concat(prevMatches).forEach(match => {
-      dispatch(getOpponentMatches({teamId: match.teamId, opponent: match.opponent}));
+      if (!match.teamId) {
+        const errObj = {
+          message: `MatchesWeekEmail: MatchId=${match.id}: teamId ${match.teamId} not found. Match=${JSON.stringify(match)}`,
+          stack: '',
+          componentStack: null,
+        };
+        console.warn(errObj.message);
+        httpClient.post('/config/Log', errObj);
+      } else {
+        dispatch(getOpponentMatches({teamId: match.teamId, opponent: match.opponent}));
+      }
     });
   });
 
