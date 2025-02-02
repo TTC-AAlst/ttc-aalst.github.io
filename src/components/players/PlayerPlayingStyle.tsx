@@ -1,21 +1,19 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, {Component} from 'react';
+import React, { useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
-import { connect } from 'react-redux';
-import {MaterialButton} from '../controls/Buttons/MaterialButton';
-import {EditIcon} from '../controls/Icons/EditIcon';
-import {PlayerAutoComplete} from './PlayerAutoComplete';
+import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import { EditIcon } from '../controls/Icons/EditIcon';
+import { PlayerAutoComplete } from './PlayerAutoComplete';
 import PlayerStyleAutocomplete from './PlayerStyleAutocomplete';
 import PlayerAvatar from './PlayerAvatar';
 import { IPlayerStyle, IStorePlayer } from '../../models/model-interfaces';
-import { RootState } from '../../store';
-import UserModel from '../../models/UserModel';
 import { t } from '../../locales';
 import { updateStyle } from '../../reducers/playersReducer';
+import { selectUser, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 
 
 type PlayerPlayingStyleProps = {
@@ -34,156 +32,123 @@ export const PlayerPlayingStyle = ({ply, allowEdit = true}: PlayerPlayingStylePr
 
 type PlayerPlayingStyleFormProps = {
   player: IStorePlayer;
-  user: UserModel;
-  updateStyle: typeof updateStyle;
   iconStyle: 'avatar' | 'edit-icon';
   style?: React.CSSProperties,
 }
 
-type PlayerPlayingStyleFormState = {
-  editingPlayer: null | IStorePlayer;
-  newStyle: Omit<IPlayerStyle, 'playerId'>;
-  editingBy: null | number | 'system';
-}
+export const PlayerPlayingStyleForm = ({player, ...props}: PlayerPlayingStyleFormProps) => {
+  const user = useTtcSelector(selectUser);
+  const dispatch = useTtcDispatch();
+  const [editingPlayer, setEditingPlayer] = useState<null | IStorePlayer>(null);
+  const [newStyle, setNewStyle] = useState<Omit<IPlayerStyle, 'playerId'>>({name: '', bestStroke: ''});
+  const [editingBy, setEditingBy] = useState<null | number | 'system'>(null);
 
-class PlayerPlayingStyleFormComponent extends Component<PlayerPlayingStyleFormProps, PlayerPlayingStyleFormState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editingPlayer: null,
-      newStyle: {name: '', bestStroke: ''},
-      editingBy: null,
-    };
-  }
+  const openStyle = () => {
+    setEditingPlayer(player);
+    setNewStyle({...player.style});
+    setEditingBy(user.playerId);
+  };
 
-  _openStyle(ply) {
-    this.setState({editingPlayer: ply, newStyle: {...ply.style}, editingBy: this.props.user.playerId});
-  }
+  const closeStyle = () => {
+    setEditingPlayer(null);
+    setNewStyle({name: '', bestStroke: ''});
+  };
 
-  _closeStyle() {
-    this.setState({editingPlayer: null, newStyle: {name: '', bestStroke: ''}});
-  }
+  const saveStyle = () => {
+    dispatch(updateStyle({
+      player: editingPlayer!,
+      newStyle,
+      updatedBy: editingBy!,
+    }));
+    closeStyle();
+  };
 
-  _saveStyle() {
-    this.props.updateStyle({
-      player: this.state.editingPlayer!,
-      newStyle: this.state.newStyle,
-      updatedBy: this.state.editingBy!,
-    });
-    this._closeStyle();
-  }
-
-  _changeStyle(text: string) {
-    this.setState(state => ({newStyle: {...state.newStyle, name: text}}));
-  }
-
-  _changeBestStroke(e) {
-    this.setState(state => ({newStyle: {...state.newStyle, bestStroke: e.target.value}}));
-  }
-
-  _changePlayer(playerId: number | 'system') {
-    this.setState({editingBy: playerId});
-  }
-
-  render() {
-    const ply = this.props.player;
-
-    const canChangeStyle = this.props.user.playerId && this.props.user.playerId !== ply.id;
-    let openFormIcon: any = null;
-    if (this.props.iconStyle === 'avatar') {
-      // MatchCard (small):
-      // Displays the Avatar but not to edit the style, instead goes to the player page
-      openFormIcon = (
-        <div
-          className="clickable"
-          onClick={canChangeStyle ? this._openStyle.bind(this, ply) : undefined}
-          style={{display: 'inline-block'}}
-          title={canChangeStyle ? t('player.editStyle.tooltip', ply.alias) : undefined}
-        >
-          <PlayerAvatar player={ply} style={{backgroundColor: 'gold', margin: 0}} />
-        </div>
-      );
-
-    } else if (canChangeStyle) {
-      openFormIcon = (
-        <EditIcon
-          tooltip={t('player.editStyle.tooltip', ply.alias)}
-          tooltipPlacement="left"
-          style={this.props.style}
-          onClick={this._openStyle.bind(this, ply)}
-        />
-      );
-    }
-
-
-    if (!this.state.editingPlayer) {
-      return openFormIcon;
-    }
-
-    const changeStyleModalActions = [
-      <MaterialButton
-        key="1"
-        label={t('common.cancel')}
-        color="secondary"
-        onClick={() => this._closeStyle()}
-      />,
-      <MaterialButton
-        key="2"
-        label={t('common.save')}
-        color="primary"
-        onClick={() => this._saveStyle()}
-      />,
-    ];
-
-    return (
-      <Dialog
-        open={!!this.state.editingPlayer}
-        onClose={() => this._closeStyle()}
-        scroll="body"
-        classes={{paperScrollPaper: 'overflow-visible', paperScrollBody: 'overflow-visible'}}
+  const canChangeStyle = user.playerId && user.playerId !== player.id;
+  let openFormIcon: any = null;
+  if (props.iconStyle === 'avatar') {
+    // MatchCard (small):
+    // Displays the Avatar but not to edit the style, instead goes to the player page
+    openFormIcon = (
+      <div
+        className="clickable"
+        onClick={canChangeStyle ? openStyle : undefined}
+        style={{display: 'inline-block'}}
+        title={canChangeStyle ? t('player.editStyle.tooltip', player.alias) : undefined}
       >
-        <DialogTitle style={{overflow: 'visible'}}>{t('player.editStyle.title', this.props.player.alias)}</DialogTitle>
+        <PlayerAvatar player={player} style={{backgroundColor: 'gold', margin: 0}} />
+      </div>
+    );
 
-        <DialogContent style={{overflow: 'visible'}}>
-          <PlayerStyleAutocomplete
-            value={this.state.newStyle.name || ''}
-            onChange={text => this._changeStyle(text)}
-          />
-
-          <br />
-
-          <TextField
-            fullWidth
-            label={t('player.editStyle.bestStroke')}
-            type="text"
-            value={this.state.newStyle.bestStroke || ''}
-            onChange={e => this._changeBestStroke(e)}
-          />
-
-          <br />
-
-          {this.props.user.isSystem() ? (
-            <div style={{marginTop: 50}}>
-              <PlayerAutoComplete
-                selectPlayer={playerId => this._changePlayer(playerId)}
-                label={t('system.playerSelect')}
-              />
-            </div>
-          ) : null}
-        </DialogContent>
-        <DialogActions>
-          {changeStyleModalActions}
-        </DialogActions>
-      </Dialog>
+  } else if (canChangeStyle) {
+    openFormIcon = (
+      <EditIcon
+        tooltip={t('player.editStyle.tooltip', player.alias)}
+        tooltipPlacement="left"
+        style={props.style}
+        onClick={openStyle}
+      />
     );
   }
-}
 
-const mapDispatchToProps = (dispatch: any) => ({
-  updateStyle: (data: Parameters<typeof updateStyle>[0]) => dispatch(updateStyle(data)),
-});
 
-export const PlayerPlayingStyleForm = connect(
-  (state: RootState) => ({user: new UserModel(state.user)}),
-  mapDispatchToProps,
-)(PlayerPlayingStyleFormComponent);
+  if (!editingPlayer) {
+    return openFormIcon;
+  }
+
+  const changeStyleModalActions = [
+    <MaterialButton
+      key="1"
+      label={t('common.cancel')}
+      color="secondary"
+      onClick={closeStyle}
+    />,
+    <MaterialButton
+      key="2"
+      label={t('common.save')}
+      color="primary"
+      onClick={saveStyle}
+    />,
+  ];
+
+  return (
+    <Dialog
+      open={!!editingPlayer}
+      onClose={closeStyle}
+      scroll="body"
+      classes={{paperScrollPaper: 'overflow-visible', paperScrollBody: 'overflow-visible'}}
+    >
+      <DialogTitle style={{overflow: 'visible'}}>{t('player.editStyle.title', player.alias)}</DialogTitle>
+
+      <DialogContent style={{overflow: 'visible'}}>
+        <PlayerStyleAutocomplete
+          value={newStyle.name || ''}
+          onChange={text => setNewStyle({...newStyle, name: text})}
+        />
+
+        <br />
+
+        <TextField
+          fullWidth
+          label={t('player.editStyle.bestStroke')}
+          type="text"
+          value={newStyle.bestStroke || ''}
+          onChange={e => setNewStyle({...newStyle, bestStroke: e.target.value})}
+        />
+
+        <br />
+
+        {user.isSystem() ? (
+          <div style={{marginTop: 50}}>
+            <PlayerAutoComplete
+              selectPlayer={playerId => setEditingBy(playerId)}
+              label={t('system.playerSelect')}
+            />
+          </div>
+        ) : null}
+      </DialogContent>
+      <DialogActions>
+        {changeStyleModalActions}
+      </DialogActions>
+    </Dialog>
+  );
+};

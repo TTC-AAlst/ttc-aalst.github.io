@@ -1,14 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mergeInStore2 } from './immutableHelpers';
-import { IStoreTeam, TeamPlayerType } from '../models/model-interfaces';
+import { ICacheResponse, IStoreTeam, ITeamRanking, TeamPlayerType } from '../models/model-interfaces';
 import http from '../utils/httpClient';
 import { showSnackbar } from './configReducer';
 import { t } from '../locales';
+import { RootState } from '../store';
 
 export const fetchTeams = createAsyncThunk(
   'teams/Get',
-  async () => {
-    const response = await http.get<IStoreTeam[]>('/teams');
+  async (_, { getState }) => {
+    const lastChecked = (getState() as RootState).config.caches.teams;
+    const response = await http.get<ICacheResponse<IStoreTeam>>('/teams', {lastChecked});
     return response;
   },
 );
@@ -38,26 +40,61 @@ export const toggleTeamPlayer = createAsyncThunk(
 
 export const loadTeamRanking = createAsyncThunk(
   'teams/Ranking',
-  async (data: {teamId: number}, { dispatch }) => {
+  async ({team}: {team: IStoreTeam}, { dispatch }) => {
+    const url = `/teams/Ranking/${team.competition}/${team.frenoy.divisionId}`;
     try {
-      const response = await http.get<IStoreTeam>('/teams/Ranking', data);
-      dispatch(simpleLoaded(response));
+      const response = await http.get<ITeamRanking[]>(url);
+      dispatch(teamRankingsSlice.actions.rankingLoaded({teamId: team.id, rankings: response}));
     } catch (err) {
-      console.error('teams/Ranking', data, err);
+      console.error(url, err);
     }
   },
 );
 
+function getInitialState(): IStoreTeam[] {
+  return [];
+  // const serializedState = localStorage.getItem("redux_teams");
+  // if (!serializedState) {
+  //   return [];
+  // }
+
+  // try {
+  //   const players = JSON.parse(serializedState);
+  //   return players;
+  // } catch {
+  //   return [];
+  // }
+}
+
 
 export const teamsSlice = createSlice({
   name: 'teams',
-  initialState: [] as IStoreTeam[],
+  initialState: getInitialState(),
   reducers: {
     simpleLoaded: (state, action: PayloadAction<IStoreTeam | IStoreTeam[]>) => mergeInStore2(state, action.payload),
   },
   extraReducers: builder => {
-    builder.addCase(fetchTeams.fulfilled, (state, action) => mergeInStore2(state, action.payload));
+    builder.addCase(fetchTeams.fulfilled, (state, action) => {
+      if (!action.payload?.data) {
+        return state;
+      }
+      return mergeInStore2(state, action.payload.data);
+    });
     builder.addCase(fetchTeam.fulfilled, (state, action) => mergeInStore2(state, action.payload));
+  },
+});
+
+
+type TeamRankingStore = {[teamId: number]: ITeamRanking[]};
+
+
+export const teamRankingsSlice = createSlice({
+  name: 'teamRankings',
+  initialState: {} as TeamRankingStore,
+  reducers: {
+    rankingLoaded: (state, action: PayloadAction<{teamId: number, rankings: ITeamRanking[]}>) => {
+      state[action.payload.teamId] = action.payload.rankings;
+    },
   },
 });
 

@@ -30,17 +30,18 @@ export const updateClub = createAsyncThunk(
 );
 
 function getInitialState(): IClub[] {
-  const serializedState = localStorage.getItem("redux_clubs");
-  if (!serializedState) {
-    return [];
-  }
+  return [];
+  // const serializedState = localStorage.getItem("redux_clubs");
+  // if (!serializedState) {
+  //   return [];
+  // }
 
-  try {
-    const clubs = JSON.parse(serializedState);
-    return clubs;
-  } catch {
-    return [];
-  }
+  // try {
+  //   const clubs = JSON.parse(serializedState);
+  //   return clubs;
+  // } catch {
+  //   return [];
+  // }
 }
 
 export const clubsSlice = createSlice({
@@ -50,7 +51,12 @@ export const clubsSlice = createSlice({
     simpleLoaded: (state, action: PayloadAction<IClub | IClub[]>) => mergeInStore2(state, action.payload),
   },
   extraReducers: builder => {
-    builder.addCase(fetchClubs.fulfilled, (state, action) => mergeInStore2(state, action.payload.data));
+    builder.addCase(fetchClubs.fulfilled, (state, action) => {
+      if (!action.payload?.data) {
+        return state;
+      }
+      return mergeInStore2(state, action.payload.data);
+    });
     builder.addCase(updateClub.fulfilled, (state, action) => mergeInStore2(state, action.payload));
   },
 });

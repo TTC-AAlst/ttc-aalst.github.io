@@ -22,6 +22,8 @@ export const userSlice = createSlice({
   reducers: {
     logout: () => {
       localStorage.removeItem('token');
+      localStorage.removeItem('redux_players');
+      localStorage.removeItem('redux_matches');
       return startState;
     },
     login: (_, action: PayloadAction<ValidateUser>) => {

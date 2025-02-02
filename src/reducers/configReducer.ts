@@ -7,6 +7,7 @@ import { login, validateToken } from "./userActions";
 import { RootState } from "../store";
 import { fetchClubs } from "./clubsReducer";
 import { fetchPlayers } from "./playersReducer";
+import { fetchTeams } from "./teamsReducer";
 
 type IConfig = typeof defaultConfigState;
 type IConfigParams = typeof defaultConfigState.params;
@@ -41,6 +42,7 @@ type InitialLoad = 'evaluating-start' | 'should-start' | 'done';
 const defaultCaches = {
   clubs: '',
   players: '',
+  teams: '',
 };
 
 const defaultConfigState = {
@@ -63,22 +65,23 @@ const defaultConfigState = {
 };
 
 function getDefaultConfig(initialState: IConfig): IConfig {
-  const serializedState = localStorage.getItem("redux_configParams");
-  if (!serializedState) {
-    return initialState;
-  }
+  return initialState;
+  // const serializedState = localStorage.getItem("redux_configParams");
+  // if (!serializedState) {
+  //   return initialState;
+  // }
 
-  const caches = localStorage.getItem("redux_configCaches");
-  try {
-    const configParams = JSON.parse(serializedState);
-    return {
-      ...defaultConfigState,
-      params: configParams,
-      caches: caches ? JSON.parse(caches) : defaultCaches,
-    };
-  } catch {
-    return initialState;
-  }
+  // const caches = localStorage.getItem("redux_configCaches");
+  // try {
+  //   const configParams = JSON.parse(serializedState);
+  //   return {
+  //     ...defaultConfigState,
+  //     params: configParams,
+  //     caches: caches ? JSON.parse(caches) : defaultCaches,
+  //   };
+  // } catch {
+  //   return initialState;
+  // }
 }
 
 
@@ -140,10 +143,19 @@ export const configSlice = createSlice({
     });
 
     builder.addCase(fetchClubs.fulfilled, (state, action) => {
-      state.caches.clubs = action.payload.lastChange;
+      if (action.payload) {
+        state.caches.clubs = action.payload.lastChange;
+      }
     });
     builder.addCase(fetchPlayers.fulfilled, (state, action) => {
-      state.caches.players = action.payload.lastChange;
+      if (action.payload) {
+        state.caches.players = action.payload.lastChange;
+      }
+    });
+    builder.addCase(fetchTeams.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.caches.teams = action.payload.lastChange;
+      }
     });
   },
 });

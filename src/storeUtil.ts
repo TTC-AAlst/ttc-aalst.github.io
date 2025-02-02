@@ -72,13 +72,13 @@ export function getMatchPlayerRankings(match: IMatch, homeTeam: boolean): IOppon
 
 const util = {
   getTeam(teamId: number): ITeam {
-    const {teams} = store.getState();
+    const {teams, teamRankings} = store.getState();
     const singleTeam = teams.find(team => team.id === teamId)!;
-    return new TeamModel(singleTeam);
+    return new TeamModel(singleTeam, teamRankings[singleTeam.id]);
   },
   getTeams(): ITeam[] {
-    const {teams} = store.getState();
-    return teams.map(team => new TeamModel(team));
+    const {teams, teamRankings} = store.getState();
+    return teams.map(team => new TeamModel(team, teamRankings[team.id]));
   },
 
   getClub(clubId: number): IClub {

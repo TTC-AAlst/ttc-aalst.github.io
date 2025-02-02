@@ -18,8 +18,19 @@ export const selectUser = createSelector(
 );
 
 export const selectTeams = createSelector(
-  [(state: RootState) => state.teams],
-  matches => matches.map(m => new TeamModel(m)),
+  [
+    (state: RootState) => state.teams,
+    (state: RootState) => state.teamRankings,
+  ],
+  (teams, rankings) => teams.map(t => new TeamModel(t, rankings[t.id])),
+);
+
+export const selectTeamRanking = createSelector(
+  [
+    (state: RootState) => state.teamRankings,
+    (_, teamId: number) => teamId,
+  ],
+  (teamRankings, teamId) => teamRankings[teamId] ?? [],
 );
 
 export const selectMatches = createSelector(

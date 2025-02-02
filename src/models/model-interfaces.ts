@@ -273,11 +273,12 @@ export interface IStoreTeam {
   year: number;
   opponents: ITeamOpponent[];
   players: ITeamPlayer[];
-  ranking: ITeamRanking[];
   frenoy: ITeamFrenoy;
 }
 
 export interface ITeam extends IStoreTeam {
+  ranking: ITeamRanking[];
+
   getTeamPlayerCount(): 2 | 3 | 4;
   getScoreCount(): 16 | 10 | 5;
   renderOwnTeamTitle(): string;

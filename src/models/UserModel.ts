@@ -55,7 +55,7 @@ export default class UserModel implements IUser {
     return storeUtil.getPlayer(this.playerId);
   }
 
-  getTeams(): IStoreTeam[] {
+  getTeams(): ITeam[] {
     return this.teams.map(storeUtil.getTeam);
   }
 
@@ -73,8 +73,9 @@ export default class UserModel implements IUser {
     }
 
     const captains: number[] = this.getTeams()
-      .map(team => new TeamModel(team))
-      .map(team => team.getCaptainPlayerIds()).flat();
+      .map(team => team.getCaptainPlayerIds())
+      .flat();
+
     return captains.indexOf(this.playerId) !== -1;
   }
 

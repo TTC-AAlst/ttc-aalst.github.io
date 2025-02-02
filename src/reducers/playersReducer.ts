@@ -10,7 +10,8 @@ import { RootState } from '../store';
 export const fetchPlayers = createAsyncThunk(
   'players/Get',
   async (_, { getState }) => {
-    const lastChecked = (getState() as RootState).config.caches.players;
+    const state = getState() as RootState;
+    const lastChecked = state.config.caches.players;
     const response = await http.get<ICacheResponse<IStorePlayer>>('/players', {lastChecked});
     return response;
   },
@@ -131,17 +132,18 @@ export const updateStyle = createAsyncThunk(
 );
 
 function getInitialState(): IStorePlayer[] {
-  const serializedState = localStorage.getItem("redux_players");
-  if (!serializedState) {
-    return [];
-  }
+  return [];
+  // const serializedState = localStorage.getItem("redux_players");
+  // if (!serializedState) {
+  //   return [];
+  // }
 
-  try {
-    const players = JSON.parse(serializedState);
-    return players;
-  } catch {
-    return [];
-  }
+  // try {
+  //   const players = JSON.parse(serializedState);
+  //   return players;
+  // } catch {
+  //   return [];
+  // }
 }
 
 
@@ -155,6 +157,9 @@ export const playersSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchPlayers.fulfilled, (state, action) => {
+      if (!action.payload?.data) {
+        return state;
+      }
       const newState = mergeInStore2(state, action.payload.data, p => p.active);
       return newState;
     });

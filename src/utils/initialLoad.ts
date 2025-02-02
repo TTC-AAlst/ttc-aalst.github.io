@@ -69,9 +69,7 @@ export const useInitialLoad = () => {
       console.log('Secondary load started');
       console.log('Teams', teams.length);
       teams.forEach(team => {
-        if (!team.ranking || team.ranking.length === 0) {
-          dispatch(loadTeamRanking({teamId: team.id}));
-        }
+        dispatch(loadTeamRanking({team}));
       });
 
       console.log('Matches', matches.length);
