@@ -109,7 +109,7 @@ type MatchesWeekPerCompetitionProps = {
 
 const MatchesWeekPerCompetition = ({comp, editMode, matches}: MatchesWeekPerCompetitionProps) => {
   const viewport = useViewport();
-  const matchSorter = (a, b) => a.getTeam().teamCode.localeCompare(b.getTeam().teamCode);
+  const matchSorter = (a: IMatch, b: IMatch) => a.getTeam().teamCode.localeCompare(b.getTeam().teamCode);
 
   matches = matches.filter(x => x.competition === comp);
   if (matches.length === 0) {

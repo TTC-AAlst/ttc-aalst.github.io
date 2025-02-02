@@ -18,6 +18,8 @@ export default class TeamModel implements ITeam {
   frenoy: ITeamFrenoy;
 
   constructor(json: IStoreTeam) {
+    json = json ?? {};
+
     this.competition = json.competition; // 'Sporta' or 'Vttl' or 'Jeugd'
     this.divisionName = json.divisionName;
     this.id = json.id;
@@ -26,8 +28,8 @@ export default class TeamModel implements ITeam {
     this.year = json.year;
     this.opponents = json.opponents; // : {teamCode: A-Z, clubId: number}[]
     this.players = json.players; // : {playerId: number, type: teamPlayerType}[]
-    this.ranking = json.ranking; // : {clubId, teamCode, isForfait, position, points, gamesWon, gamesDraw, gamesLost}[]
-    this.frenoy = new TeamFrenoyModel(json.frenoy, this);
+    this.ranking = json.ranking ?? []; // : {clubId, teamCode, isForfait, position, points, gamesWon, gamesDraw, gamesLost}[]
+    this.frenoy = new TeamFrenoyModel(json.frenoy ?? {}, this);
   }
 
   getTeamPlayerCount(): 2 | 3 | 4 {

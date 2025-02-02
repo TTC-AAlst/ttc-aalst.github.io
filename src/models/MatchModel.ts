@@ -6,6 +6,7 @@ import {sortMappedPlayers} from './TeamModel';
 import {IMatch, ITeam, Competition, IMatchScore, MatchScoreType, IMatchPlayer, IMatchGame,
   ITeamOpponent, IClub, IMatchPlayerInfo, IPlayer, IGetGameMatches,
   MatchPlayerStatus} from './model-interfaces';
+import httpClient from '../utils/httpClient';
 
 // TODO: Duplicted in backend. Should be in db.
 const defaultStartHour = 20;
@@ -187,7 +188,17 @@ export default class MatchModel implements IMatch {
   }
 
   getTeam(): ITeam {
-    return storeUtil.getTeam(this.teamId);
+    const team = storeUtil.getTeam(this.teamId);
+    if (!team || !team.id) {
+      const errObj = {
+        message: `MatchId=${this.id}: teamId ${this.teamId} not found. Match=${JSON.stringify(this)}`,
+        stack: '',
+        componentStack: null,
+      };
+      console.warn(errObj.message);
+      httpClient.post('/config/Log', errObj);
+    }
+    return team;
   }
 
   getTeamPlayerCount(): 4 | 3 {
