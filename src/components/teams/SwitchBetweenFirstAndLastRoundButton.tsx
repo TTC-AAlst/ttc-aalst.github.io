@@ -42,12 +42,12 @@ export function getFirstOrLastMatches<T extends IStoreMatchCommon>(allMatchesToC
   const lastMatches = allMatchesToCome.filter(x => x.date.month() < 7);
   if (filter === 'first' && firstMatches.length !== 0) {
     return {
-      matches: firstMatches,
+      matches: firstMatches.sort((a, b) => a.date.valueOf() - b.date.valueOf()),
       hasMore: lastMatches.length !== 0,
     };
   }
   return {
-    matches: lastMatches,
+    matches: lastMatches.sort((a, b) => a.date.valueOf() - b.date.valueOf()),
     hasMore: firstMatches.length !== 0,
   };
 }

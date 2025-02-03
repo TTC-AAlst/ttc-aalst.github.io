@@ -16,13 +16,14 @@ type TeamOverviewProps = {
 
 export const TeamOverview = ({team, small}: TeamOverviewProps) => {
   const today = moment().startOf('day');
-  const nextMatches = team.getMatches()
-    .sort((a, b) => a.date.valueOf() - b.date.valueOf())
+  const sortedMatches = team.getMatches()
+    .sort((a, b) => a.date.valueOf() - b.date.valueOf());
+
+  const nextMatches = sortedMatches
     .filter(m => m.date.isSame(today, 'day') || m.date.isAfter(today, 'day'))
     .slice(0, 2);
 
-  const prevMatches = team.getMatches()
-    .sort((a, b) => b.date.valueOf() - a.date.valueOf())
+  const prevMatches = sortedMatches
     .filter(m => m.date.isBefore(today, 'day'))
     .slice(0, 2);
 
