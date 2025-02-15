@@ -23,7 +23,7 @@ export default class TeamModel implements ITeam {
     this.competition = json.competition; // 'Sporta' or 'Vttl' or 'Jeugd'
     this.divisionName = json.divisionName;
     this.id = json.id;
-    this.teamCode = json.teamCode;
+    this.teamCode = json.teamCode || '';
     this.clubId = json.clubId;
     this.year = json.year;
     this.opponents = json.opponents; // : {teamCode: A-Z, clubId: number}[]
