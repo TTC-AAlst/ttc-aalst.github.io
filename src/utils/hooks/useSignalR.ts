@@ -7,6 +7,7 @@ import { fetchConfig } from "../../reducers/configReducer";
 import { fetchClubs } from "../../reducers/clubsReducer";
 import { fetchTeam } from "../../reducers/teamsReducer";
 import { fetchMatch } from "../../reducers/matchesReducer";
+import { fetchReadOnlyMatch } from "../../reducers/readonlyMatchesReducer";
 
 enum Entities { // eslint-disable-line no-shadow
   Player,
@@ -14,6 +15,7 @@ enum Entities { // eslint-disable-line no-shadow
   Team,
   Club,
   Config,
+  ReadOnlyMatch,
 }
 
 export const useSignalR = () => {
@@ -57,6 +59,9 @@ export const useSignalR = () => {
                 break;
               case Entities.Match:
                 dispatch(fetchMatch({id}));
+                break;
+              case Entities.ReadOnlyMatch:
+                dispatch(fetchReadOnlyMatch({id}));
                 break;
               case Entities.Team:
                 dispatch(fetchTeam({id}));

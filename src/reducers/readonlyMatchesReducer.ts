@@ -48,6 +48,14 @@ export const frenoyReadOnlyMatchSync = createAsyncThunk(
   },
 );
 
+export const fetchReadOnlyMatch = createAsyncThunk(
+  'matches/GetOpponentOne',
+  async ({id}: {id: number}) => {
+    const response = await http.get<IMatch>(`/matches/GetOpponentOne/${id}`);
+    return response;
+  },
+);
+
 
 export const readonlyMatchesSlice = createSlice({
   name: 'readonlyMatches',
@@ -57,6 +65,12 @@ export const readonlyMatchesSlice = createSlice({
       const newState = mergeInStore2(state, action.payload);
       return newState;
     },
+  },
+  extraReducers: builder => {
+    builder.addCase(fetchReadOnlyMatch.fulfilled, (state, action) => {
+      const newState = mergeInStore2(state, action.payload, m => m.shouldBePlayed);
+      return newState;
+    });
   },
 });
 
