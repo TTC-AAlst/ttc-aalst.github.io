@@ -13,7 +13,7 @@ export const selectOpponentMatchesForTeam = createSelector(
     const matchesCompetition = competition === 'Sporta' ? 'Sporta' : 'Vttl';
     return matches.filter(m => m.competition === matchesCompetition)
       .filter(m => m.home && m.away)
-      .filter(m => !teamCode || (m.home.clubId === clubId && m.home.teamCode === teamCode) || (m.away.clubId === clubId && m.away.teamCode === teamCode))
+      .filter(m => (m.home.clubId === clubId && m.home.teamCode === teamCode) || (m.away.clubId === clubId && m.away.teamCode === teamCode))
       .filter(m => m.shouldBePlayed)
       .sort((a, b) => a.date.valueOf() - b.date.valueOf());
   },
