@@ -80,9 +80,12 @@ export const Teams = () => {
   };
 
   const renderTabContent = (teamCode: string) => {
-    const team = teams.find(x => x.teamCode === teamCode && x.competition === params.competition);
+    let team = teams.find(x => x.teamCode === teamCode && x.competition === params.competition);
     if (!team) {
-      return null;
+      // BUG: When navigating from Vttl F to Sporta, there is no Sporta F
+      //      In the TabbedContainer, no tab header is selected
+      const newTeamCode = getDefaultTeam();
+      team = teams.find(x => x.teamCode === newTeamCode && x.competition === params.competition)!;
     }
 
     const transView = (key: string) => t(`teamCalendar.view.${key}`);
