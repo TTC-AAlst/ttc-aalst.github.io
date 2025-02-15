@@ -129,7 +129,7 @@ export default class MatchModel implements IMatch {
 
   renderOpponentTitle(): string {
     const club = this.getOpponentClub();
-    return `${club.name} ${this.opponent.teamCode}`;
+    return `${club.name} ${this.opponent.teamCode || ''}`;
   }
 
   getOpponentClub(): IClub {

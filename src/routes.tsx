@@ -70,7 +70,7 @@ export const browseTo = {
     return t.route('opponent')
       .replace(':competition', competition)
       .replace(':clubId', clubId?.toString())
-      .replace(':teamCode', teamCode);
+      .replace(':teamCode', teamCode || '');
   },
 };
 
