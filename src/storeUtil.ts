@@ -74,7 +74,7 @@ const util = {
   getTeam(teamId: number): ITeam {
     const {teams, teamRankings} = store.getState();
     const singleTeam = teams.find(team => team.id === teamId)!;
-    return new TeamModel(singleTeam, teamRankings[singleTeam.id]);
+    return new TeamModel(singleTeam, teamRankings[singleTeam?.id]);
   },
   getTeams(): ITeam[] {
     const {teams, teamRankings} = store.getState();
