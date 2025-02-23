@@ -254,6 +254,18 @@ export default class MatchModel implements IMatch {
       filter = ply => ply.matchPlayer.status === statusFilter;
     }
 
+    const sortMappedMatchPlayers = (plyA: IMatchPlayerInfo, plyB: IMatchPlayerInfo): number => {
+      const aComp = plyA.player.getCompetition(this.competition);
+      const bComp = plyB.player.getCompetition(this.competition);
+      if (!aComp || !aComp.position) {
+        return -1;
+      }
+      if (!bComp || bComp.position) {
+        return 1;
+      }
+      return aComp.position - bComp.position;
+    };
+
     return plys
       .filter(ply => ply.playerId)
       .map(ply => ({
@@ -261,10 +273,8 @@ export default class MatchModel implements IMatch {
         player: storeUtil.getPlayer(ply.playerId),
         matchPlayer: ply,
       }))
-      .filter(filter);
-
-    // TODO: figure out where sortMappedPlayers and what the types are 😀
-    // .sort(sortMappedPlayers(team.competition));
+      .filter(filter)
+      .sort(sortMappedMatchPlayers);
   }
 
   getOwnPlayerModels(statusFilter?: undefined | "onlyFinal" | "Play" | "Captain"): IPlayer[] {

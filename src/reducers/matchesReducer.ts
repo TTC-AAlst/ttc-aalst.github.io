@@ -6,6 +6,7 @@ import http from '../utils/httpClient';
 import { t } from '../locales';
 import { showSnackbar } from './configReducer';
 import storeUtil from '../storeUtil';
+import { PlayersPlaying } from '../components/matches/MatchesWeeks/htmlBuilder';
 
 export const fetchMatches = createAsyncThunk(
   'matches/Get',
@@ -178,7 +179,7 @@ export const frenoyTeamSync = createAsyncThunk(
 
 export const emailFormation = createAsyncThunk(
   'matches/WeekCompetitionEmail',
-  async (data: {title: string, email: string, justMe: boolean}, { dispatch }) => {
+  async (data: {title: string, email: string, justMe: boolean, players: PlayersPlaying}, { dispatch }) => {
     try {
       await http.post('/matches/WeekCompetitionEmail', data);
       dispatch(showSnackbar(t('week.formationMailed')));

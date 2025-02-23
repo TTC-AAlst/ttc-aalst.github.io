@@ -6,11 +6,27 @@ import { Competition, IMatch, IPlayer } from '../../../models/model-interfaces';
 import { RootState } from '../../../store';
 import { selectOpponentMatchesForTeam } from '../../../reducers/selectors/selectOpponentMatchesForTeam';
 
-export function buildHtml(state: RootState, user: IPlayer, compFilter: Competition, matches: IMatch[], prevMatches: IMatch[]) {
+export type PlayersPlaying = { [key: number]: string };
+
+type BuildHtmlData = {
+  email: string;
+  /** PlayerId -> TeamCode */
+  players: PlayersPlaying;
+}
+
+export function buildHtml(
+  state: RootState,
+  user: IPlayer,
+  compFilter: Competition,
+  matches: IMatch[],
+  prevMatches: IMatch[],
+): BuildHtmlData {
   // console.log('m', matches.sort((a, b) => a.date - b.date).toArray());
 
   let html = getEndearment(compFilter);
   html += '<br>';
+
+  html += '{{player-info}}';
 
   // Matches
   html += getMatches(matches, compFilter);
@@ -35,7 +51,18 @@ export function buildHtml(state: RootState, user: IPlayer, compFilter: Competiti
   html += '<br>';
   html += user.alias;
 
-  return html;
+  const players = matches.reduce((acc, match) => {
+    const formation = match.getPlayerFormation(undefined);
+    formation.forEach(plyInfo => {
+      acc[plyInfo.player.id] = `${compFilter} ${match.getTeam().teamCode}`;
+    });
+    return acc;
+  }, {} as PlayersPlaying);
+
+  return {
+    email: html,
+    players,
+  };
 }
 
 

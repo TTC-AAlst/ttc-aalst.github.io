@@ -25,6 +25,7 @@ type MatchesWeekEmailProps = {
 export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}: MatchesWeekEmailProps) => {
   const [mailFormOpen, setMailFormOpen] = useState(false);
   const [email, setEmail] = useState('');
+  const [playersPlaying, setPlayersPlaying] = useState({});
   const players = useTtcSelector(selectPlayers);
   const ownUser = useTtcSelector(selectUser);
   const dispatch = useTtcDispatch();
@@ -49,7 +50,7 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
   const emailFormationWrapper = (justMe: boolean) => {
     const week = weekCalcer.getWeek();
     const title = `${compFilter} Week ${weekCalcer.currentWeek}: ${week.start.format('D/M')} - ${week.end.format('D/M')}`;
-    dispatch(emailFormation({title, email, justMe}));
+    dispatch(emailFormation({title, email, justMe, players: playersPlaying}));
     setMailFormOpen(false);
   };
 
@@ -60,7 +61,8 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
         onClick={() => {
           setMailFormOpen(!mailFormOpen);
           const defaultEmail = buildHtml(fullState, user, compFilter, matches, prevMatches);
-          setEmail(defaultEmail);
+          setPlayersPlaying(defaultEmail.players);
+          setEmail(defaultEmail.email);
         }}
         tooltip={t('week.emailTitle')}
       />
