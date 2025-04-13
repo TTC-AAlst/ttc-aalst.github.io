@@ -3,7 +3,7 @@ import {IntroClub} from '../../App/IntroClub';
 import {IntroSponsors} from '../../App/IntroSponsors';
 import {Kampioenen} from './Kampioenen';
 import Achievements from './Achievements';
-import NextSeasonChanges from './NextSeasonChanges';
+import {NextSeasonChanges} from './NextSeasonChanges';
 import {IPlayer, ITeam, IMatch, IClub} from '../../../models/model-interfaces';
 import {AchievementsCalculator} from './AchievementsCalculator';
 import {Strike} from '../../controls/controls/Strike';

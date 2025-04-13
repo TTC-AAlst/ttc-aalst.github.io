@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import cn from 'classnames';
 import {PlayerLink} from '../../players/controls/PlayerLink';
 import {AchievementsCalculator, NewPlayerRanking} from './AchievementsCalculator';
@@ -7,30 +7,38 @@ type NextSeasonChangesProps = {
   calcer: AchievementsCalculator;
 }
 
-export default class NextSeasonChanges extends Component<NextSeasonChangesProps> {
-  render() {
-    const {calcer} = this.props;
-    return (
-      <div>
-        <h2>
-          <i className="fa fa-line-chart" style={{marginRight: 15, color: 'gray'}} />
-          Volgend Seizoen
-          <i className="fa fa-line-chart" style={{marginLeft: 15, color: 'gray'}} />
-        </h2>
-        <div className="row next-season">
+export const NextSeasonChanges = ({calcer}: NextSeasonChangesProps) => {
+  const vttl = calcer.getNewRanking('Vttl');
+  const sporta = calcer.getNewRanking('Sporta');
+
+  if (!vttl.length && !sporta.length) {
+    return null;
+  }
+
+  return (
+    <div>
+      <h2>
+        <i className="fa fa-line-chart" style={{marginRight: 15, color: 'gray'}} />
+        Volgend Seizoen
+        <i className="fa fa-line-chart" style={{marginLeft: 15, color: 'gray'}} />
+      </h2>
+      <div className="row next-season">
+        {!!vttl.length && (
           <div className="col-md-6">
             <h3>Vttl</h3>
-            <NextSeasonRankingChanges rankings={calcer.getNewRanking('Vttl')} />
+            <NextSeasonRankingChanges rankings={vttl} />
           </div>
+        )}
+        {!!sporta.length && (
           <div className="col-md-6">
             <h3>Sporta</h3>
-            <NextSeasonRankingChanges rankings={calcer.getNewRanking('Sporta')} />
+            <NextSeasonRankingChanges rankings={sporta} />
           </div>
-        </div>
+        )}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 
 const NextSeasonRankingChanges = ({rankings}: {rankings: NewPlayerRanking[]}) => {

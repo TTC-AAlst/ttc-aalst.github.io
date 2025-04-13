@@ -68,7 +68,7 @@ const Achievement = ({achievement}: {achievement: AchievementInfo}) => {
       <dt key="-1">
         {achievement.title ? <b>{achievement.title}&nbsp;</b> : null}
         <small> {achievement.desc}</small>
-      </dt>,
+      </dt>
       {nodes}
     </>
   );
