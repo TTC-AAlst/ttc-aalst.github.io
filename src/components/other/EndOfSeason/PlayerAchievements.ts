@@ -17,7 +17,6 @@ export type AchievementInfo = {
 
 export function getMostMatchesWon(playerStats: ITeamPlayerStats[]): AchievementInfo {
   const highest = playerStats.reduce((acc, cur) => (acc.victories > cur.victories ? acc : cur), playerStats[0]);
-
   const players = playerStats.filter(cur => cur.victories === highest.victories);
 
   return {
@@ -32,22 +31,27 @@ export function getMostMatchesWon(playerStats: ITeamPlayerStats[]): AchievementI
 
 
 
-export function getMostMatchesPercentageWon(playerStats: ITeamPlayerStats[]): AchievementInfo {
-  const highest = playerStats.reduce((acc, cur) => {
-    if (!acc.games) {
-      return cur;
-    }
-    if (!cur.games) {
-      return acc;
-    }
-    return getPerGames(acc) > getPerGames(cur) ? acc : cur;
-  }, playerStats[0]);
+export function getMostMatchesPercentageWon(comp: Competition, playerStats: ITeamPlayerStats[]): AchievementInfo {
+  const sortedPlayers = [...playerStats].sort((a, b) => getPerGames(b) - getPerGames(a));
 
-  const players = playerStats.filter(cur => getPerGames(cur) === getPerGames(highest));
+  const highestPercentage = getPerGames(sortedPlayers[0]);
+  let highestPlayers = sortedPlayers.filter(player => getPerGames(player) === highestPercentage);
+
+  const allHighestAreARanking = highestPlayers.every(player => player.ply.getCompetition(comp).ranking === 'A');
+  if (allHighestAreARanking) {
+    const secondHighestPercentage = getPerGames(
+      sortedPlayers.find(player => getPerGames(player) < highestPercentage) || sortedPlayers[0],
+    );
+
+    highestPlayers = highestPlayers.concat(
+      sortedPlayers.filter(player => getPerGames(player) === secondHighestPercentage),
+    );
+  }
+
   return {
     title: 'The Destroyer',
     desc: 'Hoogst % gewonnen matchen',
-    players: players.map(cur => ({
+    players: highestPlayers.map(cur => ({
       throphy: `${getPerGames(cur)}% gewonnen`,
       player: cur.ply,
     })),
@@ -204,10 +208,6 @@ export function getMostNetjesTegen(playerStats: ITeamPlayerStats[]): Achievement
 
 
 export function getMostMatchesAllWon(competition: Competition, playerStats: ITeamPlayerStats[], matches: IMatch[]): AchievementInfo {
-  // const xxx = matches.toArray()[0].getGameMatches();
-  // console.log('getGameMAtches', xxx.toArray());
-  // console.log('getOwnPlayers', matches.toArray()[0].getOwnPlayers().toArray());
-
   const toWinCount = matches[0].getTeamPlayerCount();
 
   const playerIds = matches.reduce((acc, cur) => {
@@ -231,11 +231,15 @@ export function getMostMatchesAllWon(competition: Competition, playerStats: ITea
 
 
   playerWins = playerWins.sort((a, b) => b.wins - a.wins);
+  const highest = playerWins[0];
+  let players = playerWins.filter(cur => cur.wins === highest.wins);
 
+  const allHighestAreARanking = players.every(player => player.ply.getCompetition(competition).ranking === 'A');
+  if (allHighestAreARanking) {
+    const secondHighestWins = playerWins.find(player => player.wins < highest.wins)?.wins || highest.wins;
+    players = players.concat(playerWins.filter(player => player.wins === secondHighestWins));
+  }
 
-  const highest = playerWins.reduce((acc, cur) => (acc.wins > cur.wins ? acc : cur), playerWins[0]);
-
-  const players = playerWins.filter(cur => cur.wins === highest.wins);
   return {
     title: 'Topdagen',
     desc: '',
@@ -249,7 +253,7 @@ export function getMostMatchesAllWon(competition: Competition, playerStats: ITea
 const allAchievements: {[key: string]: ((playerStats: ITeamPlayerStats[], matches: IMatch[]) => AchievementInfo)[]} = {
   Vttl: [
     getMostMatchesWon,
-    getMostMatchesPercentageWon,
+    getMostMatchesPercentageWon.bind(this, 'Vttl'),
     getMostGamesPlayer,
     getRankingDestroyer.bind(this, 'Vttl'),
     getMostMatchesAllWon.bind(this, 'Vttl'),
@@ -257,10 +261,10 @@ const allAchievements: {[key: string]: ((playerStats: ITeamPlayerStats[], matche
   ],
   Sporta: [
     getMostMatchesWon,
-    getMostMatchesPercentageWon,
+    getMostMatchesPercentageWon.bind(this, 'Sporta'),
     getMostGamesPlayer,
     getRankingDestroyer.bind(this, 'Sporta'),
-    getMostMatchesAllWon.bind(this, 'Vttl'),
+    getMostMatchesAllWon.bind(this, 'Sporta'),
   ],
   belles: [
     getMostBellesWon,

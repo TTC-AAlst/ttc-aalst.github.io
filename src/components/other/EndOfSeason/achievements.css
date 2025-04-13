@@ -16,11 +16,12 @@
       font-weight: normal;
 
       &:not(:first-child) {
-        margin-top: 10px;
+        margin-top: 15px;
       }
     }
 
     dd {
+      margin-bottom: 0;
     }
 
     a {
