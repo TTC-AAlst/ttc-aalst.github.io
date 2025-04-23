@@ -57,7 +57,10 @@ export class AchievementsCalculator {
     const {playerStats, matches} = this.getPlayerStats(type);
     if (playerStats.length !== 0) {
       return PlayerAchievements[type].reduce((acc, achievementGetter) => {
-        acc = acc.concat(achievementGetter(playerStats, matches));
+        const achievement = achievementGetter(playerStats, matches);
+        if (achievement.players.length > 0) {
+          acc = acc.concat(achievement);
+        }
         return acc;
       }, [] as AchievementInfo[]);
     }

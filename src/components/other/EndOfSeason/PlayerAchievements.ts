@@ -32,7 +32,7 @@ export function getMostMatchesWon(playerStats: ITeamPlayerStats[]): AchievementI
 
 function getHighestJumper(competition: Competition, playerStats: ITeamPlayerStats[]): AchievementInfo {
   const calculateRankingJump = (currentRanking: PlayerRanking, nextRanking: PlayerRanking): number => {
-    const rankDiff = -rankingSorter(currentRanking, nextRanking);
+    const rankDiff = rankingSorter(currentRanking, nextRanking);
     return rankDiff;
   };
 
