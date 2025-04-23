@@ -11,6 +11,7 @@ import PlayerStyleAutocomplete from '../players/PlayerStyleAutocomplete';
 import {IPlayer, IStorePlayer} from '../../models/model-interfaces';
 import { t } from '../../locales';
 import { updatePlayer } from '../../reducers/playersReducer';
+import { PlayerRanking } from '../../models/utils/rankingSorter';
 
 type AdminPlayerFormProps = {
   player?: IPlayer;
@@ -149,7 +150,7 @@ class AdminPlayerForm extends Component<AdminPlayerFormProps, IStorePlayer> {
                   style={{width: 250, marginRight: fieldMargin}}
                   label="Volgend Klassement VTTL"
                   defaultValue={player.vttl?.nextRanking}
-                  onChange={e => this.setState({vttl: {...player.vttl!, nextRanking: e.target.value}})}
+                  onChange={e => this.setState({vttl: {...player.vttl!, nextRanking: e.target.value as PlayerRanking}})}
                   placeholder={`Huidig: ${player.vttl?.ranking}`}
                 />
               )}
@@ -158,7 +159,7 @@ class AdminPlayerForm extends Component<AdminPlayerFormProps, IStorePlayer> {
                   style={{width: 250, marginRight: fieldMargin}}
                   label="Volgend Klassement Sporta"
                   defaultValue={player.sporta?.nextRanking}
-                  onChange={e => this.setState({sporta: {...player.sporta!, nextRanking: e.target.value}})}
+                  onChange={e => this.setState({sporta: {...player.sporta!, nextRanking: e.target.value as PlayerRanking}})}
                   placeholder={`Huidig: ${player.sporta?.ranking}`}
                 />
               )}

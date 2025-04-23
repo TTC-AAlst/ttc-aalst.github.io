@@ -1,5 +1,6 @@
 import { Competition, IMatch, IMatchPlayer, IPlayer, ITeamPlayerStats } from '../../../models/model-interfaces';
 import { getRankingValue } from '../../../models/utils/playerRankingValueMapper';
+import rankingSorter, { PlayerRanking } from '../../../models/utils/rankingSorter';
 import storeUtil from '../../../storeUtil';
 
 const getPerGames = cur => Math.floor((cur.victories / cur.games) * 1000) / 10;
@@ -29,6 +30,52 @@ export function getMostMatchesWon(playerStats: ITeamPlayerStats[]): AchievementI
   };
 }
 
+function getHighestJumper(competition: Competition, playerStats: ITeamPlayerStats[]): AchievementInfo {
+  const calculateRankingJump = (currentRanking: PlayerRanking, nextRanking: PlayerRanking): number => {
+    const rankDiff = -rankingSorter(currentRanking, nextRanking);
+    return rankDiff;
+  };
+
+  const playersWithJumps = playerStats.map(player => {
+    const {ranking, nextRanking} = player.ply.getCompetition(competition);
+    if (!nextRanking) {
+      return undefined;
+    }
+
+    const jump = calculateRankingJump(ranking, nextRanking);
+    return {
+      player: player.ply,
+      ranking,
+      nextRanking,
+      jump,
+    };
+  });
+
+  const sortedPlayers = playersWithJumps
+    .filter(player => player !== undefined)
+    .map(player => player!)
+    .filter(player => player.jump > 0)
+    .sort((a, b) => b.jump - a.jump);
+
+  if (sortedPlayers.length === 0) {
+    return {
+      title: 'Springer',
+      desc: 'Grootste klassement stijging',
+      players: [],
+    };
+  }
+
+  const highestJump = sortedPlayers[0].jump;
+  const highestJumpPlayers = sortedPlayers.filter(player => player.jump === highestJump);
+  return {
+    title: 'Springer',
+    desc: 'Grootste klassement stijging',
+    players: highestJumpPlayers.map(player => ({
+      throphy: `${player.ranking} 🠖 ${player.nextRanking}`,
+      player: player.player,
+    })),
+  };
+}
 
 
 export function getMostMatchesPercentageWon(comp: Competition, playerStats: ITeamPlayerStats[]): AchievementInfo {
@@ -252,6 +299,7 @@ export function getMostMatchesAllWon(competition: Competition, playerStats: ITea
 
 const allAchievements: {[key: string]: ((playerStats: ITeamPlayerStats[], matches: IMatch[]) => AchievementInfo)[]} = {
   Vttl: [
+    getHighestJumper.bind(this, 'Vttl'),
     getMostMatchesWon,
     getMostMatchesPercentageWon.bind(this, 'Vttl'),
     getMostGamesPlayer,
@@ -260,6 +308,7 @@ const allAchievements: {[key: string]: ((playerStats: ITeamPlayerStats[], matche
     getMostNetjesTegen,
   ],
   Sporta: [
+    getHighestJumper.bind(this, 'Sporta'),
     getMostMatchesWon,
     getMostMatchesPercentageWon.bind(this, 'Sporta'),
     getMostGamesPlayer,

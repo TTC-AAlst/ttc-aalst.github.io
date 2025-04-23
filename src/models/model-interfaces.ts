@@ -238,7 +238,7 @@ export interface IPlayerCompetition {
   /** Index */
   position: number;
   ranking: PlayerRanking;
-  nextRanking: string | null;
+  nextRanking: PlayerRanking | null;
   uniqueIndex: number;
   rankingIndex: number;
   rankingValue: number;
