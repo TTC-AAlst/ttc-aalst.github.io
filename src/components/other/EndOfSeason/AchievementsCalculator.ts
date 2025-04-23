@@ -1,7 +1,8 @@
 import {getPlayerStats} from '../../../models/TeamModel';
-import PlayerAchievements, { AchievementInfo } from './PlayerAchievements';
+import PlayerAchievements from './PlayerAchievements';
 import {getRankingValue} from '../../../models/utils/playerRankingValueMapper';
 import {IPlayer, IMatch, ITeam, Competition, ITeamPlayerStats} from '../../../models/model-interfaces';
+import { AchievementInfo } from './achievements/otherAchievements';
 
 export type NewPlayerRanking = {
   ply: IPlayer;

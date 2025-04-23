@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { getOpponentFormations } from '../../../storeUtil';
 import { getPlayerStats } from '../../../models/TeamModel';
-import { getRankingDestroyer } from '../../other/EndOfSeason/PlayerAchievements';
+import { getRankingDestroyer } from '../../other/EndOfSeason/achievements/otherAchievements';
 import { Competition, IMatch, IPlayer } from '../../../models/model-interfaces';
 import { RootState } from '../../../store';
 import { selectOpponentMatchesForTeam } from '../../../reducers/selectors/selectOpponentMatchesForTeam';

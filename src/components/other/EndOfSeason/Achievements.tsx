@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {PlayerLink} from '../../players/controls/PlayerLink';
 import {AchievementsCalculator} from './AchievementsCalculator';
-import { AchievementInfo } from './PlayerAchievements';
+import { AchievementInfo } from './achievements/otherAchievements';
 
 type AchievementsProps = {
   calcer: AchievementsCalculator;

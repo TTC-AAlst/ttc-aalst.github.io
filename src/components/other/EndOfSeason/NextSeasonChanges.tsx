@@ -16,7 +16,7 @@ export const NextSeasonChanges = ({calcer}: NextSeasonChangesProps) => {
   }
 
   return (
-    <div>
+    <div style={{paddingBottom: 26}}>
       <h2>
         <i className="fa fa-line-chart" style={{marginRight: 15, color: 'gray'}} />
         Volgend Seizoen
