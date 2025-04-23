@@ -1,0 +1,57 @@
+/* eslint-disable no-restricted-syntax */
+import { Moment } from "moment";
+import { IMatch, ITeam } from "../../../../models/model-interfaces";
+import { TeamAchievementInfo } from "./achievement-models";
+
+export function getTeamUndefeatedStreak(matches: IMatch[]): TeamAchievementInfo {
+  const sortedMatches = matches
+    .filter(match => match.shouldBePlayed && match.isSyncedWithFrenoy && match.isPlayed)
+    .sort((a, b) => a.date.valueOf() - b.date.valueOf());
+
+  interface TeamStreak {
+    team: ITeam;
+    currentStreak: number;
+    currentFrom: Moment | null;
+    longestStreak: number;
+    longestFrom: Moment | null;
+  }
+
+  const streaksByTeam: Record<number, TeamStreak> = {};
+
+  for (const match of sortedMatches) {
+    if (!streaksByTeam[match.teamId]) {
+      streaksByTeam[match.teamId] = {
+        team: match.getTeam(),
+        currentStreak: 0,
+        currentFrom: null,
+        longestStreak: 0,
+        longestFrom: null,
+      };
+    }
+
+    const streak = streaksByTeam[match.teamId];
+    if (match.scoreType === 'Won') {
+      if (streak.currentStreak === 0) {
+        streak.currentFrom = match.date;
+      }
+      streak.currentStreak++;
+      if (streak.currentStreak > streak.longestStreak) {
+        streak.longestStreak = streak.currentStreak;
+        streak.longestFrom = streak.currentFrom;
+      }
+    } else {
+      streak.currentStreak = 0;
+      streak.currentFrom = null;
+    }
+  }
+
+  const longest = Object.values(streaksByTeam).sort((a, b) => b.longestStreak - a.longestStreak)[0];
+  return {
+    title: 'Streak Kings',
+    desc: 'Langste reeks overwinningen',
+    teams: [{
+      throphy: ` won ${longest.longestStreak} keer vanaf ${longest.longestFrom?.format('D/M')}`,
+      team: longest.team,
+    }],
+  };
+}

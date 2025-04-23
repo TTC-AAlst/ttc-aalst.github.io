@@ -1,5 +1,6 @@
 import { IMatch, ITeamPlayerStats } from '../../../models/model-interfaces';
 import { getMostTeamsParticipated } from './achievements/getMostTeamsParticipated';
+import { getTeamUndefeatedStreak } from './achievements/getTeamUndefeatedStreak';
 import { getUndefeatedStreak } from './achievements/getUndefeatedStreak';
 import * as achievement from './achievements/otherAchievements';
 
@@ -34,3 +35,7 @@ const allAchievements: {[key: string]: ((playerStats: ITeamPlayerStats[], matche
 };
 
 export default allAchievements;
+
+export const teamAchievements = [
+  getTeamUndefeatedStreak,
+];

@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import {PlayerLink} from '../../players/controls/PlayerLink';
 import {AchievementsCalculator} from './AchievementsCalculator';
 import { AchievementInfo } from './achievements/otherAchievements';
+import { TeamAchievementInfo } from './achievements/achievement-models';
+import { browseTo } from '../../../routes';
 
 type AchievementsProps = {
   calcer: AchievementsCalculator;
@@ -35,6 +38,13 @@ export default class Achievements extends Component<AchievementsProps> {
             <dl>
               {calcer.getAchievements('belles').map((achievement, index) => <Achievement key={index} achievement={achievement} />)}
             </dl>
+
+            <h3>Teams</h3>
+            <dl>
+              {calcer.getTeamAchievements().map((achievement, index) => (
+                <TeamAchievement key={index} achievement={achievement} />
+              ))}
+            </dl>
           </div>
         </div>
       </div>
@@ -42,26 +52,31 @@ export default class Achievements extends Component<AchievementsProps> {
   }
 }
 
+const TeamAchievement = ({achievement}: {achievement: TeamAchievementInfo}) => (
+  <>
+    <dt>
+      <b>{achievement.title}&nbsp;</b>
+      <small> {achievement.desc}</small>
+    </dt>
+    {achievement.teams.map((team, index) => (
+      <dd key={index}>
+        <Link to={browseTo.getTeam(team.team)} className="link-hover-underline">
+          {team.team.renderOwnTeamTitle()}
+        </Link>
+        {team.throphy}
+      </dd>
+    ))}
+  </>
+);
+
 
 const Achievement = ({achievement}: {achievement: AchievementInfo}) => {
-  let nodes: any[] = [];
-  if (achievement.players) {
-    nodes = achievement.players.map((player, index) => (
-      <dd key={index}>
-        <PlayerLink player={player.player} />
-        {player.throphy}
-      </dd>
-    ));
-  } else {
-    // ATTN: This isn't actually happening anymore:
-    //       All Achievements are PlayerAchievements
-    // nodes = achievement.teams.map((team, index) => (
-    //   <dd key={index}>
-    //     <span>{team.renderOwnTeamTitle()}</span>
-    //   </dd>
-    // ));
-  }
-
+  const nodes: any[] = achievement.players.map((player, index) => (
+    <dd key={index}>
+      <PlayerLink player={player.player} />
+      {player.throphy}
+    </dd>
+  ));
 
   return (
     <>

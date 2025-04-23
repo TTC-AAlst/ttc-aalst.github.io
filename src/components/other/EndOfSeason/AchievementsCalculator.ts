@@ -1,8 +1,9 @@
 import {getPlayerStats} from '../../../models/TeamModel';
-import PlayerAchievements from './PlayerAchievements';
+import PlayerAchievements, { teamAchievements } from './PlayerAchievements';
 import {getRankingValue} from '../../../models/utils/playerRankingValueMapper';
 import {IPlayer, IMatch, ITeam, Competition, ITeamPlayerStats} from '../../../models/model-interfaces';
 import { AchievementInfo } from './achievements/otherAchievements';
+import { TeamAchievementInfo } from './achievements/achievement-models';
 
 export type NewPlayerRanking = {
   ply: IPlayer;
@@ -66,6 +67,16 @@ export class AchievementsCalculator {
       }, [] as AchievementInfo[]);
     }
     return [];
+  }
+
+  getTeamAchievements() {
+    return teamAchievements.reduce((acc, achievementGetter) => {
+      const achievement = achievementGetter(this.matches);
+      if (achievement.teams.length > 0) {
+        acc = acc.concat(achievement);
+      }
+      return acc;
+    }, [] as TeamAchievementInfo[]);
   }
 
   getNewRanking(competition: Competition): NewPlayerRanking[] {
