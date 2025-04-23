@@ -141,23 +141,29 @@ class AdminPlayerForm extends Component<AdminPlayerFormProps, IStorePlayer> {
 
           </Card>
 
-          {/* <Card style={{marginTop: 20, padding: 15}}>
-            <h4>Einde Seizoen</h4>
-            <TextField
-              style={{width: 200, marginRight: fieldMargin}}
-              label="Volgend Klassement VTTL"
-              defaultValue={player.vttl?.nextRanking}
-              onChange={e => this.setState({vttl: {...player.vttl, nextRanking: e.target.value}})}
-              placeholder={`Huidig: ${player.vttl?.ranking}`}
-            />
-            <TextField
-              style={{width: 200, marginRight: fieldMargin}}
-              label="Volgend Klassement Sporta"
-              defaultValue={player.sporta?.nextRanking}
-              onChange={e => this.setState({sporta: {...player.sporta, nextRanking: e.target.value}})}
-              placeholder={`Huidig: ${player.sporta?.ranking}`}
-            />
-          </Card> */}
+          {(!!player.vttl || !!player.sporta) && (
+            <Card style={{marginTop: 20, padding: 15}}>
+              <h4>Einde Seizoen</h4>
+              {!!player.vttl && (
+                <TextField
+                  style={{width: 250, marginRight: fieldMargin}}
+                  label="Volgend Klassement VTTL"
+                  defaultValue={player.vttl?.nextRanking}
+                  onChange={e => this.setState({vttl: {...player.vttl!, nextRanking: e.target.value}})}
+                  placeholder={`Huidig: ${player.vttl?.ranking}`}
+                />
+              )}
+              {!!player.sporta && (
+                <TextField
+                  style={{width: 250, marginRight: fieldMargin}}
+                  label="Volgend Klassement Sporta"
+                  defaultValue={player.sporta?.nextRanking}
+                  onChange={e => this.setState({sporta: {...player.sporta!, nextRanking: e.target.value}})}
+                  placeholder={`Huidig: ${player.sporta?.ranking}`}
+                />
+              )}
+            </Card>
+          )}
         </div>
         <MaterialButton
           variant="contained"
