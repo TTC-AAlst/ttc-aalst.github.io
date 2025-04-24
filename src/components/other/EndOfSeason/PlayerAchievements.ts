@@ -1,5 +1,6 @@
 import { IMatch, ITeamPlayerStats } from '../../../models/model-interfaces';
 import { getCleanSweepTeams } from './achievements/getCleanSweepTeams';
+import { getClutchMaster } from './achievements/getClutchMaster';
 import { getMostTeamsParticipated } from './achievements/getMostTeamsParticipated';
 import { getTeamHighestWinPercentage } from './achievements/getTeamHighestWinPercentage';
 import { getTeamMostCloseWins } from './achievements/getTeamMostCloseWins';
@@ -16,6 +17,7 @@ const allAchievements: {[key: string]: ((playerStats: ITeamPlayerStats[], matche
     achievement.getMostGamesPlayer,
     achievement.getRankingDestroyer.bind(this, 'Vttl'),
     achievement.getMostMatchesAllWon.bind(this, 'Vttl'),
+    getClutchMaster.bind(this, 'Vttl'),
     getUndefeatedStreak.bind(this, 'Vttl'),
     achievement.getMostNetjesTegen,
   ],
@@ -27,6 +29,7 @@ const allAchievements: {[key: string]: ((playerStats: ITeamPlayerStats[], matche
     achievement.getMostGamesPlayer,
     achievement.getRankingDestroyer.bind(this, 'Sporta'),
     achievement.getMostMatchesAllWon.bind(this, 'Sporta'),
+    getClutchMaster.bind(this, 'Sporta'),
     getUndefeatedStreak.bind(this, 'Sporta'),
   ],
   belles: [
