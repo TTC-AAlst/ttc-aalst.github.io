@@ -45,13 +45,15 @@ export function getTeamUndefeatedStreak(matches: IMatch[]): TeamAchievementInfo 
     }
   }
 
-  const longest = Object.values(streaksByTeam).sort((a, b) => b.longestStreak - a.longestStreak)[0];
+  const streakers = Object.values(streaksByTeam).sort((a, b) => b.longestStreak - a.longestStreak);
+  const longest = streakers[0].longestStreak;
+  const topTeams = Object.values(streaksByTeam).filter(t => t.longestStreak === longest);
   return {
     title: 'Streak Kings',
     desc: 'Langste reeks overwinningen',
-    teams: [{
-      throphy: ` won ${longest.longestStreak} keer vanaf ${longest.longestFrom?.format('D/M')}`,
-      team: longest.team,
-    }],
+    teams: topTeams.map(long => ({
+      throphy: ` won ${long.longestStreak} keer vanaf ${long.longestFrom?.format('D/M')}`,
+      team: long.team,
+    })),
   };
 }

@@ -33,7 +33,7 @@ export function getMostTeamsParticipated(competition: Competition, playerStats: 
       return arr.join('');
     }
 
-    return `${arr.slice(0, -1).join(', ')} en ${arr[arr.length - 1]}`;
+    return `${arr.slice(0, -1).join(', ')} én ${arr[arr.length - 1]}`;
   };
 
 
@@ -48,10 +48,10 @@ export function getMostTeamsParticipated(competition: Competition, playerStats: 
   const highestTeamCount = teamsArray[0].teamCount;
   const highestTeamPlayers = teamsArray.filter(player => player.teamCount === highestTeamCount);
   return {
-    title: 'De Kameleon',
-    desc: 'Aantredingen in meeste teams',
+    title: '🦎 De Kameleon',
+    desc: 'Speelde in de meeste verschillende teams',
     players: highestTeamPlayers.map(player => ({
-      throphy: `speelde in ${player.teams}`,
+      throphy: ` was overal inzetbaar ${player.teams}`,
       player: player.player,
     })),
   };

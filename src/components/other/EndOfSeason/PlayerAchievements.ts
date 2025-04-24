@@ -1,5 +1,7 @@
 import { IMatch, ITeamPlayerStats } from '../../../models/model-interfaces';
 import { getMostTeamsParticipated } from './achievements/getMostTeamsParticipated';
+import { getTeamHighestWinPercentage } from './achievements/getTeamHighestWinPercentage';
+import { getTeamMostCloseWins } from './achievements/getTeamMostCloseWins';
 import { getTeamUndefeatedStreak } from './achievements/getTeamUndefeatedStreak';
 import { getUndefeatedStreak } from './achievements/getUndefeatedStreak';
 import * as achievement from './achievements/otherAchievements';
@@ -38,4 +40,6 @@ export default allAchievements;
 
 export const teamAchievements = [
   getTeamUndefeatedStreak,
+  getTeamHighestWinPercentage,
+  getTeamMostCloseWins,
 ];

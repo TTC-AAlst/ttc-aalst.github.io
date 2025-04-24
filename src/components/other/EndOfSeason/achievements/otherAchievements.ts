@@ -59,8 +59,8 @@ export function getHighestJumper(competition: Competition, playerStats: ITeamPla
 
   if (sortedPlayers.length === 0) {
     return {
-      title: 'Rising Star',
-      desc: 'Grootste klassement stijging',
+      title: '🌟 Rising Star',
+      desc: 'Grootste klassementsstijging',
       players: [],
     };
   }
@@ -68,8 +68,8 @@ export function getHighestJumper(competition: Competition, playerStats: ITeamPla
   const highestJump = sortedPlayers[0].jump;
   const highestJumpPlayers = sortedPlayers.filter(player => player.jump === highestJump);
   return {
-    title: 'Rising Star',
-    desc: 'Grootste klassement stijging',
+    title: '🌟 Rising Star',
+    desc: 'Grootste klassementsstijging',
     players: highestJumpPlayers.map(player => ({
       throphy: `${player.ranking} 🠖 ${player.nextRanking}`,
       player: player.player,
