@@ -1,4 +1,5 @@
 import { IMatch, ITeamPlayerStats } from '../../../models/model-interfaces';
+import { getCleanSweepTeams } from './achievements/getCleanSweepTeams';
 import { getMostTeamsParticipated } from './achievements/getMostTeamsParticipated';
 import { getTeamHighestWinPercentage } from './achievements/getTeamHighestWinPercentage';
 import { getTeamMostCloseWins } from './achievements/getTeamMostCloseWins';
@@ -42,4 +43,5 @@ export const teamAchievements = [
   getTeamUndefeatedStreak,
   getTeamHighestWinPercentage,
   getTeamMostCloseWins,
+  getCleanSweepTeams,
 ];
