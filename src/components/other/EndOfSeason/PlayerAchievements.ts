@@ -2,6 +2,7 @@ import { IMatch, ITeamPlayerStats } from '../../../models/model-interfaces';
 import { getCleanSweepTeams } from './achievements/getCleanSweepTeams';
 import { getClutchMaster } from './achievements/getClutchMaster';
 import { getMostTeamsParticipated } from './achievements/getMostTeamsParticipated';
+import { getPerfectFormation } from './achievements/getPerfectFormation';
 import { getTeamHighestWinPercentage } from './achievements/getTeamHighestWinPercentage';
 import { getTeamMostCloseWins } from './achievements/getTeamMostCloseWins';
 import { getTeamUndefeatedStreak } from './achievements/getTeamUndefeatedStreak';
@@ -45,6 +46,7 @@ export default allAchievements;
 export const teamAchievements = [
   getTeamUndefeatedStreak,
   getTeamHighestWinPercentage,
+  getPerfectFormation,
   getTeamMostCloseWins,
   getCleanSweepTeams,
 ];
