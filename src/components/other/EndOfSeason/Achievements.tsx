@@ -62,8 +62,7 @@ const TeamAchievement = ({achievement}: {achievement: TeamAchievementInfo}) => (
       <dd key={index}>
         <Link to={browseTo.getTeam(team.team)} className="link-hover-underline">
           {team.team.renderOwnTeamTitle()}
-        </Link>
-        {team.throphy}
+        </Link>{team.throphy}
       </dd>
     ))}
   </>
