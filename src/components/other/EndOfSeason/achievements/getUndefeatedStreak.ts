@@ -54,8 +54,8 @@ export function getUndefeatedStreak(competition: Competition, playerStats: ITeam
   });
 
   const result: AchievementInfo = {
-    title: 'On a roll',
-    desc: 'Langste reeks opeenvolgende overwinningen',
+    title: '🔥 On a roll',
+    desc: 'Langste zegereeks',
     players: [],
   };
 
@@ -75,7 +75,7 @@ export function getUndefeatedStreak(competition: Competition, playerStats: ITeam
   }
 
   result.players = highestStreakPlayers.map(player => ({
-    throphy: `${player.longestStreak} matchen vanaf ${player.longestFrom!.format('D/M')}`,
+    throphy: `${player.longestStreak} matchen sinds ${player.longestFrom!.format('D/M')}`,
     player: player.player,
   }));
   return result;

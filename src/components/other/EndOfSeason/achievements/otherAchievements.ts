@@ -21,10 +21,10 @@ export function getMostMatchesWon(playerStats: ITeamPlayerStats[]): AchievementI
   const players = playerStats.filter(cur => cur.victories === highest.victories);
 
   return {
-    title: 'Krijgsheer',
+    title: '⚔️ Krijgsheer',
     desc: 'Meest aantal gewonnen matchen',
     players: players.map(cur => ({
-      throphy: `${cur.victories} gewonnen matchen`,
+      throphy: `met ${cur.victories} zeges`,
       player: cur.ply,
     })),
   };
@@ -96,10 +96,10 @@ export function getMostMatchesPercentageWon(comp: Competition, playerStats: ITea
   }
 
   return {
-    title: 'The Destroyer',
-    desc: 'Hoogst % gewonnen matchen',
+    title: '💥 The Destroyer',
+    desc: 'Hoogst winstpercentage',
     players: highestPlayers.map(cur => ({
-      throphy: `${getPerGames(cur)}% gewonnen`,
+      throphy: `${getPerGames(cur)}% — altijd raak`,
       player: cur.ply,
     })),
   };
@@ -120,7 +120,7 @@ export function getRankingDestroyer(competition: Competition, playerStats: ITeam
     return {
       player: ps.ply,
       difference: getValue(highestWon) - ownValue,
-      throphy: `${ownRanking} vs ${ps.won[highestWon]}x${highestWon}`,
+      throphy: `${ownRanking} klopte ${ps.won[highestWon]}x een ${highestWon} — David vs Goliath`,
     };
   });
 
@@ -129,8 +129,8 @@ export function getRankingDestroyer(competition: Competition, playerStats: ITeam
   const players = result.filter(cur => cur.difference === highest.difference);
 
   return {
-    title: 'Klassement Vernietiger',
-    desc: 'Grootste klassement verschil',
+    title: '🔨 Klassement Vernietiger',
+    desc: 'Grootste verschil verslagen klassement',
     players: players.map(cur => ({
       throphy: cur.throphy,
       player: cur.player,
@@ -146,10 +146,10 @@ export function getMostBellesPlayed(playerStats: ITeamPlayerStats[]): Achievemen
 
   const players = playerStats.filter(cur => cur.belleGames === highest.belleGames);
   return {
-    title: 'Grootste uitslover',
+    title: '💪 Grootste uitslover',
     desc: 'Meeste belles gespeeld',
     players: players.map(cur => ({
-      throphy: `${cur.belleGames} belles (${Math.floor((cur.belleVictories / cur.belleGames) * 100)}% gewonnen)`,
+      throphy: `vocht ${cur.belleGames} keer tot de laatste set (${Math.floor((cur.belleVictories / cur.belleGames) * 100)}% gewonnen)`,
       player: cur.ply,
     })),
   };
@@ -162,7 +162,7 @@ export function getMostBellesWon(playerStats: ITeamPlayerStats[]): AchievementIn
 
   const players = playerStats.filter(cur => cur.belleVictories === highest.belleVictories);
   return {
-    title: 'Meest Koelbloedig',
+    title: '❄️ Meest Koelbloedig',
     desc: 'Meeste belles gewonnen',
     players: players.map(cur => ({
       throphy: `${cur.belleVictories} belles (${Math.floor((cur.belleVictories / cur.belleGames) * 100)}% gewonnen)`,
@@ -187,8 +187,8 @@ export function getMostBellesPercentageWon(playerStats: ITeamPlayerStats[]): Ach
 
   const players = playerStats.filter(cur => getPer(cur) === getPer(highest));
   return {
-    title: 'Onderste uit de kan',
-    desc: 'Meeste belles % gewonnen',
+    title: '🧙 Onderste uit de kan',
+    desc: 'Hoogste winstpercentage in belles',
     players: players.map(cur => ({
       throphy: `${getPer(cur)}% gewonnen belles (${cur.belleGames} belles)`,
       player: cur.ply,
@@ -215,7 +215,7 @@ export function getMostBellesPercentageLost(playerStats: ITeamPlayerStats[]): Ac
   }, playerStats[0]);
 
   return {
-    title: 'Grootste Pechvogel',
+    title: '😢 Grootste Pechvogel',
     desc: 'Meest verloren belles',
     players: [{
       throphy: `${getPer(highest)}% gewonnen belles (${highest.belleGames} gespeeld)`,
@@ -231,10 +231,10 @@ export function getMostGamesPlayer(playerStats: ITeamPlayerStats[]): Achievement
 
   const players = playerStats.filter(cur => cur.games === highest.games);
   return {
-    title: 'Altijd Paraat',
+    title: '🛡️ Altijd Paraat',
     desc: 'Meeste aantredingen',
     players: players.map(cur => ({
-      throphy: `${cur.games} aantredingen (${Math.floor((cur.victories / cur.games) * 100)}% gewonnen)`,
+      throphy: `stond ${cur.games} keer paraat (${Math.floor((cur.victories / cur.games) * 100)}% winst)`,
       player: cur.ply,
     })),
   };
@@ -244,7 +244,7 @@ export function getMostGamesPlayer(playerStats: ITeamPlayerStats[]): Achievement
 export function getMostNetjesTegen(playerStats: ITeamPlayerStats[]): AchievementInfo {
   const gerdo = playerStats.find(x => x.ply.alias === 'Gerdo')!;
   return {
-    title: 'Meeste netjes tegen',
+    title: '🥴 Meeste netjes tegen',
     desc: '',
     players: [{
       throphy: '+Infinity',
@@ -288,10 +288,10 @@ export function getMostMatchesAllWon(competition: Competition, playerStats: ITea
   }
 
   return {
-    title: 'Topdagen',
+    title: '🚀 Topdagen',
     desc: '',
     players: players.map(cur => ({
-      throphy: `${cur.wins} matchen alle ${toWinCount} gewonnen`,
+      throphy: `${cur.wins} matchen alle ${toWinCount} gewonnen — fenomenale speeldagen`,
       player: cur.ply,
     })),
   };
