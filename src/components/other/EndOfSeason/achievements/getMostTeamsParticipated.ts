@@ -51,7 +51,7 @@ export function getMostTeamsParticipated(competition: Competition, playerStats: 
     title: '🦎 De Kameleon',
     desc: 'Speelde in de meeste verschillende teams',
     players: highestTeamPlayers.map(player => ({
-      throphy: ` was overal inzetbaar ${player.teams}`,
+      throphy: `overal inzetbaar ${player.teams}`,
       player: player.player,
     })),
   };

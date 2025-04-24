@@ -52,7 +52,7 @@ export function getTeamUndefeatedStreak(matches: IMatch[]): TeamAchievementInfo 
     title: '👑 Streak Kings',
     desc: 'Langste reeks overwinningen',
     teams: topTeams.map(long => ({
-      throphy: ` won ${long.longestStreak} keer vanaf ${long.longestFrom?.format('D/M')}`,
+      throphy: `won ${long.longestStreak} keer vanaf ${long.longestFrom?.format('D/M')}`,
       team: long.team,
     })),
   };

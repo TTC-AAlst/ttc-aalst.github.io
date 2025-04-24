@@ -190,7 +190,7 @@ export function getMostBellesPercentageWon(playerStats: ITeamPlayerStats[]): Ach
     title: '🧙 Onderste uit de kan',
     desc: 'Hoogste winstpercentage in belles',
     players: players.map(cur => ({
-      throphy: `${getPer(cur)}% gewonnen belles (${cur.belleGames} belles)`,
+      throphy: `${getPer(cur)}% gewonnen belles (${cur.belleGames} belle${cur.belleGames > 1 ? 's' : ''})`,
       player: cur.ply,
     })),
   };
