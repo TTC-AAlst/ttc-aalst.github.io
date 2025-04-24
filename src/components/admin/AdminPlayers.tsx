@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
 import TextField from '@mui/material/TextField';
-import AdminPlayerForm from './AdminPlayerForm';
+import { AdminPlayerForm } from './AdminPlayerForm';
 import AdminChangePassword from './AdminChangePassword';
 import {AdminBoardMembers} from './AdminBoardMembers';
 import {ButtonStack} from '../controls/Buttons/ButtonStack';
@@ -26,6 +26,10 @@ export const AdminPlayers = () => {
   const players = useTtcSelector(selectPlayers);
   const viewport = useViewport();
   const dispatch = useTtcDispatch();
+
+  useEffect(() => {
+    dispatch(fetchQuitters());
+  }, []);
 
   let playersContent: ReactElement | null = null;
   let otherContent: ReactElement | null = null;
@@ -220,10 +224,6 @@ const InactivesTable = ({filter}: InactivesTableProps) => {
   if (filter) {
     quitters = quitters.filter(x => `${x.firstName} ${x.lastName}`.toLowerCase().includes(filter));
   }
-
-  useEffect(() => {
-    dispatch(fetchQuitters());
-  }, []);
 
   return (
     <Table size="sm" hover>
