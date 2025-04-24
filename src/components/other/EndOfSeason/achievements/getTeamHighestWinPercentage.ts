@@ -32,7 +32,7 @@ export function getTeamHighestWinPercentage(matches: IMatch[]): TeamAchievementI
 
   const best = ranked[0];
   return {
-    title: 'Top Dogs',
+    title: '🐺 Top Dogs',
     desc: 'Hoogste % overwinningen',
     teams: [{
       throphy: `${(best.percentage * 100).toFixed(1)}% gewonnen over ${best.total} matchen`,

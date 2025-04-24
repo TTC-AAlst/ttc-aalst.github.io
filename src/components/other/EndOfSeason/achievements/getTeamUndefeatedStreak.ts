@@ -49,7 +49,7 @@ export function getTeamUndefeatedStreak(matches: IMatch[]): TeamAchievementInfo 
   const longest = streakers[0].longestStreak;
   const topTeams = Object.values(streaksByTeam).filter(t => t.longestStreak === longest);
   return {
-    title: 'Streak Kings',
+    title: '👑 Streak Kings',
     desc: 'Langste reeks overwinningen',
     teams: topTeams.map(long => ({
       throphy: ` won ${long.longestStreak} keer vanaf ${long.longestFrom?.format('D/M')}`,

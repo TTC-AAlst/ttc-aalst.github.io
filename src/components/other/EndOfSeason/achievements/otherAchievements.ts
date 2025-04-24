@@ -130,7 +130,7 @@ export function getRankingDestroyer(competition: Competition, playerStats: ITeam
 
   return {
     title: '🔨 Klassement Vernietiger',
-    desc: 'Grootste verschil verslagen klassement',
+    desc: 'Mooiste zege',
     players: players.map(cur => ({
       throphy: cur.throphy,
       player: cur.player,
@@ -234,7 +234,7 @@ export function getMostGamesPlayer(playerStats: ITeamPlayerStats[]): Achievement
     title: '🛡️ Altijd Paraat',
     desc: 'Meeste aantredingen',
     players: players.map(cur => ({
-      throphy: `stond ${cur.games} keer paraat (${Math.floor((cur.victories / cur.games) * 100)}% winst)`,
+      throphy: `${cur.games} keer paraat (${Math.floor((cur.victories / cur.games) * 100)}% winst)`,
       player: cur.ply,
     })),
   };
@@ -289,9 +289,9 @@ export function getMostMatchesAllWon(competition: Competition, playerStats: ITea
 
   return {
     title: '🚀 Topdagen',
-    desc: '',
+    desc: 'Fenomenale speeldagen',
     players: players.map(cur => ({
-      throphy: `${cur.wins} matchen alle ${toWinCount} gewonnen — fenomenale speeldagen`,
+      throphy: `${cur.wins} matchen alle ${toWinCount} gewonnen`,
       player: cur.ply,
     })),
   };
