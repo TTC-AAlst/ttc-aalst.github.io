@@ -46,7 +46,7 @@ export function getTeamUndefeatedStreak(matches: IMatch[]): TeamAchievementInfo 
   }
 
   const streakers = Object.values(streaksByTeam).sort((a, b) => b.longestStreak - a.longestStreak);
-  const longest = streakers[0].longestStreak;
+  const longest = streakers[0]?.longestStreak ?? 0;
   const topTeams = Object.values(streaksByTeam).filter(t => t.longestStreak === longest);
   return {
     title: '👑 Streak Kings',

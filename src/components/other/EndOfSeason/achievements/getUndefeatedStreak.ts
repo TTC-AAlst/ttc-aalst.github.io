@@ -64,7 +64,7 @@ export function getUndefeatedStreak(competition: Competition, playerStats: ITeam
     return result;
   }
 
-  const highestStreak = streaksArray[0].longestStreak;
+  const highestStreak = streaksArray[0]?.longestStreak ?? 0;
   let highestStreakPlayers = streaksArray.filter(player => player.longestStreak === highestStreak);
 
   const allHighestAreARanking = highestStreakPlayers.every(player => player.player.getCompetition(competition).ranking === 'A');
