@@ -47,12 +47,18 @@ export function getMostTeamsParticipated(competition: Competition, playerStats: 
 
   const highestTeamCount = teamsArray[0].teamCount;
   const highestTeamPlayers = teamsArray.filter(player => player.teamCount === highestTeamCount);
-  return {
+  const result: AchievementInfo = {
     title: '🦎 De Kameleon',
     desc: 'Speelde in de meeste verschillende teams',
-    players: highestTeamPlayers.map(player => ({
+    players: [],
+  };
+
+  if (highestTeamPlayers.length < 4) {
+    result.players = highestTeamPlayers.map(player => ({
       throphy: `overal inzetbaar ${player.teams}`,
       player: player.player,
-    })),
-  };
+    }));
+  }
+
+  return result;
 }
