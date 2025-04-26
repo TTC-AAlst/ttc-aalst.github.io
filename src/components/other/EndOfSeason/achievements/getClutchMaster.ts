@@ -33,10 +33,13 @@ export function getClutchMaster(competition: Competition, playerStats: ITeamPlay
 
           if (playerUniqueIndex) {
             if (!clutchCounts[playerUniqueIndex]) {
-              const player = playerStats.find(stats => stats.ply.getCompetition(competition).uniqueIndex === playerUniqueIndex)!;
-              clutchCounts[playerUniqueIndex] = { count: 0, player: player.ply };
+              const player = playerStats.find(stats => stats.ply.getCompetition(competition).uniqueIndex === playerUniqueIndex);
+              if (player) {
+                clutchCounts[playerUniqueIndex] = { count: 1, player: player.ply };
+              }
+            } else {
+              clutchCounts[playerUniqueIndex].count++;
             }
-            clutchCounts[playerUniqueIndex].count++;
           }
 
           break;

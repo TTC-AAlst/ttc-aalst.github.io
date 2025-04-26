@@ -28,7 +28,7 @@ export function getTeamMostCloseWins(matches: IMatch[]): TeamAchievementInfo {
   }
 
   const sortedTeams = Object.values(closeWinStats).sort((a, b) => b.count - a.count);
-  const best = sortedTeams[0].count;
+  const best = sortedTeams[0]?.count ?? 0;
   const topTeams = sortedTeams.filter(team => team.count === best);
   return {
     title: '🧊 Cool Under Pressure',
