@@ -13,7 +13,7 @@ const AdminDev = () => {
   return (
     <div style={{padding: 5}}>
       <div className="pull-right">
-        <a href="http://ttc-aalst.be/tabtapi-test/" target="_blank" rel="noopener noreferrer">Goto TabT test site</a>
+        <a href="https://itenium-test.synology.me:1709" target="_blank" rel="noopener noreferrer">Goto TabT test site</a>
         <br />
         <a href={`${config.backend}/api/config/Log/Get`} target="_blank" rel="noopener noreferrer">Goto log dump</a>
       </div>
