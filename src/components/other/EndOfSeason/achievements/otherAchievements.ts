@@ -116,17 +116,29 @@ export function getRankingDestroyer(competition: Competition, playerStats: ITeam
     const ownValue = getValue(ownRanking);
 
     const highestWon = Object.entries(ps.won).reduce((acc, [ranking]) => (getValue(acc) > getValue(ranking) ? acc : ranking), 'NG');
+    const difference = getValue(highestWon) - ownValue;
+
+    let throphy = `${ownRanking} klopte ${ps.won[highestWon]}x een ${highestWon}`;
+    if (difference < -3) {
+      throphy += ' — David vs Goliath';
+    }
 
     return {
       player: ps.ply,
-      difference: getValue(highestWon) - ownValue,
-      throphy: `${ownRanking} klopte ${ps.won[highestWon]}x een ${highestWon} — David vs Goliath`,
+      difference,
+      times: ps.won[highestWon],
+      throphy,
     };
   });
 
   const highest = result.reduce((acc, cur) => (acc.difference > cur.difference ? acc : cur), result[0]);
+  let players = result
+    .filter(cur => cur.difference === highest.difference)
+    .sort((a, b) => b.times - a.times);
 
-  const players = result.filter(cur => cur.difference === highest.difference);
+  if (players.length > 4) {
+    players = players.slice(0, 4);
+  }
 
   return {
     title: '🔨 Klassement Vernietiger',
