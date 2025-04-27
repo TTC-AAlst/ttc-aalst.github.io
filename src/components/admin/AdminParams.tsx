@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
+import { Button } from 'react-bootstrap';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { saveConfig } from '../../reducers/configReducer';
-
+import http from '../../utils/httpClient';
 
 export const AdminParams = () => {
   const storeParams = useTtcSelector(state => state.config.params);
@@ -12,6 +13,9 @@ export const AdminParams = () => {
   return (
     <div style={{paddingLeft: 15}}>
       <h3>Beheer Parameters</h3>
+      <Button variant="outline-danger float-end me-2" onClick={() => http.post('/config/ClearCache')}>
+        Clear Cache
+      </Button>
       <div>Einde Seizoen? Bewaar de &quot;endOfSeason&quot; parameter (false=Seizoen bezig, true=Seizoen einde)</div>
       <span>Nieuw Seizoen? Bewaar de &quot;year&quot; parameter!</span>
       <Table size="sm" hover width="100%">
