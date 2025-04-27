@@ -22,6 +22,7 @@ import { Viewport } from '../../../utils/hooks/useViewport';
 import { RootState } from '../../../store';
 import { setNewMatchComment, setSetting } from '../../../reducers/configReducer';
 import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
+import { getPreviousEncounters } from '../../../reducers/matchInfoReducer';
 
 const tabEventKeys = {
   players: 'players',
@@ -40,6 +41,7 @@ type MatchCardProps = {
   user: IUser;
 
   getOpponentMatches: typeof getOpponentMatches;
+  getPreviousEncounters: typeof getPreviousEncounters;
   setSetting: typeof setSetting;
   setNewMatchComment: typeof setNewMatchComment;
 
@@ -71,6 +73,10 @@ class MatchCard extends Component<MatchCardProps, MatchCardState> {
 
   componentDidMount() {
     this.props.getOpponentMatches({teamId: this.props.match.teamId, opponent: this.props.match.opponent});
+
+    if (this.props.match.players.length > this.props.match.getTeam().getTeamPlayerCount()) {
+      this.props.getPreviousEncounters(this.props.match);
+    }
   }
 
   render() {
@@ -90,7 +96,7 @@ class MatchCard extends Component<MatchCardProps, MatchCardState> {
       key: tabEventKeys.individualMatches,
       title: t('match.tabs.matchesTitle'),
       label: t('match.tabs.matches'),
-      show: match.games.length !== 0,
+      show: match.games.length !== 0 || match.players.length > match.getTeam().getTeamPlayerCount(),
     }, {
       key: tabEventKeys.scoresheet,
       title: t('match.tabs.scoresheet'),
@@ -252,6 +258,7 @@ class MatchCard extends Component<MatchCardProps, MatchCardState> {
 const mapDispatchToProps = (dispatch: any) => ({
   setSetting: (data: Parameters<typeof setSetting>[0]) => dispatch(setSetting(data)),
   getOpponentMatches: (data: Parameters<typeof getOpponentMatches>[0]) => dispatch(getOpponentMatches(data)),
+  getPreviousEncounters: (data: Parameters<typeof getPreviousEncounters>[0]) => dispatch(getPreviousEncounters(data)),
   setNewMatchComment: (data: Parameters<typeof setNewMatchComment>[0]) => dispatch(setNewMatchComment(data)),
 });
 

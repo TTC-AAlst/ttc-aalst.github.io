@@ -6,6 +6,7 @@ import playersReducer, { playersQuittersSlice } from './reducers/playersReducer'
 import teamsReducer, { teamRankingsSlice } from './reducers/teamsReducer';
 import clubsReducer from './reducers/clubsReducer';
 import readonlyMatchesReducer from './reducers/readonlyMatchesReducer';
+import matchInfoReducer from './reducers/matchInfoReducer';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     matches: matchesReducer,
     freeMatches: freeMatchesSlice.reducer,
     readonlyMatches: readonlyMatchesReducer,
+    matchInfo: matchInfoReducer,
     teams: teamsReducer,
     teamRankings: teamRankingsSlice.reducer,
     players: playersReducer,

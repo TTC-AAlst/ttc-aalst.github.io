@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import {Moment} from 'moment';
+import { Moment } from 'moment';
 import { UserRoles } from './UserModel';
 import { PlayerRanking } from './utils/rankingSorter';
 
@@ -168,6 +168,25 @@ export interface IMatchGame {
   homePlayerSets: number;
   outPlayerSets: number;
   outcome: MatchGameOutcome;
+}
+
+
+/** Previous encounters of players */
+export type PlayerEncounter = {
+  /** The match for which we're getting the previous encounters */
+  requestMatchId: number;
+  /** The match in which the encounter was played */
+  matchId: number;
+  matchDate: string;
+  competition: Competition;
+  homeName: string;
+  homePlayerUniqueId: number;
+  homePlayerSets: number;
+  homeRanking: PlayerRanking;
+  awayName: string;
+  awayPlayerUniqueId: number;
+  awayPlayerSets: number;
+  awayRanking: PlayerRanking;
 }
 
 
