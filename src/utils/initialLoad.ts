@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { fetchClubs } from '../reducers/clubsReducer';
 import { useTtcDispatch, useTtcSelector } from './hooks/storeHooks';
 import { fetchConfig, setInitialLoad } from '../reducers/configReducer';
-import { fetchPlayers } from '../reducers/playersReducer';
+import { fetchPlayers, fetchRankingPredictions } from '../reducers/playersReducer';
 import { fetchTeams, loadTeamRanking } from '../reducers/teamsReducer';
 import { fetchMatches, frenoyMatchSync } from '../reducers/matchesReducer';
 import { validateToken } from '../reducers/userActions';
@@ -71,6 +71,7 @@ export const useInitialLoad = () => {
       teams.forEach(team => {
         dispatch(loadTeamRanking({team}));
       });
+      dispatch(fetchRankingPredictions());
 
       console.log('Matches', matches.length);
       matches.forEach(match => {

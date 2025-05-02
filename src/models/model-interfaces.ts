@@ -257,7 +257,10 @@ export interface IPlayerCompetition {
   /** Index */
   position: number;
   ranking: PlayerRanking;
+  /** EndOfYear has been filled in manually */
   nextRanking: PlayerRanking | null;
+  /** Prediction by AI model */
+  prediction: PlayerRanking | null;
   uniqueIndex: number;
   rankingIndex: number;
   rankingValue: number;
@@ -267,6 +270,14 @@ export interface IPlayerStyle {
   playerId: number;
   name: string;
   bestStroke: string;
+}
+
+export type PredictionResult = {
+  competition: Competition;
+  uniqueIndex: number;
+  name: string;
+  oldRanking: string;
+  newRanking: string;
 }
 
 

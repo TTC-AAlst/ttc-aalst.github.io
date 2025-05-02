@@ -6,6 +6,7 @@ import {PlayerPlayingStyleForm} from '../PlayerPlayingStyle';
 import {PlayerLink} from '../controls/PlayerLink';
 import { t } from '../../../locales';
 import { selectPlayers, selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { PlayerRanking } from '../controls/PlayerRanking';
 
 type PlayersVttlProps = {
   filter: string;
@@ -38,7 +39,7 @@ export const PlayersVttl = ({filter}: PlayersVttlProps) => {
             <td>{ply.vttl!.uniqueIndex}</td>
             <td className="d-none d-sm-table-cell"><PlayerLink player={ply} /></td>
             <td className="d-table-cell d-sm-none"><PlayerLink player={ply} alias /></td>
-            <td>{ply.vttl!.ranking} <PlayerFrenoyLink comp={ply.vttl!} /></td>
+            <td><PlayerRanking player={ply.vttl} /> <PlayerFrenoyLink comp={ply.vttl!} /></td>
             <td className="d-none d-sm-table-cell">{ply.style.name}</td>
             <td className="d-none d-md-table-cell">
               <PlayerPlayingStyleForm player={ply} iconStyle="edit-icon" style={{color: '#d3d3d3', float: 'right'}} />

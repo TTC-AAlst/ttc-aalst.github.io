@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mergeInStore2 } from './immutableHelpers';
-import { ICacheResponse, IPlayerStyle, IStorePlayer } from '../models/model-interfaces';
+import { ICacheResponse, IPlayerStyle, IStorePlayer, PredictionResult } from '../models/model-interfaces';
 import http from '../utils/httpClient';
 import { t } from '../locales';
 import { showSnackbar } from './configReducer';
@@ -21,6 +21,14 @@ export const fetchQuitters = createAsyncThunk(
   'players/GetQuitters',
   async () => {
     const response = await http.get<IStorePlayer[]>('/players/Quitters');
+    return response;
+  },
+);
+
+export const fetchRankingPredictions = createAsyncThunk(
+  'players/RankingPredictions',
+  async () => {
+    const response = await http.get<PredictionResult[]>('/players/GetNextYearRankings');
     return response;
   },
 );
@@ -193,6 +201,14 @@ export const playersSlice = createSlice({
       if (ply) {
         ply.imageVersion++;
       }
+    });
+    builder.addCase(fetchRankingPredictions.fulfilled, (state, action) => {
+      action.payload.forEach(prediction => {
+        const player = state.find(x => x[prediction.competition.toLowerCase()]?.uniqueIndex === +prediction.uniqueIndex);
+        if (player) {
+          player[prediction.competition.toLowerCase()].prediction = prediction.newRanking;
+        }
+      });
     });
   },
 });

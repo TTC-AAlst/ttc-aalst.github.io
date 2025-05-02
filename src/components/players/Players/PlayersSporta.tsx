@@ -6,6 +6,7 @@ import {PlayerPlayingStyleForm} from '../PlayerPlayingStyle';
 import {PlayerLink} from '../controls/PlayerLink';
 import { t } from '../../../locales';
 import { selectPlayers, selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { PlayerRanking } from '../controls/PlayerRanking';
 
 type PlayersSportaProps = {
   filter: string;
@@ -42,7 +43,7 @@ export const PlayersSporta = ({filter}: PlayersSportaProps) => {
             <td>{ply.sporta!.uniqueIndex}</td>
             <td className="d-none d-sm-table-cell"><PlayerLink player={ply} /></td>
             <td className="d-table-cell d-sm-none"><PlayerLink player={ply} alias /></td>
-            <td>{ply.sporta!.ranking} <PlayerFrenoyLink comp={ply.sporta!} /></td>
+            <td><PlayerRanking player={ply.sporta} /> <PlayerFrenoyLink comp={ply.sporta!} /></td>
             <td>{ply.sporta!.rankingValue}</td>
             <td className="d-none d-sm-table-cell">{ply.style.name}</td>
             <td className="d-none d-md-table-cell">

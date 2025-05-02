@@ -12,6 +12,7 @@ import { IPlayer, IPlayerCompetition, Competition } from '../../models/model-int
 import { browseTo } from '../../routes';
 import { t } from '../../locales';
 import { selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { PlayerRanking } from './controls/PlayerRanking';
 
 type PlayerCardProps = {
   player: IPlayer;
@@ -141,7 +142,7 @@ export const PlayerCompetitionLabel = ({comp, player, withName = false}: PlayerC
         </Link>
       )}
       <PlayerFrenoyLink comp={compDetails} style={{marginLeft: 10}}>
-        {compDetails.ranking}
+        <PlayerRanking player={compDetails} />
       </PlayerFrenoyLink>
     </span>
   );
