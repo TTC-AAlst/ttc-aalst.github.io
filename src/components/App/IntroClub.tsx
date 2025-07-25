@@ -17,7 +17,7 @@ export const IntroClub = () => {
   return (
     <div>
       <h3>{t('intro.title')}</h3>
-      {t('intro.text', inClub)}
+      {t(`intro.text${inClub.teamsJeugd > 0 ? '' : 'NoJeugd'}`, inClub)}
     </div>
   );
 };

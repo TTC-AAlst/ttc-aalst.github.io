@@ -122,6 +122,11 @@ export default {
         + "We zijn een groeiende club en spelen met ${teamsVttl} ploegen VTTL, ${teamsSporta} Sporta en"
         + " ${teamsJeugd} jeugdploeg${teamsJeugdAmount} in competitie verband. "
         + "Fairplay en gezelligheid staan centraal bij al onze tafeltennis-activiteiten!",
+      textNoJeugd:
+        "Een toffe club met ${players} leden. "
+        + "We zijn een groeiende club en spelen met ${teamsVttl} ploegen VTTL en ${teamsSporta} Sporta"
+        + " in competitie verband. "
+        + "Fairplay en gezelligheid staan centraal bij al onze tafeltennis-activiteiten!",
       matchesToday: "matchen vandaag",
       // trainingToday: 'vandaag training vanaf 19u30',
       playedMatches: "laatst gespeelde matchen",
