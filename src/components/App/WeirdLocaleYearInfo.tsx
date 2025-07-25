@@ -2,12 +2,7 @@ import React from 'react';
 import { t } from '../../locales';
 
 export const WeirdLocaleYearInfo = ({params}: any) => ( // eslint-disable-line
-  <div>
-    <h3>WIJZIGING NAAM</h3>
-    <b>Opgelet: TTC Erembodegem heet vanaf heden TTC Aalst</b>
-
-    <br />
-
+  <div style={{paddingTop: 18}}>
     <h3>KTA Technigo Sporthal - De Voorstad</h3>
     <b>{params.location}</b>
     <br />
