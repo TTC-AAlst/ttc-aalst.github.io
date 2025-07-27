@@ -4,7 +4,6 @@ import http from '../utils/httpClient';
 import { t } from "../locales";
 import { ITeamOpponent } from '../models/model-interfaces';
 import { login, validateToken } from "./userActions";
-import { RootState } from "../store";
 import { fetchClubs } from "./clubsReducer";
 import { fetchPlayers } from "./playersReducer";
 import { fetchTeams } from "./teamsReducer";
@@ -15,9 +14,8 @@ type IBackendConfigParams = Omit<IConfigParams, 'endOfSeason'> & {endOfSeason: '
 
 export const fetchConfig = createAsyncThunk(
   'config/Get',
-  async (_, { getState }) => {
-    const lastChecked = (getState() as RootState).config.params.ModifiedOn;
-    const response = await http.get<IBackendConfigParams>('/config', {lastChecked});
+  async () => {
+    const response = await http.get<IBackendConfigParams>('/config');
     return response;
   },
 );
@@ -52,7 +50,7 @@ const defaultConfigState = {
     adultMembership: '', youthMembership: '', additionalMembership: '', recreationalMembers: '',
     frenoyClubIdVttl: '', frenoyClubIdSporta: '', compBalls: '', clubBankNr: '', clubOrgNr: '',
     year: '', endOfSeason: false,
-    ModifiedOn: '',
+    // ModifiedOn: '',
   },
   snackbar: '',
   settings: {
