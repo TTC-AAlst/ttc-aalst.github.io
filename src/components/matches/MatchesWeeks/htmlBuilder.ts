@@ -345,39 +345,35 @@ function getPrevMatches(matches: IMatch[]) {
  */
 function getMatches(matches: IMatch[], compFilter: Competition) {
   let html = '';
-  let lastMatch = matches[0].date.clone().subtract(1, 'day');
 
   matches.forEach(match => {
-    if (!lastMatch.isSame(match.date, 'day')) {
-      html += '<br>';
-      html += match.date.format('ddd D/M');
-      html += '<br>';
-      lastMatch = match.date;
+    html += '<br>';
+    html += `<code>${match.frenoyMatchId}</code> | `;
+    html += '⏰ ';
+    html += match.date.format('ddd D/M');
+    if (match.isStandardStartTime()) {
+      html += ` · ${match.date.format('HH:mm')}`;
+    } else {
+      html += ` · <b>${match.date.format('HH:mm')}</b>`;
     }
+    html += ' | ';
 
     const ownTitle = `<b>${getTeamLink(match)}</b>`;
     const theirTitle = getOpponentLink(match);
     if (match.isHomeMatch) {
-      html += `${ownTitle} vs ${theirTitle}`;
+      html += `🏠 ${ownTitle} vs ${theirTitle}`;
     } else {
-      html += `${theirTitle} vs ${ownTitle}`;
+      html += `✈️ ${theirTitle} vs ${ownTitle}`;
     }
 
-    html += ' (';
+    html += '<ul>';
     const formation = match.getPlayerFormation(undefined);
-    formation.forEach((plyInfo, index) => {
-      if (index > 0) {
-        html += ', ';
-      }
+    formation.forEach(plyInfo => {
+      html += `<li data-id="${plyInfo.player.id}">`;
       html += getPlayerLink(plyInfo.player, compFilter);
+      html += '</li>';
     });
-    html += ')';
-
-    if (!match.isStandardStartTime()) {
-      html += ` om ${match.date.format('HHumm')}`;
-    }
-
-    html += '<br>';
+    html += '</ul>';
   });
 
   return html;
