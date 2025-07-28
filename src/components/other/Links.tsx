@@ -41,6 +41,13 @@ export default class Links extends Component {
             </tr>
             <tr>
               <td>
+                <a href="https://ttc-aalst.be/tabt-api.html" target="_blank" rel="noopener noreferrer">
+                  TabT API Test Form
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <a href="https://ttcsintpauwels.be/competitie/vttl/bereken-je-klassement/" target="_blank" rel="noopener noreferrer">
                   {t('links.vttlCalculationOne')}
                 </a>
