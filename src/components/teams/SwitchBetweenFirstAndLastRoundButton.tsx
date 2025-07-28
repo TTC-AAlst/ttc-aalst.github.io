@@ -57,5 +57,5 @@ export function getFirstOrLastMatches<T extends IStoreMatchCommon>(allMatchesToC
 
 export function getFirstOrLast(): Filters {
   const today = moment();
-  return today.month() >= 7 && !(today.month() === 11 && today.date() > 20) ? 'first' : 'last';
+  return today.month() >= 5 && !(today.month() === 11 && today.date() > 20) ? 'first' : 'last';
 }
