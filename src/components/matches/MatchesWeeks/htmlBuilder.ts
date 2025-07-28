@@ -46,6 +46,7 @@ export function buildHtml(
   }
 
   html += '<br>';
+  html += '{{tournament-info}}';
   html += '<br>';
   html += 'Mvg,';
   html += '<br>';
@@ -245,7 +246,7 @@ function getPrevMatches(matches: IMatch[]) {
   html += '<b>Vorige Speelweek</b>';
   html += '<br>';
 
-  const sortOnOwnScore = (a, b) => {
+  const sortOnOwnScore = (a: IMatch, b: IMatch) => {
     const aWon = a.isHomeMatch ? a.score.home : a.score.out;
     const bWon = b.isHomeMatch ? b.score.home : b.score.out;
     return bWon - aWon;
