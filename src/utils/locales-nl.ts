@@ -243,8 +243,6 @@ export default {
         balls: "Wij spelen met",
       },
       training: {
-        trainingDays2: 'Geleide Training: 2 wekelijks woensdag 20u30 tot 22u',
-        trainingDays3: 'Jeugd Training: Elke woensdag 19u30 tot 20u30',
         extra: 'We beschikken over interne en externe (TT Progress) gediplomeerde trainers',
       },
       location: {

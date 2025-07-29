@@ -49,7 +49,7 @@ const defaultConfigState = {
     email: '', googleMapsUrl: '', location: '', trainingDays: '', competitionDays: '',
     adultMembership: '', youthMembership: '', additionalMembership: '', recreationalMembers: '',
     frenoyClubIdVttl: '', frenoyClubIdSporta: '', compBalls: '', clubBankNr: '', clubOrgNr: '',
-    year: '', endOfSeason: false,
+    year: '', endOfSeason: false, trainingDays2: '', trainingDays3: '', trainingDays4: '',
     // ModifiedOn: '',
   },
   snackbar: '',
@@ -83,7 +83,7 @@ function getDefaultConfig(initialState: IConfig): IConfig {
 }
 
 
-
+export type ConfigParams = typeof defaultConfigState.params;
 type Settings = typeof defaultConfigState.settings;
 type SettingPair<K extends keyof Settings> = {
   key: K;

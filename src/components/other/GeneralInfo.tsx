@@ -22,8 +22,9 @@ export const GeneralInfo = () => {
           <br />
           {params.trainingDays}
           Hello?
-          <br />{t('clubs.training.trainingDays2')}
-          <br />{t('clubs.training.trainingDays3')}
+          <br />{params.trainingDays2}
+          <br />{params.trainingDays3}
+          <br />{params.trainingDays4}
           <br />{t('clubs.training.extra')}
           <br /><br />
           <strong>VTTL</strong> {params.frenoyClubIdVttl}<br />

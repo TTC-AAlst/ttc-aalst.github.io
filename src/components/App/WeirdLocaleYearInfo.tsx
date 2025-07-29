@@ -1,15 +1,16 @@
 import React from 'react';
 import { t } from '../../locales';
+import { ConfigParams } from '../../reducers/configReducer';
 
-export const WeirdLocaleYearInfo = ({params}: any) => ( // eslint-disable-line
+export const WeirdLocaleYearInfo = ({params}: {params: ConfigParams}) => (
   <div style={{paddingTop: 18}}>
     <h3>KTA Technigo Sporthal - De Voorstad</h3>
     <b>{params.location}</b>
     <br />
-    <br />{t('clubs.training.trainingDays2')}
-    <br />{t('clubs.training.trainingDays3')}
+    <br />{params.trainingDays2}
+    <br />{params.trainingDays3}
     <br />
-    Jeugdwerking vanaf 8 jaar
+    {params.trainingDays4}
     <br />
     {params.competitionDays}
     <br />
