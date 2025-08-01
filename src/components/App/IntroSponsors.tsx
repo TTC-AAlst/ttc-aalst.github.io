@@ -12,30 +12,22 @@ export const IntroSponsors = () => {
   if (big) {
     return (
       <Row style={{marginTop: 25, marginBottom: 15}}>
-        <div style={{width: 770, margin: 'auto'}}>
+        <div style={{width: 800, margin: 'auto'}}>
           <Strike text={t('intro.ourSponsors')} style={{marginBottom: 5}} />
-          <Sponsor.AcademicSoftware big={big} />
-          <Sponsor.Itenium big={big} style={{marginLeft: 20}} />
-        </div>
-        <div style={{width: 770, margin: 'auto', paddingTop: 25}}>
-          <Sponsor.RdInterieur big={big} />
-          <Sponsor.BeSure2 big={big} style={{marginLeft: 20}} />
+          <Sponsor.NextGenLED big={big} />
+          <Sponsor.Capatt big={big} style={{marginLeft: 20}} />
         </div>
         <div style={{width: 770, margin: 'auto', paddingTop: 25, display: 'flex'}}>
           <div>
-            <Sponsor.Woodchuck big={big} />
+            <Sponsor.Itenium big={big} style={{marginBottom: 20}} />
+            <Sponsor.HappyPlays big={big} />
           </div>
           <div style={{marginLeft: 20}}>
-            <Sponsor.Bordman big={big} style={{marginBottom: 15}} />
-            <Sponsor.RJConstruct big={big} style={{marginBottom: 20}} />
-            <Sponsor.EcoProject big={big} />
+            <Sponsor.NextGenLasers big={big} style={{marginBottom: 15}} />
           </div>
-
         </div>
-        <div style={{width: 770, margin: 'auto', paddingTop: 25}}>
-          <Sponsor.COOLDown big={big} />
-          <Sponsor.Geniaal big={big} style={{marginLeft: 20}} />
-          <Sponsor.TuinenRottiers big={big} style={{marginLeft: 20}} />
+        <div style={{width: 770, margin: 'auto', paddingTop: 25, paddingLeft: 200}}>
+          <Sponsor.Mijlbeek big={big} />
         </div>
       </Row>
     );
@@ -45,37 +37,22 @@ export const IntroSponsors = () => {
     <Row style={{margin: 10}}>
       <Strike text={t('intro.ourSponsors')} style={{marginBottom: 5}} />
       <Col style={{marginTop: 20}}>
-        <Sponsor.AcademicSoftware big={big} />
-      </Col>
-      <Col style={{marginTop: 20}}>
         <Sponsor.Itenium big={big} />
       </Col>
       <Col style={{marginTop: 20}}>
-        <Sponsor.RdInterieur big={big} />
+        <Sponsor.NextGenLED big={big} />
       </Col>
       <Col style={{marginTop: 20}}>
-        <Sponsor.BeSure2 big={big} />
+        <Sponsor.Capatt big={big} />
       </Col>
       <Col style={{marginTop: 20}}>
-        <Sponsor.Woodchuck big={big} />
+        <Sponsor.Mijlbeek big={big} />
       </Col>
       <Col style={{marginTop: 20}}>
-        <Sponsor.Bordman big={big} />
+        <Sponsor.HappyPlays big={big} />
       </Col>
       <Col style={{marginTop: 20}}>
-        <Sponsor.RJConstruct big={big} />
-      </Col>
-      <Col style={{marginTop: 20}}>
-        <Sponsor.EcoProject big={big} />
-      </Col>
-      <Col style={{marginTop: 20}}>
-        <Sponsor.COOLDown big={big} />
-      </Col>
-      <Col style={{marginTop: 20}}>
-        <Sponsor.Geniaal big={big} />
-      </Col>
-      <Col style={{marginTop: 20}}>
-        <Sponsor.TuinenRottiers big={big} />
+        <Sponsor.NextGenLasers big={big} />
       </Col>
     </Row>
   );
