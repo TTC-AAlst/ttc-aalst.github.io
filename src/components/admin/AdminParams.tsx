@@ -7,6 +7,7 @@ import http from '../../utils/httpClient';
 import { useViewport } from '../../utils/hooks/useViewport';
 import { ButtonStack } from '../controls/Buttons/ButtonStack';
 import { AdminEetfestijn } from './AdminEetfestijn';
+import { AdminEvents } from './AdminEvents';
 
 const nonDefaultParams = ['eetfestijn', 'events'];
 
@@ -28,6 +29,7 @@ export const AdminParams = () => {
       content = <AdminEetfestijn />;
       break;
     case 'events':
+      content = <AdminEvents />;
       break;
     default:
       content = <AdminParamsSimple />;

@@ -50,7 +50,7 @@ const defaultConfigState = {
     adultMembership: '', youthMembership: '', additionalMembership: '', recreationalMembers: '',
     frenoyClubIdVttl: '', frenoyClubIdSporta: '', compBalls: '', clubBankNr: '', clubOrgNr: '',
     year: '', endOfSeason: false, trainingDays2: '', trainingDays3: '', trainingDays4: '',
-    eetfestijn: '',
+    eetfestijn: '', events: '',
     // ModifiedOn: '',
   },
   snackbar: '',

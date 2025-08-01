@@ -13,6 +13,7 @@ import { IntroSponsors } from './IntroSponsors';
 import { IMatch } from '../../models/model-interfaces';
 import { useViewport } from '../../utils/hooks/useViewport';
 import { selectMatches, selectMatchesToday, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { ClubEvents } from '../other/ClubEvents';
 
 
 const Intro = () => {
@@ -26,6 +27,7 @@ const Intro = () => {
   return (
     <div>
       <Row style={{marginTop: 25}}>
+        <ClubEvents />
         <Col md={6} style={{verticalAlign: 'top'}}>
           <IntroClub />
           <WeirdLocaleYearInfo params={config.params} />

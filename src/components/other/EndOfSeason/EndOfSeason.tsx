@@ -1,13 +1,12 @@
 import React from 'react';
-import {IntroClub} from '../../App/IntroClub';
-import {IntroSponsors} from '../../App/IntroSponsors';
-import {Kampioenen} from './Kampioenen';
+import { IntroClub } from '../../App/IntroClub';
+import { IntroSponsors } from '../../App/IntroSponsors';
+import { Kampioenen } from './Kampioenen';
 import Achievements from './Achievements';
-import {NextSeasonChanges} from './NextSeasonChanges';
-import {IPlayer, ITeam, IMatch, IClub} from '../../../models/model-interfaces';
-import {AchievementsCalculator} from './AchievementsCalculator';
-import {Strike} from '../../controls/controls/Strike';
+import { NextSeasonChanges } from './NextSeasonChanges';
+import { AchievementsCalculator } from './AchievementsCalculator';
 import { selectMatches, selectPlayers, selectTeams, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { ClubEvents } from '../ClubEvents';
 
 // TODO: This thing crashes on PlayerLink --> Probably when there is someone in the achievements that has left the club
 
@@ -21,14 +20,10 @@ export const EndOfSeason = () => {
   return (
     <div className="endofseason-container">
       <div className="row">
+        <ClubEvents />
         <div className="col-md-6">
           <IntroClub />
         </div>
-        {/* <div className="col-md-6">
-          <h3>Komende Events</h3>
-          <Strike text="Kampioenenhuldiging met drankje en hapje vrijdag 7 juni" />
-          <Strike text="Save the date! Eetfestijn 2019 op zaterdag 28 september" />
-        </div> */}
       </div>
       <h2>Einde Seizoen {new Date().getFullYear() - 1}-{new Date().getFullYear()}</h2>
       <Kampioenen topTeams={calcer.getTopRankedTeams()} />
