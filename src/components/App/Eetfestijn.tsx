@@ -1,67 +1,69 @@
 import React from 'react';
 import Paper from '@mui/material/Paper';
+import moment from 'moment';
+import { useTtcSelector } from '../../utils/hooks/storeHooks';
+import { EetfestijnModel } from '../admin/EetfestijnModel';
 
 const eetfesijnStyle = {
   padding: 0,
   width: '100%',
   margin: 'auto',
+  marginLeft: 5,
 };
 
-// eslint-disable-next-line
-const eetfestijnGoogleMaps = 'https://maps.google.com/maps?q=Botermelkstraat+63,+9300+Aalst&hl=en&ll=50.953115,4.061058&spn=0.009449,0.023475&sll=50.952442,4.062345&sspn=0.001188,0.002934&t=m&hnear=Botermelkstraat+63,+Aalst+9300+Aalst,+Oost-Vlaanderen,+Vlaams+Gewest,+Belgium&z=16';
 
-const eetfestijnSets = {
-  date: 'Zaterdag 28 september 2019',
-  startHour: '17u30',
-  endHour: '22u00',
-  meat: {
-    price: 17,
-  },
-  fish: {
-    price: 17,
-  },
-  child: {
-    price: '8,50',
-  },
-  support: {
-    price: '2,50',
-  },
-};
+export const Eetfestijn = () => {
+  const eetfestijnString = useTtcSelector(state => state.config.params.eetfestijn);
+  if (!eetfestijnString) {
+    return null;
+  }
 
-export const Eetfestijn = () => (
-  <Paper style={eetfesijnStyle}>
-    <div id="eetfestijn">
-      <h1 style={{fontSize: 26}}>
-        Eetfestijn TTC Aalst
+  const eetfestijn: EetfestijnModel = JSON.parse(eetfestijnString);
+  if (!eetfestijn.show) {
+    return null;
+  }
+
+  return (
+    <Paper style={eetfesijnStyle}>
+      <div id="eetfestijn">
+        <h1 style={{fontSize: 26}}>
+          Eetfestijn TTC Aalst
+          <br />
+          {moment(eetfestijn.date).format('ddd DD MMMM YYYY')}
+        </h1>
+
+        Van {eetfestijn.hour.from} tot {eetfestijn.hour.to} in zaal
+        &nbsp;
+        <a className="eetfestijn" href={eetfestijn.venue.mapsUrl} target="_blank" rel="noopener noreferrer">
+          {eetfestijn.venue.name}
+        </a>
         <br />
-        {eetfestijnSets.date}
-      </h1>
+        {eetfestijn.venue.address}
 
-      Van {eetfestijnSets.startHour} tot {eetfestijnSets.endHour} in zaal
-      &nbsp;
-      <a className="eetfestijn" href={eetfestijnGoogleMaps} target="_blank" rel="noopener noreferrer">Sint-Paulus</a>
-      <br />
-      Botermelkstraat 63, 9300 Aalst
+        <br /><br />
 
-      <br /><br />
+        <table width="100%">
+          <tbody>
+            <tr><th colSpan={2} style={{textAlign: 'center'}}>Menu</th></tr>
+            {eetfestijn.menu.map(menu => (
+              <tr key={menu.name}>
+                <td width="99%">
+                  <b>{menu.name}</b>
+                  &nbsp;{menu.desc}
+                </td>
+                <td width="1%">&euro;{menu.price}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      <table width="100%">
-        <tbody>
-          <tr><th colSpan={2} style={{textAlign: 'center'}}>Menu</th></tr>
-          <tr>
-            <td width="99%"><b>Varkenshaasje</b> met sla, tomaten<br /> en saus naar keuze</td><td width="1%">&euro;{eetfestijnSets.meat.price}</td>
-          </tr>
-          <tr>
-            <td><b>Tongrolletjes</b></td><td>&euro;{eetfestijnSets.fish.price}</td>
-          </tr>
-          <tr>
-            <td><b>Kindermenu</b>: kip met appelmoes</td><td>&euro;{eetfestijnSets.child.price}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <br />
-      <span>Steunkaarten ook beschikbaar voor &euro;{eetfestijnSets.support.price}</span>
-    </div>
-  </Paper>
-);
+        {eetfestijn.steunkaart > 0 && (
+          <>
+            <br />
+            <span>Steunkaarten ook beschikbaar voor &euro;{eetfestijn.steunkaart}</span>
+          </>
+        )}
+      </div>
+    </Paper>
+  );
+};

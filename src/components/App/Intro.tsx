@@ -36,7 +36,7 @@ const Intro = () => {
           ) : (
             <div>
               <div style={{clear: 'both'}} />
-              {false && <Eetfestijn />}
+              <Eetfestijn />
               <TodaysEvents />
             </div>
           )}

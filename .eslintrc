@@ -59,7 +59,8 @@
     "react/jsx-no-bind": [0],
     "no-console": [0],
     "no-debugger": [1],
-    "jsx-a11y/control-has-associated-label": [0]
+    "jsx-a11y/control-has-associated-label": [0],
+    "arrow-body-style": 0
   },
   "settings": {
     "import/resolver": {

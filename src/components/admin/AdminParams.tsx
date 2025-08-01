@@ -4,14 +4,58 @@ import { Button } from 'react-bootstrap';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { saveConfig } from '../../reducers/configReducer';
 import http from '../../utils/httpClient';
+import { useViewport } from '../../utils/hooks/useViewport';
+import { ButtonStack } from '../controls/Buttons/ButtonStack';
+import { AdminEetfestijn } from './AdminEetfestijn';
+
+const nonDefaultParams = ['eetfestijn', 'events'];
+
+type Pages = 'params' | 'eetfestijn' | 'events';
+
+const viewsConfig = [
+  { key: 'params', text: 'Parameters' },
+  { key: 'eetfestijn', text: 'Eetfestijn' },
+  { key: 'events', text: 'Events' },
+];
 
 export const AdminParams = () => {
+  const [filter, setFilter] = useState<Pages>('params');
+  const viewport = useViewport();
+
+  let content: any;
+  switch (filter) {
+    case 'eetfestijn':
+      content = <AdminEetfestijn />;
+      break;
+    case 'events':
+      break;
+    default:
+      content = <AdminParamsSimple />;
+      break;
+  }
+
+  return (
+    <div style={{padding: 15}}>
+      <ButtonStack
+        config={viewsConfig}
+        small={viewport.width < 550}
+        activeView={filter}
+        onClick={newFilter => setFilter(newFilter as Pages)}
+      />
+      <div style={{marginTop: 15}}>
+        {content}
+      </div>
+    </div>
+  );
+};
+
+export const AdminParamsSimple = () => {
   const storeParams = useTtcSelector(state => state.config.params);
   const [params, setParams] = useState(storeParams);
   const dispatch = useTtcDispatch();
 
   return (
-    <div style={{paddingLeft: 15}}>
+    <>
       <h3>Beheer Parameters</h3>
       <Button variant="outline-danger float-end me-2" onClick={() => http.post('/config/ClearCache')}>
         Clear Cache
@@ -26,7 +70,7 @@ export const AdminParams = () => {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(storeParams).sort((a, b) => a.localeCompare(b)).map(key => (
+          {Object.keys(storeParams).filter(x => !nonDefaultParams.includes(x)).sort((a, b) => a.localeCompare(b)).map(key => (
             <AdminParamRow
               key={key}
               propName={key}
@@ -37,7 +81,7 @@ export const AdminParams = () => {
           ))}
         </tbody>
       </Table>
-    </div>
+    </>
   );
 };
 
