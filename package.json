@@ -5,7 +5,8 @@
   "homepage": "https://ttc-aalst.be",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "GENERATE_SOURCEMAP=true react-scripts build --mode=development",
+    "build-original": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
     "lint": "eslint --ext js,ts,tsx src",
