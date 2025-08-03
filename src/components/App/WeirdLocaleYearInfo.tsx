@@ -1,5 +1,4 @@
 import React from 'react';
-import { t } from '../../locales';
 import { ConfigParams } from '../../reducers/configReducer';
 
 export const WeirdLocaleYearInfo = ({params}: {params: ConfigParams}) => (
