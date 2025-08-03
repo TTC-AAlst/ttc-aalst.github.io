@@ -19,6 +19,7 @@ export const Navigation = ({navOpen, closeNav}: NavigationProps) => {
   const matchesToday = useTtcSelector(selectMatchesBeingPlayed);
   const navigate = useNavigate();
   const user = useTtcSelector(selectUser);
+  const hasYouthTeam = useTtcSelector(state => state.teams.some(team => team.competition === 'Jeugd'));
 
   const handleClickHelpButton = () => {
     window.open('https://ttc-aalst.github.io/onboarding/', '_blank');
@@ -51,7 +52,7 @@ export const Navigation = ({navOpen, closeNav}: NavigationProps) => {
         <MenuItem onClick={() => goto(t.route('matchesWeek'))}>{t('nav.matchesWeek')}</MenuItem>
         <MenuItem onClick={() => goto(t.route('teams', {competition: 'Vttl'}))}>{t('nav.teamsVttl')}</MenuItem>
         <MenuItem onClick={() => goto(t.route('teams', {competition: 'Sporta'}))}>{t('nav.teamsSporta')}</MenuItem>
-        <MenuItem onClick={() => goto(t.route('teams', {competition: 'Jeugd'}))}>{t('nav.teamsJeugd')}</MenuItem>
+        {hasYouthTeam && <MenuItem onClick={() => goto(t.route('teams', {competition: 'Jeugd'}))}>{t('nav.teamsJeugd')}</MenuItem>}
         <MenuItem onClick={() => goto(t.route('players'))}>{t('nav.players')}</MenuItem>
         {user.isAdmin() ? <MenuItem onClick={() => goto(t.route('admin'))}>{t('nav.admin')}</MenuItem> : null}
         <Divider />
