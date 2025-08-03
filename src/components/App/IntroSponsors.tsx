@@ -36,22 +36,22 @@ export const IntroSponsors = () => {
   return (
     <Row style={{margin: 10}}>
       <Strike text={t('intro.ourSponsors')} style={{marginBottom: 5}} />
-      <Col style={{marginTop: 20}}>
+      <Col sm={12} style={{marginTop: 20}}>
         <Sponsor.Itenium big={big} />
       </Col>
-      <Col style={{marginTop: 20}}>
+      <Col sm={12} style={{marginTop: 20}}>
         <Sponsor.NextGenLED big={big} />
       </Col>
-      <Col style={{marginTop: 20}}>
+      <Col sm={12} style={{marginTop: 20}}>
         <Sponsor.Capatt big={big} />
       </Col>
-      <Col style={{marginTop: 20}}>
+      <Col sm={12} style={{marginTop: 20}}>
         <Sponsor.Mijlbeek big={big} />
       </Col>
-      <Col style={{marginTop: 20}}>
+      <Col sm={12} style={{marginTop: 20}}>
         <Sponsor.HappyPlays big={big} />
       </Col>
-      <Col style={{marginTop: 20}}>
+      <Col sm={12} style={{marginTop: 20}}>
         <Sponsor.NextGenLasers big={big} />
       </Col>
     </Row>

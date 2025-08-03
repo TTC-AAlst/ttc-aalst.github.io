@@ -44,6 +44,10 @@ type ImageSponsorProps = {
   style?: React.CSSProperties;
 }
 
+const imgStyle = {
+  maxWidth: '100%',
+};
+
 class ImageSponsor extends Component<ImageSponsorProps> {
   static defaultProps = {
     style: {},
@@ -52,7 +56,7 @@ class ImageSponsor extends Component<ImageSponsorProps> {
 
   render() {
     const style = this.props.big ? bottomSponsorsStyleBig : bottomSponsorsStyleSmall;
-    const img = <img src={`/img/sponsors/${this.props.img}`} alt="Sponsor logo" />;
+    const img = <img src={`/img/sponsors/${this.props.img}`} alt="Sponsor logo" style={imgStyle} />;
     return (
       <Paper style={{...style, ...this.props.style}}>
         {this.props.url ? <a href={this.props.url} target="_blank" rel="noopener noreferrer">{img}</a> : img}
