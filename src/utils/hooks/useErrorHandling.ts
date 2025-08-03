@@ -8,6 +8,7 @@ export const useErrorHandling = () => {
         message: `${event.filename}:${event.lineno}:${event.colno}: ${event.message}`,
         stack: event.error?.stack,
         componentStack: null,
+        url: document.location.pathname,
       };
       httpClient.post('/config/Log', errObj);
     };
@@ -24,6 +25,7 @@ export const useErrorHandling = () => {
         message: event.reason?.message || 'Unhandled rejection',
         stack: event.reason?.stack,
         componentStack: null,
+        url: document.location.pathname,
       };
       httpClient.post('/config/Log', errObj);
     };

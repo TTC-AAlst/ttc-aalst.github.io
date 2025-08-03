@@ -30,6 +30,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       message: error.message,
       stack: error.stack,
       componentStack: errorInfo.componentStack,
+      url: document.location.pathname,
     };
 
     httpClient.post('/config/Log', errObj);
