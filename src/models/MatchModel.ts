@@ -260,7 +260,7 @@ export default class MatchModel implements IMatch {
       if (!aComp || !aComp.position) {
         return -1;
       }
-      if (!bComp || bComp.position) {
+      if (!bComp || !bComp.position) {
         return 1;
       }
       return aComp.position - bComp.position;
