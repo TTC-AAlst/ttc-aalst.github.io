@@ -138,6 +138,9 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
             matchPlayer: {status: '', statusNote: ''},
             player: plyInfo.player,
           };
+          if (playerDecision?.matchPlayer.statusNote) {
+            captainDecision.matchPlayer.statusNote = `${playerDecision.player.alias}: ${playerDecision?.matchPlayer.statusNote}`;
+          }
         }
 
         const onButtonClick = this._toggleTablePlayer.bind(this, plyInfo.player.id, match);
