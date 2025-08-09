@@ -55,7 +55,7 @@ export class PlayerCompetitionButton extends Component<PlayerCompetitionButtonPr
       <button
         type="button"
         key={plyInfo.player.id + matchPlayer.status}
-        className={`btn btn-xs btn-${getPlayingStatusClass(matchPlayer) || 'outline-primary'}`}
+        className={`btn btn-xs btn-${getPlayingStatusClass(matchPlayer.status) || 'outline-primary'}`}
         title={matchPlayer.statusNote}
         style={({marginBottom: 5, ...this.props.style})}
         onClick={() => this.props.onButtonClick()}

@@ -106,7 +106,7 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
           // if (playerDecision)
           //  console.log(match.frenoyMatchId, playerDecision.player.alias, playerDecision.matchPlayer.status);
           return (
-            <td key={ply.player.id} className={getPlayingStatusClass(playerDecision ? playerDecision.matchPlayer.status : '')}>
+            <td key={ply.player.id} className={`td-${getPlayingStatusClass(playerDecision?.matchPlayer.status)}`}>
               &nbsp;
             </td>
           );
@@ -123,7 +123,7 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
             <td
               style={{textAlign: 'center'}}
               key={plyInfo.player.id}
-              className={getPlayingStatusClass(playerDecision ? playerDecision.matchPlayer.status : '')}
+              className={`td-${getPlayingStatusClass(playerDecision?.matchPlayer.status)}`}
             >
               {majorDecision ? <PlayerCompetitionBadge plyInfo={majorDecision} competition={match.competition} /> : null}
             </td>
@@ -145,7 +145,7 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
           <td
             style={{textAlign: 'center'}}
             key={plyInfo.player.id}
-            className={getPlayingStatusClass(playerDecision ? playerDecision.matchPlayer.status : '')}
+            className={`td-${getPlayingStatusClass(playerDecision?.matchPlayer.status)}`}
           >
             <PlayerCompetitionButton
               plyInfo={captainDecision}

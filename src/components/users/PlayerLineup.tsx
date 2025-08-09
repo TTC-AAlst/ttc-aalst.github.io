@@ -126,7 +126,7 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
               }
 
               return (
-                <tr key={match.id} className={`table-${getPlayingStatusClass(matchPlayer)}`}>
+                <tr key={match.id} className={`table-${getPlayingStatusClass(matchPlayer?.status)}`}>
                   <td className="d-none d-lg-table-cell">{match.frenoyMatchId}</td>
                   <td className="d-none d-sm-table-cell">{t('match.date', match.getDisplayDate())}</td>
                   <td>
