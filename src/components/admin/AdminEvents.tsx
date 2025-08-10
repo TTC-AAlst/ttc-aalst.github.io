@@ -5,10 +5,11 @@ import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
 import { saveConfig } from '../../reducers/configReducer';
+import { parseEvents } from '../../utils/paramParser';
 
 export const AdminEvents = () => {
   const eventsString = useTtcSelector(state => state.config.params.events);
-  const [events, setEvents] = useState<string[]>(JSON.parse(eventsString));
+  const [events, setEvents] = useState<string[]>(parseEvents(eventsString));
   const dispatch = useTtcDispatch();
 
   return (

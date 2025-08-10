@@ -3,6 +3,7 @@ import Paper from '@mui/material/Paper';
 import moment from 'moment';
 import { useTtcSelector } from '../../utils/hooks/storeHooks';
 import { EetfestijnModel } from '../admin/EetfestijnModel';
+import { parseEetfestijn } from '../../utils/paramParser';
 
 const eetfesijnStyle = {
   padding: 0,
@@ -18,7 +19,7 @@ export const Eetfestijn = () => {
     return null;
   }
 
-  const eetfestijn: EetfestijnModel = JSON.parse(eetfestijnString);
+  const eetfestijn: EetfestijnModel = parseEetfestijn(eetfestijnString);
   if (!eetfestijn.show) {
     return null;
   }
