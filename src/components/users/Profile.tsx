@@ -11,6 +11,7 @@ import { t } from '../../locales';
 import { selectTeams, selectUser, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { displayMobile } from '../../models/PlayerModel';
 import { logout } from '../../reducers/userReducer';
+import { CaptainPlayerLineup } from './CaptainPlayerLineup';
 
 const tabEventKeys = {
   main: 'main',
@@ -19,6 +20,7 @@ const tabEventKeys = {
   editAvatar: 'editAvatar',
   editPassword: 'editPassword',
   editHolidays: 'editHolidays',
+  editCaptain: 'editCaptain',
 };
 
 
@@ -29,6 +31,7 @@ export const Profile = () => {
   const dispatch = useTtcDispatch();
   const allTeams = useTtcSelector(selectTeams);
   const yourTeams = allTeams.filter(team => user.teams.includes(team.id));
+  const yourCaptainTeams = yourTeams.filter(team => team.isCaptain(user.getPlayer()));
 
   const logoutAndGoHome = () => {
     dispatch(logout());
@@ -49,6 +52,8 @@ export const Profile = () => {
         return <ChangePassword />;
       case tabEventKeys.editHolidays:
         return <PlayerLineup teams={yourTeams} playerId={user.playerId} />;
+      case tabEventKeys.editCaptain:
+        return <CaptainPlayerLineup teams={yourCaptainTeams} />;
       default:
         return null;
     }
@@ -66,6 +71,9 @@ export const Profile = () => {
     { key: tabEventKeys.editPicture, title: t('profile.editPicture') },
     { key: tabEventKeys.editAvatar, title: t('profile.editAvatar') },
   ];
+  if (yourCaptainTeams.length) {
+    tabConfig.splice(2, 0, { key: tabEventKeys.editCaptain, title: t('profile.editCaptain') });
+  }
 
   if (user.isSystem()) {
     return (

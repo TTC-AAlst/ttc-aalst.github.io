@@ -1,11 +1,10 @@
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import {PlayerAutoComplete} from '../players/PlayerAutoComplete';
 import PlayerLinup from '../users/PlayerLineup';
-import {IMatch, Competition} from '../../models/model-interfaces';
+import {Competition} from '../../models/model-interfaces';
 import storeUtil from '../../storeUtil';
-import { RootState } from '../../store';
+import { useTtcSelector } from '../../utils/hooks/storeHooks';
 
 
 type AdminPlayerLineupProps = {}
@@ -47,34 +46,35 @@ export class AdminPlayerLineup extends React.Component<AdminPlayerLineupProps, A
   }
 }
 
+
+
 type AdminPlayerLineupToolbarProps = {
-  onFilterChange: Function;
-}
+  onFilterChange: (competition: Competition, playerId: number | null) => void;
+};
 
-type AdminPlayerLineupToolbarState = {
-  playerId: null | number;
-}
+const AdminPlayerLineupToolbar = ({ onFilterChange }: AdminPlayerLineupToolbarProps) => {
+  const hasYouthTeam = useTtcSelector(state => state.teams.some(team => team.competition === 'Jeugd'));
+  const [playerId, setPlayerId] = useState<number | null>(null);
 
-class AdminPlayerLineupToolbar extends Component<AdminPlayerLineupToolbarProps, AdminPlayerLineupToolbarState> {
-  constructor(props) {
-    super(props);
-    this.state = {playerId: null};
-  }
-
-  render() {
-    const {onFilterChange} = this.props;
-    return (
-      <div style={{padding: 10, display: 'inline-block', width: 300}}>
-        <PlayerAutoComplete
-          selectPlayer={playerId => typeof playerId === 'number' && this.setState({playerId})}
-          label="Selecteer speler"
-        />
-        <div style={{marginTop: 10}}>
-          <Button variant="info" style={{marginRight: 10}} onClick={() => onFilterChange('Vttl', this.state.playerId)}>Vttl</Button>
-          <Button variant="info" style={{marginRight: 10}} onClick={() => onFilterChange('Sporta', this.state.playerId)}>Sporta</Button>
-          <Button variant="info" onClick={() => onFilterChange('Jeugd', this.state.playerId)}>Jeugd</Button>
-        </div>
+  return (
+    <div style={{ padding: 10, display: 'inline-block', width: 300 }}>
+      <PlayerAutoComplete
+        selectPlayer={id => typeof id === 'number' && setPlayerId(id)}
+        label="Selecteer speler"
+      />
+      <div style={{ marginTop: 10 }}>
+        <Button variant="info" style={{ marginRight: 10 }} onClick={() => onFilterChange('Vttl', playerId)}>
+          Vttl
+        </Button>
+        <Button variant="info" style={{ marginRight: 10 }} onClick={() => onFilterChange('Sporta', playerId)}>
+          Sporta
+        </Button>
+        {hasYouthTeam && (
+          <Button variant="info" onClick={() => onFilterChange('Jeugd', playerId)}>
+            Jeugd
+          </Button>
+        )}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};

@@ -14,6 +14,7 @@ export default {
       editAvatar: "wijzig-avatar",
       editPassword: "wijzig-paswoord",
       editHolidays: "ploegopstelling",
+      editCaptain: "kapitein",
     },
 
     players: "/spelers",
@@ -105,6 +106,9 @@ export default {
       editPicture: "Wijzig Foto",
       editAvatar: "Wijzig Avatar",
       editHolidays: "Ploegopstelling",
+      editCaptain: "Kapitein",
+      editCaptainTitle: "Opstelling aanpassen",
+      editCaptainSelectPlayer: "Speler selecteren",
       play: {
         tableTitle: "Kan je spelen?",
         canPlay: "SPELEN",
