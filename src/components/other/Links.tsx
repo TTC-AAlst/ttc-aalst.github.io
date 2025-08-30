@@ -48,6 +48,13 @@ export default class Links extends Component {
             </tr>
             <tr>
               <td>
+                <a href="https://github.com/TTC-AAlst/ttc-aalst.github.io" target="_blank" rel="noopener noreferrer">
+                  Github Source Code
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <a href="https://ttcsintpauwels.be/competitie/vttl/bereken-je-klassement/" target="_blank" rel="noopener noreferrer">
                   {t('links.vttlCalculationOne')}
                 </a>
