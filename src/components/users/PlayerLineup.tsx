@@ -68,9 +68,14 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
     const allText = t('common.all');
     const activeFilter = this.state.filter || allText;
 
+    const uniqueCompetitionCount = this.props.teams
+      .map(team => team.competition)
+      .filter((competition, index, arr) => arr.indexOf(competition) === index)
+      .length;
+
     return (
       <div>
-        {this.props.teams.length > 1 ? (
+        {uniqueCompetitionCount > 1 ? (
           <div className="btn-group" style={{padding: 5}}>
             {[allText, 'Vttl', 'Sporta'].map(button => (
               <button

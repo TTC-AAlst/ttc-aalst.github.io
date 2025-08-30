@@ -4,10 +4,8 @@ import {PlayerAutoComplete} from '../players/PlayerAutoComplete';
 import PlayerLinup from '../users/PlayerLineup';
 import {Competition} from '../../models/model-interfaces';
 import storeUtil from '../../storeUtil';
-import { useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectTeams, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 
-
-type AdminPlayerLineupProps = {}
 
 type AdminPlayerLineupState = {
   comp: Competition;
@@ -15,36 +13,34 @@ type AdminPlayerLineupState = {
 }
 
 
-export class AdminPlayerLineup extends React.Component<AdminPlayerLineupProps, AdminPlayerLineupState> {
-  constructor(props) {
-    super(props);
-    this.state = {comp: 'Vttl', playerId: null};
-  }
+export const AdminPlayerLineup = () => {
+  const [state, setState] = useState<AdminPlayerLineupState>({ comp: 'Vttl', playerId: null });
+  const allTeams = useTtcSelector(selectTeams);
+  const player = storeUtil.getPlayer(state.playerId ?? 0);
+  const teams = allTeams
+    .filter(team => team.competition === state.comp)
+    .filter(team => team.players.some(ply => ply.playerId === player?.id));
 
-  render() {
-    let playerFormation;
-    if (this.state.playerId) {
-      const team = storeUtil.getPlayer(this.state.playerId).getTeam(this.state.comp);
-
-      if (!team) {
-        playerFormation = (
-          <div>Heeft geen vaste ploeg ingesteld (Geen Standard/Captain, misschien enkel als Reserve?)</div>
-        );
-      } else {
-        playerFormation = (
-          <PlayerLinup playerId={this.state.playerId} teams={[team]} />
-        );
-      }
+  let playerFormation: React.ReactNode;
+  if (state.playerId) {
+    if (!teams.length) {
+      playerFormation = (
+        <div>Heeft geen vaste ploeg ingesteld (Geen Standard/Captain, misschien enkel als Reserve?)</div>
+      );
+    } else {
+      playerFormation = (
+        <PlayerLinup playerId={state.playerId} teams={teams} />
+      );
     }
-
-    return (
-      <div>
-        <AdminPlayerLineupToolbar onFilterChange={(comp, playerId) => this.setState({comp, playerId})} />
-        {playerFormation}
-      </div>
-    );
   }
-}
+
+  return (
+    <div>
+      <AdminPlayerLineupToolbar onFilterChange={(comp, playerId) => setState({ comp, playerId })} />
+      {playerFormation}
+    </div>
+  );
+};
 
 
 
