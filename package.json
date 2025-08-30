@@ -52,6 +52,7 @@
     "react-router-dom": "6.5.0",
     "react-select": "5.8.3",
     "redux": "^5.0.1",
+    "stacktrace-js": "^2.0.2",
     "superagent": "^3.8.3"
   },
   "devDependencies": {

@@ -2,14 +2,18 @@ import httpClient from "./httpClient";
 import { EetfestijnModel } from "../components/admin/EetfestijnModel";
 
 export function parseEvents(json: string): string[] {
+  if (!json) {
+    return [];
+  }
+
   try {
     return JSON.parse(json);
 
   } catch (err: any) {
     const errObj = {
-      message: err.message,
+      message: `parseEvents: ${err.message}`,
       stack: JSON.stringify(err),
-      componentStack: null,
+      componentStack: json,
       url: document.location.pathname,
     };
     httpClient.post('/config/Log', errObj);
@@ -27,9 +31,9 @@ export function parseEetfestijn(json: string): EetfestijnModel {
 
   } catch (err: any) {
     const errObj = {
-      message: err.message,
+      message: `parseEetfestijn: ${err.message}`,
       stack: JSON.stringify(err),
-      componentStack: null,
+      componentStack: json,
       url: document.location.pathname,
     };
     httpClient.post('/config/Log', errObj);
