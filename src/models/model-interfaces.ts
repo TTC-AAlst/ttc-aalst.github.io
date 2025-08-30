@@ -240,6 +240,7 @@ export interface IPlayer extends IStorePlayer {
   slug: string;
   getCompetition: (competition: Competition) => IPlayerCompetition;
   getTeam(comp: Competition): ITeam;
+  getTeams(): ITeam[];
 }
 
 export interface IPlayerContact {

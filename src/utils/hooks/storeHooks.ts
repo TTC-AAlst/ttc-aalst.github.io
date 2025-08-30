@@ -53,6 +53,11 @@ export const selectPlayers = createSelector(
   players => players.map(p => new PlayerModel(p) as IPlayer),
 );
 
+export const selectQuitters = createSelector(
+  [(state: RootState) => state.playersQuitters],
+  players => players.map(p => new PlayerModel(p) as IPlayer),
+);
+
 export const selectMatchesBeingPlayed = createSelector(
   selectMatches,
   matches => matches.filter(m => m.isBeingPlayed()),

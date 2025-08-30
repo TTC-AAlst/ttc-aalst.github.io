@@ -49,11 +49,15 @@ export default class PlayerModel implements IPlayer {
   }
 
   getTeam(competition: Competition): ITeam {
+    const teams = this.getTeams().filter(team => team.competition === competition);
+    return teams[0];
+  }
+
+  getTeams(): ITeam[] {
     const teams = storeUtil.getTeams()
-      .filter(team => team.competition === competition)
       .filter(team => team.players.some(tp => tp.playerId === this.id && (tp.type === 'Captain' || tp.type === 'Standard')));
 
-    return teams[0];
+    return teams;
   }
 }
 
