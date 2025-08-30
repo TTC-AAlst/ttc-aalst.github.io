@@ -234,9 +234,6 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
       if (userStatus === 'Major') {
         playersEdit = match.getPlayerFormation('Captain');
       }
-      if (playersEdit.length === 0) {
-        playersEdit = playerChoices.filter(x => x.matchPlayer.status === 'Play');
-      }
     }
 
     this.setState({
