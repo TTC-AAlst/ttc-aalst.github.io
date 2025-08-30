@@ -126,13 +126,11 @@ export const Teams = () => {
                   <button type="button" className="btn btn-danger" style={{marginRight: 5}} onClick={() => saveAndBlockAll(true)}>
                     {t('match.plys.saveAndBlockAll')}
                   </button>
-                  {user.canManageTeams() ? (
-                    <SaveButton
-                      onClick={() => saveAndBlockAll(false)}
-                      title={t('match.plys.tooltipSave')}
-                      style={{marginRight: 5}}
-                    />
-                  ) : null}
+                  <SaveButton
+                    onClick={() => saveAndBlockAll(false)}
+                    title={t('match.plys.tooltipSave')}
+                    style={{marginRight: 5}}
+                  />
                 </div>
               ) : null}
               <EditButton
