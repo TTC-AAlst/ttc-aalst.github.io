@@ -74,7 +74,7 @@ class MatchCard extends Component<MatchCardProps, MatchCardState> {
   componentDidMount() {
     this.props.getOpponentMatches({teamId: this.props.match.teamId, opponent: this.props.match.opponent});
 
-    if (this.props.match.players.length > this.props.match.getTeam().getTeamPlayerCount()) {
+    if (this.props.match.getTheirPlayers().length) {
       this.props.getPreviousEncounters(this.props.match);
     }
   }
@@ -96,7 +96,7 @@ class MatchCard extends Component<MatchCardProps, MatchCardState> {
       key: tabEventKeys.individualMatches,
       title: t('match.tabs.matchesTitle'),
       label: t('match.tabs.matches'),
-      show: match.games.length !== 0 || match.players.length > match.getTeam().getTeamPlayerCount(),
+      show: match.games.length !== 0 || !!match.getTheirPlayers().length,
     }, {
       key: tabEventKeys.scoresheet,
       title: t('match.tabs.scoresheet'),
