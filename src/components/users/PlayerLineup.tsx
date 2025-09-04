@@ -15,7 +15,7 @@ import {CannotEditMatchIcon} from '../matches/controls/CannotEditMatchIcon';
 import {SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOrLast} from '../teams/SwitchBetweenFirstAndLastRoundButton';
 import { t } from '../../locales';
 import { selectPlayer } from '../../reducers/matchesReducer';
-import { IMatch, ITeam } from '../../models/model-interfaces';
+import { IMatch, ITeam, MatchPlayerStatus } from '../../models/model-interfaces';
 
 type PlayerLineupProps = {
   selectPlayer: typeof selectPlayer,
@@ -42,7 +42,7 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
     };
   }
 
-  _onChangePlaying(match: IMatch, status, comment: string) {
+  _onChangePlaying(match: IMatch, status: MatchPlayerStatus, comment: string) {
     this.props.selectPlayer({
       matchId: match.id,
       status,
@@ -104,31 +104,26 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
               const matchPlayer = match.plays(this.props.playerId);
               const statusNote = matchPlayer ? matchPlayer.statusNote : '';
 
-              const getOnChangePlaying = status => this._onChangePlaying.bind(this, match, status, statusNote);
-              let buttons;
-              if (match.block) {
-                buttons = <CannotEditMatchIcon />;
-              } else {
-                buttons = (
-                  <ButtonToolbar>
-                    <Button style={{marginBottom: 5, width: 90}} variant="success" onClick={getOnChangePlaying('Play')}>
-                      {t('profile.play.canPlay')}
-                    </Button>
-                    <Button style={{marginBottom: 5, width: 90}} variant="danger" onClick={getOnChangePlaying('NotPlay')}>
-                      {t('profile.play.canNotPlay')}
-                    </Button>
-                    <Button style={{marginBottom: 5, width: 90}} variant="info" onClick={getOnChangePlaying('Maybe')}>
-                      {t('profile.play.canMaybe')}
-                    </Button>
-                    <Button style={{width: 90}} onClick={getOnChangePlaying('DontKnow')}>
-                      {t('profile.play.canDontKnow')}
-                    </Button>
-                    {this.state.showCommentId !== match.id ? (
-                      <CommentButton onClick={() => this.setState({showCommentId: match.id, comment: statusNote})} className="d-none d-sm-inline" />
-                    ) : null}
-                  </ButtonToolbar>
-                );
-              }
+              const getOnChangePlaying = (status: MatchPlayerStatus) => this._onChangePlaying.bind(this, match, status, statusNote);
+              const buttons = (
+                <ButtonToolbar>
+                  <Button style={{marginBottom: 5, width: 90}} variant="success" onClick={getOnChangePlaying('Play')}>
+                    {t('profile.play.canPlay')}
+                  </Button>
+                  <Button style={{marginBottom: 5, width: 90}} variant="danger" onClick={getOnChangePlaying('NotPlay')}>
+                    {t('profile.play.canNotPlay')}
+                  </Button>
+                  <Button style={{marginBottom: 5, width: 90}} variant="info" onClick={getOnChangePlaying('Maybe')}>
+                    {t('profile.play.canMaybe')}
+                  </Button>
+                  <Button style={{width: 90}} onClick={getOnChangePlaying('DontKnow')}>
+                    {t('profile.play.canDontKnow')}
+                  </Button>
+                  {this.state.showCommentId !== match.id ? (
+                    <CommentButton onClick={() => this.setState({showCommentId: match.id, comment: statusNote})} className="d-none d-sm-inline" />
+                  ) : null}
+                </ButtonToolbar>
+              );
 
               return (
                 <tr key={match.id} className={`table-${getPlayingStatusClass(matchPlayer?.status)}`}>

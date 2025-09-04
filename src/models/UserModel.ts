@@ -1,7 +1,6 @@
 import moment from 'moment';
 import storeUtil from '../storeUtil';
 import {IPlayer, ITeam, IMatch, IStoreTeam} from './model-interfaces';
-import TeamModel from './TeamModel';
 
 export const userRoles = ['Player', 'Board', 'Dev', 'System'] as const;
 export type UserRoles = typeof userRoles[number];
