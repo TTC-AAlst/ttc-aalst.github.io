@@ -120,7 +120,6 @@ const MatchesWeekPerCompetition = ({comp, editMode, matches}: MatchesWeekPerComp
     <div>
       <h4><strong>{comp}</strong></h4>
       <MatchesTable
-        team={matches[0].getTeam()}
         editMode={editMode}
         matches={matches.sort(matchSorter)}
         ownTeamLink="week"

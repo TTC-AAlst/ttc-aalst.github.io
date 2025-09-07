@@ -101,7 +101,8 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
           </thead>
           <tbody>
             {matches.map(match => {
-              const matchPlayer = match.plays(this.props.playerId);
+              const formation = match.getPlayerFormation('Play');
+              const matchPlayer = formation.find(x => x.id === this.props.playerId)?.matchPlayer;
               const statusNote = matchPlayer ? matchPlayer.statusNote : '';
 
               const getOnChangePlaying = (status: MatchPlayerStatus) => this._onChangePlaying.bind(this, match, status, statusNote);

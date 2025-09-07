@@ -38,8 +38,8 @@ export const TeamOverview = ({team, small}: TeamOverviewProps) => {
         <OpponentsTeamFormation matches={team.getMatches()} hideHeader />
       </div>
 
-      <TeamOverviewMatches matches={prevMatches} team={team} title={t('match.playedMatches')} />
-      <TeamOverviewMatches matches={nextMatches} team={team} title={t('match.nextMatches')} />
+      <TeamOverviewMatches matches={prevMatches} title={t('match.playedMatches')} />
+      <TeamOverviewMatches matches={nextMatches} title={t('match.nextMatches')} />
 
       <TeamOverviewPlayers team={team} />
 
@@ -54,12 +54,11 @@ const ucFirst = (input: string) => input[0].toUpperCase() + input.substr(1);
 
 type TeamOverviewMatchesProps = {
   matches: IMatch[],
-  team: ITeam,
   title: string,
 };
 
 
-const TeamOverviewMatches = ({matches, team, title}: TeamOverviewMatchesProps) => {
+const TeamOverviewMatches = ({matches, title}: TeamOverviewMatchesProps) => {
   const viewport = useViewport();
   if (matches.length === 0) {
     return <div />;
@@ -67,7 +66,7 @@ const TeamOverviewMatches = ({matches, team, title}: TeamOverviewMatchesProps) =
   return (
     <div>
       <h3>{ucFirst(title)}</h3>
-      <MatchesTable matches={matches} allowOpponentOnly team={team} viewport={viewport} />
+      <MatchesTable matches={matches} allowOpponentOnly viewport={viewport} />
     </div>
   );
 };

@@ -216,10 +216,7 @@ export default class MatchModel implements IMatch {
     return otherMatch;
   }
 
-  plays(
-    playerId: number | IPlayer,
-    statusFilter?: "onlyFinal",
-  ): IMatchPlayer | undefined {
+  plays(playerId: number | IPlayer, statusFilter?: "onlyFinal"): IMatchPlayer | undefined {
     if (playerId instanceof PlayerModel) {
       playerId = playerId.id;
     }

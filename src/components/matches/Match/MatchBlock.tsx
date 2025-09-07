@@ -1,12 +1,16 @@
 import React from 'react';
 import { Icon } from '../../controls/Icons/Icon';
 
-export const MatchBlock = ({block}: {block: string}) => {
+export const MatchBlock = ({block, displayNonBlocked}: {block: string, displayNonBlocked: boolean}) => {
   if (block === 'Captain') {
     return <CaptainIcon />;
   }
   if (block === 'Major') {
     return <MajorIcon />;
+  }
+
+  if (!displayNonBlocked) {
+    return null;
   }
 
   return <NotPublishedIcon />;

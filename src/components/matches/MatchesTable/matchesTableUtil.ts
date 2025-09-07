@@ -1,4 +1,10 @@
-import { ITeam } from "../../../models/model-interfaces";
+import { IMatch, ITeam } from "../../../models/model-interfaces";
+
+export const tableMatchViewportWidths = {
+  frenoyMatchId: 2000,
+  other: 2000,
+};
+
 
 export const getTablePlayers = (team: ITeam) => {
   // Matches the sorting with the Excel output (which happens on the backend)
@@ -9,4 +15,11 @@ export const getTablePlayers = (team: ITeam) => {
       const keyB = `${(b.type === 'Reserve' ? '1' : '0')}${b.player[comp]?.ranking}${b.player.alias}`;
       return keyA.localeCompare(keyB);
     });
+};
+
+export const getPlayerFormation = (match: IMatch) => {
+  if (match.block === 'Major' || match.block === 'Captain') {
+    return match.getPlayerFormation(match.block);
+  }
+  return match.getPlayerFormation('Captain');
 };

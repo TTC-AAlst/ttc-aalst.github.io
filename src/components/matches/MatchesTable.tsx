@@ -21,7 +21,6 @@ import UserModel from '../../models/UserModel';
 import storeUtil from '../../storeUtil';
 import { RootState } from '../../store';
 import { editMatchPlayers } from '../../reducers/matchesReducer';
-import { MatchesTablePlayerLineUp } from './MatchesTable/MatchesTablePlayerLineUp';
 
 function isPickedForMatch(status) {
   return status === 'Play' || status === 'Captain' || status === 'Major';
@@ -35,10 +34,6 @@ type MatchesTableProps = {
   editMode?: boolean,
   editMatchPlayers: typeof editMatchPlayers,
 
-  tableForm?: boolean,
-  team: ITeam,
-  onTablePlayerSelect?: (players: PickedPlayer[], match: IMatch) => void,
-  tablePlayers?: PickedPlayer[],
   striped?: boolean,
   ownTeamLink?: 'main' | 'matches' | 'ranking' | 'players' | 'matchesTable' | 'week',
 }
@@ -56,7 +51,6 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
   static defaultProps = {
     allowOpponentOnly: false,
     editMode: false,
-    tableForm: false,
     striped: false,
     ownTeamLink: 'main' as const,
   };
@@ -286,22 +280,6 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
         </tbody>,
       );
     });
-
-    if (this.props.tableForm) {
-      if (this.props.editMode) {
-        console.log('this.props.tablePlayers', this.props.tablePlayers);
-        console.log('this.props.onTablePlayerSelect', this.props.onTablePlayerSelect);
-      }
-
-
-      return (
-        <MatchesTablePlayerLineUp
-          team={this.props.team}
-          matches={this.props.matches}
-          editMode={!!this.props.editMode}
-        />
-      );
-    }
 
     return (
       <Table className="matches-table">

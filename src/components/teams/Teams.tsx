@@ -18,8 +18,11 @@ import {FrenoyButton} from '../controls/Buttons/FrenoyButton';
 import { t } from '../../locales';
 import { selectMatches, selectTeams, selectUser, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { useViewport } from '../../utils/hooks/useViewport';
-import { ITeam, PickedPlayer } from '../../models/model-interfaces';
+import { IMatch, ITeam, PickedPlayer } from '../../models/model-interfaces';
 import { editMatchPlayers } from '../../reducers/matchesReducer';
+import { MatchesTablePlayerLineUp } from '../matches/MatchesTable/MatchesTablePlayerLineUp';
+import { MatchesTableEditPlayerLineUp } from '../matches/MatchesTable/MatchesTableEditPlayerLineUp';
+import { getPlayerFormation } from '../matches/MatchesTable/matchesTableUtil';
 
 
 export const Teams = () => {
@@ -38,7 +41,7 @@ export const Teams = () => {
     if (user.canEditMatchesOrIsCaptain()) {
       let alreadyPicked: PickedPlayer[] = [];
       allMatches.forEach(match => {
-        const formation = match.getPlayerFormation(playerStatus);
+        const formation = getPlayerFormation(match);
         const matchPicked = formation.map(frm => ({...frm, matchId: match.id}));
         alreadyPicked = alreadyPicked.concat(matchPicked);
       });
@@ -154,16 +157,16 @@ export const Teams = () => {
       return;
     }
 
-    const perMatch = tablePlayers
-      .filter(tb => tableMatches.includes(tb.matchId))
-      .reduce((acc, tb) => {
-        if (!acc[tb.matchId]) {
-          acc[tb.matchId] = [];
-        }
-        acc[tb.matchId].push(tb);
-        return acc;
-      }, {} as {[matchId: number]: PickedPlayer[]});
+    const perMatch = tableMatches.reduce((acc, matchId) => {
+      acc[matchId] = [];
+      return acc;
+    }, {} as {[matchId: number]: PickedPlayer[]});
 
+    tablePlayers.forEach(ply => {
+      if (perMatch[ply.matchId]) {
+        perMatch[ply.matchId].push(ply);
+      }
+    });
 
     Object.entries(perMatch).forEach(([matchId, plyInfos]) => {
       dispatch(editMatchPlayers({
@@ -178,31 +181,42 @@ export const Teams = () => {
     setTableMatches([]);
   };
 
-  const renderTabViewContent = (team: ITeam, matches) => {
+  const renderTabViewContent = (team: ITeam, matches: IMatch[]) => {
     switch (params.view) {
       case 'matches':
-      case 'matchesTable':
+      case 'matchesTable': {
+        const canEditMatches = editMode && matches.some(match => user.canEditMatchPlayers(match));
         return (
           <div>
-            <MatchesTable
-              matches={matches}
-              allowOpponentOnly
-              striped
-              editMode={editMode}
-              tableForm={params.view === 'matchesTable'}
-              team={team}
-              tablePlayers={tablePlayers}
-              onTablePlayerSelect={(plyInfos, match) => {
-                setTablePlayers(plyInfos);
-                setTableMatches(tableMatches.concat([match.id]));
-              }}
-              viewport={viewport}
-            />
+            {params.view === 'matchesTable' ? (
+              <>
+                {!canEditMatches && <MatchesTablePlayerLineUp team={team} matches={matches} />}
+                {canEditMatches && (
+                  <MatchesTableEditPlayerLineUp
+                    team={team}
+                    matches={matches}
+                    tablePlayers={tablePlayers}
+                    onTablePlayerSelect={(plyInfos, match) => {
+                      setTablePlayers(plyInfos);
+                      setTableMatches(tableMatches.concat([match.id]));
+                    }}
+                  />
+                )}
+              </>
+            ) : (
+              <MatchesTable
+                matches={matches}
+                allowOpponentOnly
+                striped
+                editMode={editMode}
+                viewport={viewport}
+              />
+            )}
 
             <SwitchBetweenFirstAndLastRoundButton setMatchesFilter={setMatchesFilter} matchesFilter={matchesFilter} />
           </div>
         );
-
+      }
       case 'ranking':
         return <DivisionRanking team={team} />;
 
