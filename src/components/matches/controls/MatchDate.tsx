@@ -5,11 +5,12 @@ import { useViewport } from '../../../utils/hooks/useViewport';
 
 type MatchDateProps = {
   match: IMatch;
+  bigDisplayMinWith?: number;
 }
 
-export const MatchDate = ({match}: MatchDateProps) => {
+export const MatchDate = ({match, bigDisplayMinWith}: MatchDateProps) => {
   const viewport = useViewport();
-  if (viewport.width > 768) {
+  if (viewport.width > (bigDisplayMinWith ?? 768)) {
     // Big
     if (match.isStandardStartTime()) {
       return <span>{t('match.date', match.getDisplayDate())}</span>;

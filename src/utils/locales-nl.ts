@@ -270,8 +270,11 @@ export default {
       scoreOutDown: "Score bezoekers verlagen",
       scoreComment: "Match met wedstrijdverslag",
       block: {
+        block: 'Block',
         Captain: "Geblokkeerd door de kapitein",
-        Major: "Geblokkeerd door Arne",
+        Major: "Geblokkeerd door interclubleider",
+        None: "Niet geblokkeerd (nog niet zichtbaar voor de leden)",
+        incompleteTooltip: 'Te weinig spelers opgesteld!',
       },
       plys: {
         saveAndBlockAll: "Bewaren en Blokkeren",

@@ -3,10 +3,8 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Table from 'react-bootstrap/Table';
 import FormControl from 'react-bootstrap/FormControl';
-import {getPlayingStatusClass} from '../../models/PlayerModel';
 import MatchVs from './Match/MatchVs';
 import {PlayerAutoComplete} from '../players/PlayerAutoComplete';
-import {TeamCaptainIcon} from '../players/PlayerCard';
 import {PlayerCompetitionBadge, PlayerCompetitionButton} from '../players/PlayerBadges';
 import OwnPlayer from './Match/OwnPlayer';
 import {ThrillerIcon} from '../controls/Icons/ThrillerIcon';
@@ -23,6 +21,7 @@ import UserModel from '../../models/UserModel';
 import storeUtil from '../../storeUtil';
 import { RootState } from '../../store';
 import { editMatchPlayers } from '../../reducers/matchesReducer';
+import { MatchesTablePlayerLineUp } from './MatchesTable/MatchesTablePlayerLineUp';
 
 function isPickedForMatch(status) {
   return status === 'Play' || status === 'Captain' || status === 'Major';
@@ -70,96 +69,6 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
       comment: {edit: false, value: ''},
       playersEdit: [],
     };
-  }
-
-  _getTablePlayers() {
-    // Matches the sorting with the Excel output (which happens on the backend)
-    const comp = this.props.team.competition === 'Sporta' ? 'sporta' : 'vttl';
-    return this.props.team.getPlayers()
-      .sort((a, b) => {
-        const keyA = `${(a.type === 'Reserve' ? '1' : '0')}${a.player[comp]?.ranking}${a.player.alias}`;
-        const keyB = `${(b.type === 'Reserve' ? '1' : '0')}${b.player[comp]?.ranking}${b.player.alias}`;
-        return keyA.localeCompare(keyB);
-      });
-  }
-
-  _getTablePlayerHeaders() {
-    if (!this.props.team) {
-      return [];
-    }
-    return this._getTablePlayers()
-      .map(ply => (
-        <th key={ply.player.id}>
-          {ply.type === 'Captain' ? <TeamCaptainIcon /> : null}
-          <span style={{fontStyle: ply.type === 'Reserve' ? 'italic' : undefined}}>{ply.player.alias}</span>
-        </th>
-      ));
-  }
-
-  _renderTableEditMatchPlayers(match: IMatch) {
-    // console.log('--------------------------------');
-    const majorFormation = match.getPlayerFormation(undefined);
-    if (!this.props.editMode) {
-      return this._getTablePlayers()
-        .map(ply => {
-          const playerDecision = majorFormation.find(frm => frm.id === ply.player.id);
-          // if (playerDecision)
-          //  console.log(match.frenoyMatchId, playerDecision.player.alias, playerDecision.matchPlayer.status);
-          return (
-            <td key={ply.player.id} className={`td-${getPlayingStatusClass(playerDecision?.matchPlayer.status)}`}>
-              &nbsp;
-            </td>
-          );
-        });
-    }
-
-    const formation = match.getPlayerFormation('Play');
-    return this._getTablePlayers()
-      .map(plyInfo => {
-        const playerDecision = formation.find(frm => frm.id === plyInfo.player.id);
-        const majorDecision = majorFormation.find(frm => frm.id === plyInfo.player.id);
-        if (!this.props.user.canEditMatchPlayers(match)) {
-          return (
-            <td
-              style={{textAlign: 'center'}}
-              key={plyInfo.player.id}
-              className={`td-${getPlayingStatusClass(playerDecision?.matchPlayer.status)}`}
-            >
-              {majorDecision ? <PlayerCompetitionBadge plyInfo={majorDecision} competition={match.competition} /> : null}
-            </td>
-          );
-        }
-
-        let captainDecision = this.props.tablePlayers?.find(frm => frm.matchId === match.id && frm.id === plyInfo.player.id);
-        if (!captainDecision) {
-          captainDecision = {
-            id: plyInfo.player.id,
-            matchId: match.id,
-            matchPlayer: {status: '', statusNote: ''},
-            player: plyInfo.player,
-          };
-          if (playerDecision?.matchPlayer.statusNote) {
-            captainDecision.matchPlayer.statusNote = `${playerDecision.player.alias}: ${playerDecision?.matchPlayer.statusNote}`;
-          }
-        }
-
-        const onButtonClick = this._toggleTablePlayer.bind(this, plyInfo.player.id, match);
-        return (
-          <td
-            style={{textAlign: 'center'}}
-            key={plyInfo.player.id}
-            className={`td-${getPlayingStatusClass(playerDecision?.matchPlayer.status)}`}
-          >
-            <PlayerCompetitionButton
-              plyInfo={captainDecision}
-              isPicked={!!captainDecision.matchPlayer.status}
-              actionIconClass="fa fa-thumbs-o-up"
-              onButtonClick={onButtonClick}
-              competition={match.competition}
-            />
-          </td>
-        );
-      });
   }
 
   _renderEditMatchPlayers() {
@@ -244,26 +153,6 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
     });
   }
 
-  _toggleTablePlayer(playerId: number, match: IMatch) {
-    if (!this.props.onTablePlayerSelect || !this.props.tablePlayers) {
-      return;
-    }
-
-    const ply = this.props.tablePlayers?.find(x => x.id === playerId && x.matchId === match.id);
-    if (ply) {
-      this.props.onTablePlayerSelect(this.props.tablePlayers.filter(x => x !== ply), match);
-
-    } else {
-      const plyInfo = {
-        id: playerId,
-        matchId: match.id,
-        player: storeUtil.getPlayer(playerId),
-        matchPlayer: {status: this._getUserStatus(), statusNote: ''},
-      };
-      this.props.onTablePlayerSelect(this.props.tablePlayers.concat([plyInfo]), match);
-    }
-  }
-
   _togglePlayer(playerId: number) {
     const ply = this.state.playersEdit.find(x => x.id === playerId);
     if (ply) {
@@ -307,7 +196,7 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
     this.props.matches.forEach((match, i) => {
       const singleMatchRows: any[] = [];
 
-      const stripeColor = {backgroundColor: i % 2 === 0 && !this.props.tableForm ? '#f9f9f9' : undefined};
+      const stripeColor = {backgroundColor: i % 2 === 0 ? '#f9f9f9' : undefined};
       if (this.props.user.playerId && !this.props.striped) {
         const playsThisMatch = match.plays(this.props.user.playerId);
         const playsThisTeam = match.getTeam().plays(this.props.user.playerId);
@@ -340,36 +229,30 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
               withLinks
               withPosition={viewWidth > 400}
             />
-            {this.props.tableForm && this.props.editMode && match.getPlayerFormation(undefined).length < match.getTeamPlayerCount() && (
-              <i className="fa fa-exclamation-circle" style={{color: 'red', float: 'right', fontSize: '1.5em', marginTop: 3}} />
+          </td>
+          <td>
+            {!this.props.editMode || match.isSyncedWithFrenoy ? (
+              <ViewMatchDetailsButton match={match} size={viewWidth < 600 ? 'sm' : null} />
+
+            ) : !this.props.user.canEditMatchPlayers(match) ? (
+              <CannotEditMatchIcon />
+
+            ) : this.state.editMatch.id !== match.id ? (
+              <OpenMatchForEditButton onClick={this._onOpenEditMatchForm.bind(this, match)} match={match} />
+
+            ) : (
+              <SaveMatchButtons
+                onSave={this._saveFormation.bind(this, {blockAlso: false, closeForm: true})}
+                onBlock={this._saveFormation.bind(this, {blockAlso: true, closeForm: true})}
+                onCommentsToggle={() => this.setState(prevState => ({comment: {...prevState.comment, edit: !prevState.comment.edit}}))}
+              />
             )}
           </td>
-          {this.props.tableForm ? null : (
-            <td>
-              {!this.props.editMode || match.isSyncedWithFrenoy ? (
-                <ViewMatchDetailsButton match={match} size={viewWidth < 600 ? 'sm' : null} />
-
-              ) : !this.props.user.canEditMatchPlayers(match) ? (
-                <CannotEditMatchIcon />
-
-              ) : this.state.editMatch.id !== match.id ? (
-                <OpenMatchForEditButton onClick={this._onOpenEditMatchForm.bind(this, match)} match={match} />
-
-              ) : (
-                <SaveMatchButtons
-                  onSave={this._saveFormation.bind(this, {blockAlso: false, closeForm: true})}
-                  onBlock={this._saveFormation.bind(this, {blockAlso: true, closeForm: true})}
-                  onCommentsToggle={() => this.setState(prevState => ({comment: {...prevState.comment, edit: !prevState.comment.edit}}))}
-                />
-              )}
-            </td>
-          )}
-          {this.props.tableForm ? this._renderTableEditMatchPlayers(match) : null}
         </tr>,
       );
 
       // Match formation comments row
-      if (!this.props.tableForm && this.props.editMode && this.props.user.canEditMatchPlayers(match)
+      if (this.props.editMode && this.props.user.canEditMatchPlayers(match)
         && ((this.state.editMatch.id === match.id && (this.state.comment.edit || this.state.comment.value)) || match.formationComment)) {
 
         singleMatchRows.push(
@@ -385,9 +268,9 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
         );
       }
 
-      // Display the players of the match (non TableForm)
+      // Display the players of the match
       const isMatchInEdit = this.props.editMode && this.state.editMatch.id === match.id && this.props.user.canEditMatchPlayers(match);
-      if (!this.props.tableForm && (isMatchInEdit || match.block || match.isSyncedWithFrenoy)) {
+      if (isMatchInEdit || match.block || match.isSyncedWithFrenoy) {
         singleMatchRows.push(
           <tr key={`${match.id}_c`} style={stripeColor}>
             <td colSpan={4} style={{border: 'none'}}>
@@ -404,6 +287,22 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
       );
     });
 
+    if (this.props.tableForm) {
+      if (this.props.editMode) {
+        console.log('this.props.tablePlayers', this.props.tablePlayers);
+        console.log('this.props.onTablePlayerSelect', this.props.onTablePlayerSelect);
+      }
+
+
+      return (
+        <MatchesTablePlayerLineUp
+          team={this.props.team}
+          matches={this.props.matches}
+          editMode={!!this.props.editMode}
+        />
+      );
+    }
+
     return (
       <Table className="matches-table">
         <thead>
@@ -411,22 +310,10 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
             {showDate ? <th>{t('common.date')}</th> : null}
             <th className="d-none d-sm-table-cell">{t('common.frenoy')}</th>
             <th>{t('teamCalendar.match')}</th>
-            {!this.props.tableForm ? <th>{this.props.editMode ? t('match.plys.blockMatchTitle') : t('teamCalendar.score')}</th> : null}
-            {this.props.tableForm ? this._getTablePlayerHeaders() : null}
+            <th>{this.props.editMode ? t('match.plys.blockMatchTitle') : t('teamCalendar.score')}</th>
           </tr>
         </thead>
         {matchRows}
-        {this.props.tableForm && this.props.editMode ? (
-          <tr>
-            <td colSpan={3}>&nbsp;</td>
-            {this._getTablePlayers().map(ply => {
-              const played = this.props.matches.filter(match => this.props.tablePlayers?.find(frm => frm.matchId === match.id && frm.id === ply.player.id));
-              return (
-                <td key={ply.player.id} style={{textAlign: 'center', fontWeight: 'bold'}}>{played.length}</td>
-              );
-            })}
-          </tr>
-        ) : null}
       </Table>
     );
   }

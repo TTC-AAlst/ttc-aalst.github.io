@@ -24,3 +24,12 @@
 .td-info {
   background-color: #cff4fc !important;
 }
+
+.wrapper .container:has(.max-width-table) {
+  width: 100% !important;
+  max-width: 2000px !important;
+
+  td {
+    vertical-align: middle;
+  }
+}
