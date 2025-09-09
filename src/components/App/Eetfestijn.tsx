@@ -5,11 +5,12 @@ import { useTtcSelector } from '../../utils/hooks/storeHooks';
 import { EetfestijnModel } from '../admin/EetfestijnModel';
 import { parseEetfestijn } from '../../utils/paramParser';
 
-const eetfesijnStyle = {
+const eetfestijnStyle = {
   padding: 0,
   width: '100%',
   margin: 'auto',
   marginLeft: 5,
+  marginBottom: 16,
 };
 
 
@@ -25,7 +26,7 @@ export const Eetfestijn = () => {
   }
 
   return (
-    <Paper style={eetfesijnStyle}>
+    <Paper style={eetfestijnStyle}>
       <div id="eetfestijn">
         <h1 style={{fontSize: 26}}>
           Eetfestijn TTC Aalst
