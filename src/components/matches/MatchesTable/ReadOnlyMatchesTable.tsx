@@ -34,7 +34,7 @@ export const ReadOnlyMatchesTable = ({matches, forceStripes, ownTeamLink, allowO
             {(match.block || match.isSyncedWithFrenoy) && (
               <tr style={stripeColor}>
                 <td colSpan={4} style={{border: 'none', paddingTop: 0}}>
-                  <ReadOnlyMatchPlayers match={match} />
+                  <ReadOnlyMatchPlayers match={match} displayNonBlocked={false} />
                 </td>
               </tr>
             )}

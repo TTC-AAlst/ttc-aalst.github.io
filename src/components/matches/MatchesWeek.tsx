@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import MatchesTable from './MatchesTable';
+import { MatchesTable } from './MatchesTable';
 import { MatchesWeekEmail } from './MatchesWeeks/MatchesWeekEmail';
 import { WeekTitle } from './MatchesWeeks/WeekTitle';
 import { WeekCalcer } from './MatchesWeeks/WeekCalcer';
@@ -8,7 +8,6 @@ import { ButtonStack } from '../controls/Buttons/ButtonStack';
 import { EditButton } from '../controls/Buttons/EditButton';
 import { Competition, IMatch } from '../../models/model-interfaces';
 import { t } from '../../locales';
-import { useViewport } from '../../utils/hooks/useViewport';
 import { selectFreeMatches, selectMatches, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 
 
@@ -108,7 +107,6 @@ type MatchesWeekPerCompetitionProps = {
 };
 
 const MatchesWeekPerCompetition = ({comp, editMode, matches}: MatchesWeekPerCompetitionProps) => {
-  const viewport = useViewport();
   const matchSorter = (a: IMatch, b: IMatch) => a.getTeam().teamCode.localeCompare(b.getTeam().teamCode);
 
   matches = matches.filter(x => x.competition === comp);
@@ -123,7 +121,6 @@ const MatchesWeekPerCompetition = ({comp, editMode, matches}: MatchesWeekPerComp
         editMode={editMode}
         matches={matches.sort(matchSorter)}
         ownTeamLink="week"
-        viewport={viewport}
       />
     </div>
   );

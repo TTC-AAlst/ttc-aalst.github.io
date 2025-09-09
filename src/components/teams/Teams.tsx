@@ -8,7 +8,7 @@ import {TeamHeader} from './controls/TeamHeader';
 import {TeamTabTitle} from './controls/TeamTabTitle';
 import {SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOrLast} from './SwitchBetweenFirstAndLastRoundButton';
 import {PlayersCardGallery} from '../players/PlayersCardGallery';
-import MatchesTable from '../matches/MatchesTable';
+import {MatchesTable} from '../matches/MatchesTable';
 import {TeamMatchesWeek} from './TeamMatchesWeek';
 import {ButtonStack} from '../controls/Buttons/ButtonStack';
 import {SaveButton} from '../controls/Buttons/SaveButton';
@@ -216,7 +216,6 @@ export const Teams = () => {
                 allowOpponentOnly
                 striped
                 editMode={canEditMatches}
-                viewport={viewport}
               />
             )}
 

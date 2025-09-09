@@ -73,7 +73,13 @@ const matchBlockStyle = {
   verticalAlign: 'middle',
 };
 
-export const ReadOnlyMatchPlayers = ({match}: {match: IMatch}) => {
+type ReadOnlyMatchPlayersProps = {
+  match: IMatch;
+  /** Display line up that is not yet blocked */
+  displayNonBlocked: boolean;
+}
+
+export const ReadOnlyMatchPlayers = ({match, displayNonBlocked}: ReadOnlyMatchPlayersProps) => {
   if (match.isSyncedWithFrenoy) {
     return (
       <div style={{marginBottom: 4}}>
@@ -86,11 +92,14 @@ export const ReadOnlyMatchPlayers = ({match}: {match: IMatch}) => {
     );
   }
 
-  const players = match.getPlayerFormation(undefined);
+  let players = match.getPlayerFormation('onlyFinal');
+  if (!match.block && displayNonBlocked) {
+    players = match.getPlayerFormation('Captain');
+  }
   return (
     <div style={{marginBottom: 4}}>
       <span style={matchBlockStyle}>
-        <MatchBlock block={match.block} displayNonBlocked={false} />
+        <MatchBlock block={match.block} displayNonBlocked={displayNonBlocked} />
       </span>
       {players.map(plyInfo => (
         <PlayerCompetitionBadge

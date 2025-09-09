@@ -1,8 +1,8 @@
 import React from 'react';
 import {EditIcon} from '../../controls/Icons/EditIcon';
-import {Icon} from '../../controls/Icons/Icon';
 import {IMatch} from '../../../models/model-interfaces';
 import { t } from '../../../locales';
+import { MatchBlock } from '../Match/MatchBlock';
 
 type OpenMatchForEditButtonProps = {
   onClick: () => void;
@@ -20,12 +20,9 @@ export const OpenMatchForEditButton = ({onClick, match}: OpenMatchForEditButtonP
   >
     <span className="fa-stack fa-sm">
       {!match.block ? (
-        <EditIcon className="fa-stack-1x" />
+        <EditIcon />
       ) : (
-        <span>
-          <Icon fa="fa fa-anchor fa-stack-1x" />
-          <Icon fa="fa fa-ban fa-stack-2x text-danger" />
-        </span>
+        <MatchBlock block={match.block} displayNonBlocked />
       )}
     </span>
   </button>

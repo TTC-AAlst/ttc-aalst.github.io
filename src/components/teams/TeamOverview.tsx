@@ -1,13 +1,12 @@
 import React from 'react';
 import moment from 'moment';
-import MatchesTable from '../matches/MatchesTable';
-import {TeamPlayerAvatars} from './controls/TeamPlayerAvatars';
-import {TeamOverviewPlayers} from './controls/TeamOverviewPlayers';
-import {TeamOverviewRanking} from './controls/TeamOverviewRanking';
-import {OpponentsTeamFormation} from '../matches/Match/OpponentsTeamFormation';
+import { MatchesTable } from '../matches/MatchesTable';
+import { TeamPlayerAvatars } from './controls/TeamPlayerAvatars';
+import { TeamOverviewPlayers } from './controls/TeamOverviewPlayers';
+import { TeamOverviewRanking } from './controls/TeamOverviewRanking';
+import { OpponentsTeamFormation } from '../matches/Match/OpponentsTeamFormation';
 import { IMatch, ITeam } from '../../models/model-interfaces';
 import { t } from '../../locales';
-import { useViewport } from '../../utils/hooks/useViewport';
 
 type TeamOverviewProps = {
   team: ITeam,
@@ -59,14 +58,13 @@ type TeamOverviewMatchesProps = {
 
 
 const TeamOverviewMatches = ({matches, title}: TeamOverviewMatchesProps) => {
-  const viewport = useViewport();
   if (matches.length === 0) {
     return <div />;
   }
   return (
     <div>
       <h3>{ucFirst(title)}</h3>
-      <MatchesTable matches={matches} allowOpponentOnly viewport={viewport} />
+      <MatchesTable matches={matches} allowOpponentOnly />
     </div>
   );
 };
