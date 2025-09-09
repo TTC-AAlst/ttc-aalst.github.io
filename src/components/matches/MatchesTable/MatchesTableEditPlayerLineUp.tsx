@@ -34,7 +34,7 @@ export const MatchesTableEditPlayerLineUp = ({team, matches, tablePlayers, onTab
         return (
           <tbody key={match.id}>
             <tr key={match.id}>
-              <MatchesTablePlayerLineUpDateCell match={match} team={team} />
+              <MatchesTablePlayerLineUpDateCell match={match} team={team} bigDisplayMinWidth={tableMatchViewportWidths.other} />
               <MatchesTablePlayerLineUpFrenoyMatchIdCell match={match} />
               <MatchesTablePlayerLineUpMatchVsCell match={match} playerCount={canEditFormation ? tablePlayers.filter(x => x.matchId === match.id).length : 0} />
               <MatchesTablePlayerLineUpMatchBlockCell match={match} displayNonBlocked={canEditFormation} />

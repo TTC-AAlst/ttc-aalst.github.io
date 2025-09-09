@@ -23,6 +23,7 @@ import { editMatchPlayers } from '../../reducers/matchesReducer';
 import { MatchesTablePlayerLineUp } from '../matches/MatchesTable/MatchesTablePlayerLineUp';
 import { MatchesTableEditPlayerLineUp } from '../matches/MatchesTable/MatchesTableEditPlayerLineUp';
 import { getPlayerFormation } from '../matches/MatchesTable/matchesTableUtil';
+import { Icon } from '../controls/Icons/Icon';
 
 
 export const Teams = () => {
@@ -36,7 +37,6 @@ export const Teams = () => {
   const [editMode, setEditMode] = useState(false);
   const [matchesFilter, setMatchesFilter] = useState<ReturnType<typeof getFirstOrLast>>(getFirstOrLast());
 
-  const playerStatus = user.canManageTeams() ? 'Major' : 'Captain';
   const getAlreadyPicked = (): PickedPlayer[] => {
     if (user.canEditMatchesOrIsCaptain()) {
       let alreadyPicked: PickedPlayer[] = [];
@@ -126,11 +126,18 @@ export const Teams = () => {
             <div className="pull-right" style={{marginLeft: 5}}>
               {editMode && view !== 'matches' ? (
                 <div style={{display: 'inline'}}>
-                  <button type="button" className="btn btn-danger" style={{marginRight: 5}} onClick={() => saveAndBlockAll(true)}>
+                  {user.canManageTeams() && (
+                    <button type="button" className="btn btn-success" style={{marginRight: 5}} onClick={() => saveAndBlockAll(true, 'Major')}>
+                      <Icon fa="fa fa-angle-double-up" style={{marginRight: 6}} translate tooltip="match.block.Captain" />
+                      {t('match.plys.saveAndBlockAll')}
+                    </button>
+                  )}
+                  <button type="button" className="btn btn-warning" style={{marginRight: 5}} onClick={() => saveAndBlockAll(true, 'Captain')}>
+                    <Icon fa="fa fa-star" style={{marginRight: 6}} translate tooltip="match.block.Captain" />
                     {t('match.plys.saveAndBlockAll')}
                   </button>
                   <SaveButton
-                    onClick={() => saveAndBlockAll(false)}
+                    onClick={() => saveAndBlockAll(false, 'Captain')}
                     title={t('match.plys.tooltipSave')}
                     style={{marginRight: 5}}
                   />
@@ -152,7 +159,7 @@ export const Teams = () => {
 
 
 
-  const saveAndBlockAll = (majorBlock: boolean) => {
+  const saveAndBlockAll = (blockAlso: boolean, playerStatus: 'Captain' | 'Major') => {
     if (!tableMatches.length) {
       return;
     }
@@ -172,8 +179,8 @@ export const Teams = () => {
       dispatch(editMatchPlayers({
         matchId: parseInt(matchId, 10),
         playerIds: plyInfos.map(x => x.id),
-        blockAlso: true,
-        newStatus: !majorBlock ? 'Captain' : playerStatus,
+        blockAlso,
+        newStatus: playerStatus,
         comment: '',
       }));
     });
@@ -208,7 +215,7 @@ export const Teams = () => {
                 matches={matches}
                 allowOpponentOnly
                 striped
-                editMode={editMode}
+                editMode={canEditMatches}
                 viewport={viewport}
               />
             )}

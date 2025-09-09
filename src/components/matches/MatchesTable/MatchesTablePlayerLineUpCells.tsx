@@ -13,14 +13,15 @@ import { Icon } from '../../controls/Icons/Icon';
 type MatchesTablePlayerLineUpProps = {
   team: ITeam;
   match: IMatch;
+  bigDisplayMinWidth?: number;
 }
 
-export const MatchesTablePlayerLineUpDateCell = ({team, match}: MatchesTablePlayerLineUpProps) => (
+export const MatchesTablePlayerLineUpDateCell = ({team, match, bigDisplayMinWidth}: MatchesTablePlayerLineUpProps) => (
   <td>
     {match.shouldBePlayed && !!team.getThriller(match) && (
       <ThrillerIcon color="red" />
     )}
-    {match.shouldBePlayed ? <MatchDate match={match} bigDisplayMinWith={tableMatchViewportWidths.other} /> : null}
+    {match.shouldBePlayed ? <MatchDate match={match} bigDisplayMinWidth={bigDisplayMinWidth} /> : null}
   </td>
 );
 

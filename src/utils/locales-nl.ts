@@ -277,7 +277,7 @@ export default {
         incompleteTooltip: 'Te weinig spelers opgesteld!',
       },
       plys: {
-        saveAndBlockAll: "Bewaren en Blokkeren",
+        saveAndBlockAll: "Blokkeren",
         choiceCaptain: "OPGESTELD",
         choicePlayers: "Keuze spelers",
         blockMatchTitle: "Opstelling",

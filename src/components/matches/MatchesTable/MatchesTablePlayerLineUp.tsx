@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 import { IMatch, ITeam } from '../../../models/model-interfaces';
-import { getPlayerFormation, getTablePlayers } from './matchesTableUtil';
+import { getPlayerFormation, getTablePlayers, tableMatchViewportWidths } from './matchesTableUtil';
 import { MatchesTablePlayerLineUpHeader } from './MatchesTablePlayerLineUpHeader';
 import { MatchesTablePlayerLineUpDateCell, MatchesTablePlayerLineUpFrenoyMatchIdCell, MatchesTablePlayerLineUpMatchBlockCell,
   MatchesTablePlayerLineUpMatchVsCell,
@@ -28,7 +28,7 @@ export const MatchesTablePlayerLineUp = ({team, matches}: MatchesTablePlayerLine
         return (
           <tbody key={match.id}>
             <tr key={match.id} style={stripeColor}>
-              <MatchesTablePlayerLineUpDateCell match={match} team={team} />
+              <MatchesTablePlayerLineUpDateCell match={match} team={team} bigDisplayMinWidth={tableMatchViewportWidths.other} />
               <MatchesTablePlayerLineUpFrenoyMatchIdCell match={match} />
               <MatchesTablePlayerLineUpMatchVsCell match={match} playerCount={canSeeFormation ? playerFormation.length : 0} />
               <MatchesTablePlayerLineUpMatchBlockCell match={match} displayNonBlocked={canSeeFormation} />

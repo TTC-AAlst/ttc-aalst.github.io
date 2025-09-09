@@ -23,3 +23,13 @@ export const getPlayerFormation = (match: IMatch) => {
   }
   return match.getPlayerFormation('Captain');
 };
+
+export function getRowStripeColor(index: number, match: IMatch, playerId: number, forceStriped: boolean) {
+  if (playerId && !forceStriped) {
+    const playsThisMatch = match.plays(playerId, 'onlyFinal');
+    const playsThisTeam = match.getTeam().plays(playerId);
+    return (playsThisMatch || playsThisTeam) ? '#f9f9f9' : undefined;
+  }
+
+  return index % 2 === 0 ? '#f9f9f9' : undefined;
+}

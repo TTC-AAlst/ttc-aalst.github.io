@@ -3,24 +3,23 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Table from 'react-bootstrap/Table';
 import FormControl from 'react-bootstrap/FormControl';
-import MatchVs from './Match/MatchVs';
 import {PlayerAutoComplete} from '../players/PlayerAutoComplete';
-import {PlayerCompetitionBadge, PlayerCompetitionButton} from '../players/PlayerBadges';
-import OwnPlayer from './Match/OwnPlayer';
-import {ThrillerIcon} from '../controls/Icons/ThrillerIcon';
-import {MatchDate} from './controls/MatchDate';
-import {FrenoyWeekLink} from '../controls/Buttons/FrenoyButton';
+import {PlayerCompetitionButton} from '../players/PlayerBadges';
 import {ViewMatchDetailsButton} from './controls/ViewMatchDetailsButton';
 import {CannotEditMatchIcon} from './controls/CannotEditMatchIcon';
 import {OpenMatchForEditButton} from './controls/OpenMatchForEditButton';
 import {SaveMatchButtons} from './controls/SaveMatchButtons';
 import { t } from '../../locales';
-import { IMatch, IMatchPlayerInfo, ITeam, ITeamPlayerInfo, PickedPlayer } from '../../models/model-interfaces';
+import { IMatch, IMatchPlayerInfo, ITeamPlayerInfo, PickedPlayer } from '../../models/model-interfaces';
 import { Viewport } from '../../utils/hooks/useViewport';
 import UserModel from '../../models/UserModel';
 import storeUtil from '../../storeUtil';
 import { RootState } from '../../store';
 import { editMatchPlayers } from '../../reducers/matchesReducer';
+import { ReadOnlyMatchesTable } from './MatchesTable/ReadOnlyMatchesTable';
+import { MatchesTableDateCell, MatchesTableFrenoyLinkCell, MatchesTableHeader,
+  MatchesTableMatchVsCell, ReadOnlyMatchPlayers } from './MatchesTable/MatchesTableCells';
+import { getRowStripeColor } from './MatchesTable/matchesTableUtil';
 
 function isPickedForMatch(status) {
   return status === 'Play' || status === 'Captain' || status === 'Major';
@@ -182,6 +181,17 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
   }
 
   render() {
+    if (!this.props.editMode) {
+      return (
+        <ReadOnlyMatchesTable
+          matches={this.props.matches}
+          forceStripes={!!this.props.striped}
+          ownTeamLink={this.props.ownTeamLink}
+          allowOpponentOnly={this.props.allowOpponentOnly}
+        />
+      );
+    }
+
     const matchRows: any[] = [];
 
     const viewWidth = this.props.viewport.width;
@@ -190,40 +200,15 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
     this.props.matches.forEach((match, i) => {
       const singleMatchRows: any[] = [];
 
-      const stripeColor = {backgroundColor: i % 2 === 0 ? '#f9f9f9' : undefined};
-      if (this.props.user.playerId && !this.props.striped) {
-        const playsThisMatch = match.plays(this.props.user.playerId);
-        const playsThisTeam = match.getTeam().plays(this.props.user.playerId);
-        stripeColor.backgroundColor = playsThisMatch || playsThisTeam ? '#f9f9f9' : undefined;
-      }
+      const stripeColor = {backgroundColor: getRowStripeColor(i, match, this.props.user.playerId, !!this.props.striped)};
 
-      let thrillerIcon: any;
-      if (match.shouldBePlayed) {
-        const team = match.getTeam();
-        if (team.getThriller(match)) {
-          thrillerIcon = <ThrillerIcon color="red" />;
-        }
-      }
 
       // Complexity galore
       singleMatchRows.push(
         <tr key={match.id} style={stripeColor}>
-          {showDate ? (
-            <td>
-              {thrillerIcon}
-              {match.shouldBePlayed ? <MatchDate match={match} /> : null}
-            </td>
-          ) : null}
-          <td className="d-none d-sm-table-cell"><FrenoyWeekLink match={match} /></td>
-          <td>
-            <MatchVs
-              match={match}
-              opponentOnly={this.props.allowOpponentOnly && viewWidth < 450}
-              ownTeamLink={this.props.ownTeamLink}
-              withLinks
-              withPosition={viewWidth > 400}
-            />
-          </td>
+          <MatchesTableDateCell match={match} matches={this.props.matches} />
+          <MatchesTableFrenoyLinkCell match={match} />
+          <MatchesTableMatchVsCell match={match} ownTeamLink={this.props.ownTeamLink} allowOpponentOnly={this.props.allowOpponentOnly} />
           <td>
             {!this.props.editMode || match.isSyncedWithFrenoy ? (
               <ViewMatchDetailsButton match={match} size={viewWidth < 600 ? 'sm' : null} />
@@ -283,14 +268,7 @@ class MatchesTable extends Component<MatchesTableProps, MatchesTableState> {
 
     return (
       <Table className="matches-table">
-        <thead>
-          <tr>
-            {showDate ? <th>{t('common.date')}</th> : null}
-            <th className="d-none d-sm-table-cell">{t('common.frenoy')}</th>
-            <th>{t('teamCalendar.match')}</th>
-            <th>{this.props.editMode ? t('match.plys.blockMatchTitle') : t('teamCalendar.score')}</th>
-          </tr>
-        </thead>
+        <MatchesTableHeader editMode={this.props.editMode} matches={this.props.matches} />
         {matchRows}
       </Table>
     );
@@ -306,33 +284,7 @@ export default connect((state: RootState) => ({user: new UserModel(state.user)})
 
 
 
-const ReadOnlyMatchPlayers = ({match}: {match: IMatch}) => {
-  if (match.isSyncedWithFrenoy) {
-    return (
-      <div style={{marginBottom: 4}}>
-        {match.getOwnPlayers().map(ply => (
-          <div style={{display: 'inline-block', marginRight: 7}} key={`ply-${ply.playerId}`}>
-            <OwnPlayer match={match} ply={ply} />
-          </div>
-        ))}
-      </div>
-    );
-  }
 
-  const players = match.getPlayerFormation(undefined);
-  return (
-    <div style={{marginBottom: 4}}>
-      {players.map(plyInfo => (
-        <PlayerCompetitionBadge
-          plyInfo={plyInfo}
-          competition={match.competition}
-          style={{marginBottom: 4, marginRight: 5}}
-          key={`ply-${plyInfo.player.id}`}
-        />
-      ))}
-    </div>
-  );
-};
 
 
 type CommentFormProps = {

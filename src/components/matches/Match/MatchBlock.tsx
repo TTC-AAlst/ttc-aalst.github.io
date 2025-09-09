@@ -1,7 +1,12 @@
 import React from 'react';
 import { Icon } from '../../controls/Icons/Icon';
 
-export const MatchBlock = ({block, displayNonBlocked}: {block: string, displayNonBlocked: boolean}) => {
+type MatchBlockProps = {
+  block: string;
+  displayNonBlocked: boolean;
+}
+
+export const MatchBlock = ({block, displayNonBlocked}: MatchBlockProps) => {
   if (block === 'Captain') {
     return <CaptainIcon />;
   }
@@ -28,7 +33,7 @@ const NotPublishedIcon = () => (
 const CaptainIcon = () => (
   <Icon
     fa="fa fa-star"
-    style={{color: '#C0C0C0'}}
+    style={{color: '#ffc107'}}
     translate
     tooltip="match.block.Captain"
   />
@@ -37,7 +42,7 @@ const CaptainIcon = () => (
 const MajorIcon = () => (
   <Icon
     fa="fa fa-2x fa-angle-double-up"
-    style={{color: '#ffaf0f'}}
+    style={{color: '#198754'}}
     translate
     tooltip="match.block.Major"
   />
