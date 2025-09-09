@@ -31,7 +31,7 @@ export const Navigation = ({navOpen, closeNav}: NavigationProps) => {
   };
 
   return (
-    <Drawer open={navOpen}>
+    <Drawer open={navOpen} onClose={closeNav}>
       <AppBar>
         <Toolbar variant="dense">
           <Typography className="clickable" variant="subtitle1" color="inherit" style={{flexGrow: 1, fontSize: '1.7rem'}} onClick={closeNav}>

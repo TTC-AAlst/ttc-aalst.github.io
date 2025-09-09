@@ -11,7 +11,6 @@ import { Footer } from '../skeleton/Footer/Footer';
 import { FullScreenSpinner } from '../controls/controls/Spinner';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { clearSnackbar } from '../../reducers/configReducer';
-import { useOnClickOutside } from '../../utils/hooks/useOnClickOutside';
 import { ErrorBoundary } from './ErrorBoundary';
 
 import './App.scss';
@@ -23,7 +22,6 @@ export const App = ({Component}: {Component: any}) => {
   const navigate = useNavigate();
   const [navOpen, setNavOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useOnClickOutside(ref, () => setNavOpen(false));
 
   useEffect(() => {
     ReactGA.send({ hitType: 'pageview', page: location.pathname + location.search });
