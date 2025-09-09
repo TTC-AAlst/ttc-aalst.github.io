@@ -33,7 +33,7 @@ export const TeamOverview = ({team, small}: TeamOverviewProps) => {
       <div className="col-md-8">
         <TeamOverviewRanking team={team} small={small} />
       </div>
-      <div className="col-md-4">
+      <div className="col-md-4" style={{paddingTop: 16}}>
         <h3>{t('common.teamFormations')}</h3>
         <OpponentsTeamFormation matches={team.getMatches()} hideHeader />
       </div>
