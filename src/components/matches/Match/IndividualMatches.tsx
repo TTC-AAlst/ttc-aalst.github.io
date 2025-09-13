@@ -1,4 +1,5 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
+import { createSelector } from '@reduxjs/toolkit';
 import cn from 'classnames';
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
@@ -13,6 +14,7 @@ import { t } from '../../../locales';
 import storeUtil from '../../../storeUtil';
 import { useViewport } from '../../../utils/hooks/useViewport';
 import { useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { RootState } from '../../../store';
 
 type IndividualMatchesProps = {
   match: IMatch;
@@ -122,8 +124,7 @@ const PreviousEncounters = ({match}: {match: IMatch}) => {
                 <EncountersTable
                   key={theirPlayer.uniqueIndex}
                   encounters={vsEncounter}
-                  homePlayer={player.home ? player : match.getTheirPlayers()[0]}
-
+                  ourPlayer={player}
                 />
               );
             })}
@@ -135,10 +136,13 @@ const PreviousEncounters = ({match}: {match: IMatch}) => {
 };
 
 
-
-const PreviousEncountersButtonModal = ({matchId, players}: {matchId: number, players: IGetGameMatches}) => {
-  const [open, setOpen] = useState(false);
-  const encounters = useTtcSelector(state => state.matchInfo.previousEncounters
+const selectPreviousEncounters = createSelector(
+  [
+    (state: RootState) => state.matchInfo.previousEncounters,
+    (_, matchId: number) => matchId,
+    (_, __, players: IGetGameMatches) => players,
+  ],
+  (previousEncounters, matchId, players) => previousEncounters
     .filter(encounter => encounter.requestMatchId === matchId)
     .filter(encounter => {
       if (encounter.awayPlayerUniqueId === players.home.uniqueIndex && encounter.homePlayerUniqueId === players.out.uniqueIndex) {
@@ -148,8 +152,14 @@ const PreviousEncountersButtonModal = ({matchId, players}: {matchId: number, pla
         return true;
       }
       return false;
-    }))
-    .sort((a, b) => moment(b.matchDate).diff(moment(a.matchDate)));
+    })
+    .sort((a, b) => moment(b.matchDate).diff(moment(a.matchDate))),
+);
+
+
+const PreviousEncountersButtonModal = ({matchId, players}: {matchId: number, players: IGetGameMatches}) => {
+  const [open, setOpen] = useState(false);
+  const encounters = useTtcSelector(state => selectPreviousEncounters(state, matchId, players));
 
   if (encounters.length === 0) {
     return null;
@@ -171,7 +181,7 @@ const PreviousEncountersButtonModal = ({matchId, players}: {matchId: number, pla
       </Modal.Header>
 
       <Modal.Body>
-        <EncountersTable encounters={encounters} homePlayer={players.home} />
+        <EncountersTable encounters={encounters} ourPlayer={players.home.playerId ? players.home : players.out} />
       </Modal.Body>
 
       <Modal.Footer>
@@ -184,7 +194,7 @@ const PreviousEncountersButtonModal = ({matchId, players}: {matchId: number, pla
 };
 
 
-const EncountersTable = ({encounters, homePlayer}: {encounters: PlayerEncounter[], homePlayer: IMatchPlayer}) => (
+const EncountersTable = ({encounters, ourPlayer}: {encounters: PlayerEncounter[], ourPlayer: IMatchPlayer}) => (
   <Table size="sm" striped>
     <thead>
       <tr>
@@ -196,7 +206,7 @@ const EncountersTable = ({encounters, homePlayer}: {encounters: PlayerEncounter[
     </thead>
     <tbody>
       {encounters.map(encounter => {
-        const home = encounter.homePlayerUniqueId === homePlayer.uniqueIndex && !!homePlayer.playerId;
+        const home = encounter.homePlayerUniqueId === ourPlayer.uniqueIndex;
         const won = (home && encounter.homePlayerSets > encounter.awayPlayerSets)
           || (!home && encounter.awayPlayerSets > encounter.homePlayerSets);
 
@@ -243,60 +253,55 @@ const PlayerDesc = ({player, competition}: PlayerDescProps) => {
 
 
 
-export class ReadonlyIndividualMatches extends Component<{match: IMatch}, {pinnedPlayerIndex: number}> {
-  constructor(props) {
-    super(props);
-    this.state = {pinnedPlayerIndex: 0};
-  }
+export const ReadonlyIndividualMatches = ({match}: {match: IMatch}) => {
+  const [pinnedPlayerIndex, setPinnedPlayerIndex] = useState(0);
+  const matchResult = {home: 0, out: 0};
 
-  render() {
-    const matchResult = {home: 0, out: 0};
+  return (
+    <Table striped size="sm" className="match-card-tab-table">
+      <thead>
+        <tr>
+          <th colSpan={2}>{t('match.report.title')}</th>
+          <th>{t('match.individual.setsTitle')}</th>
+          <th><span className="d-none d-sm-inline">{t('match.individual.resultTitle')}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {match.getGameMatches().sort((a, b) => a.matchNumber - b.matchNumber).map(game => {
+          matchResult[game.homeSets > game.outSets ? 'home' : 'out']++;
+          const highlightRow = game.home?.uniqueIndex === pinnedPlayerIndex || game.out?.uniqueIndex === pinnedPlayerIndex;
+          return (
+            <tr key={game.matchNumber} className={cn({success: highlightRow})}>
+              {!game.isDoubles ? ([
+                <td key="1">
+                  <ReadonlyMatchPlayerLabel
+                    competition={match.competition}
+                    game={game}
+                    homePlayer
+                    onClick={() => setPinnedPlayerIndex(game.home.uniqueIndex)}
+                  />
+                </td>,
+                <td key="2">
+                  <ReadonlyMatchPlayerLabel
+                    competition={match.competition}
+                    game={game}
+                    homePlayer={false}
+                    onClick={() => setPinnedPlayerIndex(game.out.uniqueIndex)}
+                  />
+                </td>,
+              ]) : (
+                <td key="2" colSpan={2}>{t('match.double')}</td>
+              )}
+              <td key="3">{game.homeSets}-{game.outSets}</td>
+              <td key="4">{matchResult.home}-{matchResult.out}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </Table>
+  );
+};
 
-    return (
-      <Table striped size="sm" className="match-card-tab-table">
-        <thead>
-          <tr>
-            <th colSpan={2}>{t('match.report.title')}</th>
-            <th>{t('match.individual.setsTitle')}</th>
-            <th><span className="d-none d-sm-inline">{t('match.individual.resultTitle')}</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.match.getGameMatches().sort((a, b) => a.matchNumber - b.matchNumber).map(game => {
-            matchResult[game.homeSets > game.outSets ? 'home' : 'out']++;
-            const highlightRow = game.home?.uniqueIndex === this.state.pinnedPlayerIndex || game.out?.uniqueIndex === this.state.pinnedPlayerIndex;
-            return (
-              <tr key={game.matchNumber} className={cn({success: highlightRow})}>
-                {!game.isDoubles ? ([
-                  <td key="1">
-                    <ReadonlyMatchPlayerLabel
-                      competition={this.props.match.competition}
-                      game={game}
-                      homePlayer
-                      onClick={() => this.setState({pinnedPlayerIndex: game.home.uniqueIndex})}
-                    />
-                  </td>,
-                  <td key="2">
-                    <ReadonlyMatchPlayerLabel
-                      competition={this.props.match.competition}
-                      game={game}
-                      homePlayer={false}
-                      onClick={() => this.setState({pinnedPlayerIndex: game.out.uniqueIndex})}
-                    />
-                  </td>,
-                ]) : (
-                  <td key="2" colSpan={2}>{t('match.double')}</td>
-                )}
-                <td key="3">{game.homeSets}-{game.outSets}</td>
-                <td key="4">{matchResult.home}-{matchResult.out}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
-    );
-  }
-}
 
 type ReadonlyMatchPlayerLabelProps = {
   game: IGetGameMatches;
