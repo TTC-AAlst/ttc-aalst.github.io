@@ -47,8 +47,11 @@ export const matchInfoSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(getPreviousEncounters.fulfilled, (state, action) => {
-      if (action.payload) {
-        state.previousEncounters.push(...action.payload);
+      if (action.payload?.length) {
+        const newEncounters = action.payload.filter(
+          encounter => !state.previousEncounters.some(existing => existing.matchGameId === encounter.matchGameId),
+        );
+        state.previousEncounters.push(...newEncounters);
       }
     });
   },

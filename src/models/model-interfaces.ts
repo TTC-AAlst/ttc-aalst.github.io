@@ -173,6 +173,7 @@ export interface IMatchGame {
 
 /** Previous encounters of players */
 export type PlayerEncounter = {
+  matchGameId: number;
   /** The match for which we're getting the previous encounters */
   requestMatchId: number;
   /** The match in which the encounter was played */
