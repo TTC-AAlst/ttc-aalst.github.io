@@ -323,7 +323,7 @@ function getPrevMatches(matches: IMatch[]) {
   if (beaten.players.length) {
     html += '<br>';
     html += 'Mooiste overwinning: ';
-    html += beaten.players.map(ply => `${getPlayerLink(ply.player, competition)} ${ply.throphy.replace(/\w+ (?=vs)/, '')}`).join(', ');
+    html += beaten.players.map(ply => `${getPlayerLink(ply.player)} ${ply.throphy.replace(/\w+ (?=vs)/, '')}`).join(', ');
   }
   // console.log('uhoh', beaten);
 
@@ -389,8 +389,11 @@ function getLink(url: string, label: string) {
 }
 
 
-function getPlayerLink(player: IPlayer, compFilter: Competition) {
-  const label = `${player.alias} <small>${player.getCompetition(compFilter).ranking}</small>`;
+function getPlayerLink(player: IPlayer, compFilter?: Competition) {
+  let label = player.alias;
+  if (compFilter) {
+    label += ` <small>${player.getCompetition(compFilter).ranking}</small>`;
+  }
   return getLink(getFullUrl(`/speler/${encodeURI(player.slug)}`), label);
 }
 
