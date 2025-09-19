@@ -2,7 +2,7 @@
 import { getOpponentFormations } from '../../../storeUtil';
 import { getPlayerStats } from '../../../models/TeamModel';
 import { getRankingDestroyer } from '../../other/EndOfSeason/achievements/otherAchievements';
-import { Competition, IMatch, IPlayer } from '../../../models/model-interfaces';
+import { Competition, IMatch, IPlayer, IStorePlayer } from '../../../models/model-interfaces';
 import { RootState } from '../../../store';
 import { selectOpponentMatchesForTeam } from '../../../reducers/selectors/selectOpponentMatchesForTeam';
 
@@ -32,7 +32,7 @@ export function buildHtml(
   html += getMatches(matches, compFilter);
 
   if (prevMatches.length) {
-    html += getPrevMatches(prevMatches);
+    html += getPrevMatches(prevMatches, state.players);
   }
 
   html += getWhatToExpect(state, matches);
@@ -240,7 +240,7 @@ const scoreZero = ['💉', '⚰', '⚱', '🚬', '💊', '🔒', '💔', '💢',
  * Sporta E wint van Teneramonda C (Daniel wint 3x)
  * Sporta D vs Bernardus E: Bart wint 3x
  */
-function getPrevMatches(matches: IMatch[]) {
+function getPrevMatches(matches: IMatch[], players: IStorePlayer[]) {
   let html = '';
   html += '<br><br>';
   html += '<b>Vorige Speelweek</b>';
@@ -297,6 +297,18 @@ function getPrevMatches(matches: IMatch[]) {
     if (!scorePrinted) {
       html += ` (${match.renderScore()})`;
     }
+
+    if (match.comments?.length || match.description) {
+      const matchUrl = getFullUrl(`/match/${match.id}/wedstrijdverslag`);
+      if (match.description && match.reportPlayerId) {
+        const reportPlayer = players.find(x => x.id === match.reportPlayerId)?.alias;
+        html += ` <a href="${matchUrl}">💬 Lees verslag van ${reportPlayer}</a>`;
+      } else if (match.comments?.length) {
+        const commentPlayer = players.find(x => x.id === match.comments[0].playerId)?.alias;
+        html += ` <a href="${matchUrl}">💭 Lees commentaar van ${commentPlayer}</a>`;
+      }
+    }
+
     html += '<br>';
   });
 
