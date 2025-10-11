@@ -27,7 +27,7 @@ export const PlayerRanking = ({player}: PlayerRankingProps) => {
         {player.ranking}
         <span style={{color: 'gray'}}> ⮕ </span>
         <OverlayTrigger overlay={tooltip}>
-          <span style={{color: 'gray'}}>{player.nextRanking}</span>
+          <span style={{color: 'gray'}}>{player.prediction}</span>
         </OverlayTrigger>
       </>
     );
