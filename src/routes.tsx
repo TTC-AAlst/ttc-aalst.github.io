@@ -20,6 +20,7 @@ import { Teams } from './components/teams/Teams';
 import Admin from './components/admin/Admin';
 import { OpponentOverview } from './components/teams/OpponentOverview';
 import Intro from './components/App/Intro';
+import { NotFound } from './components/other/NotFound';
 import { useErrorHandling } from './utils/hooks/useErrorHandling';
 import t from './locales';
 import { useSignalR } from './utils/hooks/useSignalR';
@@ -56,6 +57,7 @@ const Routes = () => {
         <Route path={`${t.route('admin')}/:tabKey?`} element={<App Component={Admin} />} />
 
         <Route path="/" element={<App Component={Intro} />} />
+        <Route path="*" element={<App Component={NotFound} />} />
       </Switch>
     </BrowserRouter>
   );

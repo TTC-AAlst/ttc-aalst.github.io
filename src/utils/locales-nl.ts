@@ -78,6 +78,13 @@ export default {
       sporta: "Sporta",
     },
 
+    notFound: {
+      title: "De bal is buiten de tafel gevlogen!",
+      description: "We kunnen deze pagina niet vinden. Misschien is de link niet correct of is de pagina verwijderd.",
+      goHome: "Naar hoofdpagina",
+      goBack: "Ga terug",
+    },
+
     system: {
       playerSelect: "Wie ben je?",
     },
