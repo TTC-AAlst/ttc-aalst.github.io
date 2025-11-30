@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import { getSignalRUrl } from "../../config";
 import { useTtcDispatch, useTtcSelector } from "./storeHooks";
-import { fetchPlayer } from "../../reducers/playersReducer";
+import { fetchPlayer, fetchPlayers } from "../../reducers/playersReducer";
 import { fetchConfig } from "../../reducers/configReducer";
 import { fetchClubs } from "../../reducers/clubsReducer";
-import { fetchTeam } from "../../reducers/teamsReducer";
-import { fetchMatch } from "../../reducers/matchesReducer";
+import { fetchTeam, fetchTeams } from "../../reducers/teamsReducer";
+import { fetchMatch, fetchMatches } from "../../reducers/matchesReducer";
 import { fetchReadOnlyMatch } from "../../reducers/readonlyMatchesReducer";
 
 enum Entities { // eslint-disable-line no-shadow
@@ -70,6 +70,22 @@ export const useSignalR = () => {
                 console.warn(`BroadcastReload Unmapped!? ${entityType}: ${id}`);
             }
           });
+
+          connection.onreconnected(() => {
+            console.log("SignalR Reconnected! Syncing data...");
+            dispatch(fetchMatches());
+            dispatch(fetchTeams());
+            dispatch(fetchPlayers());
+            dispatch(fetchClubs());
+            dispatch(fetchConfig());
+          });
+
+          // connection.onreconnecting(error => {
+          //   console.warn("SignalR Reconnecting...", error);
+          // });
+          // connection.onclose(error => {
+          //   console.error("SignalR Connection closed", error);
+          // });
         })
         .catch(err => console.error("Connection failed: ", err));
     }
@@ -77,7 +93,7 @@ export const useSignalR = () => {
     return () => {
       connection?.stop();
     };
-  }, [connection]);
+  }, [connection, dispatch]);
 
   return connection;
 };
