@@ -66,7 +66,12 @@ export const MatchReport = ({match}: MatchReportProps) => {
     );
   }
 
-  const readonlyReport = text ? <pre dangerouslySetInnerHTML={{__html: text}} style={{marginRight: 15}} /> : null; // eslint-disable-line
+  const readonlyReport = text ? (
+    <pre
+      dangerouslySetInnerHTML={{__html: text}} // eslint-disable-line
+      style={{marginRight: 15, whiteSpace: 'pre-wrap', wordWrap: 'break-word', overflow: 'visible'}}
+    />
+  ) : null;
 
   let reportText: any;
   const canComment = !!user.playerId;
