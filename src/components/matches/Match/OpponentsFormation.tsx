@@ -1,13 +1,19 @@
 import React from 'react';
+import { createSelector } from '@reduxjs/toolkit';
+import moment from 'moment';
 import Table from 'react-bootstrap/Table';
 import { OpponentPlayerLabel } from './OpponentPlayer';
 import { Spinner } from '../../controls/controls/Spinner';
 import { ThumbsUpIcon, ThumbsDownIcon } from '../../controls/Icons/ThumbsIcons';
-import { ITeamOpponent, IMatch, IMatchPlayer } from '../../../models/model-interfaces';
+import { ITeamOpponent, IMatch, IMatchPlayer, IPlayer } from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 import { useViewport } from '../../../utils/hooks/useViewport';
-import { useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponentMatches';
+import { RootState } from '../../../store';
+import storeUtil from '../../../storeUtil';
+import { PreviousEncountersButtonModal } from './PreviousEncounters';
+
 
 type OpponentsFormationProps = {
   match: IMatch,
@@ -48,6 +54,7 @@ function getFormation(match: IMatch, matches: ReturnType<typeof selectOpponentMa
 
 export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) => {
   const viewport = useViewport();
+  const user = useTtcSelector(selectUser);
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match, opponent));
   const formations = getFormation(match, opponentMatches)
     .sort((a, b) => b.count - a.count);
@@ -57,6 +64,7 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
   }
 
   const showTimesPlayed = viewport.width > 600;
+  const currentPlayer = user?.playerId ? storeUtil.getPlayer(user.playerId) : null;
 
   return (
     <Table size="sm" striped className="match-card-tab-table">
@@ -65,6 +73,7 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
           <th>{t('match.opponents.player')}</th>
           {showTimesPlayed ? <th>{t('match.opponents.timesPlayed')}</th> : null}
           <th colSpan={2}>{t('match.opponents.victories')}</th>
+          {currentPlayer ? <th>&nbsp;</th> : null}
         </tr>
       </thead>
       <tbody>
@@ -82,9 +91,51 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
               {f.lost}
             </td>
             <td>{`${((f.won / (f.lost + f.won)) * 100).toFixed(0)}%`}</td>
+            {currentPlayer ? (
+              <td>
+                <PreviousEncountersButton
+                  ourPlayer={currentPlayer}
+                  opponent={f.player}
+                  match={match}
+                />
+              </td>
+            ) : null}
           </tr>
         ))}
       </tbody>
     </Table>
+  );
+};
+
+
+const selectPreviousEncounters = createSelector(
+  [
+    (state: RootState) => state.matchInfo.previousEncounters,
+    (_, ourPlayer: IPlayer) => ourPlayer,
+    (_, __, opponent: IMatchPlayer) => opponent,
+    (_, __, ___, match: IMatch) => match,
+  ],
+  (previousEncounters, ourPlayer, opponent, match) => previousEncounters
+    .filter(encounter => encounter.requestMatchId === match.id)
+    .filter(encounter => {
+      if (encounter.awayPlayerUniqueId === ourPlayer.getCompetition(match.competition)?.uniqueIndex && encounter.homePlayerUniqueId === opponent.uniqueIndex) {
+        return true;
+      }
+      if (encounter.awayPlayerUniqueId === opponent.uniqueIndex && encounter.homePlayerUniqueId === ourPlayer.getCompetition(match.competition)?.uniqueIndex) {
+        return true;
+      }
+      return false;
+    })
+    .sort((a, b) => moment(b.matchDate).diff(moment(a.matchDate))),
+);
+
+
+const PreviousEncountersButton = ({ourPlayer, opponent, match}: {ourPlayer: IPlayer, opponent: IMatchPlayer, match: IMatch}) => {
+  const encounters = useTtcSelector(state => selectPreviousEncounters(state, ourPlayer, opponent, match));
+  return (
+    <PreviousEncountersButtonModal
+      encounters={encounters}
+      ourPlayerUniqueIndex={ourPlayer.getCompetition(match.competition)?.uniqueIndex ?? 0}
+    />
   );
 };
