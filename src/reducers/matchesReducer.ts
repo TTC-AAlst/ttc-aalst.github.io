@@ -104,7 +104,7 @@ export const selectPlayer = createAsyncThunk(
     const player = storeUtil.getPlayer(data.playerId);
     const comp = player.getCompetition(match.competition);
 
-    let matchPlayer = match.plays(player);
+    let matchPlayer = match.plays(player); // TODO: this is causing the crashes in the backend?
     if (!matchPlayer) {
       matchPlayer = {
         id: 0,
@@ -127,7 +127,7 @@ export const selectPlayer = createAsyncThunk(
       };
     }
 
-    const isMyFormation = data.statusNote !== null;
+    const isMyFormation = data.statusNote !== null; // TODO: this is weird?
     if (isMyFormation) {
       matchPlayer.statusNote = data.statusNote || '';
     }
