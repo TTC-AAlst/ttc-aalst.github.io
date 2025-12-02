@@ -6,7 +6,7 @@ export const selectOpponentMatches = createSelector(
   [
     selectReadOnlyMatches,
     (_, match: IMatch) => match,
-    (_, match: IMatch, opponentIn?: ITeamOpponent) => opponentIn,
+    (_, __: IMatch, opponentIn?: ITeamOpponent) => opponentIn,
   ],
   (readOnlyMatches, match, opponentIn) => {
     const opponent = opponentIn || match.opponent;

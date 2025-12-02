@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createSelector } from '@reduxjs/toolkit';
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
@@ -8,11 +8,12 @@ import { ThumbsUpIcon, ThumbsDownIcon } from '../../controls/Icons/ThumbsIcons';
 import { ITeamOpponent, IMatch, IMatchPlayer, IPlayer } from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 import { useViewport } from '../../../utils/hooks/useViewport';
-import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { selectUser, useTtcSelector, useTtcDispatch } from '../../../utils/hooks/storeHooks';
 import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponentMatches';
 import { RootState } from '../../../store';
 import storeUtil from '../../../storeUtil';
 import { PreviousEncountersButtonModal } from './PreviousEncounters';
+import { getOpponentTeamEncounters } from '../../../reducers/matchInfoReducer';
 
 
 type OpponentsFormationProps = {
@@ -53,11 +54,23 @@ function getFormation(match: IMatch, matches: ReturnType<typeof selectOpponentMa
 
 
 export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) => {
+  const dispatch = useTtcDispatch();
   const viewport = useViewport();
   const user = useTtcSelector(selectUser);
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match, opponent));
   const formations = getFormation(match, opponentMatches)
     .sort((a, b) => b.count - a.count);
+
+  useEffect(() => {
+    if (user?.playerId && formations.length > 0) {
+      const opponentPlayers = formations.map(f => ({ name: f.player.name, uniqueIndex: f.player.uniqueIndex }));
+      dispatch(getOpponentTeamEncounters({
+        match,
+        ourPlayerId: user.playerId,
+        opponentPlayers,
+      }));
+    }
+  }, [user?.playerId, formations.length, match.id, dispatch]);
 
   if (formations.length === 0) {
     return <div className="match-card-tab-content"><h3><Spinner /></h3></div>;
@@ -108,30 +121,35 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
 };
 
 
-const selectPreviousEncounters = createSelector(
+const selectOpponentTeamEncounters = createSelector(
   [
-    (state: RootState) => state.matchInfo.previousEncounters,
+    (state: RootState) => state.matchInfo.opponentTeamEncounters,
     (_, ourPlayer: IPlayer) => ourPlayer,
     (_, __, opponent: IMatchPlayer) => opponent,
     (_, __, ___, match: IMatch) => match,
   ],
-  (previousEncounters, ourPlayer, opponent, match) => previousEncounters
-    .filter(encounter => encounter.requestMatchId === match.id)
-    .filter(encounter => {
-      if (encounter.awayPlayerUniqueId === ourPlayer.getCompetition(match.competition)?.uniqueIndex && encounter.homePlayerUniqueId === opponent.uniqueIndex) {
-        return true;
-      }
-      if (encounter.awayPlayerUniqueId === opponent.uniqueIndex && encounter.homePlayerUniqueId === ourPlayer.getCompetition(match.competition)?.uniqueIndex) {
-        return true;
-      }
-      return false;
-    })
-    .sort((a, b) => moment(b.matchDate).diff(moment(a.matchDate))),
+  (opponentTeamEncounters, ourPlayer, opponent, match) => {
+    const opponentKey = `${match.competition.toLowerCase()}-${match.opponent.clubId}-${match.opponent.teamCode}`;
+    const encounters = opponentTeamEncounters[opponentKey] || [];
+
+    return encounters
+      .filter(encounter => {
+        const ourUniqueIndex = ourPlayer.getCompetition(match.competition)?.uniqueIndex;
+        if (encounter.awayPlayerUniqueId === ourUniqueIndex && encounter.homePlayerUniqueId === opponent.uniqueIndex) {
+          return true;
+        }
+        if (encounter.awayPlayerUniqueId === opponent.uniqueIndex && encounter.homePlayerUniqueId === ourUniqueIndex) {
+          return true;
+        }
+        return false;
+      })
+      .sort((a, b) => moment(b.matchDate).diff(moment(a.matchDate)));
+  },
 );
 
 
 const PreviousEncountersButton = ({ourPlayer, opponent, match}: {ourPlayer: IPlayer, opponent: IMatchPlayer, match: IMatch}) => {
-  const encounters = useTtcSelector(state => selectPreviousEncounters(state, ourPlayer, opponent, match));
+  const encounters = useTtcSelector(state => selectOpponentTeamEncounters(state, ourPlayer, opponent, match));
   return (
     <PreviousEncountersButtonModal
       encounters={encounters}
