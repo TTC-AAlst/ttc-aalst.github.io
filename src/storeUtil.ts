@@ -51,11 +51,17 @@ const unique = (value: any, index: number, self: any[]): boolean => self.indexOf
 
 export function getMatchPlayerRankings(match: IMatch, homeTeam: boolean): IOpponentFormationRankingInfo[] {
   let opponentFormation: IMatchPlayer[];
-  if (homeTeam) {
+
+  if (match.isOurMatch) {
+    const ourMatch = match.getOurMatch();
+    const playerFormation = ourMatch.getPlayerFormation('onlyFinal');
+    opponentFormation = playerFormation.map(pf => pf.matchPlayer);
+  } else if (homeTeam) {
     opponentFormation = match.players.filter(m => m.home);
   } else {
     opponentFormation = match.players.filter(m => !m.home);
   }
+
   const rankings = opponentFormation.map(ply => ply.ranking);
   const diffs = rankings.filter(unique);
   return diffs.map((ranking: string) => ({
