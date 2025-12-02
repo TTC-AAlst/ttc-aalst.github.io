@@ -3,6 +3,7 @@ import moment from 'moment';
 import Table from 'react-bootstrap/Table';
 import { Button, Modal } from 'react-bootstrap';
 import {TrophyIcon} from '../../controls/Icons/TrophyIcon';
+import {ThumbsUpIcon, ThumbsDownIcon} from '../../controls/Icons/ThumbsIcons';
 import {IMatch, PlayerEncounter} from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 import { useTtcSelector } from '../../../utils/hooks/storeHooks';
@@ -72,10 +73,19 @@ export const PreviousEncountersButtonModal = ({encounters, ourPlayerUniqueIndex}
     return null;
   }
 
+  // Calculate wins and losses
+  const wins = encounters.filter(encounter => {
+    const home = encounter.homePlayerUniqueId === ourPlayerUniqueIndex;
+    return (home && encounter.homePlayerSets > encounter.awayPlayerSets)
+      || (!home && encounter.awayPlayerSets > encounter.homePlayerSets);
+  }).length;
+  const losses = encounters.length - wins;
+
   if (!open) {
     return (
-      <Button size="sm" variant="outline-info" onClick={() => setOpen(true)} style={{padding: '2px 6px'}}>
-        🔄x{encounters.length}
+      <Button size="sm" variant="outline-secondary" onClick={() => setOpen(true)} style={{padding: '2px 6px'}}>
+        {!!wins && <><ThumbsUpIcon color="black" />{wins}</>}
+        {!!losses && <><ThumbsDownIcon color="black" style={{marginLeft: wins ? 8 : 0}} />{losses}</>}
       </Button>
     );
   }
