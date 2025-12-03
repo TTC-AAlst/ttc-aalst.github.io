@@ -4,6 +4,7 @@ import { Strike } from '../controls/controls/Strike';
 import { TeamRankingBadges } from '../teams/controls/TeamRankingBadges';
 import { TeamPosition } from '../teams/controls/TeamPosition';
 import { selectTeams, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { useViewport } from '../../utils/hooks/useViewport';
 import { browseTo } from '../../routes';
 import { ITeam } from '../../models/model-interfaces';
 import t from '../../locales';
@@ -11,9 +12,12 @@ import t from '../../locales';
 export const DashboardGlobalTeamStats = () => {
   const teams = useTtcSelector(selectTeams);
   const user = useTtcSelector(selectUser);
+  const viewport = useViewport();
+  const isLargeDevice = viewport.width >= 768;
 
   const userTeams = teams.filter(team => user.teams.includes(team.id));
   const otherTeams = teams.filter(team => !user.teams.includes(team.id));
+  const allTeams = [...userTeams, ...otherTeams];
 
   const renderTeamStats = (team: ITeam, isUserTeam: boolean) => {
     const ranking = team.getDivisionRanking();
@@ -34,14 +38,14 @@ export const DashboardGlobalTeamStats = () => {
       >
         <Link to={browseTo.getTeam(team)} style={{textDecoration: 'none', color: 'inherit'}}>
           <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-            <div>
-              <strong>{team.renderOwnTeamTitle()}</strong>
-              <div style={{fontSize: '0.9em', color: '#666'}}>{team.getDivisionDescription()}</div>
-            </div>
             <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
-              <TeamPosition team={team} style={{marginRight: 5}} />
-              <TeamRankingBadges team={team} />
+              <TeamPosition team={team} />
+              <div>
+                <strong>{team.renderOwnTeamTitle()}</strong>
+                <div style={{fontSize: '0.9em', color: '#666'}}>{team.getDivisionDescription()}</div>
+              </div>
             </div>
+            <TeamRankingBadges team={team} />
           </div>
         </Link>
       </div>
@@ -50,27 +54,11 @@ export const DashboardGlobalTeamStats = () => {
 
   return (
     <div style={{marginBottom: 20}}>
-      <Strike text={t('dashboard.globalTeamStats')} />
+      <Strike text={t('dashboard.globalTeamStats')} style={{marginBottom: 6}} />
 
-      {userTeams.length > 0 && (
-        <div style={{marginBottom: 15}}>
-          <h4 style={{fontSize: '1.1em', marginBottom: 10}}>{t('dashboard.yourTeams')}</h4>
-          {userTeams.map(team => renderTeamStats(team, true))}
-        </div>
-      )}
-
-      {otherTeams.length > 0 && userTeams.length > 0 && (
-        <hr style={{margin: '20px 0', borderTop: '2px solid #ccc'}} />
-      )}
-
-      {otherTeams.length > 0 && (
-        <div>
-          {userTeams.length > 0 && (
-            <h4 style={{fontSize: '1.1em', marginBottom: 10}}>{t('dashboard.otherTeams')}</h4>
-          )}
-          {otherTeams.map(team => renderTeamStats(team, false))}
-        </div>
-      )}
+      <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr' : '1fr', gap: 8 }}>
+        {allTeams.map(team => renderTeamStats(team, user.teams.includes(team.id)))}
+      </div>
     </div>
   );
 };

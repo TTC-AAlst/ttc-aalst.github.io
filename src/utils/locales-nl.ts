@@ -145,7 +145,7 @@ export default {
       ourSponsors: "onze sponsers",
     },
     dashboard: {
-      globalTeamStats: "Team Statistieken",
+      globalTeamStats: "Teams",
       yourTeams: "Jouw Teams",
       otherTeams: "Andere Teams",
       recentMatches: "Recente Wedstrijden",
