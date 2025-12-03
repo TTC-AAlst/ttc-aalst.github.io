@@ -4,14 +4,14 @@ import { Strike } from '../controls/controls/Strike';
 import { PlayerLink } from '../players/controls/PlayerLink';
 import { useTtcSelector } from '../../utils/hooks/storeHooks';
 import { IPlayerCompetition, IStorePlayer } from '../../models/model-interfaces';
-import rankingSorter from '../../models/utils/rankingSorter';
+import rankingSorter, { PlayerRanking } from '../../models/utils/rankingSorter';
 import t from '../../locales';
 
 type PredictionInfo = {
   player: IStorePlayer;
   competition: 'Vttl' | 'Sporta';
-  current: string;
-  predicted: string;
+  current: PlayerRanking;
+  predicted: PlayerRanking;
   isRise: boolean;
 };
 
@@ -19,6 +19,24 @@ const isRankingRise = (comp: IPlayerCompetition): boolean => {
   if (!comp.prediction) return false;
   // Lower index = better ranking, so if prediction < current, it's a rise
   return rankingSorter(comp.prediction, comp.ranking) < 0;
+};
+
+const getRankingDifference = (current: PlayerRanking, predicted: PlayerRanking): number => {
+  // Returns how many positions the ranking changed (positive = improvement)
+  return rankingSorter(current, predicted);
+};
+
+const sortPredictions = (predictions: PredictionInfo[]): PredictionInfo[] => {
+  return [...predictions].sort((a, b) => {
+    // First sort by ranking difference (bigger improvement first)
+    const diffA = getRankingDifference(a.current, a.predicted);
+    const diffB = getRankingDifference(b.current, b.predicted);
+    if (diffA !== diffB) {
+      return diffB - diffA; // Higher difference first
+    }
+    // Then sort by starting ranking (better ranking first)
+    return rankingSorter(a.current, b.current);
+  });
 };
 
 export const DashboardRankingPredictions = () => {
@@ -49,10 +67,10 @@ export const DashboardRankingPredictions = () => {
     }
   });
 
-  const vttlRises = allPredictions.filter(p => p.isRise && p.competition === 'Vttl');
-  const sportaRises = allPredictions.filter(p => p.isRise && p.competition === 'Sporta');
-  const vttlDrops = allPredictions.filter(p => !p.isRise && p.competition === 'Vttl');
-  const sportaDrops = allPredictions.filter(p => !p.isRise && p.competition === 'Sporta');
+  const vttlRises = sortPredictions(allPredictions.filter(p => p.isRise && p.competition === 'Vttl'));
+  const sportaRises = sortPredictions(allPredictions.filter(p => p.isRise && p.competition === 'Sporta'));
+  const vttlDrops = sortPredictions(allPredictions.filter(p => !p.isRise && p.competition === 'Vttl'));
+  const sportaDrops = sortPredictions(allPredictions.filter(p => !p.isRise && p.competition === 'Sporta'));
 
   const hasRises = vttlRises.length > 0 || sportaRises.length > 0;
   const hasDrops = vttlDrops.length > 0 || sportaDrops.length > 0;
@@ -107,13 +125,15 @@ export const DashboardRankingPredictions = () => {
       {hasDrops && (
         <div style={{marginTop: 6}}>
           {!showDrops && (
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={() => setShowDrops(!showDrops)}
-            >
-              {t('dashboard.showPredictionDrops')}
-            </Button>
+            <div style={{textAlign: 'right'}}>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => setShowDrops(!showDrops)}
+              >
+                {t('dashboard.showPredictionDrops')}
+              </Button>
+            </div>
           )}
 
           {showDrops && (
