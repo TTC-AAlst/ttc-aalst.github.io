@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import {BackIcon} from '../controls/Icons/BackIcon';
 import {PlayerCard} from './PlayerCard';
 import {PlayerCompetition} from './Player/PlayerCompetition';
+import {PlayerMatchHistory} from './Player/PlayerMatchHistory';
 import { selectPlayers, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { useViewport } from '../../utils/hooks/useViewport';
 
@@ -12,9 +13,10 @@ export const Player = () => {
   const players = useTtcSelector(selectPlayers);
   const player = players.find(x => x.slug === playerSlug);
   const viewport = useViewport();
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+  }, []);
 
   if (!player) {
     return null;
@@ -34,6 +36,10 @@ export const Player = () => {
         <div className="col-md-6">
           <PlayerCompetition player={player} competition="Sporta" />
         </div>
+      </div>
+
+      <div className="col-md-12" style={{marginTop: 20}}>
+        <PlayerMatchHistory player={player} />
       </div>
     </div>
   );

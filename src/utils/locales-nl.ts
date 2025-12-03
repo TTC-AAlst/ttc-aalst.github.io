@@ -353,6 +353,8 @@ export default {
         matchTitle: "Match",
         setsTitle: "Sets",
         resultTitle: "Uitslag",
+        matchHistory: "Individuele Wedstrijden",
+        opponentPlayer: "Tegenstander",
       },
       opponents: {
         homeTeam: "Thuis",
