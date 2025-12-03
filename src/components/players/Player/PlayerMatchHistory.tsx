@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
-import { Icon } from '../../controls/Icons/Icon';
 import { TrophyIcon } from '../../controls/Icons/TrophyIcon';
 import MatchVs from '../../matches/Match/MatchVs';
 import { MatchDate } from '../../matches/controls/MatchDate';
@@ -9,6 +9,7 @@ import { OpponentPlayerLabel } from '../../matches/Match/OpponentPlayer';
 import { ViewMatchDetailsButton } from '../../matches/controls/ViewMatchDetailsButton';
 import { IPlayer } from '../../../models/model-interfaces';
 import { selectMatches, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { useViewport } from '../../../utils/hooks/useViewport';
 import { t } from '../../../locales';
 
 type PlayerMatchHistoryProps = {
@@ -17,18 +18,63 @@ type PlayerMatchHistoryProps = {
 
 export const PlayerMatchHistory = ({player}: PlayerMatchHistoryProps) => {
   const matches = useTtcSelector(selectMatches);
+  const viewport = useViewport();
+  const isSmallDevice = viewport.width < 600;
+
+  const [showVttl, setShowVttl] = useState(true);
+  const [showSporta, setShowSporta] = useState(true);
+
+  const playsInBothCompetitions = !!player.vttl && !!player.sporta;
+
+  const toggleVttl = () => {
+    if (showVttl && !showSporta) {
+      setShowSporta(true);
+    }
+    setShowVttl(!showVttl);
+  };
+
+  const toggleSporta = () => {
+    if (showSporta && !showVttl) {
+      setShowVttl(true);
+    }
+    setShowSporta(!showSporta);
+  };
 
   const matchesWithPlayer = matches
     .filter(match => match.isSyncedWithFrenoy && match.games.length)
     .filter(match => match.players.some(ply => ply?.playerId === player.id))
+    .filter(match => {
+      if (match.competition === 'Vttl') return showVttl;
+      if (match.competition === 'Sporta') return showSporta;
+      return true;
+    })
     .sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
   return (
     <Card>
-      <Card.Header>
+      <Card.Header style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h4 style={{marginBottom: 0}}>{t('match.individual.matchHistory')}</h4>
+        {playsInBothCompetitions && (
+          <div>
+            <Button
+              size="sm"
+              variant={showVttl ? 'primary' : 'outline-primary'}
+              onClick={toggleVttl}
+              style={{marginRight: 5}}
+            >
+              Vttl
+            </Button>
+            <Button
+              size="sm"
+              variant={showSporta ? 'primary' : 'outline-primary'}
+              onClick={toggleSporta}
+            >
+              Sporta
+            </Button>
+          </div>
+        )}
       </Card.Header>
-      <Card.Body style={{padding: 15}}>
+      <Card.Body>
         <Table size="sm" style={{marginBottom: 0}}>
           <thead>
             <tr>
@@ -57,14 +103,14 @@ export const PlayerMatchHistory = ({player}: PlayerMatchHistoryProps) => {
                   >
                     {index === 0 ? (
                       <td rowSpan={games.length}>
-                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 8}}>
                           <div>
                             <div style={{fontSize: '0.85em', color: '#666', marginBottom: 4}}>
                               <MatchDate match={match} />
                             </div>
-                            <MatchVs match={match} withLinks withPosition ownTeamLink="matches" />
+                            <MatchVs match={match} withLinks withPosition={!isSmallDevice} ownTeamLink="matches" />
                           </div>
-                          <div style={{marginLeft: 10, marginRight: 5}}>
+                          <div style={{marginRight: 12}}>
                             <ViewMatchDetailsButton match={match} size={null} />
                           </div>
                         </div>
@@ -76,7 +122,6 @@ export const PlayerMatchHistory = ({player}: PlayerMatchHistoryProps) => {
                     </td>
                     <td>
                       {match.isHomeMatch ? game.homeSets : game.outSets}-{match.isHomeMatch ? game.outSets : game.homeSets}
-                      {playerWon ? <Icon fa="fa fa-thumbs-o-up" color="black" style={{marginLeft: 8}} /> : null}
                     </td>
                   </tr>
                 );
