@@ -12,16 +12,22 @@ import { WeirdLocaleYearInfo } from './WeirdLocaleYearInfo';
 import { IntroSponsors } from './IntroSponsors';
 import { IMatch } from '../../models/model-interfaces';
 import { useViewport } from '../../utils/hooks/useViewport';
-import { selectMatches, selectMatchesToday, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectMatches, selectMatchesToday, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { ClubEvents } from '../other/ClubEvents';
+import { Dashboard } from '../dashboard/Dashboard';
 
 
 const Intro = () => {
   const viewport = useViewport();
   const config = useTtcSelector(state => state.config);
+  const user = useTtcSelector(selectUser);
 
   if (config.params.endOfSeason) {
     return <EndOfSeason />;
+  }
+
+  if (user.playerId) {
+    return <Dashboard />;
   }
 
   return (

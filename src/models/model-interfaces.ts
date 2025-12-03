@@ -282,6 +282,15 @@ export type PredictionResult = {
   newRanking: string;
 }
 
+export interface IPlayerEvent {
+  id: number;
+  playerId: number;
+  playerName: string;
+  eventType: string;
+  description: string;
+  timestamp: string;
+}
+
 
 /* ****************************************************
 *                       TEAMS

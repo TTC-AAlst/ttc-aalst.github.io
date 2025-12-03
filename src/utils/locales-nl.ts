@@ -144,6 +144,15 @@ export default {
       loading: "Laden...",
       ourSponsors: "onze sponsers",
     },
+    dashboard: {
+      globalTeamStats: "Team Statistieken",
+      yourTeams: "Jouw Teams",
+      otherTeams: "Andere Teams",
+      recentMatches: "Recente Wedstrijden",
+      rankingPredictions: "Klassement Voorspellingen",
+      teamPlayerPerformance: "Spelers Prestaties",
+      playerEvents: "Recente Gebeurtenissen",
+    },
     login: {
       title: "Aanmelden",
       introText:

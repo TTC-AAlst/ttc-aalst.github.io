@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import matchesReducer, { freeMatchesSlice } from './reducers/matchesReducer';
 import configReducer from './reducers/configReducer';
 import userReducer from './reducers/userReducer';
-import playersReducer, { playersQuittersSlice } from './reducers/playersReducer';
+import playersReducer, { playersQuittersSlice, eventsSlice } from './reducers/playersReducer';
 import teamsReducer, { teamRankingsSlice } from './reducers/teamsReducer';
 import clubsReducer from './reducers/clubsReducer';
 import readonlyMatchesReducer from './reducers/readonlyMatchesReducer';
@@ -20,6 +20,7 @@ export const store = configureStore({
     teamRankings: teamRankingsSlice.reducer,
     players: playersReducer,
     playersQuitters: playersQuittersSlice.reducer,
+    events: eventsSlice.reducer,
     clubs: clubsReducer,
   },
 });

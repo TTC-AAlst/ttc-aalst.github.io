@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mergeInStore2 } from './immutableHelpers';
-import { ICacheResponse, IPlayerStyle, IStorePlayer, PredictionResult } from '../models/model-interfaces';
+import { ICacheResponse, IPlayerStyle, IStorePlayer, PredictionResult, IPlayerEvent } from '../models/model-interfaces';
 import http from '../utils/httpClient';
 import { t } from '../locales';
 import { showSnackbar } from './configReducer';
@@ -29,6 +29,14 @@ export const fetchRankingPredictions = createAsyncThunk(
   'players/RankingPredictions',
   async () => {
     const response = await http.get<PredictionResult[]>('/players/GetNextYearRankings');
+    return response;
+  },
+);
+
+export const fetchPlayerEvents = createAsyncThunk(
+  'players/Events',
+  async () => {
+    const response = await http.get<IPlayerEvent[]>('/players/Events');
     return response;
   },
 );
@@ -239,6 +247,17 @@ export const playersQuittersSlice = createSlice({
       return state;
     });
     builder.addCase(deletePlayer.fulfilled, (state, action) => state.filter(p => p.id !== action.payload));
+  },
+});
+
+export const eventsSlice = createSlice({
+  name: 'events',
+  initialState: [] as IPlayerEvent[],
+  reducers: {},
+  extraReducers: builder => {
+    builder.addCase(fetchPlayerEvents.fulfilled, (state, action) => {
+      return action.payload;
+    });
   },
 });
 
