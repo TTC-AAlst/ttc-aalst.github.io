@@ -151,6 +151,7 @@ export default {
       rankingPredictions: "Klassement Voorspellingen",
       showPredictionDrops: "Andere tonen",
       teamPlayerPerformance: "Spelers",
+      showOtherPlayers: "Andere Spelers Tonen",
       playerEvents: "Recente Gebeurtenissen",
     },
     login: {
