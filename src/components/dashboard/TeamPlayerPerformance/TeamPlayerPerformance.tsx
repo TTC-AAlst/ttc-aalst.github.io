@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
-import moment from 'moment';
 import { Button } from 'react-bootstrap';
 import { Strike } from '../../controls/controls/Strike';
 import { PlayerPerformanceCard, PlayerCompetitionStats } from './PlayerPerformanceCard';
 import { selectMatches, selectPlayers, selectTeams, selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { IPlayer, IMatch, ITeam } from '../../../models/model-interfaces';
-import { GameResult } from '../../players/controls/PlayerPerformanceUtils';
+import {GameResult,
+  MatchGameResults,
+  collectPlayerGameResultsByMatch,
+  getRecentResults} from '../../players/controls/PlayerPerformanceUtils';
 import { PlayerRanking } from '../../../models/utils/rankingSorter';
 import t from '../../../locales';
-
-type MatchGameResults = {
-  matchId: number;
-  matchDate: moment.Moment;
-  results: GameResult[];
-};
 
 type PlayerWithCompetitionStats = {
   player: IPlayer;
@@ -22,60 +18,6 @@ type PlayerWithCompetitionStats = {
   vttlResults: GameResult[];
   sportaResults: GameResult[];
   recentResults: GameResult[]; // Results from last 2 matches per competition
-};
-
-const collectPlayerGameResultsByMatch = (
-  playerId: number,
-  playerRanking: PlayerRanking | undefined,
-  matches: IMatch[],
-): MatchGameResults[] => {
-  const resultsByMatch: MatchGameResults[] = [];
-
-  matches.forEach(match => {
-    if (!match.isSyncedWithFrenoy) return;
-
-    const matchResults: GameResult[] = [];
-    const gameMatches = match.getGameMatches();
-
-    gameMatches.forEach(game => {
-      if (game.isDoubles) return;
-      if (!('playerId' in game.ownPlayer) || game.ownPlayer.playerId !== playerId) return;
-
-      const ownPlayer = game.ownPlayer as { playerId: number; ranking?: PlayerRanking };
-      const opponent = match.isHomeMatch ? game.out : game.home;
-
-      matchResults.push({
-        won: game.outcome === 'Won',
-        playerRanking: (playerRanking || ownPlayer.ranking || 'NG') as PlayerRanking,
-        opponentRanking: (opponent?.ranking || 'NG') as PlayerRanking,
-      });
-    });
-
-    if (matchResults.length > 0) {
-      resultsByMatch.push({
-        matchId: match.id,
-        matchDate: match.date,
-        results: matchResults,
-      });
-    }
-  });
-
-  // Sort by date descending (most recent first)
-  resultsByMatch.sort((a, b) => b.matchDate.valueOf() - a.matchDate.valueOf());
-
-  return resultsByMatch;
-};
-
-const getRecentResults = (
-  vttlResultsByMatch: MatchGameResults[],
-  sportaResultsByMatch: MatchGameResults[],
-): GameResult[] => {
-  // Get results from last 2 Vttl matches (4 games each = 8 games max)
-  const recentVttl = vttlResultsByMatch.slice(0, 2).flatMap(m => m.results);
-  // Get results from last 2 Sporta matches (3 games each = 6 games max)
-  const recentSporta = sportaResultsByMatch.slice(0, 2).flatMap(m => m.results);
-
-  return [...recentVttl, ...recentSporta];
 };
 
 const collectStatsForPlayers = (

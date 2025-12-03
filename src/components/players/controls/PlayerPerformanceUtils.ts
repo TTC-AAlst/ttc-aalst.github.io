@@ -1,4 +1,6 @@
+import moment from 'moment';
 import { PlayerRanking } from '../../../models/utils/rankingSorter';
+import { IMatch, ITeam } from '../../../models/model-interfaces';
 
 const rankings: PlayerRanking[] = ['A', 'B0', 'B2', 'B4', 'B6', 'C0', 'C2', 'C4', 'C6', 'D0', 'D2', 'D4', 'D6', 'E0', 'E2', 'E4', 'E6', 'F', 'NG'];
 
@@ -6,6 +8,108 @@ export type GameResult = {
   won: boolean;
   playerRanking: PlayerRanking;
   opponentRanking: PlayerRanking;
+};
+
+export type MatchGameResults = {
+  matchId: number;
+  matchDate: moment.Moment;
+  results: GameResult[];
+};
+
+export type PlayerGameResultsSummary = {
+  allResults: GameResult[];
+  recentResults: GameResult[];
+};
+
+/**
+ * Collect game results for a player from a list of matches, grouped by match
+ */
+export const collectPlayerGameResultsByMatch = (
+  playerId: number,
+  playerRanking: PlayerRanking | undefined,
+  matches: IMatch[],
+): MatchGameResults[] => {
+  const resultsByMatch: MatchGameResults[] = [];
+
+  matches.forEach(match => {
+    if (!match.isSyncedWithFrenoy) return;
+
+    const matchResults: GameResult[] = [];
+    const gameMatches = match.getGameMatches();
+
+    gameMatches.forEach(game => {
+      if (game.isDoubles) return;
+      if (!('playerId' in game.ownPlayer) || game.ownPlayer.playerId !== playerId) return;
+
+      const ownPlayer = game.ownPlayer as { playerId: number; ranking?: PlayerRanking };
+      const opponent = match.isHomeMatch ? game.out : game.home;
+
+      matchResults.push({
+        won: game.outcome === 'Won',
+        playerRanking: (playerRanking || ownPlayer.ranking || 'NG') as PlayerRanking,
+        opponentRanking: (opponent?.ranking || 'NG') as PlayerRanking,
+      });
+    });
+
+    if (matchResults.length > 0) {
+      resultsByMatch.push({
+        matchId: match.id,
+        matchDate: match.date,
+        results: matchResults,
+      });
+    }
+  });
+
+  // Sort by date descending (most recent first)
+  resultsByMatch.sort((a, b) => b.matchDate.valueOf() - a.matchDate.valueOf());
+
+  return resultsByMatch;
+};
+
+/**
+ * Get recent results from the last 2 matches per competition
+ */
+export const getRecentResults = (
+  vttlResultsByMatch: MatchGameResults[],
+  sportaResultsByMatch: MatchGameResults[],
+): GameResult[] => {
+  // Get results from last 2 Vttl matches (4 games each = 8 games max)
+  const recentVttl = vttlResultsByMatch.slice(0, 2).flatMap(m => m.results);
+  // Get results from last 2 Sporta matches (3 games each = 6 games max)
+  const recentSporta = sportaResultsByMatch.slice(0, 2).flatMap(m => m.results);
+
+  return [...recentVttl, ...recentSporta];
+};
+
+/**
+ * Collect all game results for a player across both competitions
+ */
+export const collectPlayerPerformanceData = (
+  playerId: number,
+  vttlRanking: PlayerRanking | undefined,
+  sportaRanking: PlayerRanking | undefined,
+  allMatches: IMatch[],
+  teams: ITeam[],
+): PlayerGameResultsSummary => {
+  const vttlMatches = allMatches.filter(m => {
+    const team = teams.find(x => x.id === m.teamId);
+    return team?.competition === 'Vttl';
+  });
+  const sportaMatches = allMatches.filter(m => {
+    const team = teams.find(x => x.id === m.teamId);
+    return team?.competition === 'Sporta';
+  });
+
+  const vttlResultsByMatch = collectPlayerGameResultsByMatch(playerId, vttlRanking, vttlMatches);
+  const sportaResultsByMatch = collectPlayerGameResultsByMatch(playerId, sportaRanking, sportaMatches);
+
+  const allResults = [
+    ...vttlResultsByMatch.flatMap(m => m.results),
+    ...sportaResultsByMatch.flatMap(m => m.results),
+  ];
+  const recentResults = getRecentResults(vttlResultsByMatch, sportaResultsByMatch);
+
+  return { allResults, recentResults };
 };
 
 /**
@@ -142,11 +246,11 @@ export const calculatePerformanceBadge = (
   }
 
   if (isAboveExpected) {
-    return { type: 'solid', label: 'Sterk', color: '#4CAF50', icon: 'fa-star' };
+    return { type: 'solid', label: 'Sterk', color: '#4CAF50', icon: 'fa-rocket' };
   }
 
   if (isTrendingUp && !isBelowExpected) {
-    return { type: 'rising', label: 'Stijgend', color: '#2196F3', icon: 'fa-arrow-up' };
+    return { type: 'rising', label: 'Stijgend', color: '#2196F3', icon: 'fa-road' };
   }
 
   if (isBelowExpected || isTrendingDown) {
@@ -154,7 +258,7 @@ export const calculatePerformanceBadge = (
   }
 
   if (isOnTrack) {
-    return { type: 'on-track', label: 'On Track', color: '#8BC34A', icon: 'fa-check' };
+    return { type: 'on-track', label: 'On Track', color: '#8BC34A', icon: 'fa-shield' };
   }
 
   return { type: 'on-track', label: 'Stabiel', color: '#9E9E9E', icon: 'fa-minus' };

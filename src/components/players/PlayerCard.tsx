@@ -11,8 +11,11 @@ import { FrenoyPlayerDetailsIcon } from '../controls/Buttons/FrenoyButton';
 import { IPlayer, IPlayerCompetition, Competition } from '../../models/model-interfaces';
 import { browseTo } from '../../routes';
 import { t } from '../../locales';
-import { selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectMatches, selectTeams, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { PlayerRanking } from './controls/PlayerRanking';
+import { PlayerPerformanceBadge } from './controls/PlayerPerformanceBadge';
+import { calculatePerformanceBadge, collectPlayerPerformanceData } from './controls/PlayerPerformanceUtils';
+import { PlayerRanking as PlayerRankingType } from '../../models/utils/rankingSorter';
 
 type PlayerCardProps = {
   player: IPlayer;
@@ -21,7 +24,20 @@ type PlayerCardProps = {
 
 export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) => {
   const user = useTtcSelector(selectUser);
+  const allMatches = useTtcSelector(selectMatches);
+  const teams = useTtcSelector(selectTeams);
   const showAddressBelow = !showSideBySide;
+
+  const { allResults, recentResults } = collectPlayerPerformanceData(
+    player.id,
+    player.vttl?.ranking as PlayerRankingType,
+    player.sporta?.ranking as PlayerRankingType,
+    allMatches,
+    teams,
+  );
+
+  const badge = allResults.length >= 3 ? calculatePerformanceBadge(allResults, recentResults) : null;
+  const showRibbon = badge && ['on-fire', 'solid', 'rising'].includes(badge.type);
 
   const bestStroke = player.style.bestStroke ? (
     <>
@@ -40,7 +56,12 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
           <div style={{float: 'left'}}>
             <strong><PlayerLink player={player} /></strong>
             <br />
-            {player.style ? player.style.name : null}
+            <span style={{display: 'inline-flex', alignItems: 'center', gap: 6}}>
+              {badge && badge.type !== 'neutral' && (
+                <PlayerPerformanceBadge allResults={allResults} recentResults={recentResults} size="lg" showLabel={false} />
+              )}
+              {player.style ? player.style.name : null}
+            </span>
           </div>
 
           <div style={{textAlign: 'right', float: 'right'}}>
@@ -56,7 +77,8 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
         style={{color: '#d3d3d3', position: 'absolute', top: 75, right: 27}}
       />
 
-      <Card.Body>
+      <Card.Body style={{position: 'relative', overflow: 'hidden'}}>
+        {showRibbon && badge && <PerformanceRibbon badge={badge} />}
         {!user.playerId || showAddressBelow ? (
           <div>
             <PlayerImage playerId={player.id} center shape="thumbnail" />
@@ -77,6 +99,45 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
         )}
       </Card.Body>
     </Card>
+  );
+};
+
+type PerformanceRibbonProps = {
+  badge: { type: string; label: string; color: string; icon: string };
+};
+
+const PerformanceRibbon = ({ badge }: PerformanceRibbonProps) => {
+  const getGradient = () => {
+    if (badge.type === 'on-fire') {
+      return 'linear-gradient(90deg, #ff4500 0%, #ff6347 50%, #ff8c00 100%)';
+    }
+    if (badge.type === 'solid') {
+      return 'linear-gradient(90deg, #ffd700 0%, #ffec8b 50%, #daa520 100%)';
+    }
+    // rising
+    return 'linear-gradient(90deg, #2196F3 0%, #64B5F6 50%, #1976D2 100%)';
+  };
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 12,
+        left: -35,
+        width: 120,
+        padding: '4px 0',
+        background: getGradient(),
+        color: 'white',
+        fontSize: '0.75em',
+        fontWeight: 600,
+        textAlign: 'center',
+        transform: 'rotate(-45deg)',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+        zIndex: 1,
+      }}
+    >
+      {badge.label}
+    </div>
   );
 };
 
