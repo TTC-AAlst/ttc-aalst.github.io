@@ -1,8 +1,11 @@
 import React from 'react';
+import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
-import { TrophyIcon } from '../../controls/Icons/TrophyIcon';
 import { Icon } from '../../controls/Icons/Icon';
-import { OpponentLink } from '../../teams/controls/OpponentLink';
+import MatchVs from '../../matches/Match/MatchVs';
+import { MatchDate } from '../../matches/controls/MatchDate';
+import { OpponentPlayerLabel } from '../../matches/Match/OpponentPlayer';
+import { ViewMatchDetailsButton } from '../../matches/controls/ViewMatchDetailsButton';
 import { IPlayer } from '../../../models/model-interfaces';
 import { selectMatches, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { t } from '../../../locales';
@@ -20,62 +23,63 @@ export const PlayerMatchHistory = ({player}: PlayerMatchHistoryProps) => {
     .sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
   return (
-    <div style={{marginTop: 40, marginBottom: 20}}>
-      <h3>{t('match.individual.matchHistory')}</h3>
-      <Table size="sm" striped hover>
-        <thead>
-          <tr>
-            <th>{t('match.opponents.outcome')}</th>
-            <th>{t('common.date')}</th>
-            <th>{t('match.opponents.vsTeam')}</th>
-            <th>{t('match.individual.opponentPlayer')}</th>
-            <th>{t('match.individual.setsTitle')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {matchesWithPlayer.map(match => {
-            console.log('getGameMatches', match.getGameMatches().filter(x => !x.home || !x.out));
-            const games = match.getGameMatches()
-              .filter(game => !game.isDoubles)
-              .filter(game => game.home.playerId === player.id || game.out.playerId === player.id);
+    <Card>
+      <Card.Header>
+        <h4 style={{marginBottom: 0}}>{t('match.individual.matchHistory')}</h4>
+      </Card.Header>
+      <Card.Body style={{padding: 15}}>
+        <Table size="sm" style={{marginBottom: 0}}>
+          <thead>
+            <tr>
+              <th>{t('teamCalendar.match')}</th>
+              <th>{t('match.individual.opponentPlayer')}</th>
+              <th>{t('match.individual.setsTitle')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {matchesWithPlayer.map((match, matchIndex) => {
+              const games = match.getGameMatches()
+                .filter(game => !game.isDoubles)
+                .filter(game => game.home.playerId === player.id || game.out.playerId === player.id);
 
-            const teamWon = match.scoreType === 'Won';
-            const team = match.getTeam();
+              const rowStyle = matchIndex % 2 === 1 ? {backgroundColor: 'rgba(0,0,0,.05)'} : {};
 
-            return games.map((game, index) => {
-              const opponentPlayer = match.isHomeMatch ? game.out : game.home;
-              const playerWon = (match.isHomeMatch && game.homeSets > game.outSets)
-                || (!match.isHomeMatch && game.outSets > game.homeSets);
+              return games.map((game, index) => {
+                const opponentPlayer = match.isHomeMatch ? game.out : game.home;
+                const playerWon = (match.isHomeMatch && game.homeSets > game.outSets)
+                  || (!match.isHomeMatch && game.outSets > game.homeSets);
 
-              return (
-                <tr key={`${match.id}-${game.matchNumber}`}>
-                  {index === 0 ? (
-                    <>
+                return (
+                  <tr key={`${match.id}-${game.matchNumber}`} style={rowStyle}>
+                    {index === 0 ? (
                       <td rowSpan={games.length}>
-                        {teamWon ? <TrophyIcon /> : null}
-                        {' '}
-                        {match.score.home}-{match.score.out}
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                          <div>
+                            <MatchVs match={match} withLinks withPosition ownTeamLink="matches" />
+                            <div style={{fontSize: '0.85em', color: '#666', marginTop: 4}}>
+                              <MatchDate match={match} />
+                            </div>
+                          </div>
+                          <div style={{marginLeft: 10}}>
+                            <ViewMatchDetailsButton match={match} size="sm" />
+                          </div>
+                        </div>
                       </td>
-                      <td rowSpan={games.length}>
-                        {match.isHomeMatch ? <Icon fa="fa fa-home" style={{marginRight: 5}} /> : null}
-                        {match.date.format('DD/MM/YYYY')}
-                      </td>
-                      <td rowSpan={games.length}>
-                        <OpponentLink opponent={match.opponent} team={team} />
-                      </td>
-                    </>
-                  ) : null}
-                  <td>{opponentPlayer.name} ({opponentPlayer.ranking})</td>
-                  <td>
-                    {match.isHomeMatch ? game.homeSets : game.outSets}-{match.isHomeMatch ? game.outSets : game.homeSets}
-                    {playerWon ? <Icon fa="fa fa-thumbs-o-up" color="black" style={{marginLeft: 8}} /> : null}
-                  </td>
-                </tr>
-              );
-            });
-          })}
-        </tbody>
-      </Table>
-    </div>
+                    ) : null}
+                    <td>
+                      <OpponentPlayerLabel player={opponentPlayer} competition={match.competition} />
+                    </td>
+                    <td>
+                      {match.isHomeMatch ? game.homeSets : game.outSets}-{match.isHomeMatch ? game.outSets : game.homeSets}
+                      {playerWon ? <Icon fa="fa fa-thumbs-o-up" color="black" style={{marginLeft: 8}} /> : null}
+                    </td>
+                  </tr>
+                );
+              });
+            })}
+          </tbody>
+        </Table>
+      </Card.Body>
+    </Card>
   );
 };
