@@ -150,7 +150,7 @@ export default {
       showOtherMatches: "Andere Wedstrijden Tonen",
       rankingPredictions: "Klassement Voorspellingen",
       showPredictionDrops: "Andere tonen",
-      teamPlayerPerformance: "Spelers Prestaties",
+      teamPlayerPerformance: "Spelers",
       playerEvents: "Recente Gebeurtenissen",
     },
     login: {

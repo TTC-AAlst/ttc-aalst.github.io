@@ -100,7 +100,7 @@ export const DashboardRankingPredictions = () => {
 
   return (
     <div style={{marginBottom: 20}}>
-      <Strike text="Oiljst AI" />
+      <Strike text="Oiljst AI" style={{marginBottom: 6}} />
       {renderSection('Vttl', vttlRises)}
       {renderSection('Sporta', sportaRises)}
 

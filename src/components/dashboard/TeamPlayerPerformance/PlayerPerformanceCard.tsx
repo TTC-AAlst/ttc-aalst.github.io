@@ -1,101 +1,114 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ITeamPlayerStats } from '../../../models/model-interfaces';
-import { selectMatches, useTtcSelector } from '../../../utils/hooks/storeHooks';
-import { getStaticFileUrl } from '../../../config';
+import React, { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
+import { IPlayer } from '../../../models/model-interfaces';
+import { playerUtils } from '../../../models/PlayerModel';
+import { PlayerLink } from '../../players/controls/PlayerLink';
+import { Icon } from '../../controls/Icons/Icon';
 import t from '../../../locales';
 
-type PlayerPerformanceCardProps = {
-  playerStat: ITeamPlayerStats;
+export type PlayerCompetitionStats = {
+  games: number;
+  victories: number;
 };
 
-export const PlayerPerformanceCard = ({ playerStat }: PlayerPerformanceCardProps) => {
-  const allMatches = useTtcSelector(selectMatches);
+type PlayerPerformanceCardProps = {
+  player: IPlayer;
+  vttl: PlayerCompetitionStats | null;
+  sporta: PlayerCompetitionStats | null;
+};
 
-  const { ply, victories, games } = playerStat;
-  const winPercentage = games > 0 ? Math.round((victories / games) * 100) : 0;
+export const PlayerPerformanceCard = ({ player, vttl, sporta }: PlayerPerformanceCardProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  // Get last 3 matches for this player
-  const playerMatches = allMatches
-    .filter(match => match.isSyncedWithFrenoy && match.games.some(game => {
-      const gameMatch = match.getGameMatches().find(g => g.matchNumber === game.matchNumber);
-      return gameMatch?.ownPlayer.playerId === ply.id;
-    }))
-    .sort((a, b) => b.date.valueOf() - a.date.valueOf())
-    .slice(0, 3);
+  const imageUrl = playerUtils.getAvatarImageUrl(player.id, player.imageVersion);
 
-  const recentForm = playerMatches.map(match => {
-    const playerGames = match.getGameMatches().filter(g => g.ownPlayer.playerId === ply.id);
-    const won = playerGames.filter(g => g.outcome === 'Won').length;
-    const total = playerGames.length;
-    return { won, total, match };
-  });
+  const renderCompetitionStats = (label: string, stats: PlayerCompetitionStats | null, ranking: string | undefined) => {
+    if (!stats) return null;
+    const losses = stats.games - stats.victories;
+    const winPercentage = stats.games > 0 ? Math.round((stats.victories / stats.games) * 100) : 0;
 
-  const renderFormIndicator = () => {
     return (
-      <div style={{display: 'flex', gap: 4, marginTop: 8}}>
-        {recentForm.map((form, idx) => {
-          const percentage = form.total > 0 ? (form.won / form.total) * 100 : 0;
-          let color = '#f44336'; // Red for 0%
-          if (percentage >= 75) color = '#4CAF50'; // Green for 75%+
-          else if (percentage >= 50) color = '#FF9800'; // Orange for 50-74%
-          else if (percentage > 0) color = '#FFC107'; // Yellow for 1-49%
-
-          return (
-            <div
-              key={idx}
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: '50%',
-                backgroundColor: color,
-              }}
-              title={`${form.won}/${form.total} won`}
-            />
-          );
-        })}
+      <div style={{fontSize: '0.8em', color: '#666', marginTop: 2}}>
+        <strong style={{color: '#333'}}>{label}</strong>
+        {ranking && <span style={{color: '#888'}}> ({ranking})</span>}
+        <span style={{marginLeft: 6}}>
+          <Icon fa="fa fa-thumbs-up" style={{color: '#4CAF50', marginRight: 2}} />
+          {stats.victories}
+          <Icon fa="fa fa-thumbs-down" style={{color: '#f44336', marginLeft: 6, marginRight: 2}} />
+          {losses}
+          <span style={{marginLeft: 4}}>({winPercentage}%)</span>
+        </span>
       </div>
     );
   };
 
-  const imageUrl = ply.imageVersion > 0
-    ? `${getStaticFileUrl(`/img/players/${ply.id}.png?v=${ply.imageVersion}`)}`
-    : '/img/players/placeholder.png';
+  const renderAvatar = () => {
+    if (imageError || !player.imageVersion) {
+      return (
+        <Avatar
+          style={{
+            width: 60,
+            height: 60,
+            margin: '0 auto 8px',
+            fontSize: '1.5em',
+          }}
+        >
+          {player.alias?.[0] || player.firstName?.[0] || '?'}
+        </Avatar>
+      );
+    }
 
-  return (
-    <Link to={t.route('player', {playerId: ply.id})} style={{textDecoration: 'none'}}>
-      <div
-        style={{
-          padding: 12,
-          backgroundColor: '#fafafa',
-          borderRadius: 4,
-          border: '1px solid #ddd',
-          textAlign: 'center',
-          transition: 'transform 0.2s',
-          cursor: 'pointer',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.02)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
-      >
+    return (
+      <>
+        {!imageLoaded && (
+          <Avatar
+            style={{
+              width: 60,
+              height: 60,
+              margin: '0 auto 8px',
+              fontSize: '1.5em',
+            }}
+          >
+            {player.alias?.[0] || player.firstName?.[0] || '?'}
+          </Avatar>
+        )}
         <img
           src={imageUrl}
-          alt={ply.alias}
+          alt={player.alias}
           style={{
             width: 60,
             height: 60,
             borderRadius: '50%',
             objectFit: 'cover',
             marginBottom: 8,
+            display: imageLoaded ? 'block' : 'none',
+            margin: '0 auto 8px',
           }}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
         />
-        <div style={{fontSize: '0.9em', fontWeight: 'bold', color: '#333'}}>
-          {ply.alias}
-        </div>
-        <div style={{fontSize: '0.85em', color: '#666', marginTop: 4}}>
-          {victories}/{games} ({winPercentage}%)
-        </div>
-        {renderFormIndicator()}
+      </>
+    );
+  };
+
+  return (
+    <div
+      style={{
+        padding: 12,
+        backgroundColor: '#fafafa',
+        borderRadius: 4,
+        border: '1px solid #ddd',
+        textAlign: 'center',
+        transition: 'transform 0.2s',
+      }}
+    >
+      {renderAvatar()}
+      <div style={{fontSize: '0.9em', fontWeight: 'bold', color: '#333'}}>
+        <PlayerLink player={player} alias />
       </div>
-    </Link>
+      {renderCompetitionStats('Vttl', vttl, player.vttl?.ranking)}
+      {renderCompetitionStats('Sporta', sporta, player.sporta?.ranking)}
+    </div>
   );
 };
