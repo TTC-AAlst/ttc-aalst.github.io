@@ -1,0 +1,253 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { IPlayerEvent, IStorePlayer, PlayerEventType } from '../../../models/model-interfaces';
+import { TimeAgo } from '../../controls/controls/TimeAgo';
+import { useTtcSelector } from '../../../utils/hooks/storeHooks';
+import PlayerModel from '../../../models/PlayerModel';
+import storeUtil from '../../../storeUtil';
+import t from '../../../locales';
+
+type PlayerEventItemProps = {
+  event: IPlayerEvent;
+};
+
+type PlayerStyleData = {
+  PlayerId: number;
+  Style: string;
+  BestStroke: string | null;
+};
+
+type MatchCommentData = {
+  CommentId: number;
+};
+
+const getEventIcon = (eventType: PlayerEventType): string => {
+  switch (eventType) {
+    case 'PlayerStyleUpdated':
+      return '🎨';
+    case 'MatchReport':
+      return '📝';
+    case 'MatchComment':
+      return '💬';
+    default:
+      return '📌';
+  }
+};
+
+const getEventTooltip = (eventType: PlayerEventType): string => {
+  switch (eventType) {
+    case 'PlayerStyleUpdated':
+      return 'Speelstijl aangepast';
+    case 'MatchReport':
+      return 'Wedstrijdverslag toegevoegd';
+    case 'MatchComment':
+      return 'Reactie toegevoegd';
+    default:
+      return 'Activiteit';
+  }
+};
+
+const MAX_CONTENT_LENGTH = 150;
+
+const truncateHtml = (html: string, maxLength: number): { html: string; isTruncated: boolean } => {
+  // Strip HTML tags to get plain text for length calculation
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+  const plainText = tempDiv.textContent || tempDiv.innerText || '';
+
+  if (plainText.length <= maxLength) {
+    return { html, isTruncated: false };
+  }
+
+  // Truncate the plain text and add ellipsis
+  const truncated = `${plainText.substring(0, maxLength).trim()}...`;
+  return { html: truncated, isTruncated: true };
+};
+
+const getPlayerUrl = (player: IStorePlayer): string => {
+  const ply = new PlayerModel(player);
+  return t.route('player').replace(':playerId', encodeURI(ply.slug));
+};
+
+export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
+  const [expanded, setExpanded] = useState(false);
+  const players = useTtcSelector(state => state.players);
+  const matches = useTtcSelector(state => state.matches);
+  const readonlyMatches = useTtcSelector(state => state.readonlyMatches);
+
+  const allMatches = [...matches, ...readonlyMatches];
+  const match = event.matchId ? allMatches.find(m => m.id === event.matchId) : null;
+
+  const getPlayerStyleContent = (): React.ReactNode => {
+    if (event.type !== 'PlayerStyleUpdated' || !event.data) return null;
+    try {
+      const data: PlayerStyleData = JSON.parse(event.data);
+      const targetPlayer = players.find(p => p.id === data.PlayerId);
+      const playerName = targetPlayer?.alias || targetPlayer?.firstName || `Speler ${data.PlayerId}`;
+      const playerUrl = targetPlayer ? getPlayerUrl(targetPlayer) : null;
+
+      return (
+        <>
+          <div style={{ fontSize: '0.8em', color: '#666', marginTop: 2 }}>
+            {'Speelstijl van '}
+            {playerUrl ? (
+              <Link to={playerUrl} style={{ color: '#2196F3' }}>
+                {playerName}
+              </Link>
+            ) : (
+              playerName
+            )}
+            {data.Style ? ` aangepast naar ${data.Style}` : ' aangepast'}
+          </div>
+          {data.BestStroke && (
+            <div style={{ fontSize: '0.8em', color: '#666', marginTop: 2 }}>
+              🔥 {data.BestStroke}
+            </div>
+          )}
+        </>
+      );
+    } catch {
+      return null;
+    }
+  };
+
+  const getMatchContent = (): { html: string; isTruncated: boolean } | null => {
+    if (event.type === 'MatchReport') {
+      if (match?.description) {
+        if (expanded) {
+          return { html: match.description, isTruncated: true };
+        }
+        return truncateHtml(match.description, MAX_CONTENT_LENGTH);
+      }
+      return null;
+    }
+
+    if (event.type === 'MatchComment') {
+      if (!event.data || !match) return null;
+      try {
+        const data: MatchCommentData = JSON.parse(event.data);
+        const comment = match.comments?.find(c => c.id === data.CommentId);
+        if (comment?.text) {
+          if (expanded) {
+            return { html: comment.text, isTruncated: true };
+          }
+          return truncateHtml(comment.text, MAX_CONTENT_LENGTH);
+        }
+        if (comment?.imageUrl) {
+          return { html: '📷 Foto toegevoegd', isTruncated: false };
+        }
+      } catch {
+        return null;
+      }
+    }
+
+    return null;
+  };
+
+  const getMatchInfo = (): React.ReactNode => {
+    if (!match || !event.matchId) return null;
+    const matchUrl = `${t.route('match').replace(':matchId', String(event.matchId))}/wedstrijdverslag`;
+
+    // Try to get match model with methods for proper title rendering
+    try {
+      const matchModel = storeUtil.getMatch(event.matchId);
+      if (matchModel) {
+        const team = matchModel.getTeam();
+        const opponentTitle = matchModel.renderOpponentTitle();
+        const teamTitle = team?.renderOwnTeamTitle?.() || '';
+
+        // Build match title with score
+        const { score } = matchModel;
+        let scoreText = '';
+
+        if (score && (score.home !== 0 || score.out !== 0)) {
+          scoreText = ` (${score.home}-${score.out})`;
+        }
+
+        const matchTitle = matchModel.isHomeMatch
+          ? `${teamTitle} - ${opponentTitle}${scoreText}`
+          : `${opponentTitle} - ${teamTitle}${scoreText}`;
+
+        return (
+          <Link to={matchUrl} style={{ color: '#2196F3', fontSize: '0.85em' }}>
+            {matchTitle}
+          </Link>
+        );
+      }
+    } catch {
+      // Fall back to simple display
+    }
+
+    return (
+      <Link to={matchUrl} style={{ color: '#2196F3', fontSize: '0.85em' }}>
+        {`Wedstrijd #${event.matchId}`}
+      </Link>
+    );
+  };
+
+  const matchContent = getMatchContent();
+
+  return (
+    <div
+      style={{
+        padding: 8,
+        marginBottom: 8,
+        backgroundColor: '#fff',
+        borderRadius: 4,
+        borderLeft: '3px solid #2196F3',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'start', gap: 8 }}>
+        <span style={{ fontSize: '1.2em', cursor: 'default' }} title={getEventTooltip(event.type)}>
+          {getEventIcon(event.type)}
+        </span>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: '0.85em', fontWeight: 'bold', color: '#333' }}>
+            {event.createdBy}
+          </div>
+
+          {event.type === 'PlayerStyleUpdated' && getPlayerStyleContent()}
+
+          {(event.type === 'MatchReport' || event.type === 'MatchComment') && (
+            <div style={{ marginTop: 2 }}>
+              {getMatchInfo()}
+            </div>
+          )}
+
+          {matchContent && (
+            <div style={{ fontSize: '0.8em', color: '#555', marginTop: 4 }}>
+              <div
+                dangerouslySetInnerHTML={{ __html: matchContent.html }} // eslint-disable-line react/no-danger
+                style={{
+                  maxHeight: expanded ? 'none' : '4.5em',
+                  overflow: 'hidden',
+                }}
+              />
+              {matchContent.isTruncated && (
+                <button
+                  type="button"
+                  onClick={() => setExpanded(!expanded)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#2196F3',
+                    cursor: 'pointer',
+                    padding: 0,
+                    fontSize: '0.9em',
+                    marginTop: 2,
+                  }}
+                >
+                  {expanded ? 'minder' : 'meer'}
+                </button>
+              )}
+            </div>
+          )}
+
+          <div style={{ fontSize: '0.75em', color: '#999', marginTop: 4 }}>
+            <TimeAgo date={event.createdOn} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

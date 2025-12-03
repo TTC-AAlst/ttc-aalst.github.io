@@ -282,6 +282,19 @@ export type PredictionResult = {
   newRanking: string;
 }
 
+export type PlayerEventType = 'PlayerStyleUpdated' | 'MatchReport' | 'MatchComment';
+
+export interface IPlayerEvent {
+  id: number;
+  type: PlayerEventType;
+  data: string | null;
+  teamId: number | null;
+  matchId: number | null;
+  playerId: number;
+  createdOn: string;
+  createdBy: string;
+}
+
 
 /* ****************************************************
 *                       TEAMS
