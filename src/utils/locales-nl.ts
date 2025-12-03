@@ -148,7 +148,7 @@ export default {
       globalTeamStats: "Teams",
       upcomingMatches: "Volgende Wedstrijden",
       recentMatches: "Recente Wedstrijden",
-      showOtherMatches: "Andere Wedstrijden Tonen",
+      showOtherMatches: "Meer Wedstrijden Tonen",
       rankingPredictions: "Klassement Voorspellingen",
       showPredictionDrops: "Andere tonen",
       teamPlayerPerformance: "Spelers",
