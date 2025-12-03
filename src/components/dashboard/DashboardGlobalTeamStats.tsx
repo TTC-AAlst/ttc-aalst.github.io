@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Strike } from '../controls/controls/Strike';
 import { TeamRankingBadges } from '../teams/controls/TeamRankingBadges';
@@ -16,6 +16,7 @@ export const DashboardGlobalTeamStats = () => {
   const viewport = useViewport();
   const isLargeDevice = viewport.width >= 1200;
   const isSmallDevice = viewport.width < 576;
+  const [showOtherTeams, setShowOtherTeams] = useState(false);
 
   // Get user's teams, or default to VTTL A and Sporta A if user has no teams
   const getDefaultTeams = () => {
@@ -111,9 +112,28 @@ export const DashboardGlobalTeamStats = () => {
       </div>
 
       {otherTeams.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: smallGridTemplateColumns, gap: 4 }}>
-          {otherTeams.map(team => renderCompactTeamStats(team))}
-        </div>
+        isSmallDevice && !showOtherTeams ? (
+          <button
+            type="button"
+            onClick={() => setShowOtherTeams(true)}
+            style={{
+              width: '100%',
+              padding: '8px 12px',
+              backgroundColor: '#f5f5f5',
+              border: '1px solid #ddd',
+              borderRadius: 4,
+              cursor: 'pointer',
+              fontSize: '0.9em',
+              color: '#666',
+            }}
+          >
+            Meer Teams Tonen
+          </button>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: smallGridTemplateColumns, gap: 4 }}>
+            {otherTeams.map(team => renderCompactTeamStats(team))}
+          </div>
+        )
       )}
     </div>
   );
