@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useState, useMemo } from 'react';
+import { Button, ButtonGroup, Form } from 'react-bootstrap';
 import { Strike } from '../../controls/controls/Strike';
+import { Icon } from '../../controls/Icons/Icon';
 import { PlayerPerformanceCard, PlayerCompetitionStats } from './PlayerPerformanceCard';
 import { selectMatches, selectPlayers, selectTeams, selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { IPlayer, IMatch, ITeam } from '../../../models/model-interfaces';
 import {GameResult,
   MatchGameResults,
   collectPlayerGameResultsByMatch,
-  getRecentResults} from '../../players/controls/PlayerPerformanceUtils';
+  getRecentResults,
+  calculatePerformanceBadge,
+  PerformanceBadgeType} from '../../players/controls/PlayerPerformanceUtils';
 import { PlayerRanking } from '../../../models/utils/rankingSorter';
 import t from '../../../locales';
+
+const latinize = (str: string): string => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 type PlayerWithCompetitionStats = {
   player: IPlayer;
@@ -18,6 +23,7 @@ type PlayerWithCompetitionStats = {
   vttlResults: GameResult[];
   sportaResults: GameResult[];
   recentResults: GameResult[]; // Results from last 2 matches per competition
+  badgeType: PerformanceBadgeType | null;
 };
 
 const collectStatsForPlayers = (
@@ -85,25 +91,51 @@ const collectStatsForPlayers = (
     entry.vttlResultsByMatch.sort((a, b) => b.matchDate.valueOf() - a.matchDate.valueOf());
     entry.sportaResultsByMatch.sort((a, b) => b.matchDate.valueOf() - a.matchDate.valueOf());
 
+    const vttlResults = entry.vttlResultsByMatch.flatMap(m => m.results);
+    const sportaResults = entry.sportaResultsByMatch.flatMap(m => m.results);
+    const allResults = [...vttlResults, ...sportaResults];
+    const recentResults = getRecentResults(entry.vttlResultsByMatch, entry.sportaResultsByMatch);
+    const badge = allResults.length >= 3 ? calculatePerformanceBadge(allResults, recentResults) : null;
+
     return {
       player: entry.player,
       vttl: entry.vttlStats,
       sporta: entry.sportaStats,
-      vttlResults: entry.vttlResultsByMatch.flatMap(m => m.results),
-      sportaResults: entry.sportaResultsByMatch.flatMap(m => m.results),
-      recentResults: getRecentResults(entry.vttlResultsByMatch, entry.sportaResultsByMatch),
+      vttlResults,
+      sportaResults,
+      recentResults,
+      badgeType: badge?.type ?? null,
     };
   });
 };
 
+type BadgeFilter = 'on-fire' | 'solid' | 'rising' | 'on-track' | 'struggling';
+
 export const TeamPlayerPerformance = () => {
   const [showOtherPlayers, setShowOtherPlayers] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [nameFilter, setNameFilter] = useState('');
+  const [badgeFilters, setBadgeFilters] = useState<Set<BadgeFilter>>(new Set());
   const user = useTtcSelector(selectUser);
   const teams = useTtcSelector(selectTeams);
   const allMatches = useTtcSelector(selectMatches);
   const allPlayers = useTtcSelector(selectPlayers);
 
   const userTeams = teams.filter(team => user.teams.includes(team.id));
+
+  const toggleBadgeFilter = (badge: BadgeFilter) => {
+    setBadgeFilters(prev => {
+      const next = new Set(prev);
+      if (next.has(badge)) {
+        next.delete(badge);
+      } else {
+        next.add(badge);
+      }
+      return next;
+    });
+  };
+
+  const hasActiveFilters = nameFilter.length > 0 || badgeFilters.size > 0;
 
   if (userTeams.length === 0) {
     return null;
@@ -148,15 +180,100 @@ export const TeamPlayerPerformance = () => {
     ? collectStatsForPlayers(otherPlayerIds, allPlayers, teams, allMatches)
     : [];
 
+  const filterStats = (stats: PlayerWithCompetitionStats[]): PlayerWithCompetitionStats[] => {
+    if (!hasActiveFilters) return stats;
+
+    return stats.filter(stat => {
+      // Name filter
+      if (nameFilter.length > 0) {
+        const searchTerm = latinize(nameFilter);
+        const playerName = latinize(`${stat.player.firstName} ${stat.player.lastName} ${stat.player.alias || ''}`);
+        if (!playerName.includes(searchTerm)) {
+          return false;
+        }
+      }
+
+      // Badge filter
+      if (badgeFilters.size > 0) {
+        if (!stat.badgeType || !badgeFilters.has(stat.badgeType as BadgeFilter)) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  };
+
+  const filteredPlayerStats = filterStats(playerStats);
+  const filteredOtherPlayerStats = filterStats(otherPlayerStats);
+
   if (playerStats.length === 0) {
     return null;
   }
 
+  const badgeFilterButtons: { key: BadgeFilter; label: string; color: string }[] = [
+    { key: 'on-fire', label: 'On Fire', color: '#FF5722' },
+    { key: 'solid', label: 'Sterk', color: '#4CAF50' },
+    { key: 'rising', label: 'Stijgend', color: '#2196F3' },
+    { key: 'on-track', label: 'On Track', color: '#8BC34A' },
+    { key: 'struggling', label: 'Lastig', color: '#FF9800' },
+  ];
+
   return (
     <div style={{marginBottom: 20}}>
-      <Strike text={t('dashboard.teamPlayerPerformance')} style={{marginBottom: 6}} />
+      <div style={{display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6}}>
+        <Strike text={t('dashboard.teamPlayerPerformance')} style={{flex: 1, marginBottom: 0}} />
+        <Button
+          variant={hasActiveFilters ? 'primary' : 'outline-secondary'}
+          size="sm"
+          onClick={() => setShowFilters(!showFilters)}
+          style={{padding: '2px 8px', fontSize: '0.75em'}}
+        >
+          <Icon fa="fa fa-filter" />
+        </Button>
+      </div>
+
+      {showFilters && (
+        <div style={{
+          backgroundColor: '#f8f9fa',
+          padding: 10,
+          borderRadius: 6,
+          marginBottom: 12,
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          gap: 10,
+        }}
+        >
+          <Form.Control
+            type="text"
+            placeholder={t('dashboard.filterByName')}
+            value={nameFilter}
+            onChange={e => setNameFilter(e.target.value)}
+            size="sm"
+            style={{width: 180, flex: '0 0 auto'}}
+          />
+          <ButtonGroup size="sm">
+            {badgeFilterButtons.map(badge => (
+              <Button
+                key={badge.key}
+                variant={badgeFilters.has(badge.key) ? 'primary' : 'outline-secondary'}
+                onClick={() => toggleBadgeFilter(badge.key)}
+                style={{
+                  fontSize: '0.8em',
+                  borderColor: badgeFilters.has(badge.key) ? badge.color : undefined,
+                  backgroundColor: badgeFilters.has(badge.key) ? badge.color : undefined,
+                }}
+              >
+                {badge.label}
+              </Button>
+            ))}
+          </ButtonGroup>
+        </div>
+      )}
+
       <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 15}}>
-        {playerStats.map(stat => (
+        {filteredPlayerStats.map(stat => (
           <PlayerPerformanceCard
             key={stat.player.id}
             player={stat.player}
@@ -176,10 +293,10 @@ export const TeamPlayerPerformance = () => {
           </Button>
         </div>
       )}
-      {showOtherPlayers && otherPlayerStats.length > 0 && (
+      {showOtherPlayers && filteredOtherPlayerStats.length > 0 && (
         <div style={{marginTop: 15}}>
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 15}}>
-            {otherPlayerStats.map(stat => (
+            {filteredOtherPlayerStats.map(stat => (
               <PlayerPerformanceCard
                 key={stat.player.id}
                 player={stat.player}

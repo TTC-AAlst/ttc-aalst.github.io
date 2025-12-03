@@ -153,6 +153,7 @@ export default {
       teamPlayerPerformance: "Spelers",
       showOtherPlayers: "Andere Spelers Tonen",
       playerEvents: "Recente Gebeurtenissen",
+      filterByName: "Zoek op naam...",
     },
     login: {
       title: "Aanmelden",
