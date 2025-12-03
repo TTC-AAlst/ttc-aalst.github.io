@@ -49,16 +49,21 @@ export const DashboardRankingPredictions = () => {
     }
   });
 
-  const rises = allPredictions.filter(p => p.isRise);
-  const drops = allPredictions.filter(p => !p.isRise);
+  const vttlRises = allPredictions.filter(p => p.isRise && p.competition === 'Vttl');
+  const sportaRises = allPredictions.filter(p => p.isRise && p.competition === 'Sporta');
+  const vttlDrops = allPredictions.filter(p => !p.isRise && p.competition === 'Vttl');
+  const sportaDrops = allPredictions.filter(p => !p.isRise && p.competition === 'Sporta');
 
-  // If no rises and no drops, don't show anything
+  const hasRises = vttlRises.length > 0 || sportaRises.length > 0;
+  const hasDrops = vttlDrops.length > 0 || sportaDrops.length > 0;
+
+  // If no predictions at all, don't show anything
   if (allPredictions.length === 0) {
     return null;
   }
 
   // If no rises at all, don't show anything
-  if (rises.length === 0) {
+  if (!hasRises) {
     return null;
   }
 
@@ -69,30 +74,38 @@ export const DashboardRankingPredictions = () => {
         display: 'inline-flex',
         alignItems: 'center',
         backgroundColor: pred.isRise ? '#e8f5e9' : '#ffebee',
-        padding: '4px 10px',
-        borderRadius: 16,
-        marginRight: 8,
-        marginBottom: 8,
-        fontSize: '0.9em',
+        padding: '2px 8px',
+        borderRadius: 12,
+        marginRight: 6,
+        marginBottom: 4,
+        fontSize: '0.85em',
       }}
     >
-      <PlayerLink player={pred.player} alias style={{fontWeight: 'bold', marginRight: 6}} />
-      <span style={{color: '#666', marginRight: 4}}>{pred.competition}:</span>
-      <span style={{color: pred.isRise ? '#4CAF50' : '#f44336'}}>
-        {pred.current} → {pred.predicted}
+      <PlayerLink player={pred.player} alias style={{fontWeight: 500, marginRight: 4}} />
+      <span style={{color: pred.isRise ? '#4CAF50' : '#f44336', fontWeight: 500}}>
+        {pred.current}→{pred.predicted}
       </span>
     </span>
   );
 
+  const renderSection = (label: string, predictions: PredictionInfo[]) => {
+    if (predictions.length === 0) return null;
+    return (
+      <div style={{marginBottom: 6}}>
+        <strong style={{fontSize: '0.85em', color: '#666', marginRight: 8}}>{label}:</strong>
+        {predictions.map(renderPrediction)}
+      </div>
+    );
+  };
+
   return (
     <div style={{marginBottom: 20}}>
       <Strike text="Oiljst AI" />
-      <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
-        {rises.map(renderPrediction)}
-      </div>
+      {renderSection('Vttl', vttlRises)}
+      {renderSection('Sporta', sportaRises)}
 
-      {drops.length > 0 && (
-        <div style={{marginTop: 8}}>
+      {hasDrops && (
+        <div style={{marginTop: 6}}>
           {!showDrops && (
             <Button
               variant="outline-secondary"
@@ -104,9 +117,10 @@ export const DashboardRankingPredictions = () => {
           )}
 
           {showDrops && (
-            <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', marginTop: 8}}>
-              {drops.map(renderPrediction)}
-            </div>
+            <>
+              {renderSection('Vttl', vttlDrops)}
+              {renderSection('Sporta', sportaDrops)}
+            </>
           )}
         </div>
       )}
