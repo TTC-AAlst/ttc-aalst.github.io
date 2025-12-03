@@ -11,8 +11,9 @@ export const PlayerEvents = () => {
   // Filter events from last 14 days
   const twoWeeksAgo = moment().subtract(14, 'days');
   const recentEvents = playerEvents
-    .filter(event => moment(event.timestamp).isAfter(twoWeeksAgo))
-    .sort((a, b) => moment(b.timestamp).valueOf() - moment(a.timestamp).valueOf());
+    .slice()
+    // .filter(event => moment(event.createdOn).isAfter(twoWeeksAgo))
+    .sort((a, b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
 
   if (recentEvents.length === 0) {
     return null;
