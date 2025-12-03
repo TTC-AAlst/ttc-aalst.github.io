@@ -34,13 +34,13 @@ export const Dashboard = () => {
 
           <DashboardRecentMatches />
 
-          <DashboardRankingPredictions />
-
           <TeamPlayerPerformance />
         </Col>
 
         {/* Right sidebar */}
         <Col lg={3} md={4}>
+          <DashboardRankingPredictions />
+
           <PlayerEvents />
         </Col>
       </Row>

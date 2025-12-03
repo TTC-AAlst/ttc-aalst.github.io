@@ -146,10 +146,10 @@ export default {
     },
     dashboard: {
       globalTeamStats: "Teams",
-      yourTeams: "Jouw Teams",
-      otherTeams: "Andere Teams",
       recentMatches: "Recente Wedstrijden",
+      showOtherMatches: "Andere Wedstrijden Tonen",
       rankingPredictions: "Klassement Voorspellingen",
+      showPredictionDrops: "Andere tonen",
       teamPlayerPerformance: "Spelers Prestaties",
       playerEvents: "Recente Gebeurtenissen",
     },

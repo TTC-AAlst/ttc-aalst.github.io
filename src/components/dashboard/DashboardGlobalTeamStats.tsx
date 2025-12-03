@@ -8,18 +8,26 @@ import { useViewport } from '../../utils/hooks/useViewport';
 import { browseTo } from '../../routes';
 import { ITeam } from '../../models/model-interfaces';
 import t from '../../locales';
+import { Icon } from '../controls/Icons/Icon';
 
 export const DashboardGlobalTeamStats = () => {
   const teams = useTtcSelector(selectTeams);
   const user = useTtcSelector(selectUser);
   const viewport = useViewport();
-  const isLargeDevice = viewport.width >= 768;
+  const isLargeDevice = viewport.width >= 1200;
 
-  const userTeams = teams.filter(team => user.teams.includes(team.id));
-  const otherTeams = teams.filter(team => !user.teams.includes(team.id));
-  const allTeams = [...userTeams, ...otherTeams];
+  // Get user's teams, or default to VTTL A and Sporta A if user has no teams
+  const getDefaultTeams = () => {
+    const vttlA = teams.find(team => team.competition === 'Vttl' && team.teamCode === 'A');
+    const sportaA = teams.find(team => team.competition === 'Sporta' && team.teamCode === 'A');
+    return [vttlA, sportaA].filter(Boolean) as ITeam[];
+  };
 
-  const renderTeamStats = (team: ITeam, isUserTeam: boolean) => {
+  const userTeamIds = user.teams.length > 0 ? user.teams : getDefaultTeams().map(team => team.id);
+  const primaryTeams = teams.filter(team => userTeamIds.includes(team.id));
+  const otherTeams = teams.filter(team => !userTeamIds.includes(team.id));
+
+  const renderPrimaryTeamStats = (team: ITeam) => {
     const ranking = team.getDivisionRanking();
     if (ranking.empty) {
       return null;
@@ -31,9 +39,9 @@ export const DashboardGlobalTeamStats = () => {
         style={{
           padding: 10,
           marginBottom: 8,
-          backgroundColor: isUserTeam ? '#F0F0F0' : '#fafafa',
+          backgroundColor: '#F0F0F0',
           borderRadius: 4,
-          border: isUserTeam ? '2px solid #4CAF50' : '1px solid #ddd',
+          border: '2px solid #4CAF50',
         }}
       >
         <Link to={browseTo.getTeam(team)} style={{textDecoration: 'none', color: 'inherit'}}>
@@ -52,13 +60,57 @@ export const DashboardGlobalTeamStats = () => {
     );
   };
 
+  const renderCompactTeamStats = (team: ITeam) => {
+    const ranking = team.getDivisionRanking();
+    if (ranking.empty) {
+      return null;
+    }
+
+    return (
+      <Link
+        key={team.id}
+        to={browseTo.getTeam(team)}
+        style={{textDecoration: 'none', color: 'inherit'}}
+      >
+        <div
+          style={{
+            padding: 6,
+            marginBottom: 4,
+            backgroundColor: '#fafafa',
+            borderRadius: 4,
+            border: '1px solid #ddd',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: '0.85em',
+          }}
+        >
+          <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+            <TeamPosition team={team} style={{marginRight: 4, marginTop: 0, fontSize: '0.9em'}} />
+            <span>{team.renderOwnTeamTitle()}</span>
+          </div>
+          <div style={{display: 'flex', alignItems: 'center', gap: 4, fontSize: '1.2em'}}>
+            <span style={{color: '#4CAF50', marginRight: 4}}><Icon fa="fa fa-thumbs-up" style={{marginRight: 2}} />{ranking.gamesWon}</span>
+            <span style={{color: '#FF9800', marginRight: 4}}><Icon fa="fa fa-meh-o" style={{marginRight: 2}} />{ranking.gamesDraw}</span>
+            <span style={{color: '#f44336'}}><Icon fa="fa fa-thumbs-down" style={{marginRight: 2}} />{ranking.gamesLost}</span>
+          </div>
+        </div>
+      </Link>
+    );
+  };
+
   return (
     <div style={{marginBottom: 20}}>
       <Strike text={t('dashboard.globalTeamStats')} style={{marginBottom: 6}} />
-
       <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr' : '1fr', gap: 8 }}>
-        {allTeams.map(team => renderTeamStats(team, user.teams.includes(team.id)))}
+        {primaryTeams.map(team => renderPrimaryTeamStats(team))}
       </div>
+
+      {otherTeams.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr 1fr' : '1fr 1fr', gap: 4 }}>
+          {otherTeams.map(team => renderCompactTeamStats(team))}
+        </div>
+      )}
     </div>
   );
 };
