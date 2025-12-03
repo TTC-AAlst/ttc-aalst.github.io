@@ -2,6 +2,7 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import { Icon } from '../../controls/Icons/Icon';
+import { TrophyIcon } from '../../controls/Icons/TrophyIcon';
 import MatchVs from '../../matches/Match/MatchVs';
 import { MatchDate } from '../../matches/controls/MatchDate';
 import { OpponentPlayerLabel } from '../../matches/Match/OpponentPlayer';
@@ -42,7 +43,7 @@ export const PlayerMatchHistory = ({player}: PlayerMatchHistoryProps) => {
                 .filter(game => !game.isDoubles)
                 .filter(game => game.home.playerId === player.id || game.out.playerId === player.id);
 
-              const rowStyle = matchIndex % 2 === 1 ? {backgroundColor: 'rgba(0,0,0,.05)'} : {};
+              const isEvenMatch = matchIndex % 2 === 0;
 
               return games.map((game, index) => {
                 const opponentPlayer = match.isHomeMatch ? game.out : game.home;
@@ -50,23 +51,27 @@ export const PlayerMatchHistory = ({player}: PlayerMatchHistoryProps) => {
                   || (!match.isHomeMatch && game.outSets > game.homeSets);
 
                 return (
-                  <tr key={`${match.id}-${game.matchNumber}`} style={rowStyle}>
+                  <tr
+                    key={`${match.id}-${game.matchNumber}`}
+                    className={isEvenMatch ? '' : 'table-info'}
+                  >
                     {index === 0 ? (
                       <td rowSpan={games.length}>
                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                           <div>
-                            <MatchVs match={match} withLinks withPosition ownTeamLink="matches" />
-                            <div style={{fontSize: '0.85em', color: '#666', marginTop: 4}}>
+                            <div style={{fontSize: '0.85em', color: '#666', marginBottom: 4}}>
                               <MatchDate match={match} />
                             </div>
+                            <MatchVs match={match} withLinks withPosition ownTeamLink="matches" />
                           </div>
-                          <div style={{marginLeft: 10}}>
-                            <ViewMatchDetailsButton match={match} size="sm" />
+                          <div style={{marginLeft: 10, marginRight: 5}}>
+                            <ViewMatchDetailsButton match={match} size={null} />
                           </div>
                         </div>
                       </td>
                     ) : null}
                     <td>
+                      {playerWon ? <TrophyIcon style={{marginRight: 6}} /> : null}
                       <OpponentPlayerLabel player={opponentPlayer} competition={match.competition} />
                     </td>
                     <td>
