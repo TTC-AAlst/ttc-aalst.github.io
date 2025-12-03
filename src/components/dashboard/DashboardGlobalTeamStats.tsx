@@ -15,6 +15,7 @@ export const DashboardGlobalTeamStats = () => {
   const user = useTtcSelector(selectUser);
   const viewport = useViewport();
   const isLargeDevice = viewport.width >= 1200;
+  const isSmallDevice = viewport.width < 576;
 
   // Get user's teams, or default to VTTL A and Sporta A if user has no teams
   const getDefaultTeams = () => {
@@ -50,10 +51,10 @@ export const DashboardGlobalTeamStats = () => {
               <TeamPosition team={team} />
               <div>
                 <strong>{team.renderOwnTeamTitle()}</strong>
-                <div style={{fontSize: '0.9em', color: '#666'}}>{team.getDivisionDescription()}</div>
+                {!isSmallDevice && <div style={{fontSize: '0.9em', color: '#666'}}>{team.getDivisionDescription()}</div>}
               </div>
             </div>
-            <TeamRankingBadges team={team} />
+            <TeamRankingBadges team={team} style={isSmallDevice ? {fontSize: 18, marginTop: -5} : undefined} />
           </div>
         </Link>
       </div>
@@ -99,6 +100,9 @@ export const DashboardGlobalTeamStats = () => {
     );
   };
 
+  let smallGridTemplateColumns = isLargeDevice ? '1fr 1fr 1fr' : '1fr 1fr';
+  if (isSmallDevice) smallGridTemplateColumns = '1fr';
+
   return (
     <div style={{marginBottom: 20}}>
       <Strike text={t('dashboard.globalTeamStats')} style={{marginBottom: 6}} />
@@ -107,7 +111,7 @@ export const DashboardGlobalTeamStats = () => {
       </div>
 
       {otherTeams.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr 1fr' : '1fr 1fr', gap: 4 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: smallGridTemplateColumns, gap: 4 }}>
           {otherTeams.map(team => renderCompactTeamStats(team))}
         </div>
       )}
