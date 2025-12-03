@@ -282,13 +282,17 @@ export type PredictionResult = {
   newRanking: string;
 }
 
+export type PlayerEventType = 'PlayerStyleUpdated' | 'MatchReport' | 'MatchComment';
+
 export interface IPlayerEvent {
   id: number;
+  type: PlayerEventType;
+  data: string | null;
+  teamId: number | null;
+  matchId: number | null;
   playerId: number;
-  playerName: string;
-  eventType: string;
-  description: string;
-  timestamp: string;
+  createdOn: string;
+  createdBy: string;
 }
 
 
