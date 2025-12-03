@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import Button from 'react-bootstrap/Button';
 import { Strike } from '../controls/controls/Strike';
-import { MatchMiniView } from './MatchMiniView';
+import { UpcomingMatchMiniView } from './UpcomingMatchMiniView';
 import { selectMatches, selectTeams, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { useViewport } from '../../utils/hooks/useViewport';
 import { ITeam } from '../../models/model-interfaces';
 import t from '../../locales';
 
-export const DashboardRecentMatches = () => {
+export const DashboardUpcomingMatches = () => {
   const matches = useTtcSelector(selectMatches);
   const teams = useTtcSelector(selectTeams);
   const user = useTtcSelector(selectUser);
@@ -16,8 +16,8 @@ export const DashboardRecentMatches = () => {
   const isLargeDevice = viewport.width >= 1200;
   const [showOtherMatches, setShowOtherMatches] = useState(false);
 
-  const today = moment();
-  const lastWeek = moment().subtract(7, 'days');
+  const today = moment().startOf('day');
+  const nextWeek = moment().add(14, 'days').endOf('day');
 
   // Get default team IDs (VTTL A and Sporta A) if user has no teams
   const getDefaultTeamIds = () => {
@@ -28,27 +28,39 @@ export const DashboardRecentMatches = () => {
 
   const userTeamIds = user.teams.length > 0 ? user.teams : getDefaultTeamIds();
 
-  // Get matches from previous week and current week
-  const recentMatches = matches
+  // Get upcoming matches (next 2 weeks)
+  const upcomingMatches = matches
     .filter(match => {
       const matchDate = moment(match.date);
-      return matchDate.isBetween(lastWeek, today, 'day', '[]');
+      return matchDate.isBetween(today, nextWeek, 'day', '[]') && !match.isSyncedWithFrenoy;
     })
-    .sort((a, b) => b.date.valueOf() - a.date.valueOf());
+    .sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
-  const userMatches = recentMatches.filter(match => userTeamIds.includes(match.teamId));
-  const otherMatches = recentMatches.filter(match => !userTeamIds.includes(match.teamId));
+  // Check if user is in the formation of a match
+  const isUserInFormation = (match: any): boolean => {
+    if (!user.playerId) return false;
+    const formation = match.getPlayerFormation(undefined);
+    return formation.some((p: any) => p.id === user.playerId);
+  };
 
-  if (recentMatches.length === 0) {
+  // User matches: user's team OR user is in formation
+  const userMatches = upcomingMatches.filter(
+    match => userTeamIds.includes(match.teamId) || isUserInFormation(match),
+  );
+  const otherMatches = upcomingMatches.filter(
+    match => !userTeamIds.includes(match.teamId) && !isUserInFormation(match),
+  );
+
+  if (upcomingMatches.length === 0) {
     return null;
   }
 
   return (
     <div style={{marginBottom: 20}}>
-      <Strike text={t('dashboard.recentMatches')} style={{marginBottom: 6}} />
+      <Strike text={t('dashboard.upcomingMatches')} style={{marginBottom: 6}} />
       <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr' : '1fr', gap: 8 }}>
         {userMatches.map(match => (
-          <MatchMiniView
+          <UpcomingMatchMiniView
             key={match.id}
             match={match}
           />
@@ -72,7 +84,7 @@ export const DashboardRecentMatches = () => {
           {showOtherMatches && (
             <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr' : '1fr', gap: 8, marginTop: 8 }}>
               {otherMatches.map(match => (
-                <MatchMiniView
+                <UpcomingMatchMiniView
                   key={match.id}
                   match={match}
                 />

@@ -146,6 +146,7 @@ export default {
     },
     dashboard: {
       globalTeamStats: "Teams",
+      upcomingMatches: "Volgende Wedstrijden",
       recentMatches: "Recente Wedstrijden",
       showOtherMatches: "Andere Wedstrijden Tonen",
       rankingPredictions: "Klassement Voorspellingen",

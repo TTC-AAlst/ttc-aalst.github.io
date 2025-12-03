@@ -127,9 +127,13 @@ export const DashboardRankingPredictions = () => {
           {!showDrops && (
             <div style={{textAlign: 'right'}}>
               <Button
-                variant="outline-secondary"
+                variant="link"
                 size="sm"
                 onClick={() => setShowDrops(!showDrops)}
+                className="text-dark text-decoration-none"
+                style={{padding: 0, fontSize: '0.85em'}}
+                onMouseEnter={e => e.currentTarget.classList.add('text-decoration-underline')}
+                onMouseLeave={e => e.currentTarget.classList.remove('text-decoration-underline')}
               >
                 {t('dashboard.showPredictionDrops')}
               </Button>

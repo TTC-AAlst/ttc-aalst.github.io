@@ -5,11 +5,10 @@ import MatchVs from '../matches/Match/MatchVs';
 import { CommentIcon } from '../controls/Icons/CommentIcon';
 import { ThumbsUpIcon, ThumbsDownIcon } from '../controls/Icons/ThumbsIcons';
 import { PlayerLink } from '../players/controls/PlayerLink';
-import { selectPlayers, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectPlayers, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 
 type MatchMiniViewProps = {
   match: IMatch;
-  highlight?: boolean;
 };
 
 type OpponentNameProps = {
@@ -43,11 +42,15 @@ const OpponentName = ({name, ranking, showFull, onClick}: OpponentNameProps) => 
   );
 };
 
-export const MatchMiniView = ({ match, highlight }: MatchMiniViewProps) => {
+export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
   const players = useTtcSelector(selectPlayers);
+  const user = useTtcSelector(selectUser);
   const hasReport = !!match.description;
   const hasComments = match.comments && match.comments.length > 0;
   const [expandedPlayers, setExpandedPlayers] = useState<Set<number>>(new Set());
+
+  // Check if current user played in this match
+  const userPlayedInMatch = user.playerId && match.plays(user.playerId, 'onlyFinal');
 
   const getPlayer = (playerId: number): IStorePlayer | undefined => players.find(p => p.id === playerId);
 
@@ -164,9 +167,9 @@ export const MatchMiniView = ({ match, highlight }: MatchMiniViewProps) => {
     <div
       style={{
         padding: 10,
-        backgroundColor: highlight ? '#F0F0F0' : '#fafafa',
+        backgroundColor: userPlayedInMatch ? '#F0F0F0' : '#fafafa',
         borderRadius: 4,
-        border: highlight ? '2px solid #4CAF50' : '1px solid #ddd',
+        border: userPlayedInMatch ? '2px solid #4CAF50' : '1px solid #ddd',
       }}
     >
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>

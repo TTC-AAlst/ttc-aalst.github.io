@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { ClubEvents } from '../other/ClubEvents';
 import { Eetfestijn } from '../App/Eetfestijn';
+import { DashboardUpcomingMatches } from './DashboardUpcomingMatches';
 import { DashboardGlobalTeamStats } from './DashboardGlobalTeamStats';
 import { DashboardRecentMatches } from './DashboardRecentMatches';
 import { DashboardRankingPredictions } from './DashboardRankingPredictions';
@@ -29,6 +30,8 @@ export const Dashboard = () => {
         {/* Main content area */}
         <Col lg={9} md={8}>
           <Eetfestijn />
+
+          <DashboardUpcomingMatches />
 
           <DashboardGlobalTeamStats />
 
