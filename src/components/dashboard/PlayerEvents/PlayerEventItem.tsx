@@ -34,6 +34,19 @@ const getEventIcon = (eventType: PlayerEventType): string => {
   }
 };
 
+const getEventTooltip = (eventType: PlayerEventType): string => {
+  switch (eventType) {
+    case 'PlayerStyleUpdated':
+      return 'Speelstijl aangepast';
+    case 'MatchReport':
+      return 'Wedstrijdverslag toegevoegd';
+    case 'MatchComment':
+      return 'Reactie toegevoegd';
+    default:
+      return 'Activiteit';
+  }
+};
+
 const MAX_CONTENT_LENGTH = 150;
 
 const truncateHtml = (html: string, maxLength: number): { html: string; isTruncated: boolean } => {
@@ -65,88 +78,70 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
   const allMatches = [...matches, ...readonlyMatches];
   const match = event.matchId ? allMatches.find(m => m.id === event.matchId) : null;
 
-  const getTitle = (): React.ReactNode => {
-    switch (event.type) {
-      case 'PlayerStyleUpdated': {
-        if (!event.data) return 'Speelstijl aangepast';
-        try {
-          const data: PlayerStyleData = JSON.parse(event.data);
-          const targetPlayer = players.find(p => p.id === data.PlayerId);
-          if (targetPlayer) {
-            return (
-              <>
-                {'Speelstijl van '}
-                <Link to={getPlayerUrl(targetPlayer)} style={{ color: '#2196F3' }}>
-                  {targetPlayer.alias || targetPlayer.firstName}
-                </Link>
-                {' aangepast'}
-              </>
-            );
-          }
-          return 'Speelstijl aangepast';
-        } catch {
-          return 'Speelstijl aangepast';
-        }
-      }
-      case 'MatchReport':
-        return 'Wedstrijdverslag toegevoegd';
-      case 'MatchComment':
-        return 'Reactie toegevoegd';
-      default:
-        return 'Activiteit';
+  const getPlayerStyleContent = (): React.ReactNode => {
+    if (event.type !== 'PlayerStyleUpdated' || !event.data) return null;
+    try {
+      const data: PlayerStyleData = JSON.parse(event.data);
+      const targetPlayer = players.find(p => p.id === data.PlayerId);
+      const playerName = targetPlayer?.alias || targetPlayer?.firstName || `Speler ${data.PlayerId}`;
+      const playerUrl = targetPlayer ? getPlayerUrl(targetPlayer) : null;
+
+      return (
+        <>
+          <div style={{ fontSize: '0.8em', color: '#666', marginTop: 2 }}>
+            {'Speelstijl van '}
+            {playerUrl ? (
+              <Link to={playerUrl} style={{ color: '#2196F3' }}>
+                {playerName}
+              </Link>
+            ) : (
+              playerName
+            )}
+            {data.Style ? ` aangepast naar ${data.Style}` : ' aangepast'}
+          </div>
+          {data.BestStroke && (
+            <div style={{ fontSize: '0.8em', color: '#666', marginTop: 2 }}>
+              🔥 {data.BestStroke}
+            </div>
+          )}
+        </>
+      );
+    } catch {
+      return null;
     }
   };
 
-  const getContent = (): { html: string; isTruncated: boolean } | null => {
-    switch (event.type) {
-      case 'PlayerStyleUpdated': {
-        if (!event.data) return null;
-        try {
-          const data: PlayerStyleData = JSON.parse(event.data);
-          const parts: string[] = [];
-          if (data.Style) {
-            parts.push(`stijl: ${data.Style}`);
-          }
-          if (data.BestStroke) {
-            parts.push(`beste slag: ${data.BestStroke}`);
-          }
-          if (parts.length === 0) return null;
-          return { html: parts.join(', '), isTruncated: false };
-        } catch {
-          return null;
+  const getMatchContent = (): { html: string; isTruncated: boolean } | null => {
+    if (event.type === 'MatchReport') {
+      if (match?.description) {
+        if (expanded) {
+          return { html: match.description, isTruncated: true };
         }
+        return truncateHtml(match.description, MAX_CONTENT_LENGTH);
       }
-      case 'MatchReport': {
-        if (match?.description) {
-          if (expanded) {
-            return { html: match.description, isTruncated: true };
-          }
-          return truncateHtml(match.description, MAX_CONTENT_LENGTH);
-        }
-        return null;
-      }
-      case 'MatchComment': {
-        if (!event.data || !match) return null;
-        try {
-          const data: MatchCommentData = JSON.parse(event.data);
-          const comment = match.comments?.find(c => c.id === data.CommentId);
-          if (comment?.text) {
-            if (expanded) {
-              return { html: comment.text, isTruncated: true };
-            }
-            return truncateHtml(comment.text, MAX_CONTENT_LENGTH);
-          }
-          if (comment?.imageUrl) {
-            return { html: '📷 Foto toegevoegd', isTruncated: false };
-          }
-        } catch {
-          return null;
-        }
-        return null;
-      }
-      default:
-        return null;
+      return null;
     }
+
+    if (event.type === 'MatchComment') {
+      if (!event.data || !match) return null;
+      try {
+        const data: MatchCommentData = JSON.parse(event.data);
+        const comment = match.comments?.find(c => c.id === data.CommentId);
+        if (comment?.text) {
+          if (expanded) {
+            return { html: comment.text, isTruncated: true };
+          }
+          return truncateHtml(comment.text, MAX_CONTENT_LENGTH);
+        }
+        if (comment?.imageUrl) {
+          return { html: '📷 Foto toegevoegd', isTruncated: false };
+        }
+      } catch {
+        return null;
+      }
+    }
+
+    return null;
   };
 
   const getMatchInfo = (): React.ReactNode => {
@@ -160,9 +155,19 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
         const team = matchModel.getTeam();
         const opponentTitle = matchModel.renderOpponentTitle();
         const teamTitle = team?.renderOwnTeamTitle?.() || '';
+
+        // Build match title with score
+        const { score } = matchModel;
+        let scoreText = '';
+
+        if (score && (score.home !== 0 || score.out !== 0)) {
+          scoreText = ` (${score.home}-${score.out})`;
+        }
+
         const matchTitle = matchModel.isHomeMatch
-          ? `${teamTitle} - ${opponentTitle}`
-          : `${opponentTitle} - ${teamTitle}`;
+          ? `${teamTitle} - ${opponentTitle}${scoreText}`
+          : `${opponentTitle} - ${teamTitle}${scoreText}`;
+
         return (
           <Link to={matchUrl} style={{ color: '#2196F3', fontSize: '0.85em' }}>
             {matchTitle}
@@ -180,7 +185,7 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
     );
   };
 
-  const content = getContent();
+  const matchContent = getMatchContent();
 
   return (
     <div
@@ -192,30 +197,33 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
         borderLeft: '3px solid #2196F3',
       }}
     >
-      <div style={{display: 'flex', alignItems: 'start', gap: 8}}>
-        <span style={{fontSize: '1.2em'}}>{getEventIcon(event.type)}</span>
-        <div style={{flex: 1}}>
-          <div style={{fontSize: '0.85em', fontWeight: 'bold', color: '#333'}}>
+      <div style={{ display: 'flex', alignItems: 'start', gap: 8 }}>
+        <span style={{ fontSize: '1.2em', cursor: 'default' }} title={getEventTooltip(event.type)}>
+          {getEventIcon(event.type)}
+        </span>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: '0.85em', fontWeight: 'bold', color: '#333' }}>
             {event.createdBy}
           </div>
-          <div style={{fontSize: '0.8em', color: '#666', marginTop: 2}}>
-            {getTitle()}
-          </div>
+
+          {event.type === 'PlayerStyleUpdated' && getPlayerStyleContent()}
+
           {(event.type === 'MatchReport' || event.type === 'MatchComment') && (
-            <div style={{marginTop: 2}}>
+            <div style={{ marginTop: 2 }}>
               {getMatchInfo()}
             </div>
           )}
-          {content && (
-            <div style={{fontSize: '0.8em', color: '#555', marginTop: 4}}>
+
+          {matchContent && (
+            <div style={{ fontSize: '0.8em', color: '#555', marginTop: 4 }}>
               <div
-                dangerouslySetInnerHTML={{ __html: content.html }} // eslint-disable-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: matchContent.html }} // eslint-disable-line react/no-danger
                 style={{
                   maxHeight: expanded ? 'none' : '4.5em',
                   overflow: 'hidden',
                 }}
               />
-              {content.isTruncated && (
+              {matchContent.isTruncated && (
                 <button
                   type="button"
                   onClick={() => setExpanded(!expanded)}
@@ -234,7 +242,8 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
               )}
             </div>
           )}
-          <div style={{fontSize: '0.75em', color: '#999', marginTop: 4}}>
+
+          <div style={{ fontSize: '0.75em', color: '#999', marginTop: 4 }}>
             <TimeAgo date={event.createdOn} />
           </div>
         </div>
