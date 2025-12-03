@@ -24,6 +24,7 @@ export const TeamOverview = ({team, small}: TeamOverviewProps) => {
 
   const prevMatches = sortedMatches
     .filter(m => m.date.isBefore(today, 'day'))
+    .reverse()
     .slice(0, 2);
 
   return (
