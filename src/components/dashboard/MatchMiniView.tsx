@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
-import { IMatch } from '../../models/model-interfaces';
+import { IMatch, IStorePlayer } from '../../models/model-interfaces';
 import { MatchScore } from '../matches/MatchScore';
 import MatchVs from '../matches/Match/MatchVs';
 import { CommentIcon } from '../controls/Icons/CommentIcon';
 import { ThumbsUpIcon, ThumbsDownIcon } from '../controls/Icons/ThumbsIcons';
+import { PlayerLink } from '../players/controls/PlayerLink';
+import { selectPlayers, useTtcSelector } from '../../utils/hooks/storeHooks';
 
 type MatchMiniViewProps = {
   match: IMatch;
@@ -42,9 +44,12 @@ const OpponentName = ({name, ranking, showFull, onClick}: OpponentNameProps) => 
 };
 
 export const MatchMiniView = ({ match, highlight }: MatchMiniViewProps) => {
+  const players = useTtcSelector(selectPlayers);
   const hasReport = !!match.description;
   const hasComments = match.comments && match.comments.length > 0;
   const [expandedPlayers, setExpandedPlayers] = useState<Set<number>>(new Set());
+
+  const getPlayer = (playerId: number): IStorePlayer | undefined => players.find(p => p.id === playerId);
 
   const togglePlayerExpanded = (playerId: number, e: React.MouseEvent) => {
     e.preventDefault();
@@ -104,43 +109,53 @@ export const MatchMiniView = ({ match, highlight }: MatchMiniViewProps) => {
 
     return (
       <div style={{marginTop: 8, fontSize: '0.85em', color: '#555'}}>
-        {Object.values(playerSummary).map(summary => (
-          <div key={summary.playerId} style={{marginBottom: 4}}>
-            <strong>{summary.name}:</strong>
-            {summary.won.length > 0 && (
-              <span style={{marginLeft: 5}}>
-                <ThumbsUpIcon color="#4CAF50" style={{marginRight: 3}} />
-                {summary.won.map((opponent, i) => (
-                  <span key={i}>
-                    {i > 0 && ', '}
-                    <OpponentName
-                      name={opponent.name}
-                      ranking={opponent.ranking}
-                      showFull={isExpanded(summary.playerId)}
-                      onClick={e => togglePlayerExpanded(summary.playerId, e)}
-                    />
-                  </span>
-                ))}
-              </span>
-            )}
-            {summary.lost.length > 0 && (
-              <span style={{marginLeft: 8}}>
-                <ThumbsDownIcon color="#f44336" style={{marginRight: 3}} />
-                {summary.lost.map((opponent, i) => (
-                  <span key={i}>
-                    {i > 0 && ', '}
-                    <OpponentName
-                      name={opponent.name}
-                      ranking={opponent.ranking}
-                      showFull={isExpanded(summary.playerId)}
-                      onClick={e => togglePlayerExpanded(summary.playerId, e)}
-                    />
-                  </span>
-                ))}
-              </span>
-            )}
-          </div>
-        ))}
+        {Object.values(playerSummary).map(summary => {
+          const player = getPlayer(summary.playerId);
+          return (
+            <div key={summary.playerId} style={{marginBottom: 4}}>
+              <strong>
+                {player ? (
+                  <PlayerLink player={player}>{summary.name}</PlayerLink>
+                ) : (
+                  summary.name
+                )}
+                :
+              </strong>
+              {summary.won.length > 0 && (
+                <span style={{marginLeft: 5}}>
+                  <ThumbsUpIcon color="#4CAF50" style={{marginRight: 3}} />
+                  {summary.won.map((opponent, i) => (
+                    <span key={i}>
+                      {i > 0 && ', '}
+                      <OpponentName
+                        name={opponent.name}
+                        ranking={opponent.ranking}
+                        showFull={isExpanded(summary.playerId)}
+                        onClick={e => togglePlayerExpanded(summary.playerId, e)}
+                      />
+                    </span>
+                  ))}
+                </span>
+              )}
+              {summary.lost.length > 0 && (
+                <span style={{marginLeft: 8}}>
+                  <ThumbsDownIcon color="#f44336" style={{marginRight: 3}} />
+                  {summary.lost.map((opponent, i) => (
+                    <span key={i}>
+                      {i > 0 && ', '}
+                      <OpponentName
+                        name={opponent.name}
+                        ranking={opponent.ranking}
+                        showFull={isExpanded(summary.playerId)}
+                        onClick={e => togglePlayerExpanded(summary.playerId, e)}
+                      />
+                    </span>
+                  ))}
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   };
