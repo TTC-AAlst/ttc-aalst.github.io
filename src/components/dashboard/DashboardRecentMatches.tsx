@@ -3,11 +3,14 @@ import moment from 'moment';
 import { Strike } from '../controls/controls/Strike';
 import { MatchMiniView } from './MatchMiniView';
 import { selectMatches, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { useViewport } from '../../utils/hooks/useViewport';
 import t from '../../locales';
 
 export const DashboardRecentMatches = () => {
   const matches = useTtcSelector(selectMatches);
   const user = useTtcSelector(selectUser);
+  const viewport = useViewport();
+  const isLargeDevice = viewport.width >= 768;
 
   const today = moment();
   const lastWeek = moment().subtract(7, 'days');
@@ -26,17 +29,19 @@ export const DashboardRecentMatches = () => {
 
   return (
     <div style={{marginBottom: 20}}>
-      <Strike text={t('dashboard.recentMatches')} />
-      {recentMatches.map(match => {
-        const isUserTeam = user.teams.includes(match.teamId);
-        return (
-          <MatchMiniView
-            key={match.id}
-            match={match}
-            highlight={isUserTeam}
-          />
-        );
-      })}
+      <Strike text={t('dashboard.recentMatches')} style={{marginBottom: 6}} />
+      <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr' : '1fr', gap: 8 }}>
+        {recentMatches.map(match => {
+          const isUserTeam = user.teams.includes(match.teamId);
+          return (
+            <MatchMiniView
+              key={match.id}
+              match={match}
+              highlight={isUserTeam}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

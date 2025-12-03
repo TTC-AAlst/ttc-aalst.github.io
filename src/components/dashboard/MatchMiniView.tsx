@@ -19,7 +19,7 @@ type OpponentNameProps = {
 
 const OpponentName = ({name, ranking, showFull, onClick}: OpponentNameProps) => {
   const firstName = name.split(' ')[0];
-  const displayName = showFull ? `${name} (${ranking})` : firstName;
+  const displayName = showFull ? name : firstName;
 
   return (
     <button
@@ -36,6 +36,7 @@ const OpponentName = ({name, ranking, showFull, onClick}: OpponentNameProps) => 
       }}
     >
       {displayName}
+      <span style={{opacity: 0.7}}> <small>({ranking})</small></span>
     </button>
   );
 };
@@ -148,7 +149,6 @@ export const MatchMiniView = ({ match, highlight }: MatchMiniViewProps) => {
     <div
       style={{
         padding: 10,
-        marginBottom: 8,
         backgroundColor: highlight ? '#F0F0F0' : '#fafafa',
         borderRadius: 4,
         border: highlight ? '2px solid #4CAF50' : '1px solid #ddd',
@@ -156,7 +156,7 @@ export const MatchMiniView = ({ match, highlight }: MatchMiniViewProps) => {
     >
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <div>
-          <MatchVs match={match} withLinks withPosition />
+          <MatchVs match={match} withLinks withPosition ownTeamLink="main" />
           <div style={{fontSize: '0.85em', color: '#666'}}>
             {match.getDisplayDate('d')} - {match.getDisplayTime()}
           </div>
@@ -164,7 +164,7 @@ export const MatchMiniView = ({ match, highlight }: MatchMiniViewProps) => {
         <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
           {hasReport && <span title="Wedstrijdverslag" style={{color: '#2196F3'}}>📝</span>}
           {hasComments && <CommentIcon />}
-          <MatchScore match={match} />
+          <MatchScore match={match} showComments style={{fontSize: 16}} />
         </div>
       </div>
       {renderPlayerResults()}
