@@ -35,14 +35,13 @@ export const UpcomingMatchMiniView = ({ match }: UpcomingMatchMiniViewProps) => 
       const player = getPlayer(ply.id);
       const ranking = player?.getCompetition(match.competition)?.ranking;
       return (
-        <span key={ply.id}>
-          {i > 0 && ', '}
+        <span key={ply.id} style={{whiteSpace: 'nowrap'}}>
           {player ? (
             <PlayerLink player={player}>{player.alias}</PlayerLink>
           ) : (
             ply.player?.alias || 'Unknown'
           )}
-          {ranking && <small style={{opacity: 0.7}}> ({ranking})</small>}
+          {ranking && <small style={{opacity: 0.7}}> ({ranking})</small>}{i < playerList.length - 1 && ', '}
         </span>
       );
     });

@@ -15,6 +15,7 @@ export const DashboardUpcomingMatches = () => {
   const players = useTtcSelector(selectPlayers);
   const viewport = useViewport();
   const isLargeDevice = viewport.width >= 1200;
+  const isSmallDevice = viewport.width < 576;
   const [showOtherMatches, setShowOtherMatches] = useState(false);
 
   const currentPlayer = user.playerId ? players.find(p => p.id === user.playerId) : null;
@@ -68,7 +69,7 @@ export const DashboardUpcomingMatches = () => {
             {t('dashboard.greeting', {name: currentPlayer.firstName})}
           </span>
         )}
-        <Strike text={t('dashboard.upcomingMatches')} style={{flex: 1, marginBottom: 0}} />
+        {isSmallDevice ? <div style={{flex: 1}} /> : <Strike text={t('dashboard.upcomingMatches')} style={{flex: 1, marginBottom: 0}} />}
         {matchesBeingPlayed.length > 0 && (
           <Link to={t.route('matchesToday')}>
             <Button variant="success" size="sm" style={{whiteSpace: 'nowrap'}}>
