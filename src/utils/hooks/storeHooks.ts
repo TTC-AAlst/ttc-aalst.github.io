@@ -73,23 +73,17 @@ export const selectMatchesToday = createSelector(
  * Selector to determine "your teams" based on match participation.
  * - Uses teams defined on the player
  * - If more than 2 teams, looks at synced matches to find most played teams
- * - Per competition: if you played 40%+ of matches with a team, you can belong to 2 teams
  */
 export const selectUserTeams = createSelector(
   [selectUser, selectTeams, selectMatches],
   (user, teams, matches): ITeam[] => {
     if (!user.playerId) {
-      // Not logged in - default to VTTL A and Sporta A
       const vttlA = teams.find(t => t.competition === 'Vttl' && t.teamCode === 'A');
       const sportaA = teams.find(t => t.competition === 'Sporta' && t.teamCode === 'A');
       return [vttlA, sportaA].filter(Boolean) as ITeam[];
     }
 
-    // Get teams the user is defined in
-    const userTeamIds = user.teams;
-    const userTeams = teams.filter(t => userTeamIds.includes(t.id));
-
-    // If 2 or fewer teams, just return them
+    const userTeams = teams.filter(t => user.teams.includes(t.id));
     if (userTeams.length <= 2) {
       return userTeams;
     }

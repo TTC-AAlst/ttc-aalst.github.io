@@ -23,11 +23,16 @@ export const DashboardUpcomingMatches = () => {
 
   const userTeamIds = userTeams.map(team => team.id);
 
-  // Get upcoming matches (next 2 weeks)
+  // Get upcoming matches (next 2 weeks), exclude walk overs and forfeited opponents
   const upcomingMatches = matches
     .filter(match => {
       const matchDate = moment(match.date);
-      return matchDate.isBetween(today, nextWeek, 'day', '[]') && !match.isSyncedWithFrenoy;
+      if (!matchDate.isBetween(today, nextWeek, 'day', '[]')) return false;
+      if (match.isSyncedWithFrenoy) return false;
+      if (match.scoreType === 'WalkOver') return false;
+      const divisionRanking = match.getTeam().getDivisionRanking(match.opponent);
+      if (!divisionRanking.empty && divisionRanking.isForfait) return false;
+      return true;
     })
     .sort((a, b) => a.date.valueOf() - b.date.valueOf());
 

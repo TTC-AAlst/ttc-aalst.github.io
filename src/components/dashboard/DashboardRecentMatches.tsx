@@ -19,11 +19,16 @@ export const DashboardRecentMatches = () => {
 
   const userTeamIds = userTeams.map(team => team.id);
 
-  // Get matches from previous week and current week that have been synced
+  // Get matches from previous week and current week that have been synced, exclude walk overs and forfeited opponents
   const recentMatches = matches
     .filter(match => {
       const matchDate = moment(match.date);
-      return matchDate.isBetween(lastWeek, today, 'day', '[]') && match.isSyncedWithFrenoy;
+      if (!matchDate.isBetween(lastWeek, today, 'day', '[]')) return false;
+      if (!match.isSyncedWithFrenoy) return false;
+      if (match.scoreType === 'WalkOver') return false;
+      const divisionRanking = match.getTeam().getDivisionRanking(match.opponent);
+      if (!divisionRanking.empty && divisionRanking.isForfait) return false;
+      return true;
     })
     .sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
