@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import MatchForm from '../Match/MatchForm';
 import { MatchScore } from '../MatchScore';
-import { DivisionRankingLabel } from '../controls/DivisionRankingLabel';
 import { IMatch, ITeamOpponent } from '../../../models/model-interfaces';
 import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { browseTo } from '../../../routes';
 import t from '../../../locales';
 
 type MobileLiveMatchHeaderProps = {
@@ -14,9 +15,6 @@ export const MobileLiveMatchHeader = ({ match }: MobileLiveMatchHeaderProps) => 
   const user = useTtcSelector(selectUser);
   const team = match.getTeam();
 
-  const homeTeam = match.isHomeMatch ? team.renderOwnTeamTitle() : match.renderOpponentTitle();
-  const awayTeam = match.isHomeMatch ? match.renderOpponentTitle() : team.renderOwnTeamTitle();
-
   const getRanking = (opponent?: ITeamOpponent) => {
     const ranking = team.getDivisionRanking(opponent);
     return ranking.empty ? null : ranking;
@@ -24,6 +22,21 @@ export const MobileLiveMatchHeader = ({ match }: MobileLiveMatchHeaderProps) => 
 
   const homeRanking = getRanking(match.isHomeMatch ? undefined : match.opponent);
   const awayRanking = getRanking(match.isHomeMatch ? match.opponent : undefined);
+
+  const ownTeamLink = browseTo.getTeam(team, 'main');
+  const opponentLink = browseTo.getOpponent(match.competition, match.opponent);
+
+  const renderOwnTeam = () => (
+    <Link to={ownTeamLink} className="link-hover-underline">
+      {team.renderOwnTeamTitle()}
+    </Link>
+  );
+
+  const renderOpponentTeam = () => (
+    <Link to={opponentLink} className="link-hover-underline">
+      {match.renderOpponentTitle()}
+    </Link>
+  );
 
   return (
     <div
@@ -37,14 +50,14 @@ export const MobileLiveMatchHeader = ({ match }: MobileLiveMatchHeaderProps) => 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
           <div style={{ fontWeight: match.isHomeMatch ? 'bold' : 'normal', fontSize: '1.1em' }}>
             {homeRanking && <small className="match-opponent-team">{homeRanking.position}. </small>}
-            {homeTeam}
+            {match.isHomeMatch ? renderOwnTeam() : renderOpponentTeam()}
           </div>
           <div style={{ color: '#888', fontSize: '0.85em', margin: '4px 0' }}>
             {t('match.vs')}
           </div>
           <div style={{ fontWeight: !match.isHomeMatch ? 'bold' : 'normal', fontSize: '1.1em' }}>
             {awayRanking && <small className="match-opponent-team">{awayRanking.position}. </small>}
-            {awayTeam}
+            {match.isHomeMatch ? renderOpponentTeam() : renderOwnTeam()}
           </div>
         </div>
 
