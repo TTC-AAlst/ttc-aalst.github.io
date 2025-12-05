@@ -60,19 +60,21 @@ export const MatchScore = ({showThrophy = true, ...props}: MatchScoreProps) => {
   const score = match.score || {home: 0, out: 0};
   const classColor = match.isDerby ? 'match-won' : getClassName(match.isHomeMatch, score.home, score.out);
   return (
-    <span
-      className={cn('badge label-as-badge clickable', props.className, classColor)}
-      style={props.style}
-    >
-      <span>
-        {classColor === 'match-won' && !match.isDerby && viewport.width > 350 && showThrophy ? (
-          <TrophyIcon style={{marginRight: 7, fontWeight: 'normal'}} color="#FFE568" />
-        ) : null}
-        {`${score.home} - ${score.out}`}
-        {props.showComments && (match.comments.length || match.description) ? (
-          <CommentIcon style={{marginLeft: 8}} tooltip={t('match.scoreComment')} />
-        ) : null}
+    <Link to={t.route('match', {matchId: match.id})}>
+      <span
+        className={cn('badge label-as-badge clickable', props.className, classColor)}
+        style={props.style}
+      >
+        <span>
+          {classColor === 'match-won' && !match.isDerby && viewport.width > 350 && showThrophy ? (
+            <TrophyIcon style={{marginRight: 7, fontWeight: 'normal'}} color="#FFE568" />
+          ) : null}
+          {`${score.home} - ${score.out}`}
+          {props.showComments && (match.comments.length || match.description) ? (
+            <CommentIcon style={{marginLeft: 8}} tooltip={t('match.scoreComment')} />
+          ) : null}
+        </span>
       </span>
-    </span>
+    </Link>
   );
 };

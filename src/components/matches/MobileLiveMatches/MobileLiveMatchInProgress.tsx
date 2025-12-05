@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import cn from 'classnames';
+import Button from 'react-bootstrap/Button';
 import { IMatch, IMatchPlayer } from '../../../models/model-interfaces';
 import { matchOutcome } from '../../../models/MatchModel';
 import { PlayerCompetitionBadge } from '../../players/PlayerBadges';
-import { ThumbsUpIcon, ThumbsDownIcon } from '../../controls/Icons/ThumbsIcons';
+import { ThumbsUpIcon } from '../../controls/Icons/ThumbsIcons';
 import { TrophyIcon } from '../../controls/Icons/TrophyIcon';
+import { IndividualMatches } from '../Match/IndividualMatches';
 import { t } from '../../../locales';
+import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import storeUtil from '../../../storeUtil';
 
 type MobileLiveMatchInProgressProps = {
@@ -22,12 +24,12 @@ export const MobileLiveMatchInProgress = ({
     {opponentPlayersKnown ? (
       <>
         <FormationsWithResults match={match} />
-        <IndividualGames match={match} />
+        <IndividualGamesToggle match={match} />
       </>
     ) : (
       <WaitingForResults />
     )}
-    <MatchDetailsLink match={match} />
+    {!match.isSyncedWithFrenoy && <MatchDetailsLink match={match} />}
   </div>
 );
 
@@ -117,84 +119,42 @@ const OurPlayerRow = ({ match, ply, teamPlayerCount }: { match: IMatch; ply: IMa
 const TheirPlayerRow = ({ ply }: { ply: IMatchPlayer }) => (
   <div
     style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '4px 8px',
-      backgroundColor: 'rgba(0, 0, 0, 0.03)',
-      borderRadius: 4,
+      padding: '4px 0',
+      fontSize: '0.9em',
     }}
   >
-    <span style={{ fontSize: '0.9em' }}>{ply.alias}</span>
-    <span style={{ fontSize: '0.85em', color: '#666' }}>{ply.ranking}</span>
+    <span>{ply.alias}</span>
+    <span style={{ color: '#666' }}> ({ply.ranking})</span>
     {ply.won ? (
-      <span style={{ fontSize: '0.85em', color: '#666' }}>
-        {t('match.enemyVictory', ply.won)}
-      </span>
+      <span style={{ color: '#666' }}>: {t('match.enemyVictory', ply.won)}</span>
     ) : null}
   </div>
 );
 
-const IndividualGames = ({ match }: { match: IMatch }) => {
+const IndividualGamesToggle = ({ match }: { match: IMatch }) => {
+  const [showGames, setShowGames] = useState(false);
+  const user = useTtcSelector(selectUser);
+
   if (match.games.length === 0) {
     return null;
   }
 
-  let homeScore = 0;
-  let outScore = 0;
-
   return (
     <div>
-      <SectionTitle>{t('match.tabs.matchesTitle')}</SectionTitle>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        {match.getGameMatches()
-          .sort((a, b) => a.matchNumber - b.matchNumber)
-          .map(game => {
-            if (game.homeSets > game.outSets) {
-              homeScore++;
-            } else {
-              outScore++;
-            }
-
-            const isDouble = game.isDoubles;
-            const won = game.outcome === matchOutcome.Won;
-
-            return (
-              <div
-                key={game.matchNumber}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '6px 8px',
-                  backgroundColor: won ? 'rgba(40, 167, 69, 0.1)' : 'rgba(220, 53, 69, 0.05)',
-                  borderRadius: 4,
-                  fontSize: '0.9em',
-                }}
-              >
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4 }}>
-                  {won && <TrophyIcon style={{ marginRight: 4 }} />}
-                  <span className={cn({ 'font-weight-bold': won })}>
-                    {isDouble ? t('match.double') : game.home.alias}
-                  </span>
-                </div>
-                {!isDouble && (
-                  <span style={{ color: '#666', flex: 1, textAlign: 'center' }}>
-                    {game.out.alias}
-                  </span>
-                )}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ color: '#666', fontSize: '0.85em' }}>
-                    {game.homeSets}-{game.outSets}
-                  </span>
-                  <span style={{ fontWeight: 'bold', minWidth: 32, textAlign: 'right' }}>
-                    {homeScore}-{outScore}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+      <div style={{ textAlign: 'center' }}>
+        <Button
+          variant="outline-secondary"
+          size="sm"
+          onClick={() => setShowGames(!showGames)}
+        >
+          {showGames ? t('match.report.viewDetails') : t('match.tabs.matchesTitle')}
+        </Button>
       </div>
+      {showGames && (
+        <div style={{ marginTop: 12 }}>
+          <IndividualMatches match={match} ownPlayerId={user.playerId} />
+        </div>
+      )}
     </div>
   );
 };

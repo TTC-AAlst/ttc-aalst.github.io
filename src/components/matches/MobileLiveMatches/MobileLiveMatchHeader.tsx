@@ -1,6 +1,8 @@
 import React from 'react';
 import MatchForm from '../Match/MatchForm';
-import { IMatch } from '../../../models/model-interfaces';
+import { MatchScore } from '../MatchScore';
+import { DivisionRankingLabel } from '../controls/DivisionRankingLabel';
+import { IMatch, ITeamOpponent } from '../../../models/model-interfaces';
 import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import t from '../../../locales';
 
@@ -15,6 +17,14 @@ export const MobileLiveMatchHeader = ({ match }: MobileLiveMatchHeaderProps) => 
   const homeTeam = match.isHomeMatch ? team.renderOwnTeamTitle() : match.renderOpponentTitle();
   const awayTeam = match.isHomeMatch ? match.renderOpponentTitle() : team.renderOwnTeamTitle();
 
+  const getRanking = (opponent?: ITeamOpponent) => {
+    const ranking = team.getDivisionRanking(opponent);
+    return ranking.empty ? null : ranking;
+  };
+
+  const homeRanking = getRanking(match.isHomeMatch ? undefined : match.opponent);
+  const awayRanking = getRanking(match.isHomeMatch ? match.opponent : undefined);
+
   return (
     <div
       style={{
@@ -26,18 +36,24 @@ export const MobileLiveMatchHeader = ({ match }: MobileLiveMatchHeaderProps) => 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
           <div style={{ fontWeight: match.isHomeMatch ? 'bold' : 'normal', fontSize: '1.1em' }}>
+            {homeRanking && <small className="match-opponent-team">{homeRanking.position}. </small>}
             {homeTeam}
           </div>
           <div style={{ color: '#888', fontSize: '0.85em', margin: '4px 0' }}>
             {t('match.vs')}
           </div>
           <div style={{ fontWeight: !match.isHomeMatch ? 'bold' : 'normal', fontSize: '1.1em' }}>
+            {awayRanking && <small className="match-opponent-team">{awayRanking.position}. </small>}
             {awayTeam}
           </div>
         </div>
 
         <div style={{ marginLeft: 12 }}>
-          <MatchForm match={match} user={user} />
+          {match.isSyncedWithFrenoy ? (
+            <MatchScore match={match} forceDisplay style={{fontSize: 26}} />
+          ) : (
+            <MatchForm match={match} user={user} />
+          )}
         </div>
       </div>
     </div>
