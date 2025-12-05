@@ -174,7 +174,34 @@ export const TeamPlayerPerformance = () => {
     }
   });
 
+  // Count matches played together with the current user
+  const matchesPlayedTogether: Record<number, number> = {};
+  if (user.playerId) {
+    const userTeamMatches = allMatches.filter(m => m.isSyncedWithFrenoy);
+    userTeamMatches.forEach(match => {
+      const playersInMatch = match.players
+        .filter(p => p.playerId && p.playerId !== user.playerId)
+        .map(p => p.playerId);
+      const userInMatch = match.players.some(p => p.playerId === user.playerId);
+      if (userInMatch) {
+        playersInMatch.forEach(playerId => {
+          matchesPlayedTogether[playerId] = (matchesPlayedTogether[playerId] || 0) + 1;
+        });
+      }
+    });
+  }
+
   const playerStats = collectStatsForPlayers(playerIdsInUserTeams, allPlayers, teams, allMatches);
+
+  // Sort: current user first, then by matches played together
+  playerStats.sort((a, b) => {
+    if (a.player.id === user.playerId) return -1;
+    if (b.player.id === user.playerId) return 1;
+    const aMatches = matchesPlayedTogether[a.player.id] || 0;
+    const bMatches = matchesPlayedTogether[b.player.id] || 0;
+    return bMatches - aMatches;
+  });
+
   const otherPlayerStats = showOtherPlayers
     ? collectStatsForPlayers(otherPlayerIds, allPlayers, teams, allMatches)
     : [];
