@@ -4,9 +4,11 @@ import Table from 'react-bootstrap/Table';
 import { Button, Modal } from 'react-bootstrap';
 import {TrophyIcon} from '../../controls/Icons/TrophyIcon';
 import {ThumbsUpIcon, ThumbsDownIcon} from '../../controls/Icons/ThumbsIcons';
+import {Icon} from '../../controls/Icons/Icon';
 import {IMatch, PlayerEncounter} from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 import { useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { useViewport } from '../../../utils/hooks/useViewport';
 
 
 export const PreviousEncounters = ({match}: {match: IMatch}) => {
@@ -68,6 +70,8 @@ export const PreviousEncounters = ({match}: {match: IMatch}) => {
 
 export const PreviousEncountersButtonModal = ({encounters, ourPlayerUniqueIndex}: {encounters: PlayerEncounter[], ourPlayerUniqueIndex: number}) => {
   const [open, setOpen] = useState(false);
+  const viewport = useViewport();
+  const isSmallDevice = viewport.width < 500;
 
   if (encounters.length === 0) {
     return null;
@@ -84,8 +88,14 @@ export const PreviousEncountersButtonModal = ({encounters, ourPlayerUniqueIndex}
   if (!open) {
     return (
       <Button size="sm" variant="outline-secondary" onClick={() => setOpen(true)} style={{padding: '2px 6px'}}>
-        {!!wins && <><ThumbsUpIcon color="black" />{wins}</>}
-        {!!losses && <><ThumbsDownIcon color="black" style={{marginLeft: wins ? 8 : 0}} />{losses}</>}
+        {isSmallDevice ? (
+          <Icon fa="fa fa-history" />
+        ) : (
+          <>
+            {!!wins && <><ThumbsUpIcon color="black" />{wins}</>}
+            {!!losses && <><ThumbsDownIcon color="black" style={{marginLeft: wins ? 8 : 0}} />{losses}</>}
+          </>
+        )}
       </Button>
     );
   }
