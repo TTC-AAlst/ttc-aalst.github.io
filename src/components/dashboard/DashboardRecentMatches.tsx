@@ -28,11 +28,11 @@ export const DashboardRecentMatches = () => {
 
   const userTeamIds = user.teams.length > 0 ? user.teams : getDefaultTeamIds();
 
-  // Get matches from previous week and current week
+  // Get matches from previous week and current week that have been synced
   const recentMatches = matches
     .filter(match => {
       const matchDate = moment(match.date);
-      return matchDate.isBetween(lastWeek, today, 'day', '[]');
+      return matchDate.isBetween(lastWeek, today, 'day', '[]') && match.isSyncedWithFrenoy;
     })
     .sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
