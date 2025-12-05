@@ -4,7 +4,7 @@ import moment from 'moment';
 import Button from 'react-bootstrap/Button';
 import { Strike } from '../controls/controls/Strike';
 import { UpcomingMatchMiniView } from './UpcomingMatchMiniView';
-import { selectMatches, selectPlayers, selectUser, selectUserTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectMatches, selectMatchesBeingPlayed, selectPlayers, selectUser, selectUserTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { useViewport } from '../../utils/hooks/useViewport';
 import t from '../../locales';
 
@@ -40,7 +40,7 @@ export const DashboardUpcomingMatches = () => {
     .sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
   // Matches currently being played
-  const matchesBeingPlayed = matches.filter(match => match.isBeingPlayed());
+  const matchesBeingPlayed = useTtcSelector(selectMatchesBeingPlayed);
 
   // Check if user is in the formation of a match
   const isUserInFormation = (match: any): boolean => {

@@ -177,7 +177,7 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
         <div>
           <MatchVs match={match} withLinks withPosition ownTeamLink="main" />
           <div style={{fontSize: '0.85em', color: '#666'}}>
-            <MatchDate match={match} />
+            <MatchDate match={match} bigDisplayMinWidth={0} />
           </div>
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: 8}}>

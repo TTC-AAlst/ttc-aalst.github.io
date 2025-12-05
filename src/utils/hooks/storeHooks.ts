@@ -59,8 +59,20 @@ export const selectQuitters = createSelector(
 );
 
 export const selectMatchesBeingPlayed = createSelector(
-  selectMatches,
-  matches => matches.filter(m => m.isBeingPlayed()),
+  [
+    selectMatches,
+    selectTeams,
+    () => Math.floor(Date.now() / (1000 * 60 * 60)),
+  ],
+  (matches, teams) => matches.filter(m => {
+    if (!m.isBeingPlayed()) return false;
+    if (m.scoreType === 'WalkOver') return false;
+    const team = teams.find(x => x.id === m.teamId);
+    if (!team) return true;
+    const divisionRanking = team.getDivisionRanking(m.opponent);
+    if (!divisionRanking.empty && divisionRanking.isForfait) return false;
+    return true;
+  }),
 );
 
 const today = moment();

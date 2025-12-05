@@ -67,7 +67,7 @@ export const UpcomingMatchMiniView = ({ match }: UpcomingMatchMiniViewProps) => 
         <div>
           <MatchVs match={match} withLinks withPosition ownTeamLink="main" />
           <div style={{fontSize: '0.85em', color: '#666'}}>
-            <MatchDate match={match} />
+            <MatchDate match={match} bigDisplayMinWidth={0} />
           </div>
         </div>
         <Link to={t.route('match', {matchId: match.id})} className="btn btn-outline-secondary btn-sm">
