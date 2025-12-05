@@ -3,14 +3,13 @@ import moment from 'moment';
 import Button from 'react-bootstrap/Button';
 import { Strike } from '../controls/controls/Strike';
 import { UpcomingMatchMiniView } from './UpcomingMatchMiniView';
-import { selectMatches, selectTeams, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectMatches, selectUser, selectUserTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { useViewport } from '../../utils/hooks/useViewport';
-import { ITeam } from '../../models/model-interfaces';
 import t from '../../locales';
 
 export const DashboardUpcomingMatches = () => {
   const matches = useTtcSelector(selectMatches);
-  const teams = useTtcSelector(selectTeams);
+  const userTeams = useTtcSelector(selectUserTeams);
   const user = useTtcSelector(selectUser);
   const viewport = useViewport();
   const isLargeDevice = viewport.width >= 1200;
@@ -19,14 +18,7 @@ export const DashboardUpcomingMatches = () => {
   const today = moment().startOf('day');
   const nextWeek = moment().add(14, 'days').endOf('day');
 
-  // Get default team IDs (VTTL A and Sporta A) if user has no teams
-  const getDefaultTeamIds = () => {
-    const vttlA = teams.find(team => team.competition === 'Vttl' && team.teamCode === 'A');
-    const sportaA = teams.find(team => team.competition === 'Sporta' && team.teamCode === 'A');
-    return ([vttlA, sportaA].filter(Boolean) as ITeam[]).map(team => team.id);
-  };
-
-  const userTeamIds = user.teams.length > 0 ? user.teams : getDefaultTeamIds();
+  const userTeamIds = userTeams.map(team => team.id);
 
   // Get upcoming matches (next 2 weeks)
   const upcomingMatches = matches

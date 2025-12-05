@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Form } from 'react-bootstrap';
 import { Strike } from '../../controls/controls/Strike';
 import { Icon } from '../../controls/Icons/Icon';
 import { PlayerPerformanceCard, PlayerCompetitionStats } from './PlayerPerformanceCard';
-import { selectMatches, selectPlayers, selectTeams, selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { selectMatches, selectPlayers, selectTeams, selectUser, selectUserTeams, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { IPlayer, IMatch, ITeam } from '../../../models/model-interfaces';
 import {GameResult,
   MatchGameResults,
@@ -118,10 +118,9 @@ export const TeamPlayerPerformance = () => {
   const [badgeFilters, setBadgeFilters] = useState<Set<BadgeFilter>>(new Set());
   const user = useTtcSelector(selectUser);
   const teams = useTtcSelector(selectTeams);
+  const userTeams = useTtcSelector(selectUserTeams);
   const allMatches = useTtcSelector(selectMatches);
   const allPlayers = useTtcSelector(selectPlayers);
-
-  const userTeams = teams.filter(team => user.teams.includes(team.id));
 
   const toggleBadgeFilter = (badge: BadgeFilter) => {
     setBadgeFilters(prev => {

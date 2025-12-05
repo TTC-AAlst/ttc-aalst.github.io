@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Strike } from '../controls/controls/Strike';
 import { TeamRankingBadges } from '../teams/controls/TeamRankingBadges';
 import { TeamPosition } from '../teams/controls/TeamPosition';
-import { selectTeams, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectTeams, selectUserTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { useViewport } from '../../utils/hooks/useViewport';
 import { browseTo } from '../../routes';
 import { ITeam } from '../../models/model-interfaces';
@@ -12,21 +12,14 @@ import { Icon } from '../controls/Icons/Icon';
 
 export const DashboardGlobalTeamStats = () => {
   const teams = useTtcSelector(selectTeams);
-  const user = useTtcSelector(selectUser);
+  const userTeams = useTtcSelector(selectUserTeams);
   const viewport = useViewport();
   const isLargeDevice = viewport.width >= 1200;
   const isSmallDevice = viewport.width < 576;
   const [showOtherTeams, setShowOtherTeams] = useState(false);
 
-  // Get user's teams, or default to VTTL A and Sporta A if user has no teams
-  const getDefaultTeams = () => {
-    const vttlA = teams.find(team => team.competition === 'Vttl' && team.teamCode === 'A');
-    const sportaA = teams.find(team => team.competition === 'Sporta' && team.teamCode === 'A');
-    return [vttlA, sportaA].filter(Boolean) as ITeam[];
-  };
-
-  const userTeamIds = user.teams.length > 0 ? user.teams : getDefaultTeams().map(team => team.id);
-  const primaryTeams = teams.filter(team => userTeamIds.includes(team.id));
+  const userTeamIds = userTeams.map(team => team.id);
+  const primaryTeams = userTeams;
   const otherTeams = teams.filter(team => !userTeamIds.includes(team.id));
 
   const renderPrimaryTeamStats = (team: ITeam) => {

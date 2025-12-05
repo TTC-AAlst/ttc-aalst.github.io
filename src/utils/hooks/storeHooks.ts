@@ -6,7 +6,7 @@ import UserModel from '../../models/UserModel';
 import MatchModel from '../../models/MatchModel';
 import TeamModel from '../../models/TeamModel';
 import PlayerModel from '../../models/PlayerModel';
-import { IMatch, IPlayer } from '../../models/model-interfaces';
+import { Competition, IMatch, IPlayer, ITeam } from '../../models/model-interfaces';
 
 export const useTtcDispatch = useDispatch.withTypes<AppDispatch>();
 export const useTtcSelector = useSelector.withTypes<RootState>();
@@ -67,4 +67,96 @@ const today = moment();
 export const selectMatchesToday = createSelector(
   selectMatches,
   matches => matches.filter(m => m.date.isSame(today, 'day')),
+);
+
+/**
+ * Selector to determine "your teams" based on match participation.
+ * - Uses teams defined on the player
+ * - If more than 2 teams, looks at synced matches to find most played teams
+ * - Per competition: if you played 40%+ of matches with a team, you can belong to 2 teams
+ */
+export const selectUserTeams = createSelector(
+  [selectUser, selectTeams, selectMatches],
+  (user, teams, matches): ITeam[] => {
+    if (!user.playerId) {
+      // Not logged in - default to VTTL A and Sporta A
+      const vttlA = teams.find(t => t.competition === 'Vttl' && t.teamCode === 'A');
+      const sportaA = teams.find(t => t.competition === 'Sporta' && t.teamCode === 'A');
+      return [vttlA, sportaA].filter(Boolean) as ITeam[];
+    }
+
+    // Get teams the user is defined in
+    const userTeamIds = user.teams;
+    const userTeams = teams.filter(t => userTeamIds.includes(t.id));
+
+    // If 2 or fewer teams, just return them
+    if (userTeams.length <= 2) {
+      return userTeams;
+    }
+
+    // More than 2 teams: analyze match participation
+    const syncedMatches = matches.filter(m => m.isSyncedWithFrenoy);
+
+    // Count matches per team for this player
+    const teamMatchCounts: Record<number, number> = {};
+    syncedMatches.forEach(match => {
+      const playerInMatch = match.players.find(p => p.playerId === user.playerId);
+      if (playerInMatch) {
+        teamMatchCounts[match.teamId] = (teamMatchCounts[match.teamId] || 0) + 1;
+      }
+    });
+
+    // Group teams by competition
+    const teamsByCompetition: Record<Competition, ITeam[]> = { Vttl: [], Sporta: [], Jeugd: [] };
+    userTeams.forEach(team => {
+      teamsByCompetition[team.competition].push(team);
+    });
+
+    // For each competition, determine the user's team(s)
+    const competitions: Competition[] = ['Vttl', 'Sporta', 'Jeugd'];
+    return competitions.flatMap(competition => {
+      const compTeams = teamsByCompetition[competition];
+
+      if (compTeams.length === 0) {
+        return [];
+      }
+
+      if (compTeams.length === 1) {
+        // Only one team in this competition, include it
+        return [compTeams[0]];
+      }
+
+      // Multiple teams in this competition
+      // Calculate total matches played in this competition
+      const totalCompMatches = compTeams.reduce(
+        (sum, team) => sum + (teamMatchCounts[team.id] || 0),
+        0,
+      );
+
+      if (totalCompMatches === 0) {
+        // No matches played yet, pick the first team (by teamCode)
+        const sorted = [...compTeams].sort((a, b) => a.teamCode.localeCompare(b.teamCode));
+        return [sorted[0]];
+      }
+
+      // Sort by match count descending
+      const teamsWithCounts = compTeams
+        .map(team => ({
+          team,
+          count: teamMatchCounts[team.id] || 0,
+          percentage: (teamMatchCounts[team.id] || 0) / totalCompMatches,
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      // Always include the team with most matches
+      const result = [teamsWithCounts[0].team];
+
+      // Include second team if they played 40%+ of matches
+      if (teamsWithCounts.length > 1 && teamsWithCounts[1].percentage >= 0.4) {
+        result.push(teamsWithCounts[1].team);
+      }
+
+      return result;
+    });
+  },
 );

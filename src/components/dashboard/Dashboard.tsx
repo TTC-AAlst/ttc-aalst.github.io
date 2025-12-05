@@ -9,12 +9,11 @@ import { DashboardRecentMatches } from './DashboardRecentMatches';
 import { DashboardRankingPredictions } from './DashboardRankingPredictions';
 import { TeamPlayerPerformance } from './TeamPlayerPerformance/TeamPlayerPerformance';
 import { PlayerEvents } from './PlayerEvents/PlayerEvents';
-import { useTtcDispatch, useTtcSelector, selectUser } from '../../utils/hooks/storeHooks';
+import { useTtcDispatch } from '../../utils/hooks/storeHooks';
 import { fetchPlayerEvents } from '../../reducers/playersReducer';
 
 export const Dashboard = () => {
   const dispatch = useTtcDispatch();
-  const user = useTtcSelector(selectUser);
 
   useEffect(() => {
     dispatch(fetchPlayerEvents());
@@ -27,23 +26,16 @@ export const Dashboard = () => {
       </Row>
 
       <Row>
-        {/* Main content area */}
         <Col lg={9} md={8}>
           <Eetfestijn />
-
           <DashboardUpcomingMatches />
-
           <DashboardGlobalTeamStats />
-
           <DashboardRecentMatches />
-
           <TeamPlayerPerformance />
         </Col>
 
-        {/* Right sidebar */}
         <Col lg={3} md={4}>
           <DashboardRankingPredictions />
-
           <PlayerEvents />
         </Col>
       </Row>
