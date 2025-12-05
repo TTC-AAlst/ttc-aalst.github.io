@@ -6,6 +6,7 @@ import { CommentIcon } from '../controls/Icons/CommentIcon';
 import { ThumbsUpIcon, ThumbsDownIcon } from '../controls/Icons/ThumbsIcons';
 import { PlayerLink } from '../players/controls/PlayerLink';
 import { selectPlayers, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { MatchDate } from '../matches/controls/MatchDate';
 
 type MatchMiniViewProps = {
   match: IMatch;
@@ -176,7 +177,7 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
         <div>
           <MatchVs match={match} withLinks withPosition ownTeamLink="main" />
           <div style={{fontSize: '0.85em', color: '#666'}}>
-            {match.getDisplayDate('d')} - {match.getDisplayTime()}
+            <MatchDate match={match} />
           </div>
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: 8}}>

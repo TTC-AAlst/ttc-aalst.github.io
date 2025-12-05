@@ -7,6 +7,7 @@ import { MatchBlock } from '../matches/Match/MatchBlock';
 import { selectPlayers, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { getPlayerFormation } from '../matches/MatchesTable/matchesTableUtil';
 import t from '../../locales';
+import { MatchDate } from '../matches/controls/MatchDate';
 
 type UpcomingMatchMiniViewProps = {
   match: IMatch;
@@ -67,7 +68,7 @@ export const UpcomingMatchMiniView = ({ match }: UpcomingMatchMiniViewProps) => 
         <div>
           <MatchVs match={match} withLinks withPosition ownTeamLink="main" />
           <div style={{fontSize: '0.85em', color: '#666'}}>
-            {match.getDisplayDate('d')} - {match.getDisplayTime()}
+            <MatchDate match={match} />
           </div>
         </div>
         <Link to={t.route('match', {matchId: match.id})} className="btn btn-outline-secondary btn-sm">
