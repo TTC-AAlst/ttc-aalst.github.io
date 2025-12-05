@@ -145,6 +145,7 @@ export default {
       ourSponsors: "onze sponsers",
     },
     dashboard: {
+      greeting: "Hallo ${name} 🏓",
       globalTeamStats: "Teams",
       upcomingMatches: "Volgende Wedstrijden",
       recentMatches: "Recente Wedstrijden",
