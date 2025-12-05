@@ -41,19 +41,22 @@ export const PlayerPerformanceCard = ({
   const isSolid = badge?.type === 'solid';
 
   // Gradient borders using the pseudo-element trick with wrapper padding
-  const getWrapperStyle = (): React.CSSProperties => {
+  const getBadgeGradient = () => {
     if (isOnFire) {
-      return {
-        background: 'linear-gradient(135deg, #ff4500 0%, #ff6347 50%, #ff8c00 100%)',
-        padding: 2,
-        borderRadius: 10,
-        display: 'flex',
-      };
+      return 'linear-gradient(135deg, #ff4500 0%, #ff6347 50%, #ff8c00 100%)';
     }
-
     if (isSolid) {
+      return 'linear-gradient(135deg, #ffd700 0%, #ffec8b 50%, #daa520 100%)';
+    }
+    return null;
+  };
+
+  const getWrapperStyle = (): React.CSSProperties => {
+    const badgeGradient = getBadgeGradient();
+
+    if (badgeGradient) {
       return {
-        background: 'linear-gradient(135deg, #ffd700 0%, #ffec8b 50%, #daa520 100%)',
+        background: badgeGradient,
         padding: 2,
         borderRadius: 10,
         display: 'flex',
@@ -84,20 +87,23 @@ export const PlayerPerformanceCard = ({
       backgroundColor: '#fafafa',
     };
 
-    if (isOnFire || isSolid) {
-      return {
-        ...baseStyle,
-        flex: 1,
-        width: '100%',
-      };
-    }
+    const hasBadgeGradient = isOnFire || isSolid;
 
+    // Current user always gets the gradient background
     if (isCurrentUser) {
       return {
         ...baseStyle,
         flex: 1,
         width: '100%',
         background: 'linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 50%, #dceefb 100%)',
+      };
+    }
+
+    if (hasBadgeGradient) {
+      return {
+        ...baseStyle,
+        flex: 1,
+        width: '100%',
       };
     }
 
@@ -181,7 +187,11 @@ export const PlayerPerformanceCard = ({
   };
 
   const wrapperStyle = getWrapperStyle();
-  const hasGradientBorder = isOnFire || isSolid || isCurrentUser;
+  const hasBadgeBorder = isOnFire || isSolid;
+  const hasGradientBorder = hasBadgeBorder || isCurrentUser;
+
+  // For current user with badge: show badge border outside, user border inside
+  const needsDoubleWrapper = isCurrentUser && hasBadgeBorder;
 
   const cardContent = (
     <div style={getCardStyle()}>
@@ -214,6 +224,23 @@ export const PlayerPerformanceCard = ({
       {renderCompetitionStats('Sporta', sporta, player.sporta?.ranking)}
     </div>
   );
+
+  if (needsDoubleWrapper) {
+    // Current user with badge: badge border -> user border -> card with user background
+    const userBorderStyle: React.CSSProperties = {
+      background: 'linear-gradient(135deg, #2196F3 0%, #64B5F6 50%, #1976D2 100%)',
+      padding: 2,
+      borderRadius: 8,
+      display: 'flex',
+      flex: 1,
+      width: '100%',
+    };
+    return (
+      <div style={wrapperStyle}>
+        <div style={userBorderStyle}>{cardContent}</div>
+      </div>
+    );
+  }
 
   if (hasGradientBorder) {
     return <div style={wrapperStyle}>{cardContent}</div>;
