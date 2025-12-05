@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import Button from 'react-bootstrap/Button';
 import { Strike } from '../controls/controls/Strike';
@@ -23,18 +24,22 @@ export const DashboardUpcomingMatches = () => {
 
   const userTeamIds = userTeams.map(team => team.id);
 
-  // Get upcoming matches (next 2 weeks), exclude walk overs and forfeited opponents
+  // Get upcoming matches (next 2 weeks), exclude walk overs, forfeited opponents, and matches being played
   const upcomingMatches = matches
     .filter(match => {
       const matchDate = moment(match.date);
       if (!matchDate.isBetween(today, nextWeek, 'day', '[]')) return false;
       if (match.isSyncedWithFrenoy) return false;
       if (match.scoreType === 'WalkOver') return false;
+      if (match.isBeingPlayed()) return false;
       const divisionRanking = match.getTeam().getDivisionRanking(match.opponent);
       if (!divisionRanking.empty && divisionRanking.isForfait) return false;
       return true;
     })
     .sort((a, b) => a.date.valueOf() - b.date.valueOf());
+
+  // Matches currently being played
+  const matchesBeingPlayed = matches.filter(match => match.isBeingPlayed());
 
   // Check if user is in the formation of a match
   const isUserInFormation = (match: any): boolean => {
@@ -51,7 +56,7 @@ export const DashboardUpcomingMatches = () => {
     match => !userTeamIds.includes(match.teamId) && !isUserInFormation(match),
   );
 
-  if (upcomingMatches.length === 0) {
+  if (upcomingMatches.length === 0 && matchesBeingPlayed.length === 0) {
     return null;
   }
 
@@ -64,6 +69,13 @@ export const DashboardUpcomingMatches = () => {
           </span>
         )}
         <Strike text={t('dashboard.upcomingMatches')} style={{flex: 1, marginBottom: 0}} />
+        {matchesBeingPlayed.length > 0 && (
+          <Link to={t.route('matchesToday')}>
+            <Button variant="success" size="sm" style={{whiteSpace: 'nowrap'}}>
+              {t('dashboard.matchesBeingPlayed', {count: matchesBeingPlayed.length})}
+            </Button>
+          </Link>
+        )}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr' : '1fr', gap: 8 }}>
         {userMatches.map(match => (

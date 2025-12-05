@@ -159,7 +159,7 @@ export default class MatchModel implements IMatch {
 
   isBeingPlayed(): boolean {
     const diff = moment.duration(moment().diff(this.date)).asHours();
-    return Math.abs(diff) < 10;
+    return Math.abs(diff) < 14;
   }
 
   won(opponent: ITeamOpponent): boolean {

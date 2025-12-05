@@ -150,6 +150,7 @@ export default {
       upcomingMatches: "Volgende Wedstrijden",
       recentMatches: "Recente Wedstrijden",
       showOtherMatches: "Meer Wedstrijden Tonen",
+      matchesBeingPlayed: "Vandaag (${count})",
       rankingPredictions: "Klassement Voorspellingen",
       showPredictionDrops: "Andere tonen",
       teamPlayerPerformance: "Spelers",
