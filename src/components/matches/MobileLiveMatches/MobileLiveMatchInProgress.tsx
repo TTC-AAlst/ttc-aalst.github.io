@@ -40,17 +40,17 @@ const WaitingForResults = () => (
 );
 
 const FormationsWithResults = ({ match }: { match: IMatch }) => (
-  <div style={{ display: 'flex', gap: 16 }}>
+  <div style={{ display: 'flex', gap: 16, padding: 8 }}>
     <div style={{ flex: 1 }}>
       <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
       {match.getOwnPlayers().map(ply => (
-        <OwnPlayer key={ply.position} match={match} ply={ply} playerAsBadge />
+        <OwnPlayer key={ply.position} match={match} ply={ply} />
       ))}
     </div>
     <div style={{ flex: 1 }}>
       <SectionTitle>{t('match.playersOpponentsTitle')}</SectionTitle>
       {match.getTheirPlayers().map(ply => (
-        <OpponentPlayer key={ply.position} ply={ply} t={t} competition={match.competition} />
+        <OpponentPlayer key={ply.position} ply={ply} t={t} competition={match.competition} fullName={false} />
       ))}
     </div>
   </div>
@@ -66,7 +66,7 @@ const IndividualGamesToggle = ({ match }: { match: IMatch }) => {
 
   return (
     <div>
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', marginBottom: 12 }}>
         <Button
           variant="outline-secondary"
           size="sm"
@@ -76,7 +76,7 @@ const IndividualGamesToggle = ({ match }: { match: IMatch }) => {
         </Button>
       </div>
       {showGames && (
-        <div style={{ marginTop: 12 }}>
+        <div style={{ marginTop: 12, marginBottom: 8 }}>
           <IndividualMatches match={match} ownPlayerId={user.playerId} />
         </div>
       )}
