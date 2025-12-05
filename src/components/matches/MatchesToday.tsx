@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import MatchCard from './Match/MatchCard';
+import { MobileLiveMatches } from './MobileLiveMatches/MobileLiveMatches';
 import { IMatch } from '../../models/model-interfaces';
 import { useViewport } from '../../utils/hooks/useViewport';
 import { selectMatchesBeingPlayed, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
@@ -8,16 +9,25 @@ import { setSetting } from '../../reducers/configReducer';
 export const MatchesToday = () => {
   const viewport = useViewport();
   const dispatch = useTtcDispatch();
+  const isMobile = viewport.width < 768;
+
   useEffect(() => {
-    dispatch(setSetting({key: 'container100PerWidth', value: true}));
-    return () => {
-      dispatch(setSetting({key: 'container100PerWidth', value: false}));
-    };
-  }, []);
+    if (!isMobile) {
+      dispatch(setSetting({key: 'container100PerWidth', value: true}));
+      return () => {
+        dispatch(setSetting({key: 'container100PerWidth', value: false}));
+      };
+    }
+    return undefined;
+  }, [isMobile]);
 
   const matchesToday = useTtcSelector(selectMatchesBeingPlayed);
   if (matchesToday.length === 0) {
     return <div />;
+  }
+
+  if (isMobile) {
+    return <MobileLiveMatches matches={matchesToday} />;
   }
 
   if (viewport.width > 1500) {
@@ -29,8 +39,7 @@ export const MatchesToday = () => {
     );
   }
 
-  // on small devices
-  // onOpen={null} == default behavior == open match card
+  // Medium devices
   return (
     <div className="row">
       {matchesToday.map(match => (
