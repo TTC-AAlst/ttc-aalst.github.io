@@ -46,8 +46,6 @@ const OpponentName = ({name, ranking, showFull, onClick}: OpponentNameProps) => 
 export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
   const players = useTtcSelector(selectPlayers);
   const user = useTtcSelector(selectUser);
-  const hasReport = !!match.description;
-  const hasComments = match.comments && match.comments.length > 0;
   const [expandedPlayers, setExpandedPlayers] = useState<Set<number>>(new Set());
 
   // Check if current user played in this match
@@ -181,8 +179,6 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
           </div>
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
-          {hasReport && <span title="Wedstrijdverslag" style={{color: '#2196F3'}}>📝</span>}
-          {hasComments && <CommentIcon />}
           <MatchScore match={match} showComments style={{fontSize: 16}} />
         </div>
       </div>
