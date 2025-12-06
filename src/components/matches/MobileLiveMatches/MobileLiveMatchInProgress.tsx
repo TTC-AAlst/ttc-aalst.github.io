@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
 import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import OwnPlayer from '../Match/OwnPlayer';
@@ -18,13 +17,9 @@ import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
-  opponentPlayersKnown: boolean;
 };
 
-export const MobileLiveMatchInProgress = ({
-  match,
-  opponentPlayersKnown,
-}: MobileLiveMatchInProgressProps) => {
+export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressProps) => {
   const hasStarted = match.games.length || match.getTheirPlayers().length;
 
   // Pre-start: show our formation and away match details
@@ -41,27 +36,13 @@ export const MobileLiveMatchInProgress = ({
   // Match in progress or finished
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {opponentPlayersKnown ? (
-        <>
-          <FormationsWithResults match={match} />
-          <MatchActionButtons match={match} />
-        </>
-      ) : (
-        <WaitingForResults />
-      )}
+      <FormationsWithResults match={match} />
+      <MatchActionButtons match={match} />
       {!match.isSyncedWithFrenoy && <MatchDetailsLink match={match} />}
     </div>
   );
 };
 
-const WaitingForResults = () => (
-  <div style={{ textAlign: 'center', padding: 20, color: '#666' }}>
-    <div style={{ fontSize: '1.2em', marginBottom: 8 }}>Match bezig...</div>
-    <div style={{ fontSize: '0.9em' }}>
-      Wachten op individuele uitslagen van Frenoy
-    </div>
-  </div>
-);
 
 const FormationsWithResults = ({ match }: { match: IMatch }) => (
   <div style={{ display: 'flex', gap: 16, padding: 8 }}>

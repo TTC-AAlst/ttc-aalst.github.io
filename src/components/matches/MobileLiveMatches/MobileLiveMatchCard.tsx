@@ -8,8 +8,6 @@ type MobileLiveMatchCardProps = {
 };
 
 export const MobileLiveMatchCard = ({ match }: MobileLiveMatchCardProps) => {
-  const opponentPlayersKnown = match.getTheirPlayers().length > 0;
-
   return (
     <div
       style={{
@@ -20,7 +18,7 @@ export const MobileLiveMatchCard = ({ match }: MobileLiveMatchCardProps) => {
       }}
     >
       <MobileLiveMatchHeader match={match} />
-      <MobileLiveMatchInProgress match={match} opponentPlayersKnown={opponentPlayersKnown} />
+      <MobileLiveMatchInProgress match={match} />
     </div>
   );
 };
