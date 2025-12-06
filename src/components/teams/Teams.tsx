@@ -151,7 +151,7 @@ export const Teams = () => {
             </div>
           ) : null}
         </div>
-        {view !== 'week' ? <TeamHeader team={team} showRanking={!isSmall} /> : null}
+        {view !== 'week' ? <TeamHeader team={team} showRanking={viewport.width > 900} /> : null}
         {renderTabViewContent(team, matches)}
       </div>
     );
@@ -241,7 +241,7 @@ export const Teams = () => {
   const tabConfig: TabKey[] = teams.filter(team => team.competition === params.competition).map(team => ({
     key: team.teamCode,
     title: '',
-    headerChildren: <TeamTabTitle team={team} showRanking={isSmall} />,
+    headerChildren: <TeamTabTitle team={team} showRanking={viewport.width < 900} />,
   }));
 
   return (

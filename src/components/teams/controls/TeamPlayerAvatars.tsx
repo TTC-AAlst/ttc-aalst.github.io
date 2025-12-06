@@ -15,6 +15,7 @@ const containerStyle: React.CSSProperties = {
   display: 'flex',
   marginBottom: 16,
   flexWrap: 'wrap',
+  gap: 16,
 };
 
 export const TeamPlayerAvatars = ({team, style}: TeamPlayerAvatarsProps) => {
@@ -37,9 +38,7 @@ export const TeamPlayerAvatars = ({team, style}: TeamPlayerAvatarsProps) => {
         }
 
         const avatarStyle = {
-          marginRight: 16,
           boxShadow: `3px 3px 3px ${isCaptain ? '#CD7F32' : '#888888'}`,
-          flex: 1,
         };
 
         return (

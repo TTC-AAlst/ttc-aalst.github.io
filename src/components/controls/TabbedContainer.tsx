@@ -103,8 +103,8 @@ export const TabbedContainer = (props: TabbedContainerComponentProps) => {
     return (
       <Accordion.Item className="match-card-panel" eventKey={tab.key} key={tab.key}>
         <Accordion.Header>
-          <div className="clickable" onClick={() => onTabSelect(tab.key)} role="button" tabIndex={0}>
-            <div style={{fontSize: 24}}>{tab.title} {tab.headerChildren}</div>
+          <div className="clickable" onClick={() => onTabSelect(tab.key)} role="button" tabIndex={0} style={{width: '100%'}}>
+            <div style={{fontSize: 24, width: '100%'}}>{tab.title} {tab.headerChildren}</div>
           </div>
         </Accordion.Header>
         <Accordion.Body>{props.tabRenderer(tab.key)}</Accordion.Body>
