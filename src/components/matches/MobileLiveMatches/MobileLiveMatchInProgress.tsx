@@ -232,12 +232,12 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: 4,
-                    padding: '2px 8px',
-                    fontSize: '0.8em',
+                    gap: 3,
+                    padding: '1px 6px',
+                    fontSize: '0.75em',
                     color: 'black',
                     border: '1px solid black',
-                    borderRadius: 4,
+                    borderRadius: 3,
                     textDecoration: 'none',
                   }}
                 >
