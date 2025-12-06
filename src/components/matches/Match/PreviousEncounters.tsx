@@ -102,7 +102,7 @@ export const PreviousEncountersButtonModal = ({encounters, ourPlayerUniqueIndex}
 
   const names = encounters.find(x => x.awayName && x.homeName) || encounters[0];
   return (
-    <Modal size="lg" show onHide={() => setOpen(false)} centered>
+    <Modal size="lg" show onHide={() => setOpen(false)} centered style={{zIndex: 100000}}>
       <Modal.Header closeButton>
         <Modal.Title>{names.homeName} vs {names.awayName}</Modal.Title>
       </Modal.Header>
