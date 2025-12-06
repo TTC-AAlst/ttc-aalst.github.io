@@ -227,7 +227,7 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
                 <Icon fa="fa fa-location-arrow" />
               </Button>
             </div>
-            <div style={{ fontSize: '0.9em', color: '#666', marginLeft: 24 }}>
+            <div style={{ fontSize: '0.9em', color: '#666', marginLeft: 17, textTransform: 'capitalize' }}>
               {loc.address}, {loc.postalCode} {loc.city}
             </div>
           </div>
