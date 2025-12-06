@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import { IMatch, IStorePlayer } from '../../models/model-interfaces';
 import { MatchScore } from '../matches/MatchScore';
 import MatchVs from '../matches/Match/MatchVs';
-import { CommentIcon } from '../controls/Icons/CommentIcon';
 import { ThumbsUpIcon, ThumbsDownIcon } from '../controls/Icons/ThumbsIcons';
 import { PlayerLink } from '../players/controls/PlayerLink';
 import { selectPlayers, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { MatchDate } from '../matches/controls/MatchDate';
+import rankingSorter, { PlayerRanking } from '../../models/utils/rankingSorter';
 
 type MatchMiniViewProps = {
   match: IMatch;
@@ -76,6 +76,7 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
     const playerSummary: {[playerId: number]: {
       playerId: number,
       name: string,
+      ranking: PlayerRanking,
       won: {name: string, ranking: string}[],
       lost: {name: string, ranking: string}[]
     }} = {};
@@ -89,6 +90,7 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
         playerSummary[playerId] = {
           playerId,
           name: ownPlayer.name || ownPlayer.alias || 'Unknown',
+          ranking: ownPlayer.ranking || 'NG',
           won: [],
           lost: [],
         };
@@ -107,11 +109,31 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
       }
     });
 
+    // Sort opponents by ranking, then by first name
+    const sortOpponents = (opponents: {name: string, ranking: string}[]) => opponents.sort((a, b) => {
+      const rankingDiff = rankingSorter(a.ranking as PlayerRanking, b.ranking as PlayerRanking);
+      if (rankingDiff !== 0) return rankingDiff;
+      return a.name.split(' ')[0].localeCompare(b.name.split(' ')[0]);
+    });
+
+    // Sort players by most wins (descending), then by ranking
+    const sortedPlayers = Object.values(playerSummary)
+      .sort((a, b) => {
+        const winsDiff = b.won.length - a.won.length;
+        if (winsDiff !== 0) return winsDiff;
+        return rankingSorter(a.ranking, b.ranking);
+      })
+      .map(summary => ({
+        ...summary,
+        won: sortOpponents([...summary.won]),
+        lost: sortOpponents([...summary.lost]),
+      }));
+
     const isExpanded = (playerId: number) => expandedPlayers.has(playerId);
 
     return (
       <div style={{marginTop: 8, fontSize: '0.85em', color: '#555'}}>
-        {Object.values(playerSummary).map(summary => {
+        {sortedPlayers.map(summary => {
           const player = getPlayer(summary.playerId);
           return (
             <div key={summary.playerId} style={{marginBottom: 4}}>
