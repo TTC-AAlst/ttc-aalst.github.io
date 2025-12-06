@@ -404,7 +404,7 @@ export interface ITeamFrenoy {
 
 export interface IClub {
   active: boolean;
-  alternativeLocations: any[];
+  alternativeLocations: IClubLocation[];
   codeSporta: string;
   codeVttl: string;
   id: number;
@@ -422,6 +422,7 @@ export interface IClubLocation {
   postalCode: string;
   city: string;
   mobile: string;
+  comment: string;
 }
 
 export interface IClubManager {

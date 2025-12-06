@@ -29,6 +29,20 @@ export const updateClub = createAsyncThunk(
   },
 );
 
+export const frenoyClubSync = createAsyncThunk(
+  'clubs/Sync',
+  async (_, { dispatch }) => {
+    try {
+      const response = await http.post<IClub[]>('/clubs/Sync');
+      dispatch(showSnackbar('Clubs synced with Frenoy'));
+      return response;
+    } catch (err) {
+      dispatch(showSnackbar(t('common.apiFail')));
+      throw err;
+    }
+  },
+);
+
 function getInitialState(): IClub[] {
   return [];
   // const serializedState = localStorage.getItem("redux_clubs");

@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 import AdminClubForm from './AdminClubForm';
 import {EditButton} from '../controls/Buttons/EditButton';
 import {IClub, IClubLocation} from '../../models/model-interfaces';
-import { updateClub } from '../../reducers/clubsReducer';
+import { frenoyClubSync, updateClub } from '../../reducers/clubsReducer';
 import { RootState } from '../../store';
 
 type AdminClubsProps = {
   clubs: IClub[];
   updateClub: Function;
+  frenoyClubSync: Function;
 }
 
 type AdminClubsState = {
@@ -43,11 +44,21 @@ class AdminClubs extends Component<AdminClubsProps, AdminClubsState> {
 
     return (
       <div>
-        <TextField
-          placeholder="Zoek club"
-          onChange={e => this.setState({clubFilter: e.target.value.toLowerCase()})}
-          style={{width: 150, marginLeft: 10}}
-        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <TextField
+            placeholder="Zoek club"
+            onChange={e => this.setState({clubFilter: e.target.value.toLowerCase()})}
+            style={{width: 150, marginLeft: 10}}
+          />
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            style={{marginRight: 15}}
+            onClick={() => this.props.frenoyClubSync()}
+          >
+            Frenoy Sync
+          </button>
+        </div>
 
         <ClubsTable
           clubs={clubs}
@@ -90,6 +101,7 @@ const ClubsTable = ({clubs, onEditClub}: {clubs: IClub[], onEditClub: (club: ICl
 
 const mapDispatchToProps = (dispatch: any) => ({
   updateClub: (data: {club: IClub}) => dispatch(updateClub(data)),
+  frenoyClubSync: () => dispatch(frenoyClubSync()),
 });
 
 export default connect((state: RootState) => ({clubs: state.clubs}), mapDispatchToProps)(AdminClubs);
