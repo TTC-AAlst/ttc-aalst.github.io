@@ -360,6 +360,7 @@ export default {
         commentHidden: "Enkel zichtbaar voor leden van TTC Aalst",
       },
       hasNewComments: "Het wedstrijdverslag is gewijzigd!",
+      formationUnknown: "Opstelling onbekend",
       playersVictoryTitle: "Overwinningen",
       playersOpponentsTitle: "Tegenstanders",
       double: "Dubbel",

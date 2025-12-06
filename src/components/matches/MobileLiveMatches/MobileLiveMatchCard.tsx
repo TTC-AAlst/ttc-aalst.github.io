@@ -1,8 +1,6 @@
 import React from 'react';
-import moment from 'moment';
 import { IMatch } from '../../../models/model-interfaces';
 import { MobileLiveMatchHeader } from './MobileLiveMatchHeader';
-import { MobileLiveMatchPreStart } from './MobileLiveMatchPreStart';
 import { MobileLiveMatchInProgress } from './MobileLiveMatchInProgress';
 
 type MobileLiveMatchCardProps = {
@@ -10,7 +8,6 @@ type MobileLiveMatchCardProps = {
 };
 
 export const MobileLiveMatchCard = ({ match }: MobileLiveMatchCardProps) => {
-  const hasStarted = moment().isAfter(match.date);
   const opponentPlayersKnown = match.getTheirPlayers().length > 0;
 
   return (
@@ -23,12 +20,7 @@ export const MobileLiveMatchCard = ({ match }: MobileLiveMatchCardProps) => {
       }}
     >
       <MobileLiveMatchHeader match={match} />
-
-      {!hasStarted ? (
-        <MobileLiveMatchPreStart match={match} />
-      ) : (
-        <MobileLiveMatchInProgress match={match} opponentPlayersKnown={opponentPlayersKnown} />
-      )}
+      <MobileLiveMatchInProgress match={match} opponentPlayersKnown={opponentPlayersKnown} />
     </div>
   );
 };
