@@ -9,6 +9,7 @@ import { IndividualMatches } from '../Match/IndividualMatches';
 import { MatchReport } from '../Match/MatchReport';
 import { OpponentsLastMatches } from '../Match/OpponentsLastMatches';
 import { OpponentsFormation } from '../Match/OpponentsFormation';
+import { Scoresheet } from '../Match/Scoresheet';
 import { PlayerCompetitionBadge } from '../../players/PlayerBadges';
 import { Icon } from '../../controls/Icons/Icon';
 import { t } from '../../../locales';
@@ -170,12 +171,33 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 );
 
 const OurFormationPreStart = ({ match }: { match: IMatch }) => {
+  const [showScoresheet, setShowScoresheet] = useState(false);
   const playingPlayers = match.getPlayerFormation('onlyFinal').map(x => x.player);
 
   return (
     <div>
-      <SectionTitle>{t('match.tabs.playersTitle')}</SectionTitle>
-      {playingPlayers.length > 0 ? (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <SectionTitle>{t('match.tabs.playersTitle')}</SectionTitle>
+        {playingPlayers.length > 0 && (
+          <Button
+            size="sm"
+            variant={showScoresheet ? 'secondary' : 'outline-secondary'}
+            onClick={() => setShowScoresheet(!showScoresheet)}
+          >
+            <Icon fa="fa fa-table" />
+          </Button>
+        )}
+      </div>
+      {playingPlayers.length === 0 && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#666' }}>
+          <Icon fa="fa fa-question-circle" />
+          <span style={{ fontStyle: 'italic' }}>{t('match.formationUnknown')}</span>
+        </div>
+      )}
+      {playingPlayers.length > 0 && showScoresheet && (
+        <Scoresheet match={match} />
+      )}
+      {playingPlayers.length > 0 && !showScoresheet && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {playingPlayers.map(ply => (
             <PlayerCompetitionBadge
@@ -185,11 +207,6 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
               style={{ marginBottom: 0 }}
             />
           ))}
-        </div>
-      ) : (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#666' }}>
-          <Icon fa="fa fa-question-circle" />
-          <span style={{ fontStyle: 'italic' }}>{t('match.formationUnknown')}</span>
         </div>
       )}
     </div>
@@ -218,25 +235,15 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontWeight: 600 }}>{loc.description}</span>
-                <a
+                <Button
+                  size="sm"
+                  variant="outline-secondary"
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${loc.address}, ${loc.postalCode} ${loc.city}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 3,
-                    padding: '1px 6px',
-                    fontSize: '0.75em',
-                    color: 'black',
-                    border: '1px solid black',
-                    borderRadius: 3,
-                    textDecoration: 'none',
-                  }}
                 >
                   <Icon fa="fa fa-location-arrow" />
-                  Route
-                </a>
+                </Button>
               </div>
               <div style={{ fontSize: '0.9em', color: '#666' }}>
                 {loc.address}, {loc.postalCode} {loc.city}
