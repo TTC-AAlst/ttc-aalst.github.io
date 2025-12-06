@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
@@ -6,9 +6,12 @@ import OwnPlayer from '../Match/OwnPlayer';
 import OpponentPlayer from '../Match/OpponentPlayer';
 import { IndividualMatches } from '../Match/IndividualMatches';
 import { MatchReport } from '../Match/MatchReport';
+import { OpponentsLastMatches } from '../Match/OpponentsLastMatches';
+import { OpponentsFormation } from '../Match/OpponentsFormation';
 import { Icon } from '../../controls/Icons/Icon';
 import { t } from '../../../locales';
-import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
@@ -61,10 +64,16 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => (
 const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const [showGames, setShowGames] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showOpponentModal, setShowOpponentModal] = useState(false);
   const user = useTtcSelector(selectUser);
+  const dispatch = useTtcDispatch();
 
   const hasReportOrComments = !!match.description || match.comments.length > 0;
   const hasGames = match.games.length > 0;
+
+  useEffect(() => {
+    dispatch(getOpponentMatches({ teamId: match.teamId, opponent: match.opponent }));
+  }, [dispatch, match.teamId, match.opponent]);
 
   if (!hasGames) {
     return null;
@@ -75,18 +84,22 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
       <div style={{ textAlign: 'center', marginBottom: 12 }}>
         <ButtonGroup size="sm">
           <Button
-            variant={showGames ? 'secondary' : 'outline-secondary'}
-            onClick={() => setShowGames(!showGames)}
-          >
-            {t('match.tabs.matchesTitle')}
-          </Button>
-          <Button
             variant="outline-secondary"
             onClick={() => setShowReportModal(true)}
           >
-            <Icon
-              fa={hasReportOrComments ? 'fa fa-commenting-o' : 'fa fa-comment-o'}
-            />
+            <Icon fa={hasReportOrComments ? 'fa fa-commenting-o' : 'fa fa-comment-o'} />
+          </Button>
+          <Button
+            variant={showGames ? 'secondary' : 'outline-secondary'}
+            onClick={() => setShowGames(!showGames)}
+          >
+            {t('match.tabs.matches')}
+          </Button>
+          <Button
+            variant="outline-secondary"
+            onClick={() => setShowOpponentModal(true)}
+          >
+            {t('match.individual.opponentPlayer')}
           </Button>
         </ButtonGroup>
       </div>
@@ -105,6 +118,20 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
         </Modal.Header>
         <Modal.Body style={{padding: 6}}>
           <MatchReport match={match} skipContainerClass />
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showOpponentModal} onHide={() => setShowOpponentModal(false)} fullscreen style={{zIndex: 99999}}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {match.renderOpponentTitle()}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{padding: 6}}>
+          <h4>{t('match.tabs.opponentsRankingTitle')}</h4>
+          <OpponentsLastMatches match={match} />
+          <h4 style={{marginTop: 24}}>{t('match.tabs.opponentsFormationTitle')}</h4>
+          <OpponentsFormation match={match} opponent={match.opponent} />
         </Modal.Body>
       </Modal>
     </div>
