@@ -63,7 +63,7 @@ export const OpponentOverview = () => {
 
       <div className="col-md-4">
         <h3>{t('match.tabs.opponentsFormationTitle')}</h3>
-        <OpponentsTeamFormation matches={otherMatches} opponent={opponent} />
+        <OpponentsTeamFormation matches={otherMatches} opponent={opponent} limitRows />
       </div>
 
       <div className="col-md-8">
