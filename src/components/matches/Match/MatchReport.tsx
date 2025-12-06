@@ -31,10 +31,11 @@ function getEmptyComment(matchId: number, playerId: number): IMatchComment {
 
 type MatchReportProps = {
   match: IMatch;
+  skipContainerClass?: boolean;
 }
 
 
-export const MatchReport = ({match}: MatchReportProps) => {
+export const MatchReport = ({match, skipContainerClass}: MatchReportProps) => {
   const user = useTtcSelector(selectUser);
   const dispatch = useTtcDispatch();
   const viewport = useViewport();
@@ -55,6 +56,7 @@ export const MatchReport = ({match}: MatchReportProps) => {
   };
 
   const editorHeight = 200;
+  const editorToolbarHeight = 44; // Quill snow theme toolbar height
 
   let reportWriterText: React.ReactNode;
   const reportWriter = storeUtil.getPlayer(match.reportPlayerId);
@@ -85,19 +87,20 @@ export const MatchReport = ({match}: MatchReportProps) => {
           <div>
             {reportFormOpen ? (
               <div>
-                <QuillEditor
-                  text={text}
-                  style={{height: editorHeight, marginRight: 15}}
-                  onChange={txt => setText(txt)}
-                  readOnly={!canPostReport}
-                />
+                <div style={{height: editorHeight + editorToolbarHeight, marginRight: 15, marginBottom: 16}}>
+                  <QuillEditor
+                    text={text}
+                    style={{height: editorHeight}}
+                    onChange={txt => setText(txt)}
+                    readOnly={!canPostReport}
+                  />
+                </div>
 
-                <div style={{paddingTop: 50}}>
+                <div style={{textAlign: 'right', marginRight: 15, paddingTop: 12}}>
                   <MaterialButton
                     variant="contained"
                     label={t('common.save')}
                     color="primary"
-                    style={{float: 'right', marginRight: 15}}
                     onClick={() => {
                       dispatch(postReport({matchId: match.id, text, playerId: user.playerId}));
                       setReportFormOpen(false);
@@ -123,7 +126,7 @@ export const MatchReport = ({match}: MatchReportProps) => {
     comments = (
       <div>
         {text || reportFormOpen ? (
-          <h3 style={{marginTop: reportFormOpen ? 55 : 0}}>
+          <h3 style={{marginTop: reportFormOpen ? 16 : 0}}>
             {t('match.report.commentsTitle')}
           </h3>
         ) : null}
@@ -140,12 +143,14 @@ export const MatchReport = ({match}: MatchReportProps) => {
                 />
               </div>
             ) : null}
-            <QuillEditor
-              text={comment.text}
-              style={{height: editorHeight, marginRight: 15}}
-              onChange={txt => setComment({...comment, text: txt})}
-              readOnly={!canComment}
-            />
+            <div style={{height: editorHeight + editorToolbarHeight, marginRight: 15, marginBottom: 16}}>
+              <QuillEditor
+                text={comment.text}
+                style={{height: editorHeight}}
+                onChange={txt => setComment({...comment, text: txt})}
+                readOnly={!canComment}
+              />
+            </div>
           </div>
         ) : commentImageFormOpen ? (
           <div style={{marginBottom: 12}}>
@@ -158,10 +163,10 @@ export const MatchReport = ({match}: MatchReportProps) => {
         ) : null}
 
         {user.playerId ? (
-          <div style={{width: '100%', paddingTop: commentFormOpen ? 50 : 0}}>
+          <div style={{width: '100%', paddingTop: 16}}>
             {commentFormOpen && (
               <FormControlLabel
-                style={viewport.width > 450 ? {float: 'right', textAlign: 'right'} : {}}
+                style={{float: 'right', textAlign: 'right'}}
                 control={(
                   <Checkbox
                     checked={!comment.hidden}
@@ -202,7 +207,7 @@ export const MatchReport = ({match}: MatchReportProps) => {
   }
 
   return (
-    <div className="match-card-tab-content">
+    <div className={skipContainerClass ? '' : 'match-card-tab-content'}>
       <h3>
         {t('match.report.title')}
         {canPostReport ? (

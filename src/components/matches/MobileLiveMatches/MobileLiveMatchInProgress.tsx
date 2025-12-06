@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
+import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import OwnPlayer from '../Match/OwnPlayer';
 import OpponentPlayer from '../Match/OpponentPlayer';
 import { IndividualMatches } from '../Match/IndividualMatches';
+import { MatchReport } from '../Match/MatchReport';
+import { Icon } from '../../controls/Icons/Icon';
 import { t } from '../../../locales';
 import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 
@@ -21,7 +23,7 @@ export const MobileLiveMatchInProgress = ({
     {opponentPlayersKnown ? (
       <>
         <FormationsWithResults match={match} />
-        <IndividualGamesToggle match={match} />
+        <MatchActionButtons match={match} />
       </>
     ) : (
       <WaitingForResults />
@@ -56,30 +58,55 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => (
   </div>
 );
 
-const IndividualGamesToggle = ({ match }: { match: IMatch }) => {
+const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const [showGames, setShowGames] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
   const user = useTtcSelector(selectUser);
 
-  if (match.games.length === 0) {
+  const hasReportOrComments = !!match.description || match.comments.length > 0;
+  const hasGames = match.games.length > 0;
+
+  if (!hasGames) {
     return null;
   }
 
   return (
     <div>
       <div style={{ textAlign: 'center', marginBottom: 12 }}>
-        <Button
-          variant="outline-secondary"
-          size="sm"
-          onClick={() => setShowGames(!showGames)}
-        >
-          {showGames ? t('match.report.viewDetails') : t('match.tabs.matchesTitle')}
-        </Button>
+        <ButtonGroup size="sm">
+          <Button
+            variant={showGames ? 'secondary' : 'outline-secondary'}
+            onClick={() => setShowGames(!showGames)}
+          >
+            {t('match.tabs.matchesTitle')}
+          </Button>
+          <Button
+            variant="outline-secondary"
+            onClick={() => setShowReportModal(true)}
+          >
+            <Icon
+              fa={hasReportOrComments ? 'fa fa-commenting-o' : 'fa fa-comment-o'}
+            />
+          </Button>
+        </ButtonGroup>
       </div>
+
       {showGames && (
         <div style={{ marginTop: 12, marginBottom: 8 }}>
           <IndividualMatches match={match} ownPlayerId={user.playerId} />
         </div>
       )}
+
+      <Modal show={showReportModal} onHide={() => setShowReportModal(false)} fullscreen style={{zIndex: 99999}}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {match.getTeam().renderOwnTeamTitle()} vs {match.renderOpponentTitle()}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{padding: 6}}>
+          <MatchReport match={match} skipContainerClass />
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
