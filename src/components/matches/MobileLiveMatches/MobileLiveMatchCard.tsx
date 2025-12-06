@@ -24,13 +24,11 @@ export const MobileLiveMatchCard = ({ match }: MobileLiveMatchCardProps) => {
     >
       <MobileLiveMatchHeader match={match} />
 
-      <div style={{ padding: 12 }}>
-        {!hasStarted ? (
-          <MobileLiveMatchPreStart match={match} />
-        ) : (
-          <MobileLiveMatchInProgress match={match} opponentPlayersKnown={opponentPlayersKnown} />
-        )}
-      </div>
+      {!hasStarted ? (
+        <MobileLiveMatchPreStart match={match} />
+      ) : (
+        <MobileLiveMatchInProgress match={match} opponentPlayersKnown={opponentPlayersKnown} />
+      )}
     </div>
   );
 };

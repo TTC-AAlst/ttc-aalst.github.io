@@ -122,7 +122,7 @@ type PlayerDescProps = {
 const PlayerDesc = ({player, competition}: PlayerDescProps) => {
   const viewport = useViewport();
   if (!player.playerId) {
-    return <OpponentPlayerLabel player={player} competition={competition} fullName />;
+    return <OpponentPlayerLabel player={player} competition={competition} fullName={viewport.width > 700} />;
   }
 
   const realPlayer = storeUtil.getPlayer(player.playerId);

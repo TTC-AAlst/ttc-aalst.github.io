@@ -32,11 +32,12 @@ type OpponentPlayerProps = {
   t: Translator;
   ply: IMatchPlayer;
   competition: Competition;
+  fullName?: boolean;
 }
 
-const OpponentPlayer = ({ply, t, competition}: OpponentPlayerProps) => (
+const OpponentPlayer = ({ply, t, competition, fullName = true}: OpponentPlayerProps) => (
   <div>
-    <OpponentPlayerLabel player={ply} competition={competition} />
+    <OpponentPlayerLabel player={ply} competition={competition} fullName={fullName} />
     <small style={{marginLeft: 7}}> {ply.won ? t('match.enemyVictory', ply.won) : null}</small>
   </div>
 );

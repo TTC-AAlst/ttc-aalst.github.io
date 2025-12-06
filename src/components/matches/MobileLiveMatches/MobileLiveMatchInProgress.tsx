@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import { IMatch, IMatchPlayer } from '../../../models/model-interfaces';
-import { matchOutcome } from '../../../models/MatchModel';
-import { PlayerCompetitionBadge } from '../../players/PlayerBadges';
-import { ThumbsUpIcon } from '../../controls/Icons/ThumbsIcons';
-import { TrophyIcon } from '../../controls/Icons/TrophyIcon';
+import { IMatch } from '../../../models/model-interfaces';
+import OwnPlayer from '../Match/OwnPlayer';
+import OpponentPlayer from '../Match/OpponentPlayer';
 import { IndividualMatches } from '../Match/IndividualMatches';
 import { t } from '../../../locales';
 import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
-import storeUtil from '../../../storeUtil';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
@@ -42,92 +39,20 @@ const WaitingForResults = () => (
   </div>
 );
 
-const FormationsWithResults = ({ match }: { match: IMatch }) => {
-  const ownPlayers = match.getOwnPlayers();
-  const theirPlayers = match.getTheirPlayers();
-  const teamPlayerCount = match.getTeam().getTeamPlayerCount();
-
-  return (
-    <div style={{ display: 'flex', gap: 16 }}>
-      {/* Our team */}
-      <div style={{ flex: 1 }}>
-        <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {ownPlayers.map(ply => (
-            <OurPlayerRow
-              key={ply.position}
-              match={match}
-              ply={ply}
-              teamPlayerCount={teamPlayerCount}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Their team */}
-      <div style={{ flex: 1 }}>
-        <SectionTitle>{t('match.playersOpponentsTitle')}</SectionTitle>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {theirPlayers.map(ply => (
-            <TheirPlayerRow key={ply.position} ply={ply} />
-          ))}
-        </div>
-      </div>
+const FormationsWithResults = ({ match }: { match: IMatch }) => (
+  <div style={{ display: 'flex', gap: 16, padding: 8 }}>
+    <div style={{ flex: 1 }}>
+      <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
+      {match.getOwnPlayers().map(ply => (
+        <OwnPlayer key={ply.position} match={match} ply={ply} />
+      ))}
     </div>
-  );
-};
-
-const OurPlayerRow = ({ match, ply, teamPlayerCount }: { match: IMatch; ply: IMatchPlayer; teamPlayerCount: number }) => {
-  const player = storeUtil.getPlayer(ply.playerId);
-  const result = getPlayerResults(match, ply);
-
-  if (result.wo) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <s style={{ color: '#999' }}>{ply.alias}</s>
-      </div>
-    );
-  }
-
-  const allWon = result.wins === teamPlayerCount;
-  const showWins = result.wins > 0 && result.wins < teamPlayerCount;
-
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      {player ? (
-        <PlayerCompetitionBadge
-          plyInfo={{ player, matchPlayer: { status: ply.status } }}
-          competition={match.competition}
-          style={{ marginBottom: 0 }}
-        />
-      ) : (
-        <span style={{ fontWeight: 500 }}>{ply.alias}</span>
-      )}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        {allWon && <TrophyIcon />}
-        {showWins && (
-          <>
-            <ThumbsUpIcon />
-            <span style={{ fontSize: '0.85em', color: '#28a745' }}>{result.wins}</span>
-          </>
-        )}
-      </div>
+    <div style={{ flex: 1 }}>
+      <SectionTitle>{t('match.playersOpponentsTitle')}</SectionTitle>
+      {match.getTheirPlayers().map(ply => (
+        <OpponentPlayer key={ply.position} ply={ply} t={t} competition={match.competition} fullName={false} />
+      ))}
     </div>
-  );
-};
-
-const TheirPlayerRow = ({ ply }: { ply: IMatchPlayer }) => (
-  <div
-    style={{
-      padding: '4px 0',
-      fontSize: '0.9em',
-    }}
-  >
-    <span>{ply.alias}</span>
-    <span style={{ color: '#666' }}> ({ply.ranking})</span>
-    {ply.won ? (
-      <span style={{ color: '#666' }}>: {t('match.enemyVictory', ply.won)}</span>
-    ) : null}
   </div>
 );
 
@@ -141,7 +66,7 @@ const IndividualGamesToggle = ({ match }: { match: IMatch }) => {
 
   return (
     <div>
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', marginBottom: 12 }}>
         <Button
           variant="outline-secondary"
           size="sm"
@@ -151,7 +76,7 @@ const IndividualGamesToggle = ({ match }: { match: IMatch }) => {
         </Button>
       </div>
       {showGames && (
-        <div style={{ marginTop: 12 }}>
+        <div style={{ marginTop: 12, marginBottom: 8 }}>
           <IndividualMatches match={match} ownPlayerId={user.playerId} />
         </div>
       )}
@@ -183,16 +108,3 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     {children}
   </div>
 );
-
-function getPlayerResults(match: IMatch, ply: IMatchPlayer) {
-  const plyMatches = match.getGameMatches().filter(game => game.ownPlayer === ply);
-
-  if (plyMatches.every(game => game.outcome === 'WalkOver')) {
-    return { wins: 0, losses: 0, wo: true };
-  }
-
-  const wins = plyMatches.filter(game => game.outcome === matchOutcome.Won).length;
-  const losses = plyMatches.filter(game => game.outcome === matchOutcome.Lost).length;
-
-  return { wins, losses, wo: false };
-}
