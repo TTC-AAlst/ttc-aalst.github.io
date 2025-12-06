@@ -8,6 +8,7 @@ import { IMatch, ITeamOpponent } from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 import { useViewport } from '../../../utils/hooks/useViewport';
 import { selectReadOnlyMatches, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { Icon } from '../../controls/Icons/Icon';
 
 const AmountOfOpponentMatchesToShow = 5;
 
@@ -27,9 +28,10 @@ export const OpponentsLastMatches = ({match}: OpponentsLastMatchesProps) => {
     .filter(m => m.competition === match.competition && m.frenoyDivisionId === match.frenoyDivisionId)
     .filter(m => m.score && (m.score.home || m.score.out))
     .filter(m => m.id !== match.id)
-    .sort((a, b) => a.date.valueOf() - b.date.valueOf());
+    .sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
   const widthRemoveColumn = 750; // combine Home&Away columns to just one Opponent column on small devices
+  const totalMatches = readonlyMatches.length;
 
   if (!showAll) {
     readonlyMatches = readonlyMatches.slice(0, AmountOfOpponentMatchesToShow);
@@ -43,7 +45,7 @@ export const OpponentsLastMatches = ({match}: OpponentsLastMatchesProps) => {
     <Table size="sm" className="match-card-tab-table">
       <thead>
         <tr>
-          <th key="1">{t('common.date')}</th>
+          <th key="1" className="d-none d-sm-table-cell">{t('common.date')}</th>
           <th key="7" className="d-none d-md-table-cell">{t('common.frenoy')}</th>
           {viewport.width > widthRemoveColumn ? [
             <th key="2">{t('match.opponents.homeTeam')}</th>,
@@ -65,13 +67,14 @@ export const OpponentsLastMatches = ({match}: OpponentsLastMatchesProps) => {
               onClick={() => setShowDetails({...showDetails, [m.id]: !showDetails[m.id]})}
             >
 
-              <td key="1">{m.getDisplayDate(viewport.width > widthRemoveColumn ? 'd' : 's')}</td>
+              <td key="1" className="d-none d-sm-table-cell">{m.getDisplayDate(viewport.width > widthRemoveColumn ? 'd' : 's')}</td>
               <td key="7" className="d-none d-md-table-cell">{m.frenoyMatchId}</td>
               {viewport.width > widthRemoveColumn ? [
                 <td key="2">{m.getClub('home')?.name} {m.home.teamCode}</td>,
                 <td key="3">{m.getClub('away')?.name} {m.away.teamCode}</td>,
               ] : (
                 <td key="4">
+                  {isHomeMatch && <Icon fa="fa fa-home" style={{ marginRight: 4, color: '#666' }} />}
                   {isHomeMatch ? (
                     `${m.getClub('away')?.name} ${m.away.teamCode}`
                   ) : (
@@ -82,12 +85,15 @@ export const OpponentsLastMatches = ({match}: OpponentsLastMatchesProps) => {
 
               <td key="5"><MatchPlayerRankings match={m} homeTeam={isHomeMatch} /></td>
 
-              <td key="6">{m.score.home}&nbsp;-&nbsp;{m.score.out}</td>
+              <td key="6">
+                {m.won(match.opponent) && <Icon fa="fa fa-trophy" style={{ marginRight: 4, color: '#f1c40f' }} />}
+                {m.score.home}&nbsp;-&nbsp;{m.score.out}
+              </td>
             </tr>,
             <OtherMatchPlayerResultsTableRow key="8" show={showDetails[m.id]} match={m} colSpan={5} />,
           ];
         })}
-        {!showAll && readonlyMatches.length > AmountOfOpponentMatchesToShow ? (
+        {!showAll && totalMatches > AmountOfOpponentMatchesToShow ? (
           <tr key="showAll">
             <td colSpan={5} style={{textAlign: 'center'}}>
               <IconButton onClick={() => setShowAll(true)}>
