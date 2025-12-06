@@ -176,7 +176,7 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
         <SectionTitle>{t('match.tabs.playersTitle')}</SectionTitle>
         {playingPlayers.length > 0 && (
           <Button
@@ -230,24 +230,24 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
           </div>
         )}
         {loc?.address ? (
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-            <Icon fa="fa fa-map-marker" style={{ marginTop: 2 }} />
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Icon fa="fa fa-map-marker" />
                 <span style={{ fontWeight: 600 }}>{loc.description}</span>
-                <Button
-                  size="sm"
-                  variant="outline-secondary"
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${loc.address}, ${loc.postalCode} ${loc.city}`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon fa="fa fa-location-arrow" />
-                </Button>
               </div>
-              <div style={{ fontSize: '0.9em', color: '#666' }}>
-                {loc.address}, {loc.postalCode} {loc.city}
-              </div>
+              <Button
+                size="sm"
+                variant="outline-secondary"
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${loc.address}, ${loc.postalCode} ${loc.city}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon fa="fa fa-location-arrow" />
+              </Button>
+            </div>
+            <div style={{ fontSize: '0.9em', color: '#666', marginLeft: 24 }}>
+              {loc.address}, {loc.postalCode} {loc.city}
             </div>
           </div>
         ) : (
