@@ -24,7 +24,7 @@ export const MobileLiveMatchInProgress = ({
   match,
   opponentPlayersKnown,
 }: MobileLiveMatchInProgressProps) => {
-  const hasStarted = moment().isAfter(match.date);
+  const hasStarted = match.games.length || match.getTheirPlayers().length;
 
   // Pre-start: show our formation and away match details
   if (!hasStarted) {
@@ -96,22 +96,15 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
     <div>
       <div style={{ textAlign: 'center', marginBottom: 12 }}>
         <ButtonGroup size="sm">
-          <Button
-            variant="outline-secondary"
-            onClick={() => setShowReportModal(true)}
-          >
+          <Button variant="outline-secondary" onClick={() => setShowReportModal(true)}>
             <Icon fa={hasReportOrComments ? 'fa fa-commenting-o' : 'fa fa-comment-o'} />
           </Button>
-          <Button
-            variant={showGames ? 'secondary' : 'outline-secondary'}
-            onClick={() => setShowGames(!showGames)}
-          >
-            {t('match.tabs.matches')}
-          </Button>
-          <Button
-            variant="outline-secondary"
-            onClick={() => setShowOpponentModal(true)}
-          >
+          {match.games.length > 0 && (
+            <Button variant={showGames ? 'secondary' : 'outline-secondary'} onClick={() => setShowGames(!showGames)}>
+              {t('match.tabs.matches')}
+            </Button>
+          )}
+          <Button variant="outline-secondary" onClick={() => setShowOpponentModal(true)}>
             {t('match.individual.opponentPlayer')}
           </Button>
         </ButtonGroup>
