@@ -8,6 +8,7 @@ type TeamRankingBadgesProps = {
   team: ITeam;
   opponent?: ITeamOpponent;
   style?: React.CSSProperties;
+  small?: boolean;
 }
 
 export class TeamRankingBadges extends Component<TeamRankingBadgesProps> {
@@ -25,16 +26,20 @@ export class TeamRankingBadges extends Component<TeamRankingBadgesProps> {
 type TeamRankingBadgesCoreProps = {
   ranking: ITeamRanking;
   style?: React.CSSProperties;
+  small?: boolean;
 }
 
 class TeamRankingBadgesCore extends Component<TeamRankingBadgesCoreProps> {
   render() {
-    const {ranking} = this.props;
+    const {ranking, small} = this.props;
+    const defaultStyle = small ? {fontSize: 18} : {fontSize: 26};
+    const badgeMargin = small ? 6 : 12;
+    const m = badgeMargin;
     return (
-      <div style={({display: 'inline', ...(this.props.style || {fontSize: 26, marginTop: -10})})}>
-        <TeamOverviewBadge amount={ranking.gamesWon} colorClass="match-won" fa="fa-thumbs-up" tooltip={t('teamCalendar.matchesWonBadge')} />
-        <TeamOverviewBadge amount={ranking.gamesDraw} colorClass="match-draw" fa="fa-meh-o" tooltip={t('teamCalendar.matchesDrawBadge')} />
-        <TeamOverviewBadge amount={ranking.gamesLost} colorClass="match-lost" fa="fa-thumbs-down" tooltip={t('teamCalendar.matchesLostBadge')} />
+      <div style={({display: 'inline', ...(this.props.style || defaultStyle)})}>
+        <TeamOverviewBadge amount={ranking.gamesWon} type="match-won" fa="fa-thumbs-up" tooltip="matchesWonBadge" m={m} />
+        <TeamOverviewBadge amount={ranking.gamesDraw} type="match-draw" fa="fa-meh-o" tooltip="matchesDrawBadge" m={m} />
+        <TeamOverviewBadge amount={ranking.gamesLost} type="match-lost" fa="fa-thumbs-down" tooltip="matchesLostBadge" m={m} />
       </div>
     );
   }
@@ -43,16 +48,17 @@ class TeamRankingBadgesCore extends Component<TeamRankingBadgesCoreProps> {
 
 
 
-const TeamOverviewBadge = ({amount, colorClass, fa, tooltip}: TeamOverviewBadgeProps) => (
-  <Badgy type={colorClass} style={{marginLeft: 12}} tooltip={tooltip}>
-    <Icon fa={`fa ${fa}`} style={{marginRight: 6}} />
+const TeamOverviewBadge = ({amount, type, fa, tooltip, m}: TeamOverviewBadgeProps) => (
+  <Badgy type={type} style={{marginLeft: m}} tooltip={t(`teamCalendar.${tooltip}`)}>
+    <Icon fa={`fa ${fa}`} style={{marginRight: 4}} />
     {amount}
   </Badgy>
 );
 
 type TeamOverviewBadgeProps = {
   amount: number,
-  colorClass: string,
+  type: string,
   fa: string,
   tooltip: string,
+  m: number,
 };

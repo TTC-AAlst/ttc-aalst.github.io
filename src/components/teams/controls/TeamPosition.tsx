@@ -6,6 +6,7 @@ type TeamPositionProps = {
   team: ITeam;
   opponent?: ITeamOpponent;
   style?: React.CSSProperties;
+  small?: boolean;
 }
 
 const defaultStyle = {
@@ -13,7 +14,13 @@ const defaultStyle = {
   marginTop: -5,
 };
 
-export const TeamPosition = ({team, opponent, style = defaultStyle}: TeamPositionProps) => {
+const smallStyle = {
+  marginRight: 6,
+  fontSize: 12,
+};
+
+export const TeamPosition = ({team, opponent, style, small}: TeamPositionProps) => {
+  const appliedStyle = style || (small ? smallStyle : defaultStyle);
   const ranking = team.getDivisionRanking(opponent);
   if (ranking.empty) {
     return null;
@@ -29,7 +36,7 @@ export const TeamPosition = ({team, opponent, style = defaultStyle}: TeamPositio
   }
 
   return (
-    <Badgy type={positionClassName} style={style} tooltip="teamCalendar.teamRanking">
+    <Badgy type={positionClassName} style={appliedStyle} tooltip="teamCalendar.teamRanking">
       {ranking.position} / {team.ranking.length}
     </Badgy>
   );

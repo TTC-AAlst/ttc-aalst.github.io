@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { getOpponentFormations } from '../../../storeUtil';
 import { PlayerRankings } from '../controls/MatchPlayerRankings';
@@ -9,10 +9,17 @@ type OpponentsTeamFormationProps = {
   matches: IMatch[];
   opponent?: ITeamOpponent;
   hideHeader?: boolean;
+  limitRows?: boolean;
 }
 
-export const OpponentsTeamFormation = ({matches, opponent, hideHeader}: OpponentsTeamFormationProps) => {
-  const formations = getOpponentFormations(matches, opponent);
+const INITIAL_ROW_LIMIT = 5;
+
+export const OpponentsTeamFormation = ({matches, opponent, hideHeader, limitRows}: OpponentsTeamFormationProps) => {
+  const [showAll, setShowAll] = useState(false);
+  const formations = getOpponentFormations(matches, opponent).sort((a, b) => b.value - a.value);
+
+  const shouldLimit = limitRows && !showAll && formations.length > INITIAL_ROW_LIMIT;
+  const displayedFormations = shouldLimit ? formations.slice(0, INITIAL_ROW_LIMIT) : formations;
 
   return (
     <Table size="sm" striped style={{maxWidth: 250}}>
@@ -25,7 +32,7 @@ export const OpponentsTeamFormation = ({matches, opponent, hideHeader}: Opponent
         </thead>
       ) : null}
       <tbody>
-        {formations.sort((a, b) => b.value - a.value).map(formation => (
+        {displayedFormations.map(formation => (
           <tr key={formation.key}>
             <td>{formation.amount}x</td>
 
@@ -36,6 +43,15 @@ export const OpponentsTeamFormation = ({matches, opponent, hideHeader}: Opponent
             <td>{formation.value}</td>
           </tr>
         ))}
+        {shouldLimit && (
+          <tr>
+            <td colSpan={3} style={{textAlign: 'right'}}>
+              <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => setShowAll(true)}>
+                Meer tonen
+              </button>
+            </td>
+          </tr>
+        )}
       </tbody>
     </Table>
   );
