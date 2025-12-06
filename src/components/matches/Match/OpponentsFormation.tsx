@@ -77,6 +77,7 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
   }
 
   const showTimesPlayed = viewport.width > 600;
+  const showFullName = viewport.width > 500;
   const currentPlayer = user?.playerId ? storeUtil.getPlayer(user.playerId) : null;
 
   return (
@@ -93,7 +94,7 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
         {formations.map(f => (
           <tr key={f.player.uniqueIndex}>
             <td>
-              <OpponentPlayerLabel player={f.player} competition={match.competition} />
+              <OpponentPlayerLabel player={f.player} competition={match.competition} fullName={showFullName} />
             </td>
             {showTimesPlayed ? <td>{f.count}</td> : null}
             <td>
@@ -103,7 +104,7 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
               <ThumbsDownIcon style={{marginLeft: 8}} />
               {f.lost}
             </td>
-            <td>{`${((f.won / (f.lost + f.won)) * 100).toFixed(0)}%`}</td>
+            <td style={{textAlign: 'right'}}>{`${((f.won / (f.lost + f.won)) * 100).toFixed(0)}%`}</td>
             {currentPlayer ? (
               <td>
                 <PreviousEncountersButton
