@@ -110,6 +110,7 @@ const TodayMarker = ({ hasMatchesToday }: { hasMatchesToday: boolean }) => (
       backgroundColor: '#e74c3c',
       boxShadow: '0 0 8px rgba(231, 76, 60, 0.5)',
       flexShrink: 0,
+      animation: hasMatchesToday ? 'pulse 2s infinite' : undefined,
     }}
     />
     <div style={{
@@ -118,12 +119,12 @@ const TodayMarker = ({ hasMatchesToday }: { hasMatchesToday: boolean }) => (
       backgroundColor: '#e74c3c',
       display: 'flex',
       alignItems: 'center',
+      justifyContent: 'center',
     }}
     >
       <span style={{
         backgroundColor: 'white',
-        padding: '0 8px',
-        marginLeft: 12,
+        padding: '0 12px',
         color: '#e74c3c',
         fontWeight: 600,
         fontSize: '0.85em',
@@ -148,14 +149,51 @@ const getScoreBackgroundColor = (won: boolean, isDraw: boolean) => {
   return '#f8d7da';
 };
 
-const getDotColor = (isToday: boolean, isPast: boolean) => {
+const getMatchResult = (match: IMatch): 'won' | 'lost' | 'draw' | null => {
+  const hasScore = match.score && (match.score.home !== 0 || match.score.out !== 0);
+  if (!hasScore) return null;
+
+  const ownScore = match.isHomeMatch ? match.score.home : match.score.out;
+  const theirScore = match.isHomeMatch ? match.score.out : match.score.home;
+
+  if (ownScore > theirScore) return 'won';
+  if (ownScore < theirScore) return 'lost';
+  return 'draw';
+};
+
+const getDayDotColor = (matches: IMatch[], isToday: boolean, isPast: boolean): string => {
+  // Today with matches: pulsing red (handled separately with animation)
   if (isToday) return '#e74c3c';
-  if (isPast) return '#bdc3c7';
-  return '#3498db';
+
+  // Future: blue
+  if (!isPast) return '#3498db';
+
+  // Past: calculate aggregate result
+  const results = matches.map(m => getMatchResult(m)).filter(r => r !== null);
+  if (results.length === 0) return '#bdc3c7'; // No results yet, gray
+
+  const wins = results.filter(r => r === 'won').length;
+  const losses = results.filter(r => r === 'lost').length;
+
+  // All won: gold
+  if (wins === results.length) return '#FFD700';
+  // All lost: red
+  if (losses === results.length) return '#e74c3c';
+
+  // Mixed: interpolate between gold and red based on win ratio
+  const winRatio = wins / results.length;
+  // Gold (#FFD700) to Orange (#FFA500) to Red (#e74c3c)
+  if (winRatio >= 0.5) {
+    // More wins than losses: gold to orange
+    return '#FFA500';
+  }
+  // More losses than wins: orange to red
+  return '#FF6347';
 };
 
 const DayCard = ({ group, isPast, isToday }: DayCardProps) => {
   const user = useTtcSelector(selectUser);
+  const dotColor = getDayDotColor(group.matches, !!isToday, !!isPast);
 
   return (
     <div style={{ marginBottom: 16 }}>
@@ -170,8 +208,10 @@ const DayCard = ({ group, isPast, isToday }: DayCardProps) => {
           width: 12,
           height: 12,
           borderRadius: '50%',
-          backgroundColor: getDotColor(!!isToday, !!isPast),
+          backgroundColor: dotColor,
           flexShrink: 0,
+          boxShadow: isToday ? '0 0 8px rgba(231, 76, 60, 0.5)' : undefined,
+          animation: isToday ? 'pulse 2s infinite' : undefined,
         }}
         />
         <span style={{
