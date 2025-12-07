@@ -337,6 +337,8 @@ export default {
         opponentsRanking: "Tegenstanders",
         opponentsRankingTitle: "Hun laatste uitslagen",
         opponentsFormationTitle: "Hun opstelling",
+        previousEncounters: "Onderling",
+        previousEncountersTitle: "Onderlinge duels",
         admin: "Dev",
       },
       report: {

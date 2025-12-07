@@ -9,12 +9,14 @@ import { IndividualMatches } from '../Match/IndividualMatches';
 import { MatchReport } from '../Match/MatchReport';
 import { OpponentsLastMatches } from '../Match/OpponentsLastMatches';
 import { OpponentsFormation } from '../Match/OpponentsFormation';
+import { PreviousEncounters } from '../Match/PreviousEncounters';
 import { Scoresheet } from '../Match/Scoresheet';
 import { PlayerCompetitionBadge } from '../../players/PlayerBadges';
 import { Icon } from '../../controls/Icons/Icon';
 import { t } from '../../../locales';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
+import { getPreviousEncounters } from '../../../reducers/matchInfoReducer';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
@@ -68,14 +70,22 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const [showGames, setShowGames] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showOpponentModal, setShowOpponentModal] = useState(false);
+  const [showEncountersModal, setShowEncountersModal] = useState(false);
   const user = useTtcSelector(selectUser);
   const dispatch = useTtcDispatch();
 
   const hasReportOrComments = !!match.description || match.comments.length > 0;
+  const hasTheirPlayers = match.getTheirPlayers().length > 0;
 
   useEffect(() => {
     dispatch(getOpponentMatches({ teamId: match.teamId, opponent: match.opponent }));
   }, [dispatch, match.teamId, match.opponent]);
+
+  useEffect(() => {
+    if (hasTheirPlayers) {
+      dispatch(getPreviousEncounters(match));
+    }
+  }, [dispatch, match, hasTheirPlayers]);
 
   return (
     <div>
@@ -92,6 +102,11 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
           <Button variant="outline-secondary" onClick={() => setShowOpponentModal(true)}>
             {t('match.individual.opponentPlayer')}
           </Button>
+          {hasTheirPlayers && (
+            <Button variant="outline-secondary" onClick={() => setShowEncountersModal(true)}>
+              {t('match.tabs.previousEncounters')}
+            </Button>
+          )}
         </ButtonGroup>
       </div>
 
@@ -123,6 +138,17 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
           <OpponentsLastMatches match={match} />
           <h4 style={{marginTop: 24}}>{t('match.tabs.opponentsFormationTitle')}</h4>
           <OpponentsFormation match={match} opponent={match.opponent} />
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showEncountersModal} onHide={() => setShowEncountersModal(false)} fullscreen style={{zIndex: 99999}}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {t('match.tabs.previousEncountersTitle')}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{padding: 6}}>
+          <PreviousEncounters match={match} />
         </Modal.Body>
       </Modal>
     </div>
