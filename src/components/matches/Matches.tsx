@@ -107,6 +107,7 @@ type TodayMarkerProps = {
 const TodayMarker = ({ hasMatchesToday, todayGroup }: TodayMarkerProps) => {
   const user = useTtcSelector(selectUser);
   const todayDate = moment().format('dd D MMM');
+  const todayColor = '#9b59b6';
 
   return (
     <div style={{ marginBottom: 16 }}>
@@ -116,8 +117,8 @@ const TodayMarker = ({ hasMatchesToday, todayGroup }: TodayMarkerProps) => {
           width: 12,
           height: 12,
           borderRadius: '50%',
-          backgroundColor: '#e74c3c',
-          boxShadow: hasMatchesToday ? '0 0 8px rgba(231, 76, 60, 0.5)' : undefined,
+          backgroundColor: todayColor,
+          boxShadow: hasMatchesToday ? '0 0 8px rgba(155, 89, 182, 0.5)' : undefined,
           flexShrink: 0,
           animation: hasMatchesToday ? 'pulse 2s infinite' : undefined,
         }}
@@ -125,7 +126,7 @@ const TodayMarker = ({ hasMatchesToday, todayGroup }: TodayMarkerProps) => {
         <span style={{
           fontWeight: 600,
           fontSize: '0.9em',
-          color: '#e74c3c',
+          color: todayColor,
           textTransform: 'uppercase',
           marginLeft: 8,
           flexShrink: 0,
@@ -136,7 +137,7 @@ const TodayMarker = ({ hasMatchesToday, todayGroup }: TodayMarkerProps) => {
         <div style={{
           flex: 1,
           height: 2,
-          backgroundColor: '#e74c3c',
+          backgroundColor: todayColor,
           marginLeft: 8,
           display: 'flex',
           alignItems: 'center',
@@ -146,7 +147,7 @@ const TodayMarker = ({ hasMatchesToday, todayGroup }: TodayMarkerProps) => {
           <span style={{
             backgroundColor: 'white',
             padding: '0 12px',
-            color: '#e74c3c',
+            color: todayColor,
             fontWeight: 600,
             fontSize: '0.85em',
             textTransform: 'uppercase',
@@ -207,8 +208,7 @@ const getMatchResult = (match: IMatch): 'won' | 'lost' | 'draw' | null => {
 };
 
 const getDayDotColor = (matches: IMatch[], isToday: boolean, isPast: boolean): string => {
-  // Today with matches: pulsing red (handled separately with animation)
-  if (isToday) return '#e74c3c';
+  if (isToday) return '#9b59b6';
 
   // Future: blue
   if (!isPast) return '#3498db';
