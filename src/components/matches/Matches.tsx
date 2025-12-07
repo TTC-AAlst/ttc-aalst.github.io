@@ -144,17 +144,35 @@ const TodayMarker = ({ hasMatchesToday, todayGroup }: TodayMarkerProps) => {
           justifyContent: 'center',
         }}
         >
-          <span style={{
-            backgroundColor: 'white',
-            padding: '0 12px',
-            color: todayColor,
-            fontWeight: 600,
-            fontSize: '0.85em',
-            textTransform: 'uppercase',
-          }}
-          >
-            {hasMatchesToday ? t('match.todayMatches') : 'Vandaag'}
-          </span>
+          {hasMatchesToday ? (
+            <Link
+              to={t.route('matchesToday')}
+              style={{
+                backgroundColor: 'white',
+                padding: '0 12px',
+                color: todayColor,
+                fontWeight: 600,
+                fontSize: '0.85em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+              }}
+              className="link-hover-underline"
+            >
+              {t('match.todayMatches')}
+            </Link>
+          ) : (
+            <span style={{
+              backgroundColor: 'white',
+              padding: '0 12px',
+              color: todayColor,
+              fontWeight: 600,
+              fontSize: '0.85em',
+              textTransform: 'uppercase',
+            }}
+            >
+              Vandaag
+            </span>
+          )}
         </div>
       </div>
 
