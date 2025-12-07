@@ -375,6 +375,33 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
       opacity: isPast ? 0.7 : 1,
     }}
     >
+      {/* vs or thriller indicator - positioned on the border */}
+      <div style={{
+        position: 'absolute',
+        left: thriller ? -4 : 0,
+        top: thriller ? 24 : 27,
+        display: 'flex',
+        alignItems: 'center',
+        background: `linear-gradient(to right, #fff 50%, ${cardBg} 50%)`,
+        padding: '0 4px',
+        zIndex: 1,
+      }}
+      >
+        {thriller ? (
+          <ThrillerIcon color={thriller === 'topMatch' ? 'red' : 'orange'} />
+        ) : (
+          <span style={{
+            color: '#888',
+            fontSize: '0.7em',
+            fontWeight: 500,
+            textTransform: 'uppercase',
+          }}
+          >
+            vs
+          </span>
+        )}
+      </div>
+
       {/* Card with full border */}
       <div style={{
         backgroundColor: cardBg,
@@ -384,34 +411,6 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
         marginLeft: 10,
       }}
       >
-        {/* vs or thriller indicator overlaying the left border */}
-        <div style={{
-          position: 'absolute',
-          left: thriller ? -4 : 0,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          display: 'flex',
-          alignItems: 'center',
-          background: `linear-gradient(to right, #fff 50%, ${cardBg} 50%)`,
-          padding: '0 4px',
-          zIndex: 1,
-        }}
-        >
-          {thriller ? (
-            <ThrillerIcon color={thriller === 'topMatch' ? 'red' : 'orange'} />
-          ) : (
-            <span style={{
-              color: '#888',
-              fontSize: '0.7em',
-              fontWeight: 500,
-              textTransform: 'uppercase',
-            }}
-            >
-              vs
-            </span>
-          )}
-        </div>
-
         {/* Teams row */}
         <div style={{
           display: 'flex',
