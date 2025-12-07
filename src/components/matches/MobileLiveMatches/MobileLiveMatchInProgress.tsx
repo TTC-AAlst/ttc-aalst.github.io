@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import { Button, ButtonGroup, Modal } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import OwnPlayer from '../Match/OwnPlayer';
@@ -20,15 +21,17 @@ type MobileLiveMatchInProgressProps = {
 };
 
 export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressProps) => {
-  const hasStarted = match.games.length || match.getTheirPlayers().length;
+  const hasPlayersOrGames = match.games.length || match.getTheirPlayers().length;
+  const hasStarted = match.date.isBefore(moment());
 
   // Pre-start: show our formation and away match details
-  if (!hasStarted) {
+  if (!hasPlayersOrGames) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 8 }}>
         <OurFormationPreStart match={match} />
         {!match.isHomeMatch && <AwayMatchDetails match={match} />}
         <MatchActionButtons match={match} />
+        {hasStarted && <MatchDetailsLink match={match} />}
       </div>
     );
   }
