@@ -388,12 +388,11 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
         <div style={{
           position: 'absolute',
           left: thriller ? -4 : 0,
-          top: 10,
-          height: 'calc(100% - 20px)',
-          maxHeight: 40,
+          top: '50%',
+          transform: 'translateY(-50%)',
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: '#fff',
+          background: `linear-gradient(to right, #fff 50%, ${cardBg} 50%)`,
           padding: '0 4px',
           zIndex: 1,
         }}
