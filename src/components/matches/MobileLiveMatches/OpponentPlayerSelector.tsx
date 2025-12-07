@@ -8,6 +8,8 @@ import { Icon } from '../../controls/Icons/Icon';
 
 type OpponentPlayerSelectorProps = {
   match: IMatch;
+  initialOpen?: boolean;
+  onClose?: () => void;
 };
 
 type PlayerRowProps = {
@@ -52,7 +54,7 @@ const PlayerRow = ({ player, isSelected, isDisabled, onToggle }: PlayerRowProps)
   </label>
 );
 
-export const OpponentPlayerSelector = ({ match }: OpponentPlayerSelectorProps) => {
+export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: OpponentPlayerSelectorProps) => {
   const dispatch = useTtcDispatch();
   const club = match.getOpponentClub();
   const clubCode = match.competition === 'Vttl' ? club?.codeVttl : club?.codeSporta;
@@ -61,15 +63,15 @@ export const OpponentPlayerSelector = ({ match }: OpponentPlayerSelectorProps) =
   const isLoading = useTtcSelector(state => selectClubPlayersLoading(state, match.competition, clubCode || ''));
 
   const requiredPlayerCount = match.getTeamPlayerCount();
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(initialOpen);
   const [selectedPlayers, setSelectedPlayers] = useState<ClubPlayer[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    if (isFormOpen && clubCode && !clubPlayers) {
+    if ((isFormOpen || initialOpen) && clubCode && !clubPlayers) {
       dispatch(fetchClubPlayers({ competition: match.competition, clubCode }));
     }
-  }, [dispatch, match.competition, clubCode, clubPlayers, isFormOpen]);
+  }, [dispatch, match.competition, clubCode, clubPlayers, isFormOpen, initialOpen]);
 
   const handlePlayerToggle = (player: ClubPlayer) => {
     setSelectedPlayers(prev => {
@@ -92,6 +94,7 @@ export const OpponentPlayerSelector = ({ match }: OpponentPlayerSelectorProps) =
     try {
       await dispatch(editOpponentPlayers({ matchId: match.id, players: selectedPlayers }));
       setIsFormOpen(false);
+      onClose?.();
     } finally {
       setIsSaving(false);
     }

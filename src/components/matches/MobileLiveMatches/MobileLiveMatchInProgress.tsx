@@ -13,6 +13,7 @@ import { PreviousEncounters } from '../Match/PreviousEncounters';
 import { Scoresheet } from '../Match/Scoresheet';
 import { PlayerCompetitionBadge } from '../../players/PlayerBadges';
 import { Icon } from '../../controls/Icons/Icon';
+import { EditIcon } from '../../controls/Icons/EditIcon';
 import { t } from '../../../locales';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
@@ -51,22 +52,42 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
 };
 
 
-const FormationsWithResults = ({ match }: { match: IMatch }) => (
-  <div style={{ display: 'flex', gap: 16, padding: 8 }}>
-    <div style={{ flex: 1 }}>
-      <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
-      {match.getOwnPlayers().map(ply => (
-        <OwnPlayer key={ply.position} match={match} ply={ply} />
-      ))}
+const FormationsWithResults = ({ match }: { match: IMatch }) => {
+  const [showEditOpponents, setShowEditOpponents] = useState(false);
+  const canEditOpponents = match.games.length === 0;
+
+  return (
+    <div style={{ padding: 8 }}>
+      <div style={{ display: 'flex', gap: 16 }}>
+        <div style={{ flex: 1 }}>
+          <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
+          {match.getOwnPlayers().map(ply => (
+            <OwnPlayer key={ply.position} match={match} ply={ply} />
+          ))}
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+            <SectionTitle>{t('match.playersOpponentsTitle')}</SectionTitle>
+            {canEditOpponents && (
+              <EditIcon
+                style={{ cursor: 'pointer' }}
+                onClick={() => setShowEditOpponents(!showEditOpponents)}
+              />
+            )}
+          </div>
+          {match.getTheirPlayers().map(ply => (
+            <OpponentPlayer key={ply.position} ply={ply} t={t} competition={match.competition} fullName={false} />
+          ))}
+        </div>
+      </div>
+      {showEditOpponents && (
+        <div style={{ marginTop: 16 }}>
+          <OpponentPlayerSelector match={match} initialOpen onClose={() => setShowEditOpponents(false)} />
+        </div>
+      )}
     </div>
-    <div style={{ flex: 1 }}>
-      <SectionTitle>{t('match.playersOpponentsTitle')}</SectionTitle>
-      {match.getTheirPlayers().map(ply => (
-        <OpponentPlayer key={ply.position} ply={ply} t={t} competition={match.competition} fullName={false} />
-      ))}
-    </div>
-  </div>
-);
+  );
+};
 
 const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const [showGames, setShowGames] = useState(false);
