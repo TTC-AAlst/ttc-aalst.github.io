@@ -124,6 +124,7 @@ export const selectPlayer = createAsyncThunk(
       matchPlayer = {
         ...matchPlayer,
         status: data.status,
+        uniqueIndex: comp.uniqueIndex,
       };
     }
 
