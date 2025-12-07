@@ -100,7 +100,7 @@ const ClubsTable = ({clubs, onEditClub}: {clubs: IClub[], onEditClub: (club: ICl
 );
 
 const mapDispatchToProps = (dispatch: any) => ({
-  updateClub: (data: {club: IClub}) => dispatch(updateClub(data)),
+  updateClub: (club: IClub) => dispatch(updateClub(club)),
   frenoyClubSync: () => dispatch(frenoyClubSync()),
 });
 
