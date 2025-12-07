@@ -10,7 +10,7 @@ import { selectMatches, selectUser, useTtcSelector } from '../../utils/hooks/sto
 import { getPlayerFormation } from './MatchesTable/matchesTableUtil';
 import { browseTo } from '../../routes';
 
-const matchesToShow = 10;
+const matchesToShow = 30;
 
 type GroupedMatches = {
   date: string;
