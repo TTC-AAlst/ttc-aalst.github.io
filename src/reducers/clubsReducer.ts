@@ -17,11 +17,11 @@ export const fetchClubs = createAsyncThunk(
 
 export const updateClub = createAsyncThunk(
   'clubs/UpdateClub',
-  async (data: {club: IClub}, { dispatch }) => {
+  async (club: IClub, { dispatch }) => {
     try {
-      await http.post('/clubs/UpdateClub', data.club);
+      await http.post('/clubs/UpdateClub', club);
       dispatch(showSnackbar('Club saved'));
-      return data.club;
+      return club;
     } catch (err) {
       dispatch(showSnackbar(t('common.apiFail')));
       throw err;
