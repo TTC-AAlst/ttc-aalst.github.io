@@ -74,9 +74,6 @@ export default class TeamModel implements ITeam {
   }
 
   getThriller(match: IMatch): undefined | 'topMatch' | 'degradationMatch' {
-    if (match.date.isBefore(moment())) {
-      return undefined;
-    }
     const ourRanking = this.getDivisionRanking();
     const theirRanking = this.getDivisionRanking(match.opponent);
     if (ourRanking.empty || theirRanking.empty) {
