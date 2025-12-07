@@ -62,7 +62,9 @@ export default {
       crash: 'Oepsie! Er is iets misgegaan...',
 
       save: "Bewaren",
+      saving: "Bewaren...",
       cancel: "Annuleren",
+      loading: "Laden...",
 
       frenoy: "Frenoy",
       teamFormation: "Opstelling",
@@ -365,6 +367,9 @@ export default {
       formationUnknown: "Opstelling onbekend",
       playersVictoryTitle: "Overwinningen",
       playersOpponentsTitle: "Tegenstanders",
+      theirFormation: "Hun opstelling",
+      selectOpponents: "Selecteer tegenstanders",
+      opponentPlayersLocked: "Tegenstanders kunnen niet meer gewijzigd worden",
       double: "Dubbel",
       doubles: "Dubbels",
       individual: {

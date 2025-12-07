@@ -7,6 +7,7 @@ import teamsReducer, { teamRankingsSlice } from './reducers/teamsReducer';
 import clubsReducer from './reducers/clubsReducer';
 import readonlyMatchesReducer from './reducers/readonlyMatchesReducer';
 import matchInfoReducer from './reducers/matchInfoReducer';
+import clubPlayersReducer from './reducers/clubPlayersReducer';
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     playersQuitters: playersQuittersSlice.reducer,
     events: eventsSlice.reducer,
     clubs: clubsReducer,
+    clubPlayers: clubPlayersReducer,
   },
 });
 

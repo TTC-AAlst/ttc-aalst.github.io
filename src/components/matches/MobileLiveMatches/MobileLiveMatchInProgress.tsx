@@ -17,6 +17,7 @@ import { t } from '../../../locales';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
 import { getPreviousEncounters } from '../../../reducers/matchInfoReducer';
+import { OpponentPlayerSelector } from './OpponentPlayerSelector';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
@@ -31,7 +32,8 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 8 }}>
         <OurFormationPreStart match={match} />
-        {!match.isHomeMatch && <AwayMatchDetails match={match} />}
+        {!match.isHomeMatch && !hasStarted && <AwayMatchDetails match={match} />}
+        {hasStarted && <OpponentPlayersPreStart match={match} />}
         <MatchActionButtons match={match} />
         {hasStarted && <MatchDetailsLink match={match} />}
       </div>
@@ -266,6 +268,23 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
           </div>
         )}
       </div>
+    </div>
+  );
+};
+
+const OpponentPlayersPreStart = ({ match }: { match: IMatch }) => {
+  const canEdit = match.games.length === 0;
+
+  return (
+    <div>
+      <SectionTitle>{t('match.theirFormation')}</SectionTitle>
+      {canEdit ? (
+        <OpponentPlayerSelector match={match} />
+      ) : (
+        <div style={{ color: '#666', fontStyle: 'italic' }}>
+          {t('match.opponentPlayersLocked')}
+        </div>
+      )}
     </div>
   );
 };
