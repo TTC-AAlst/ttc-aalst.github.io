@@ -370,6 +370,8 @@ export default {
       theirFormation: "Hun opstelling",
       selectOpponents: "Selecteer tegenstanders",
       opponentPlayersLocked: "Tegenstanders kunnen niet meer gewijzigd worden",
+      noEncountersYet: "Geen vorige ontmoetingen",
+      noDuels: "geen duels",
       double: "Dubbel",
       doubles: "Dubbels",
       individual: {
