@@ -43,11 +43,16 @@ export const PreviousEncounters = ({match}: {match: IMatch}) => {
         const playerEncounters = encounters.filter(encounter => encounter.homePlayerUniqueId === player.uniqueIndex
           || encounter.awayPlayerUniqueId === player.uniqueIndex);
 
+        // Check if this player has any encounters with the current opponents
+        const hasAnyEncountersWithCurrentOpponents = theirPlayers.some(theirPlayer => playerEncounters.some(
+          enc => enc.homePlayerUniqueId === theirPlayer.uniqueIndex || enc.awayPlayerUniqueId === theirPlayer.uniqueIndex,
+        ));
+
         return (
           <div key={player.playerId}>
             {index > 0 && <hr />}
             <h2>{player.alias}</h2>
-            {playerEncounters.length === 0 ? (
+            {!hasAnyEncountersWithCurrentOpponents ? (
               <div style={{ fontStyle: 'italic', color: '#666' }}>{t('match.noEncountersYet')}</div>
             ) : (
               theirPlayers.map(theirPlayer => {
