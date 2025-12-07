@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { TrophyIcon } from '../controls/Icons/TrophyIcon';
 import { ThrillerIcon } from '../controls/Icons/ThrillerIcon';
+import { Icon } from '../controls/Icons/Icon';
 import { t } from '../../locales';
 import { IMatch } from '../../models/model-interfaces';
 import { selectMatches, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
@@ -85,13 +86,10 @@ export const Matches = () => {
         <DayCard key={group.date} group={group} isPast />
       ))}
 
-      {/* Today marker */}
+      {/* Today marker and matches */}
       <div ref={todayRef}>
-        <TodayMarker hasMatchesToday={matchesToday.length > 0} />
+        <TodayMarker hasMatchesToday={matchesToday.length > 0} todayGroup={todayGroup} />
       </div>
-
-      {/* Today's matches */}
-      {todayGroup && <DayCard group={todayGroup} isToday />}
 
       {/* Future matches */}
       {futureGroups.map(group => (
@@ -101,41 +99,88 @@ export const Matches = () => {
   );
 };
 
-const TodayMarker = ({ hasMatchesToday }: { hasMatchesToday: boolean }) => (
-  <div style={{ display: 'flex', alignItems: 'center', margin: '16px 0' }}>
-    <div style={{
-      width: 12,
-      height: 12,
-      borderRadius: '50%',
-      backgroundColor: '#e74c3c',
-      boxShadow: '0 0 8px rgba(231, 76, 60, 0.5)',
-      flexShrink: 0,
-      animation: hasMatchesToday ? 'pulse 2s infinite' : undefined,
-    }}
-    />
-    <div style={{
-      flex: 1,
-      height: 2,
-      backgroundColor: '#e74c3c',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-    >
-      <span style={{
-        backgroundColor: 'white',
-        padding: '0 12px',
-        color: '#e74c3c',
-        fontWeight: 600,
-        fontSize: '0.85em',
-        textTransform: 'uppercase',
-      }}
-      >
-        {hasMatchesToday ? t('match.todayMatches') : 'Vandaag'}
-      </span>
+type TodayMarkerProps = {
+  hasMatchesToday: boolean;
+  todayGroup: GroupedMatches | null;
+};
+
+const TodayMarker = ({ hasMatchesToday, todayGroup }: TodayMarkerProps) => {
+  const user = useTtcSelector(selectUser);
+  const todayDate = moment().format('dd D MMM');
+
+  return (
+    <div style={{ marginBottom: 16 }}>
+      {/* Today stripe with date on left */}
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: hasMatchesToday ? 8 : 0 }}>
+        <div style={{
+          width: 12,
+          height: 12,
+          borderRadius: '50%',
+          backgroundColor: '#e74c3c',
+          boxShadow: hasMatchesToday ? '0 0 8px rgba(231, 76, 60, 0.5)' : undefined,
+          flexShrink: 0,
+          animation: hasMatchesToday ? 'pulse 2s infinite' : undefined,
+        }}
+        />
+        <span style={{
+          fontWeight: 600,
+          fontSize: '0.9em',
+          color: '#e74c3c',
+          textTransform: 'uppercase',
+          marginLeft: 8,
+          flexShrink: 0,
+        }}
+        >
+          {todayDate}
+        </span>
+        <div style={{
+          flex: 1,
+          height: 2,
+          backgroundColor: '#e74c3c',
+          marginLeft: 8,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        >
+          <span style={{
+            backgroundColor: 'white',
+            padding: '0 12px',
+            color: '#e74c3c',
+            fontWeight: 600,
+            fontSize: '0.85em',
+            textTransform: 'uppercase',
+          }}
+          >
+            {hasMatchesToday ? t('match.todayMatches') : 'Vandaag'}
+          </span>
+        </div>
+      </div>
+
+      {/* Today's matches */}
+      {todayGroup && (
+        <div style={{
+          marginLeft: 5,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8,
+          borderLeft: '2px solid #ecf0f1',
+          paddingLeft: 12,
+        }}
+        >
+          {todayGroup.matches.map(match => (
+            <MatchRow
+              key={match.id}
+              match={match}
+              isToday
+              userId={user.playerId}
+            />
+          ))}
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 type DayCardProps = {
   group: GroupedMatches;
@@ -339,26 +384,33 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
         marginLeft: 10,
       }}
       >
-        {/* vs indicator overlaying the left border */}
+        {/* vs or thriller indicator overlaying the left border */}
         <div style={{
           position: 'absolute',
-          left: 0,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          backgroundColor: cardBg,
+          left: thriller ? -4 : 0,
+          top: 10,
+          height: 'calc(100% - 20px)',
+          maxHeight: 40,
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: '#fff',
           padding: '0 4px',
           zIndex: 1,
         }}
         >
-          <span style={{
-            color: '#888',
-            fontSize: '0.7em',
-            fontWeight: 500,
-            textTransform: 'uppercase',
-          }}
-          >
-            vs
-          </span>
+          {thriller ? (
+            <ThrillerIcon color={thriller === 'topMatch' ? 'red' : 'orange'} />
+          ) : (
+            <span style={{
+              color: '#888',
+              fontSize: '0.7em',
+              fontWeight: 500,
+              textTransform: 'uppercase',
+            }}
+            >
+              vs
+            </span>
+          )}
         </div>
 
         {/* Teams row */}
@@ -368,21 +420,12 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
           gap: 8,
         }}
         >
-          {/* Teams and thriller */}
+          {/* Teams */}
           <div style={{ flex: 1, minWidth: 0 }}>
             {/* Own team row */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              marginBottom: 2,
-            }}
-            >
-              {thriller && <ThrillerIcon color={thriller === 'topMatch' ? 'red' : 'orange'} />}
-              <div style={{ fontWeight: 600 }}>
-                {ownRankingPos && <small style={{ color: '#888', fontWeight: 400 }}>{ownRankingPos}. </small>}
-                <Link to={browseTo.getTeam(team)} className="link-hover-underline">{ownTeamTitle}</Link>
-              </div>
+            <div style={{ fontWeight: 600, marginBottom: 2 }}>
+              {ownRankingPos && <small style={{ color: '#888', fontWeight: 400 }}>{ownRankingPos}. </small>}
+              <Link to={browseTo.getTeam(team)} className="link-hover-underline">{ownTeamTitle}</Link>
             </div>
             {/* Opponent row */}
             <div style={{ fontWeight: 600 }}>
@@ -393,15 +436,16 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
             </div>
           </div>
 
-          {/* Score or time or button */}
-          <div style={{ flexShrink: 0 }}>
+          {/* Score or time+button */}
+          <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
             {scoreElement}
             {!hasScore && showTime && (
-              <span style={{ color: '#888', fontSize: '0.85em' }}>
-                {match.date.format('HH:mm')}
-              </span>
+              <div style={{ color: '#888', fontSize: '0.85em', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Icon fa="fa fa-clock-o" />
+                <span>{match.date.format('HH:mm')}</span>
+              </div>
             )}
-            {!hasScore && !showTime && (
+            {!hasScore && (
               <Link
                 to={t.route('match', { matchId: match.id })}
                 className="btn btn-outline-secondary btn-sm"
