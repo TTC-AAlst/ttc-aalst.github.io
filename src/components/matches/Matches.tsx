@@ -122,7 +122,7 @@ const TodayMarker = ({ hasMatchesToday }: { hasMatchesToday: boolean }) => (
       <span style={{
         backgroundColor: 'white',
         padding: '0 8px',
-        marginLeft: 8,
+        marginLeft: 12,
         color: '#e74c3c',
         fontWeight: 600,
         fontSize: '0.85em',
@@ -257,74 +257,115 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
   // Hide time for default start times on future matches
   const showTime = !hasScore && !isDefaultStartTime(match);
 
-  return (
+  const scoreElement = hasScore && (
     <Link
       to={t.route('match', { matchId: match.id })}
-      style={{
-        textDecoration: 'none',
-        color: 'inherit',
-      }}
+      style={{ textDecoration: 'none' }}
     >
       <div style={{
-        backgroundColor: getCardBackground(!!isToday, !!isPast),
-        border: getCardBorder(!!userPlaysInMatch, !!isToday),
-        borderRadius: 8,
-        padding: '10px 14px',
-        opacity: isPast ? 0.7 : 1,
-        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 6,
+        padding: '4px 10px',
+        borderRadius: 4,
+        backgroundColor: getScoreBackgroundColor(!!won, isDraw),
+        fontWeight: 600,
+        whiteSpace: 'nowrap',
+        color: 'inherit',
       }}
       >
-        {/* Teams and score */}
+        {won && <TrophyIcon style={{ fontSize: '0.9em' }} />}
+        <span>{match.score.home} - {match.score.out}</span>
+      </div>
+    </Link>
+  );
+
+  const borderStyle = getCardBorder(!!userPlaysInMatch, !!isToday);
+  const cardBg = getCardBackground(!!isToday, !!isPast);
+
+  return (
+    <div style={{
+      position: 'relative',
+      opacity: isPast ? 0.7 : 1,
+    }}
+    >
+      {/* Card with full border */}
+      <div style={{
+        backgroundColor: cardBg,
+        border: borderStyle,
+        borderRadius: 8,
+        padding: '10px 14px',
+        marginLeft: 10,
+      }}
+      >
+        {/* vs indicator overlaying the left border */}
         <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          gap: 12,
+          position: 'absolute',
+          left: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          backgroundColor: cardBg,
+          padding: '0 4px',
+          zIndex: 1,
         }}
         >
-          {/* Teams column */}
+          <span style={{
+            color: '#888',
+            fontSize: '0.7em',
+            fontWeight: 500,
+            textTransform: 'uppercase',
+          }}
+          >
+            vs
+          </span>
+        </div>
+
+        {/* Teams row */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+        }}
+        >
+          {/* Teams and thriller */}
           <div style={{ flex: 1, minWidth: 0 }}>
-            {thriller && (
-              <div style={{ marginBottom: 4 }}>
-                <ThrillerIcon color={thriller === 'topMatch' ? 'red' : 'orange'} />
+            {/* Own team row */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              marginBottom: 2,
+            }}
+            >
+              {thriller && <ThrillerIcon color={thriller === 'topMatch' ? 'red' : 'orange'} />}
+              <div style={{ fontWeight: 600 }}>
+                {ownRankingPos && <small style={{ color: '#888', fontWeight: 400 }}>{ownRankingPos}. </small>}
+                <span>{ownTeamTitle}</span>
               </div>
-            )}
-            {/* Own team */}
-            <div style={{ fontWeight: 600, marginBottom: 2 }}>
-              {ownRankingPos && <small style={{ color: '#888', fontWeight: 400 }}>{ownRankingPos}. </small>}
-              <span>{ownTeamTitle}</span>
             </div>
-            {/* vs */}
-            <div style={{ color: '#888', fontSize: '0.85em', marginBottom: 2 }}>vs</div>
-            {/* Opponent */}
+            {/* Opponent row */}
             <div style={{ fontWeight: 600 }}>
               {opponentRankingPos && <small style={{ color: '#888', fontWeight: 400 }}>{opponentRankingPos}. </small>}
               <span>{opponentTitle}</span>
             </div>
           </div>
 
-          {/* Score or time */}
+          {/* Score or time or button */}
           <div style={{ flexShrink: 0 }}>
-            {hasScore && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '4px 10px',
-                borderRadius: 4,
-                backgroundColor: getScoreBackgroundColor(!!won, isDraw),
-                fontWeight: 600,
-                whiteSpace: 'nowrap',
-              }}
-              >
-                {won && <TrophyIcon style={{ fontSize: '0.9em' }} />}
-                <span>{match.score.home} - {match.score.out}</span>
-              </div>
-            )}
+            {scoreElement}
             {!hasScore && showTime && (
               <span style={{ color: '#888', fontSize: '0.85em' }}>
                 {match.date.format('HH:mm')}
               </span>
+            )}
+            {!hasScore && !showTime && (
+              <Link
+                to={t.route('match', { matchId: match.id })}
+                className="btn btn-outline-secondary btn-sm"
+                style={{ fontSize: '0.75em', padding: '4px 8px' }}
+              >
+                {t('match.details')}
+              </Link>
             )}
           </div>
         </div>
@@ -350,7 +391,7 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
           </div>
         )}
       </div>
-    </Link>
+    </div>
   );
 };
 
