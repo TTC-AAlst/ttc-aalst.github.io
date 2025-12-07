@@ -223,17 +223,16 @@ const getDayDotColor = (matches: IMatch[], isToday: boolean, isPast: boolean): s
   // All won: gold
   if (wins === results.length) return '#FFD700';
   // All lost: red
-  if (losses === results.length) return '#e74c3c';
+  if (losses === results.length) return '#dc3545';
 
-  // Mixed: interpolate between gold and red based on win ratio
-  const winRatio = wins / results.length;
-  // Gold (#FFD700) to Orange (#FFA500) to Red (#e74c3c)
-  if (winRatio >= 0.5) {
-    // More wins than losses: gold to orange
-    return '#FFA500';
-  }
-  // More losses than wins: orange to red
-  return '#FF6347';
+  // Equal wins and losses (or all draws): yellow/amber
+  if (wins === losses) return '#f0ad4e';
+
+  // More wins than losses: orange (leaning gold)
+  if (wins > losses) return '#FFA500';
+
+  // More losses than wins: dark orange (distinct from red)
+  return '#e67e22';
 };
 
 const DayCard = ({ group, isPast, isToday }: DayCardProps) => {
