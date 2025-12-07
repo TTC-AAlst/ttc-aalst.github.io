@@ -77,7 +77,7 @@ function getRankingResults(match: IMatch, ply: IMatchPlayer): RankingResult {
   const getAdversaryRanking = (game: IGetGameMatches) => (game.home.uniqueIndex === ply.uniqueIndex ? game.out.ranking : game.home.ranking);
 
   const plyMatches = match.getGameMatches().filter(game => game.ownPlayer === ply);
-  if (plyMatches.every(game => game.outcome === 'WalkOver')) {
+  if (plyMatches.length > 0 && plyMatches.every(game => game.outcome === 'WalkOver')) {
     return {
       win: [],
       lost: [],

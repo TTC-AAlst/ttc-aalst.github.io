@@ -61,7 +61,7 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => {
       <div style={{ display: 'flex', gap: 16 }}>
         <div style={{ flex: 1 }}>
           <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
-          {match.getOwnPlayers().map(ply => (
+          {match.getOwnPlayers().filter(ply => ply.status === match.block).map(ply => (
             <OwnPlayer key={ply.position} match={match} ply={ply} />
           ))}
         </div>
