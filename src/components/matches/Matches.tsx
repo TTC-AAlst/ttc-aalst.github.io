@@ -7,6 +7,7 @@ import { t } from '../../locales';
 import { IMatch } from '../../models/model-interfaces';
 import { selectMatches, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { getPlayerFormation } from './MatchesTable/matchesTableUtil';
+import { browseTo } from '../../routes';
 
 const matchesToShow = 10;
 
@@ -294,7 +295,7 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
         backgroundColor: cardBg,
         border: borderStyle,
         borderRadius: 8,
-        padding: '10px 14px',
+        padding: '10px 14px 10px 20px',
         marginLeft: 10,
       }}
       >
@@ -340,13 +341,15 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
               {thriller && <ThrillerIcon color={thriller === 'topMatch' ? 'red' : 'orange'} />}
               <div style={{ fontWeight: 600 }}>
                 {ownRankingPos && <small style={{ color: '#888', fontWeight: 400 }}>{ownRankingPos}. </small>}
-                <span>{ownTeamTitle}</span>
+                <Link to={browseTo.getTeam(team)} className="link-hover-underline">{ownTeamTitle}</Link>
               </div>
             </div>
             {/* Opponent row */}
             <div style={{ fontWeight: 600 }}>
               {opponentRankingPos && <small style={{ color: '#888', fontWeight: 400 }}>{opponentRankingPos}. </small>}
-              <span>{opponentTitle}</span>
+              <Link to={browseTo.getOpponent(match.competition, match.opponent)} className="link-hover-underline">
+                {opponentTitle}
+              </Link>
             </div>
           </div>
 
