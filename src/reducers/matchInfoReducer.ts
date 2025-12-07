@@ -93,7 +93,13 @@ function getOpponentKey(match: IMatch): string {
 export const matchInfoSlice = createSlice({
   name: 'matchInfo',
   initialState: getInitialState(),
-  reducers: {},
+  reducers: {
+    clearPreviousEncountersForMatch: (state, action: { payload: number }) => {
+      state.previousEncounters = state.previousEncounters.filter(
+        encounter => encounter.requestMatchId !== action.payload,
+      );
+    },
+  },
   extraReducers: builder => {
     builder.addCase(getPreviousEncounters.fulfilled, (state, action) => {
       if (action.payload?.length) {
@@ -118,5 +124,7 @@ export const matchInfoSlice = createSlice({
     });
   },
 });
+
+export const { clearPreviousEncountersForMatch } = matchInfoSlice.actions;
 
 export default matchInfoSlice.reducer;

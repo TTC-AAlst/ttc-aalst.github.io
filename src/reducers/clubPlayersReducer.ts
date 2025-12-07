@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import http from '../utils/httpClient';
-import { Competition, IFullStoreMatchOwn, IMatch } from '../models/model-interfaces';
+import { Competition, IFullStoreMatchOwn } from '../models/model-interfaces';
 import { RootState } from '../store';
 import { simpleLoaded } from './matchesReducer';
 import { showSnackbar } from './configReducer';
+import { clearPreviousEncountersForMatch } from './matchInfoReducer';
 import { t } from '../locales';
 
 export type ClubPlayer = {
@@ -49,6 +50,7 @@ export const editOpponentPlayers = createAsyncThunk(
   async (params: EditOpponentPlayersParams, { dispatch }) => {
     try {
       const result = await http.post<IFullStoreMatchOwn>('/matches/EditOpponentPlayers', params);
+      dispatch(clearPreviousEncountersForMatch(params.matchId));
       dispatch(simpleLoaded(result));
       dispatch(showSnackbar(t('common.apiSuccess')));
       return result;
