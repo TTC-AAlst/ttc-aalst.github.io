@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { Button, ButtonGroup, Modal } from 'react-bootstrap';
+import { Button, ButtonGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import OwnPlayer from '../Match/OwnPlayer';
 import OpponentPlayer from '../Match/OpponentPlayer';
@@ -117,22 +117,30 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
     <div>
       <div style={{ textAlign: 'center', marginBottom: 12 }}>
         <ButtonGroup size="sm">
-          <Button variant="outline-secondary" onClick={() => setShowReportModal(true)}>
-            <Icon fa={hasReportOrComments ? 'fa fa-commenting-o' : 'fa fa-comment-o'} />
-          </Button>
-          {match.games.length > 0 && (
-            <Button variant={showGames ? 'secondary' : 'outline-secondary'} onClick={() => setShowGames(!showGames)}>
-              {t('match.tabs.matches')}
+          <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.report')}</Tooltip>}>
+            <Button variant="outline-secondary" onClick={() => setShowReportModal(true)}>
+              <Icon fa={hasReportOrComments ? 'fa fa-commenting-o' : 'fa fa-comment-o'} />
             </Button>
+          </OverlayTrigger>
+          {match.games.length > 0 && (
+            <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.matchesTitle')}</Tooltip>}>
+              <Button variant={showGames ? 'secondary' : 'outline-secondary'} onClick={() => setShowGames(!showGames)}>
+                {t('match.tabs.matches')}
+              </Button>
+            </OverlayTrigger>
           )}
-          <Button variant="outline-secondary" onClick={() => setShowOpponentModal(true)}>
-            {t('match.individual.opponentPlayer')}
-          </Button>
+          <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.opponentsFormationTitle')}</Tooltip>}>
+            <Button variant="outline-secondary" onClick={() => setShowOpponentModal(true)}>
+              {t('match.individual.opponentPlayer')}
+            </Button>
+          </OverlayTrigger>
           <MatchOtherRoundButton match={match} shortLabel small />
           {hasTheirPlayers && (
-            <Button variant="outline-secondary" onClick={() => setShowEncountersModal(true)}>
-              {t('match.tabs.previousEncounters')}
-            </Button>
+            <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.previousEncountersTitle')}</Tooltip>}>
+              <Button variant="outline-secondary" onClick={() => setShowEncountersModal(true)}>
+                {t('match.tabs.previousEncounters')}
+              </Button>
+            </OverlayTrigger>
           )}
         </ButtonGroup>
       </div>
@@ -219,13 +227,15 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
         <SectionTitle>{t('match.tabs.playersTitle')}</SectionTitle>
         {playingPlayers.length > 0 && (
-          <Button
-            size="sm"
-            variant={showScoresheet ? 'secondary' : 'outline-secondary'}
-            onClick={() => setShowScoresheet(!showScoresheet)}
-          >
-            <Icon fa="fa fa-table" />
-          </Button>
+          <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.scoresheet')}</Tooltip>}>
+            <Button
+              size="sm"
+              variant={showScoresheet ? 'secondary' : 'outline-secondary'}
+              onClick={() => setShowScoresheet(!showScoresheet)}
+            >
+              <Icon fa="fa fa-table" />
+            </Button>
+          </OverlayTrigger>
         )}
       </div>
       {playingPlayers.length === 0 && (
@@ -274,15 +284,17 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
                 <Icon fa="fa fa-map-marker" />
                 <span style={{ fontWeight: 600 }}>{loc.description}</span>
               </div>
-              <Button
-                size="sm"
-                variant="outline-secondary"
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${loc.address}, ${loc.postalCode} ${loc.city}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icon fa="fa fa-location-arrow" />
-              </Button>
+              <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.navigateToClub')}</Tooltip>}>
+                <Button
+                  size="sm"
+                  variant="outline-secondary"
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${loc.address}, ${loc.postalCode} ${loc.city}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon fa="fa fa-location-arrow" />
+                </Button>
+              </OverlayTrigger>
             </div>
             <div style={{ fontSize: '0.9em', color: '#666', marginLeft: 17, textTransform: 'capitalize' }}>
               {loc.address}, {loc.postalCode} {loc.city}

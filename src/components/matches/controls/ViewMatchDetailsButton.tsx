@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { OwnClubId } from '../../../models/ClubModel';
 import { MatchScore } from '../MatchScore';
 import { IMatch } from '../../../models/model-interfaces';
@@ -37,7 +38,7 @@ export class ViewMatchDetailsButton extends Component<ViewMatchDetailsButtonProp
 
 type MatchOtherRoundButtonProps = {
   match: IMatch;
-  /** Use short label ("Heenronde") instead of full label ("Details heenronde") */
+  /** Use short label ("Thuis"/"Uit") instead of full label ("Details heenronde") */
   shortLabel?: boolean;
   /** Render as small button suitable for ButtonGroup */
   small?: boolean;
@@ -60,13 +61,15 @@ export const MatchOtherRoundButton = ({match, shortLabel, small}: MatchOtherRoun
 
   const wasPrev = match.date > otherRoundMatch.date;
   let label: string;
+  let tooltip: string | null = null;
   if (shortLabel) {
     label = otherRoundMatch.isHomeMatch ? t('match.thuis') : t('match.uit');
+    tooltip = t(`match.${wasPrev ? 'gotoPreviousEncounter' : 'gotoNextEncounter'}`);
   } else {
     label = t(`match.${wasPrev ? 'gotoPreviousEncounter' : 'gotoNextEncounter'}`);
   }
 
-  return (
+  const linkElement = (
     <Link
       to={t.route('match', {matchId: otherRoundMatch.id})}
       className={cn('btn btn-outline-secondary', {'btn-sm': small})}
@@ -75,4 +78,14 @@ export const MatchOtherRoundButton = ({match, shortLabel, small}: MatchOtherRoun
       {label} <MatchScore match={otherRoundMatch} forceDisplay />
     </Link>
   );
+
+  if (tooltip) {
+    return (
+      <OverlayTrigger placement="top" overlay={<Tooltip>{tooltip}</Tooltip>}>
+        {linkElement}
+      </OverlayTrigger>
+    );
+  }
+
+  return linkElement;
 };

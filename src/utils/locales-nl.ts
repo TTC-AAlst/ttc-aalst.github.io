@@ -330,6 +330,7 @@ export default {
       terugronde: "Terugronde",
       thuis: "Thuis",
       uit: "Uit",
+      navigateToClub: "Bekijk op kaart",
       details: "Details",
       tabs: {
         players: "Spelers",
