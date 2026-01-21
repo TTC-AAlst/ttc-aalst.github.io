@@ -19,6 +19,7 @@ import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks
 import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
 import { getPreviousEncounters } from '../../../reducers/matchInfoReducer';
 import { OpponentPlayerSelector } from './OpponentPlayerSelector';
+import { TeamRankingBadges } from '../../teams/controls/TeamRankingBadges';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
@@ -155,6 +156,9 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
         <Modal.Header closeButton>
           <Modal.Title>
             {match.renderOpponentTitle()}
+            <div style={{marginLeft: -6, marginTop: -8}}>
+              <TeamRankingBadges team={match.getTeam()} opponent={match.opponent} small />
+            </div>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body style={{padding: 6}}>
