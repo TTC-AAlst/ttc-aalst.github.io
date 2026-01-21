@@ -250,17 +250,15 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
 const AwayMatchDetails = ({ match }: { match: IMatch }) => {
   const club = match.getOpponentClub();
   const loc = club?.mainLocation;
-  const startHour = match.date.format('HH:mm');
-  const isNonDefaultTime = startHour !== '19:30' && startHour !== '14:00';
 
   return (
     <div>
       <SectionTitle>{t('match.tabs.clubTitle')}</SectionTitle>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {isNonDefaultTime && (
+        {!match.isStandardStartTime && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Icon fa="fa fa-clock-o" />
-            <span style={{ fontWeight: 600 }}>{startHour}</span>
+            <span style={{ fontWeight: 600 }}>{match.date.format('HH:mm')}</span>
           </div>
         )}
         {loc?.address ? (
