@@ -45,9 +45,16 @@ type AdminPlayerFormProps = {
   onEnd: () => void;
 }
 
+const isValidEmail = (email: string): boolean => {
+  if (!email) return true;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 export const AdminPlayerForm = (props: AdminPlayerFormProps) => {
   const dispatch = useTtcDispatch();
   const [player, setPlayer] = useState(props.player || getNewPlayer());
+  const [emailError, setEmailError] = useState('');
   const similarPlayers = useTtcSelector(state => state.players.concat(state.playersQuitters)
     .filter(p => (player.alias.length > 2 && p.alias.toLowerCase().trim().includes(player.alias.toLowerCase().trim()))
       || (player.firstName.length > 2 && p.firstName.toLowerCase().trim().includes(player.firstName.toLowerCase().trim()))
@@ -127,7 +134,13 @@ export const AdminPlayerForm = (props: AdminPlayerFormProps) => {
             style={{width: 300, marginRight: fieldMargin}}
             label={t('player.email')}
             defaultValue={player.contact.email}
-            onChange={e => setPlayer({...player, contact: {...player.contact, email: e.target.value}})}
+            error={!!emailError}
+            helperText={emailError}
+            onChange={e => {
+              const email = e.target.value;
+              setPlayer({...player, contact: {...player.contact, email}});
+              setEmailError(isValidEmail(email) ? '' : 'Ongeldig e-mailadres');
+            }}
           />
 
           <TextField
@@ -185,7 +198,12 @@ export const AdminPlayerForm = (props: AdminPlayerFormProps) => {
         label={t('common.save')}
         color="primary"
         style={{marginTop: 5}}
+        disabled={!!emailError}
         onClick={() => {
+          if (!isValidEmail(player.contact.email)) {
+            setEmailError('Ongeldig e-mailadres');
+            return;
+          }
           dispatch(updatePlayer({player}));
           props.onEnd();
         }}
