@@ -66,6 +66,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
   const [isFormOpen, setIsFormOpen] = useState(initialOpen);
   const [selectedPlayers, setSelectedPlayers] = useState<ClubPlayer[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     if ((isFormOpen || initialOpen) && clubCode && !clubPlayers) {
@@ -133,10 +134,28 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
     );
   }
 
+  const handleClose = () => {
+    setIsFormOpen(false);
+    setSearchText('');
+    setSelectedPlayers([]);
+    onClose?.();
+  };
+
+  const filteredPlayers = clubPlayers.filter(player => player.name.toLowerCase().includes(searchText.toLowerCase()));
   return (
     <div>
+      <div style={{ marginBottom: 8 }}>
+        <Form.Control
+          type="text"
+          size="sm"
+          placeholder={t('common.search')}
+          value={searchText}
+          onChange={e => setSearchText(e.target.value)}
+        />
+      </div>
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 300, overflowY: 'auto' }}>
-        {clubPlayers.map(player => {
+        {filteredPlayers.map(player => {
           const isSelected = selectedPlayers.some(p => p.uniqueIndex === player.uniqueIndex);
           return (
             <PlayerRow
@@ -150,7 +169,14 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
         })}
       </div>
 
-      <div style={{ marginTop: 12, textAlign: 'center' }}>
+      <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center', gap: 8 }}>
+        <Button
+          variant="outline-secondary"
+          size="sm"
+          onClick={handleClose}
+        >
+          {t('common.cancel')}
+        </Button>
         <Button
           variant="primary"
           size="sm"

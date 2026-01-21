@@ -65,6 +65,7 @@ export default {
       saving: "Bewaren...",
       cancel: "Annuleren",
       loading: "Laden...",
+      search: "Zoeken...",
 
       frenoy: "Frenoy",
       teamFormation: "Opstelling",
