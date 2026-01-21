@@ -27,6 +27,7 @@ type MobileLiveMatchInProgressProps = {
 export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressProps) => {
   const hasPlayersOrGames = match.games.length || match.getTheirPlayers().length;
   const hasStarted = match.date.isBefore(moment());
+  const canEnterOpponents = match.date.clone().subtract(1, 'hour').isBefore(moment());
 
   // Pre-start: show our formation and away match details
   if (!hasPlayersOrGames) {
@@ -34,7 +35,7 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 8 }}>
         <OurFormationPreStart match={match} />
         {!match.isHomeMatch && !hasStarted && <AwayMatchDetails match={match} />}
-        {hasStarted && <OpponentPlayersPreStart match={match} />}
+        {canEnterOpponents && <OpponentPlayersPreStart match={match} />}
         <MatchActionButtons match={match} />
         {hasStarted && <MatchDetailsLink match={match} />}
       </div>
