@@ -6,6 +6,7 @@ import { fetchPlayers, fetchRankingPredictions } from '../reducers/playersReduce
 import { fetchTeams, loadTeamRanking } from '../reducers/teamsReducer';
 import { fetchMatches, frenoyMatchSync } from '../reducers/matchesReducer';
 import { validateToken } from '../reducers/userActions';
+import http from './httpClient';
 
 export const useInitialLoad = () => {
   const dispatch = useTtcDispatch();
@@ -71,12 +72,24 @@ export const useInitialLoad = () => {
       teams.forEach(team => {
         dispatch(loadTeamRanking({team}));
       });
-      dispatch(fetchRankingPredictions());
+
+      dispatch(fetchRankingPredictions())
+        .unwrap()
+        .catch(err => {
+          http.post('/config/log', {
+            Message: `Failed to load ranking predictions: ${err?.message || String(err)}`,
+            Stack: err?.stack || '',
+            ComponentStack: `userAgent: ${navigator.userAgent}, screen: ${window.innerWidth}x${window.innerHeight}`,
+            Url: window.location.href,
+            ParsedStack: '',
+          });
+        });
 
       console.log('Matches', matches.length);
       matches.forEach(match => {
         dispatch(frenoyMatchSync({match}));
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.initialLoad]);
 };
