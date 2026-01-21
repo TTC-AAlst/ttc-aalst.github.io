@@ -235,7 +235,7 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
         </div>
       )}
       {playingPlayers.length > 0 && showScoresheet && (
-        <Scoresheet match={match} />
+        <Scoresheet match={match} hideDownload />
       )}
       {playingPlayers.length > 0 && !showScoresheet && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>

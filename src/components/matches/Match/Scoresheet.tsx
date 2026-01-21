@@ -8,19 +8,26 @@ import { t } from '../../../locales';
 import { IMatch } from '../../../models/model-interfaces';
 import { useViewport } from '../../../utils/hooks/useViewport';
 
-export const Scoresheet = ({match}: {match: IMatch}) => {
+type ScoresheetProps = {
+  match: IMatch;
+  hideDownload?: boolean;
+};
+
+export const Scoresheet = ({match, hideDownload}: ScoresheetProps) => {
   const viewport = useViewport();
   const isSmall = viewport.width < 550;
 
   if (match.competition === 'Sporta') {
     return (
       <>
-        <ExcelButton
-          onClick={() => downloadScoresheetExcel(match)}
-          tooltip={match.isHomeMatch ? 'Download Scoresheet' : 'Download Scoresheet (UIT match???)'}
-          className={`pull-right ${match.isHomeMatch ? 'btn-success' : 'btn-danger'}`}
-          style={{margin: 6}}
-        />
+        {!hideDownload && (
+          <ExcelButton
+            onClick={() => downloadScoresheetExcel(match)}
+            tooltip={match.isHomeMatch ? 'Download Scoresheet' : 'Download Scoresheet (UIT match???)'}
+            className={`pull-right ${match.isHomeMatch ? 'btn-success' : 'btn-danger'}`}
+            style={{margin: 6}}
+          />
+        )}
         <Table size="sm" className="match-card-tab-table">
           <thead>
             <tr>
