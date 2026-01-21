@@ -11,9 +11,12 @@ import { TeamPlayerPerformance } from './TeamPlayerPerformance/TeamPlayerPerform
 import { PlayerEvents } from './PlayerEvents/PlayerEvents';
 import { useTtcDispatch } from '../../utils/hooks/storeHooks';
 import { fetchPlayerEvents } from '../../reducers/playersReducer';
+import { useViewport } from '../../utils/hooks/useViewport';
 
 export const Dashboard = () => {
   const dispatch = useTtcDispatch();
+  const viewport = useViewport();
+  const isMobile = viewport.width < 768;
 
   useEffect(() => {
     dispatch(fetchPlayerEvents());
@@ -30,12 +33,13 @@ export const Dashboard = () => {
           <Eetfestijn />
           <DashboardUpcomingMatches />
           <DashboardGlobalTeamStats />
+          {isMobile && <DashboardRankingPredictions />}
           <DashboardRecentMatches />
           <TeamPlayerPerformance />
         </Col>
 
         <Col lg={3} md={4}>
-          <DashboardRankingPredictions />
+          {!isMobile && <DashboardRankingPredictions />}
           <PlayerEvents />
         </Col>
       </Row>
