@@ -16,13 +16,13 @@ export const OpponentPlayerLabel = ({ player, competition, fullName = true }: Op
   return (
     <span>
       {fullName ? (
-        <span style={{ marginRight: 7 }}>{displayName}</span>
+        <span style={{ marginRight: 4 }}>{displayName}</span>
       ) : (
         <button
           type="button"
           onClick={() => setShowFullName(!showFullName)}
           style={{
-            marginRight: 7,
+            marginRight: 4,
             background: 'none',
             border: 'none',
             padding: 0,
@@ -34,10 +34,9 @@ export const OpponentPlayerLabel = ({ player, competition, fullName = true }: Op
           {displayName}
         </button>
       )}
-      <small>
+      <small style={{color: '#666'}}>
         <FrenoyLink competition={competition} uniqueIndex={player.uniqueIndex}>
-          {player.ranking}
-          &nbsp;
+          ({player.ranking})&nbsp;
         </FrenoyLink>
       </small>
     </span>

@@ -10,10 +10,11 @@ import { IGetGameMatches, IMatch, IMatchPlayer } from '../../../models/model-int
 type OwnPlayerProps = {
   match: IMatch;
   ply: IMatchPlayer;
-  playerAsBadge?: boolean,
+  playerAsBadge?: boolean;
+  showRanking?: boolean;
 };
 
-const OwnPlayer = ({match, ply, playerAsBadge = false}: OwnPlayerProps) => {
+const OwnPlayer = ({match, ply, playerAsBadge = false, showRanking = false}: OwnPlayerProps) => {
   const result = getRankingResults(match, ply);
   if (result.wo) {
     return <s>{ply.alias}</s>;
@@ -21,10 +22,13 @@ const OwnPlayer = ({match, ply, playerAsBadge = false}: OwnPlayerProps) => {
 
   const teamPlayerCount = match.getTeam().getTeamPlayerCount();
   const winNode = renderWinsNode(result, teamPlayerCount);
+  const player = storeUtil.getPlayer(ply.playerId);
   const plyInfo = {
-    player: storeUtil.getPlayer(ply.playerId),
+    player,
     matchPlayer: {status: ply.status},
   };
+
+  const ranking = match.competition === 'Vttl' ? player?.vttl?.ranking : player?.sporta?.ranking;
 
   return (
     <div style={{marginRight: 10}}>
@@ -33,6 +37,7 @@ const OwnPlayer = ({match, ply, playerAsBadge = false}: OwnPlayerProps) => {
       ) : (
         <span className="accentuate" style={{marginRight: 7}}>
           <strong><PlayerLink player={plyInfo.player} alias /></strong>
+          {showRanking && ranking && <small style={{marginLeft: 4, color: '#666'}}>({ranking})</small>}
         </span>
       )}
       {result.win.length !== teamPlayerCount && result.win.length ? <ThumbsUpIcon /> : null}
