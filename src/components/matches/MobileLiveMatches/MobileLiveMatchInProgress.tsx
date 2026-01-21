@@ -259,7 +259,7 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
     <div>
       <SectionTitle>{t('match.tabs.clubTitle')}</SectionTitle>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {!match.isStandardStartTime && (
+        {!match.isStandardStartTime() && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Icon fa="fa fa-clock-o" />
             <span style={{ fontWeight: 600 }}>{match.date.format('HH:mm')}</span>

@@ -353,7 +353,7 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
   const showFormation = !isPast && !hasScore && formation.length > 0;
 
   // Hide time for default start times on future matches
-  const showTime = !hasScore && !match.isStandardStartTime;
+  const showTime = !hasScore && !match.isStandardStartTime();
 
   const scoreElement = hasScore && (
     <Link
