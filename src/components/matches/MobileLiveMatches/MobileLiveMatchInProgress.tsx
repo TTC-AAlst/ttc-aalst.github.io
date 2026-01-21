@@ -9,6 +9,8 @@ import { IndividualMatches } from '../Match/IndividualMatches';
 import { MatchReport } from '../Match/MatchReport';
 import { OpponentsLastMatches } from '../Match/OpponentsLastMatches';
 import { OpponentsFormation } from '../Match/OpponentsFormation';
+import { OpponentsTeamFormation } from '../Match/OpponentsTeamFormation';
+import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponentMatches';
 import { PreviousEncounters } from '../Match/PreviousEncounters';
 import { Scoresheet } from '../Match/Scoresheet';
 import { PlayerCompetitionBadge } from '../../players/PlayerBadges';
@@ -99,6 +101,8 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const [showEncountersModal, setShowEncountersModal] = useState(false);
   const user = useTtcSelector(selectUser);
   const dispatch = useTtcDispatch();
+  const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match));
+  const opponentMatchesList = [...opponentMatches.home, ...opponentMatches.away];
 
   const hasReportOrComments = !!match.description || match.comments.length > 0;
   const hasTheirPlayers = match.getTheirPlayers().length > 0;
@@ -172,10 +176,14 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body style={{padding: 6}}>
-          <h4>{t('match.tabs.opponentsRankingTitle')}</h4>
-          <OpponentsLastMatches match={match} />
-          <h4 style={{marginTop: 24}}>{t('match.tabs.opponentsFormationTitle')}</h4>
+          <h4>{t('match.tabs.opponentsFormationTitle')}</h4>
+          <OpponentsTeamFormation matches={opponentMatchesList} opponent={match.opponent} limitRows />
+
+          <h4 style={{marginTop: 24}}>{t('teamCalendar.individual')}</h4>
           <OpponentsFormation match={match} opponent={match.opponent} />
+
+          <h4 style={{marginTop: 24}}>{t('match.tabs.opponentsRankingTitle')}</h4>
+          <OpponentsLastMatches match={match} />
         </Modal.Body>
       </Modal>
 
