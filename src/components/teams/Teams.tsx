@@ -93,7 +93,7 @@ export const Teams = () => {
 
     const transView = (key: string) => t(`teamCalendar.view.${key}`);
     const viewsKeys = ['main', 'week', 'matches', 'ranking', 'players'];
-    if (user.playerId && viewport.width > 1000) {
+    if (user.canEditMatchesOrIsCaptain() && viewport.width > 1000) {
       viewsKeys.splice(3, 0, 'matchesTable');
     }
     const viewsConfig = viewsKeys.map(v => ({key: v, text: transView(v)}));
