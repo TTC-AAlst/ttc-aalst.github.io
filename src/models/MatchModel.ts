@@ -2,7 +2,6 @@ import moment, {Moment} from 'moment';
 import storeUtil from '../storeUtil';
 import PlayerModel from './PlayerModel';
 import {OwnClubId} from './ClubModel';
-import {sortMappedPlayers} from './TeamModel';
 import {IMatch, ITeam, Competition, IMatchScore, MatchScoreType, IMatchPlayer, IMatchGame,
   ITeamOpponent, IClub, IMatchPlayerInfo, IPlayer, IGetGameMatches,
   MatchPlayerStatus} from './model-interfaces';

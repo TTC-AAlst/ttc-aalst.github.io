@@ -27,6 +27,7 @@ type MobileLiveMatchInProgressProps = {
 export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressProps) => {
   const hasPlayersOrGames = match.games.length || match.getTheirPlayers().length;
   const hasStarted = match.date.isBefore(moment());
+  const canEnterOpponents = match.date.clone().subtract(1, 'hour').isBefore(moment());
 
   // Pre-start: show our formation and away match details
   if (!hasPlayersOrGames) {
@@ -34,7 +35,7 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 8 }}>
         <OurFormationPreStart match={match} />
         {!match.isHomeMatch && !hasStarted && <AwayMatchDetails match={match} />}
-        {hasStarted && <OpponentPlayersPreStart match={match} />}
+        {canEnterOpponents && <OpponentPlayersPreStart match={match} />}
         <MatchActionButtons match={match} />
         {hasStarted && <MatchDetailsLink match={match} />}
       </div>
@@ -249,17 +250,15 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
 const AwayMatchDetails = ({ match }: { match: IMatch }) => {
   const club = match.getOpponentClub();
   const loc = club?.mainLocation;
-  const startHour = match.date.format('HH:mm');
-  const isNonDefaultTime = startHour !== '19:30' && startHour !== '14:00';
 
   return (
     <div>
       <SectionTitle>{t('match.tabs.clubTitle')}</SectionTitle>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {isNonDefaultTime && (
+        {!match.isStandardStartTime && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Icon fa="fa fa-clock-o" />
-            <span style={{ fontWeight: 600 }}>{startHour}</span>
+            <span style={{ fontWeight: 600 }}>{match.date.format('HH:mm')}</span>
           </div>
         )}
         {loc?.address ? (

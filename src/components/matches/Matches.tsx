@@ -27,11 +27,6 @@ const isMatchHidden = (match: IMatch): boolean => {
   return false;
 };
 
-const isDefaultStartTime = (match: IMatch): boolean => {
-  const hour = match.date.format('HH:mm');
-  return hour === '19:30' || hour === '14:00' || hour === '20:00';
-};
-
 const groupMatchesByDate = (matches: IMatch[]): GroupedMatches[] => {
   const groups: { [key: string]: IMatch[] } = {};
   matches.filter(m => !isMatchHidden(m)).forEach(match => {
@@ -358,7 +353,7 @@ const MatchRow = ({ match, isPast, isToday, userId }: MatchRowProps) => {
   const showFormation = !isPast && !hasScore && formation.length > 0;
 
   // Hide time for default start times on future matches
-  const showTime = !hasScore && !isDefaultStartTime(match);
+  const showTime = !hasScore && !match.isStandardStartTime;
 
   const scoreElement = hasScore && (
     <Link
