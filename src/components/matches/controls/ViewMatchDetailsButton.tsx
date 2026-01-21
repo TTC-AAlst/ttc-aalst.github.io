@@ -29,7 +29,7 @@ export class ViewMatchDetailsButton extends Component<ViewMatchDetailsButtonProp
         className={cn({'btn btn-outline-secondary': !score, clickable: !!score, [`btn-${size}`]: !!size})}
         to={t.route('match', {matchId: match.id})}
       >
-        {score ? <MatchScore match={match} style={{fontSize: size === 'sm' ? 12 : 16}} showComments /> : t('match.details')}
+        {score ? <MatchScore match={match} style={{fontSize: size === 'sm' ? 12 : 16}} showComments noLink /> : t('match.details')}
       </Link>
     );
   }
@@ -75,7 +75,7 @@ export const MatchOtherRoundButton = ({match, shortLabel, small}: MatchOtherRoun
       className={cn('btn btn-outline-secondary', {'btn-sm': small})}
       style={small ? undefined : {margin: 7}}
     >
-      {label} <MatchScore match={otherRoundMatch} forceDisplay />
+      {label} <MatchScore match={otherRoundMatch} forceDisplay noLink />
     </Link>
   );
 

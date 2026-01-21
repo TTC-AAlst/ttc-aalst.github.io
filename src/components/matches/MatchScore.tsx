@@ -27,9 +27,11 @@ type MatchScoreProps = {
   forceDisplay?: boolean,
   showComments?: boolean,
   showThrophy?: boolean,
+  /** When true, don't wrap in a Link (useful when already inside a Link) */
+  noLink?: boolean,
 }
 
-export const MatchScore = ({showThrophy = true, ...props}: MatchScoreProps) => {
+export const MatchScore = ({showThrophy = true, noLink = false, ...props}: MatchScoreProps) => {
   const viewport = useViewport();
 
   let match: IMatch | undefined;
@@ -41,40 +43,43 @@ export const MatchScore = ({showThrophy = true, ...props}: MatchScoreProps) => {
         return null;
       }
       const classColor2 = props.match.isDerby ? 'match-won' : getClassName(match.isHomeMatch, match.score.home, match.score.out);
-      return (
-        <Link to={t.route('match', {matchId: match.id})}>
-          <span
-            className={cn('badge label-as-badge clickable', classColor2, props.className)}
-            title={t('match.previousEncounterScore')}
-            style={props.style}
-          >
-
-            <Icon fa="fa fa-long-arrow-left" style={{marginRight: 7}} />
-            <span>{match.renderScore()}</span>
-          </span>
-        </Link>
+      const badge = (
+        <span
+          className={cn('badge label-as-badge clickable', classColor2, props.className)}
+          title={t('match.previousEncounterScore')}
+          style={props.style}
+        >
+          <Icon fa="fa fa-long-arrow-left" style={{marginRight: 7}} />
+          <span>{match.renderScore()}</span>
+        </span>
       );
+      if (noLink) {
+        return badge;
+      }
+      return <Link to={t.route('match', {matchId: match.id})}>{badge}</Link>;
     }
   }
 
   const score = match.score || {home: 0, out: 0};
   const classColor = match.isDerby ? 'match-won' : getClassName(match.isHomeMatch, score.home, score.out);
-  return (
-    <Link to={t.route('match', {matchId: match.id})}>
-      <span
-        className={cn('badge label-as-badge clickable', props.className, classColor)}
-        style={props.style}
-      >
-        <span>
-          {classColor === 'match-won' && !match.isDerby && viewport.width > 350 && showThrophy ? (
-            <TrophyIcon style={{marginRight: 7, fontWeight: 'normal'}} color="#FFE568" />
-          ) : null}
-          {`${score.home} - ${score.out}`}
-          {props.showComments && (match.comments.length || match.description) ? (
-            <CommentIcon style={{marginLeft: 8}} tooltip={t('match.scoreComment')} />
-          ) : null}
-        </span>
+  const badge = (
+    <span
+      className={cn('badge label-as-badge clickable', props.className, classColor)}
+      style={props.style}
+    >
+      <span>
+        {classColor === 'match-won' && !match.isDerby && viewport.width > 350 && showThrophy ? (
+          <TrophyIcon style={{marginRight: 7, fontWeight: 'normal'}} color="#FFE568" />
+        ) : null}
+        {`${score.home} - ${score.out}`}
+        {props.showComments && (match.comments.length || match.description) ? (
+          <CommentIcon style={{marginLeft: 8}} tooltip={t('match.scoreComment')} />
+        ) : null}
       </span>
-    </Link>
+    </span>
   );
+  if (noLink) {
+    return badge;
+  }
+  return <Link to={t.route('match', {matchId: match.id})}>{badge}</Link>;
 };

@@ -332,6 +332,10 @@ export default {
       uit: "Uit",
       navigateToClub: "Bekijk op kaart",
       details: "Details",
+      expandAll: "Alles uitklappen",
+      collapseAll: "Alles inklappen",
+      expand: "Uitklappen",
+      collapse: "Inklappen",
       tabs: {
         players: "Spelers",
         playersTitle: "Onze opstelling",
