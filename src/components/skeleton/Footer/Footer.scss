@@ -48,6 +48,10 @@ body {
 
     img {
       max-width: 80%;
+
+      // Fix Chrome/Edge SVG rendering glitch
+      // It was displaying a diagonal striped-line on some pages (ex: /vandaag, dashboard, ...)
+      transform: translateZ(0);
     }
   }
 }
