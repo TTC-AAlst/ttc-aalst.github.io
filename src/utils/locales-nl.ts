@@ -326,6 +326,10 @@ export default {
       previousEncounterScore: "Uitslag heenronde",
       gotoPreviousEncounter: "Details heenronde",
       gotoNextEncounter: "Details terugronde",
+      heenronde: "Heenronde",
+      terugronde: "Terugronde",
+      thuis: "Thuis",
+      uit: "Uit",
       details: "Details",
       tabs: {
         players: "Spelers",

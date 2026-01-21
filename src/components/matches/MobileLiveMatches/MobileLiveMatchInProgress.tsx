@@ -20,6 +20,7 @@ import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
 import { getPreviousEncounters } from '../../../reducers/matchInfoReducer';
 import { OpponentPlayerSelector } from './OpponentPlayerSelector';
 import { TeamRankingBadges } from '../../teams/controls/TeamRankingBadges';
+import { MatchOtherRoundButton } from '../controls/ViewMatchDetailsButton';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
@@ -127,6 +128,7 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
           <Button variant="outline-secondary" onClick={() => setShowOpponentModal(true)}>
             {t('match.individual.opponentPlayer')}
           </Button>
+          <MatchOtherRoundButton match={match} shortLabel small />
           {hasTheirPlayers && (
             <Button variant="outline-secondary" onClick={() => setShowEncountersModal(true)}>
               {t('match.tabs.previousEncounters')}
