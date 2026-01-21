@@ -3,7 +3,7 @@ import request from 'superagent';
 import moment from 'moment';
 import t from '../locales';
 import { IMatch } from '../models/model-interfaces';
-import { config, devUrl } from '../config';
+import { config, devUrl, isDev } from '../config';
 
 const LogRequestTimes = false;
 
@@ -19,9 +19,9 @@ export function getUrl(path, appendApi = true) {
     path = `/api${path}`;
   }
 
-  return window.location.hostname !== 'localhost'
-    ? `${config.backend}${path}`
-    : `${devUrl}${path}`;
+  return isDev()
+    ? `${devUrl}${path}`
+    : `${config.backend}${path}`;
 }
 
 function bearer(req) {

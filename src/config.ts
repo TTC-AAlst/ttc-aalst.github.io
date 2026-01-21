@@ -7,15 +7,19 @@ export const config = {
 
 export const devUrl = 'http://localhost:5193';
 
+export function isDev() {
+  return window.location.hostname === 'localhost' || window.location.hostname.startsWith('192.168.');
+}
+
 export function getSignalRUrl() {
-  return window.location.hostname !== 'localhost'
-    ? `${config.backend}/hubs/ttc`
-    : `${devUrl}/hubs/ttc`;
+  return isDev()
+    ? `${devUrl}/hubs/ttc`
+    : `${config.backend}/hubs/ttc`;
 }
 
 
 export function getStaticFileUrl(path: string) {
-  return window.location.hostname !== 'localhost'
-    ? `${config.images}${path}`
-    : `${devUrl}${path}`;
+  return isDev()
+    ? `${devUrl}${path}`
+    : `${config.images}${path}`;
 }
