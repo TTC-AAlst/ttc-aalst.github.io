@@ -1,6 +1,6 @@
 node_modules
 dist
-npm-debug.log
+bun-debug.log
 public/img/players
 todo.txt
 .claude/settings.local.json
