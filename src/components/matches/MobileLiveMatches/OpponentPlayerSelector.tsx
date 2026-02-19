@@ -68,6 +68,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
   const opponentMatchesList = [...opponentMatches.home, ...opponentMatches.away];
 
   const requiredPlayerCount = match.getTeamPlayerCount();
+  const existingOpponents = match.getTheirPlayers();
   const [isFormOpen, setIsFormOpen] = useState(initialOpen);
   const [selectedPlayers, setSelectedPlayers] = useState<ClubPlayer[]>([]);
   const [isSaving, setIsSaving] = useState(false);
@@ -79,6 +80,17 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
       dispatch(fetchClubPlayers({ competition: match.competition, clubCode }));
     }
   }, [dispatch, match.competition, clubCode, clubPlayers, isFormOpen, initialOpen]);
+
+  useEffect(() => {
+    if (clubPlayers && existingOpponents.length > 0 && selectedPlayers.length === 0) {
+      const preSelected = existingOpponents
+        .map(op => clubPlayers.find(cp => cp.uniqueIndex === op.uniqueIndex))
+        .filter(Boolean) as ClubPlayer[];
+      if (preSelected.length > 0) {
+        setSelectedPlayers(preSelected);
+      }
+    }
+  }, [clubPlayers]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePlayerToggle = (player: ClubPlayer) => {
     setSelectedPlayers(prev => {
@@ -92,7 +104,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
       const next = [...prev, player];
       if (next.length === requiredPlayerCount) {
         handleSave(next);
-      } else {
+      } else if (searchText) {
         setSearchText('');
         searchRef.current?.focus();
       }
@@ -102,9 +114,6 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
 
   const handleSave = async (players?: ClubPlayer[]) => {
     const toSave = players || selectedPlayers;
-    if (toSave.length !== requiredPlayerCount) {
-      return;
-    }
     setIsSaving(true);
     try {
       await dispatch(editOpponentPlayers({ matchId: match.id, players: toSave }));
@@ -162,7 +171,12 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
 
   const filteredPlayers = clubPlayers
     .filter(player => latinize(player.name).includes(latinize(searchText)))
-    .sort((a, b) => (playerFrequency[b.uniqueIndex] || 0) - (playerFrequency[a.uniqueIndex] || 0));
+    .sort((a, b) => {
+      const aSelected = selectedPlayers.some(p => p.uniqueIndex === a.uniqueIndex);
+      const bSelected = selectedPlayers.some(p => p.uniqueIndex === b.uniqueIndex);
+      if (aSelected !== bSelected) return aSelected ? -1 : 1;
+      return (playerFrequency[b.uniqueIndex] || 0) - (playerFrequency[a.uniqueIndex] || 0);
+    });
   return (
     <div>
       <div style={{ marginBottom: 8 }}>
@@ -203,7 +217,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
           variant="primary"
           size="sm"
           onClick={() => handleSave()}
-          disabled={selectedPlayers.length !== requiredPlayerCount || isSaving}
+          disabled={selectedPlayers.length === 0 || isSaving}
         >
           {isSaving ? (
             <>

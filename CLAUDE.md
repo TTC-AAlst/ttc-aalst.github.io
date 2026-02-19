@@ -149,10 +149,12 @@ Configured globally in `index.tsx`.
 
 ### Testing
 
-Tests use Jest with jsdom environment:
-- Test files: `**/spec/**/*Spec.ts`
+Tests use Jest with jsdom environment and React Testing Library for component tests:
+- Test files: `**/spec/**/*Spec.ts` (models) or `**/spec/**/*Spec.tsx` (components)
 - Config: `jest.config.js` (uses `test-tsconfig.json`)
 - Run individual test: `npm test -- <path/to/spec>`
+- Shared test utility: `src/utils/test-utils.tsx` (`renderWithProviders` with Redux store)
+- **Boy scout rule:** when touching a component, add or update tests for it
 
 ### ESLint Rules
 
