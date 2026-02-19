@@ -3,6 +3,7 @@ import { Button, Form, Spinner } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import { useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { ClubPlayer, fetchClubPlayers, selectClubPlayers, selectClubPlayersLoading, editOpponentPlayers } from '../../../reducers/clubPlayersReducer';
+import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponentMatches';
 import { t } from '../../../locales';
 import { Icon } from '../../controls/Icons/Icon';
 
@@ -63,6 +64,8 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
 
   const clubPlayers = useTtcSelector(state => selectClubPlayers(state, match.competition, clubCode || ''));
   const isLoading = useTtcSelector(state => selectClubPlayersLoading(state, match.competition, clubCode || ''));
+  const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match));
+  const opponentMatchesList = [...opponentMatches.home, ...opponentMatches.away];
 
   const requiredPlayerCount = match.getTeamPlayerCount();
   const [isFormOpen, setIsFormOpen] = useState(initialOpen);
@@ -152,7 +155,14 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
     onClose?.();
   };
 
-  const filteredPlayers = clubPlayers.filter(player => latinize(player.name).includes(latinize(searchText)));
+  // Count how often each player appeared in opponent team matches this season
+  const playerFrequency: Record<number, number> = opponentMatchesList
+    .flatMap(m => m.players)
+    .reduce((acc, p) => ({ ...acc, [p.uniqueIndex]: (acc[p.uniqueIndex] || 0) + 1 }), {} as Record<number, number>);
+
+  const filteredPlayers = clubPlayers
+    .filter(player => latinize(player.name).includes(latinize(searchText)))
+    .sort((a, b) => (playerFrequency[b.uniqueIndex] || 0) - (playerFrequency[a.uniqueIndex] || 0));
   return (
     <div>
       <div style={{ marginBottom: 8 }}>
