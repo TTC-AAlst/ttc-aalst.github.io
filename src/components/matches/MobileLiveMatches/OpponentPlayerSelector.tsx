@@ -6,6 +6,8 @@ import { ClubPlayer, fetchClubPlayers, selectClubPlayers, selectClubPlayersLoadi
 import { t } from '../../../locales';
 import { Icon } from '../../controls/Icons/Icon';
 
+const latinize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
 type OpponentPlayerSelectorProps = {
   match: IMatch;
   initialOpen?: boolean;
@@ -141,7 +143,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
     onClose?.();
   };
 
-  const filteredPlayers = clubPlayers.filter(player => player.name.toLowerCase().includes(searchText.toLowerCase()));
+  const filteredPlayers = clubPlayers.filter(player => latinize(player.name).includes(latinize(searchText)));
   return (
     <div>
       <div style={{ marginBottom: 8 }}>
