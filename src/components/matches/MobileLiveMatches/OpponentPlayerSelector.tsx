@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import { useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
@@ -69,6 +69,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
   const [selectedPlayers, setSelectedPlayers] = useState<ClubPlayer[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if ((isFormOpen || initialOpen) && clubCode && !clubPlayers) {
@@ -85,17 +86,25 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
       if (prev.length >= requiredPlayerCount) {
         return prev;
       }
-      return [...prev, player];
+      const next = [...prev, player];
+      if (next.length === requiredPlayerCount) {
+        handleSave(next);
+      } else {
+        setSearchText('');
+        searchRef.current?.focus();
+      }
+      return next;
     });
   };
 
-  const handleSave = async () => {
-    if (selectedPlayers.length !== requiredPlayerCount) {
+  const handleSave = async (players?: ClubPlayer[]) => {
+    const toSave = players || selectedPlayers;
+    if (toSave.length !== requiredPlayerCount) {
       return;
     }
     setIsSaving(true);
     try {
-      await dispatch(editOpponentPlayers({ matchId: match.id, players: selectedPlayers }));
+      await dispatch(editOpponentPlayers({ matchId: match.id, players: toSave }));
       setIsFormOpen(false);
       onClose?.();
     } finally {
@@ -148,6 +157,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
     <div>
       <div style={{ marginBottom: 8 }}>
         <Form.Control
+          ref={searchRef}
           type="text"
           size="sm"
           placeholder={t('common.search')}
@@ -182,7 +192,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
         <Button
           variant="primary"
           size="sm"
-          onClick={handleSave}
+          onClick={() => handleSave()}
           disabled={selectedPlayers.length !== requiredPlayerCount || isSaving}
         >
           {isSaving ? (
