@@ -1,8 +1,9 @@
+@use './Match.scss';
+
 @import '../../../node_modules/normalize.css/normalize.css';
 @import '../variables.css';
 
 @import './AppDefaults.css';
-@import './Match.scss';
 @import './Intro.css';
 
 @import '../../../node_modules/font-awesome-animation/dist/font-awesome-animation.min.css';
