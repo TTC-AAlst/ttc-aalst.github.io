@@ -12,7 +12,7 @@ import { t } from '../../../locales';
 import { useViewport } from '../../../utils/hooks/useViewport';
 import { useTtcSelector } from '../../../utils/hooks/storeHooks';
 
-require('./Header.css');
+import './Header.css';
 
 const HeaderButton = ({label, href}: {label: string, href: string}) => (
   <Link to={href}>

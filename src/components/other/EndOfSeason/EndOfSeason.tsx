@@ -10,7 +10,7 @@ import { ClubEvents } from '../ClubEvents';
 
 // TODO: This thing crashes on PlayerLink --> Probably when there is someone in the achievements that has left the club
 
-require('./achievements.css');
+import './achievements.css';
 
 export const EndOfSeason = () => {
   const players = useTtcSelector(selectPlayers);

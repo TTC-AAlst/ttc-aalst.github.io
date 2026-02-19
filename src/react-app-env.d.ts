@@ -1,5 +1,3 @@
-// / <reference types="react-scripts" />
-
 // https://github.com/JedWatson/classnames/blob/main/index.d.ts
 declare module 'classnames' {
   type Value = string | number | null | undefined | boolean;
