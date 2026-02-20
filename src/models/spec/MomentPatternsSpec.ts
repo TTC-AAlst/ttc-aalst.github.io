@@ -78,6 +78,31 @@ describe('moment.js API patterns used in codebase', () => {
       expect(oneHourBefore.hours()).toBe(19);
       expect(matchDate.hours()).toBe(20); // original unchanged
     });
+
+    it('canEnterOpponents: true when within 1 hour before match start', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2025, 2, 15, 19, 30, 0)); // 19:30, match at 20:00
+
+      const matchDate = moment('2025-03-15T20:00:00');
+      // match.date.clone().subtract(1, 'hour').isBefore(moment())
+      // 19:00.isBefore(19:30) = true → can enter
+      const canEnterOpponents = matchDate.clone().subtract(1, 'hour').isBefore(moment());
+      expect(canEnterOpponents).toBe(true);
+
+      vi.useRealTimers();
+    });
+
+    it('canEnterOpponents: false when more than 1 hour before match', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2025, 2, 15, 18, 30, 0)); // 18:30, match at 20:00
+
+      const matchDate = moment('2025-03-15T20:00:00');
+      // 19:00.isBefore(18:30) = false → cannot enter yet
+      const canEnterOpponents = matchDate.clone().subtract(1, 'hour').isBefore(moment());
+      expect(canEnterOpponents).toBe(false);
+
+      vi.useRealTimers();
+    });
   });
 
   describe('diff sorting (PreviousEncounters, OpponentsFormation, IndividualMatches)', () => {
@@ -96,6 +121,30 @@ describe('moment.js API patterns used in codebase', () => {
     });
   });
 
+  describe('valueOf sorting with inline moment construction (PlayerEvents)', () => {
+    it('sorts string dates descending using moment(b).valueOf() - moment(a).valueOf()', () => {
+      const events = [
+        {createdOn: '2025-03-10T10:00:00'},
+        {createdOn: '2025-03-15T20:00:00'},
+        {createdOn: '2025-03-12T14:00:00'},
+      ];
+      const sorted = [...events].sort(
+        (a, b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf(),
+      );
+      expect(sorted.map(e => e.createdOn)).toEqual([
+        '2025-03-15T20:00:00',
+        '2025-03-12T14:00:00',
+        '2025-03-10T10:00:00',
+      ]);
+    });
+
+    it('handles equal dates in valueOf subtraction', () => {
+      const a = moment('2025-03-15T20:00:00');
+      const b = moment('2025-03-15T20:00:00');
+      expect(b.valueOf() - a.valueOf()).toBe(0);
+    });
+  });
+
   describe('fromNow (TimeAgo)', () => {
     it('returns a relative time string', () => {
       const recentDate = moment().subtract(5, 'minutes');
@@ -104,9 +153,15 @@ describe('moment.js API patterns used in codebase', () => {
       expect(result.length).toBeGreaterThan(0);
     });
 
-    it('handles past dates', () => {
+    it('handles past dates with full nl-be locale format', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2025, 2, 15, 12, 0, 0));
+
       const pastDate = moment().subtract(3, 'days');
-      expect(pastDate.fromNow()).toMatch(/dagen/); // nl-be: "3 dagen geleden"
+      const result = pastDate.fromNow();
+      expect(result).toBe('3 dagen geleden');
+
+      vi.useRealTimers();
     });
   });
 
@@ -167,6 +222,29 @@ describe('moment.js API patterns used in codebase', () => {
     });
   });
 
+  describe('next vs previous match partitioning (TeamOverview)', () => {
+    it('match on today appears in next, not previous', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2025, 2, 15, 10, 0, 0)); // Mar 15 10:00
+
+      const today = moment().startOf('day');
+      const matchToday = moment('2025-03-15T20:00:00');
+      const matchYesterday = moment('2025-03-14T20:00:00');
+      const matchTomorrow = moment('2025-03-16T20:00:00');
+
+      // TeamOverview logic: next = isSame(today, 'day') || isAfter(today, 'day')
+      expect(matchToday.isSame(today, 'day') || matchToday.isAfter(today, 'day')).toBe(true);
+      expect(matchTomorrow.isSame(today, 'day') || matchTomorrow.isAfter(today, 'day')).toBe(true);
+      expect(matchYesterday.isSame(today, 'day') || matchYesterday.isAfter(today, 'day')).toBe(false);
+
+      // previous = isBefore(today, 'day')
+      expect(matchYesterday.isBefore(today, 'day')).toBe(true);
+      expect(matchToday.isBefore(today, 'day')).toBe(false);
+
+      vi.useRealTimers();
+    });
+  });
+
   describe('duration (MatchModel.isBeingPlayed)', () => {
     it('calculates absolute hours difference', () => {
       const now = moment('2025-03-15T21:00:00');
@@ -182,6 +260,29 @@ describe('moment.js API patterns used in codebase', () => {
       const diff = moment.duration(now.diff(matchDate)).asHours();
       expect(diff).toBe(-1);
       expect(Math.abs(diff) < 14).toBe(true);
+    });
+  });
+
+  describe('invalid input handling (MatchModel constructor, TimeAgo)', () => {
+    it('moment(null) creates an invalid moment', () => {
+      const m = moment(null as any);
+      expect(m.isValid()).toBe(false);
+      expect(m.format('YYYY-MM-DD')).toBe('Invalid date');
+    });
+
+    it('moment(undefined) is treated as moment() — valid current time', () => {
+      const m = moment(undefined as any);
+      expect(m.isValid()).toBe(true);
+    });
+
+    it('moment("garbage") creates an invalid moment', () => {
+      const m = moment('not-a-date');
+      expect(m.isValid()).toBe(false);
+    });
+
+    it('moment(validString).isValid() returns true', () => {
+      const m = moment('2025-03-15T20:00:00');
+      expect(m.isValid()).toBe(true);
     });
   });
 });

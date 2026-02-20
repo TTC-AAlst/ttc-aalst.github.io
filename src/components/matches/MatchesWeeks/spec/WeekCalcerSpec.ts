@@ -67,6 +67,20 @@ describe('WeekCalcer', () => {
       expect(weekMatches.map(m => m.id)).toEqual([1, 2]);
     });
 
+    it('includes match at exact week start boundary', () => {
+      // Monday 00:00:00 is the startOf('week') in nl-be locale
+      // The week.start is set via clone().startOf('week'), so a match
+      // at exactly Monday 00:00 must be included
+      const matches = [
+        createMatch('2025-03-10T00:00:00', 1), // Monday midnight = exact startOf('week')
+        createMatch('2025-03-12T20:00:00', 2), // Wednesday same week
+      ];
+      const wc = new WeekCalcer(matches, 1);
+      const weekMatches = wc.getMatches();
+      expect(weekMatches.length).toBe(2);
+      expect(weekMatches.map(m => m.id)).toEqual([1, 2]);
+    });
+
     it('returns matches for a different week', () => {
       const matches = [
         createMatch('2025-03-10T20:00:00', 1),
@@ -88,6 +102,36 @@ describe('WeekCalcer', () => {
       ];
       const wc = new WeekCalcer(matches, 2);
       expect(wc.currentWeek).toBe(2);
+    });
+
+    it('detects current week when today falls within a match week', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2025, 2, 12, 10, 0, 0)); // Wed Mar 12 2025
+
+      const matches = [
+        createMatch('2025-03-03T20:00:00', 1),  // week 1 (Mar 3-9)
+        createMatch('2025-03-10T20:00:00', 2),  // week 2 (Mar 10-16) ← today is here
+        createMatch('2025-03-17T20:00:00', 3),  // week 3 (Mar 17-23)
+      ];
+      const wc = new WeekCalcer(matches);
+      expect(wc.currentWeek).toBe(2);
+
+      vi.useRealTimers();
+    });
+
+    it('advances to next match week when today is between match weeks', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2025, 2, 19, 10, 0, 0)); // Wed Mar 19, between week 2 and 3
+
+      const matches = [
+        createMatch('2025-03-10T20:00:00', 1),  // week 1 (Mar 10-16)
+        createMatch('2025-03-24T20:00:00', 2),  // week 2 (Mar 24-30) ← skipped Mar 17 week
+      ];
+      const wc = new WeekCalcer(matches);
+      // Loop should advance past Mar 17 week (no match) and find Mar 24 week
+      expect(wc.currentWeek).toBe(2);
+
+      vi.useRealTimers();
     });
 
     it('falls back to last week when all matches are in the past', () => {

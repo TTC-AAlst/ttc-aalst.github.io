@@ -96,6 +96,69 @@ describe('MatchModel date methods', () => {
       const match = createMatch(farFuture);
       expect(match.isBeingPlayed()).toBe(false);
     });
+
+    it('returns false at exactly 14 hours boundary', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2025, 2, 15, 10, 0, 0)); // Mar 15 10:00
+
+      // Match was 14 hours ago: Mar 14 20:00
+      const match = createMatch('2025-03-14T20:00:00');
+      // Math.abs(diff) < 14 → 14 is NOT less than 14, so false
+      expect(match.isBeingPlayed()).toBe(false);
+
+      vi.useRealTimers();
+    });
+
+    it('returns true just under 14 hours', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2025, 2, 15, 9, 59, 0)); // Mar 15 09:59
+
+      // Match was at Mar 14 20:00 → 13h59m ago
+      const match = createMatch('2025-03-14T20:00:00');
+      expect(match.isBeingPlayed()).toBe(true);
+
+      vi.useRealTimers();
+    });
+  });
+
+  describe('comment postedOn parsing', () => {
+    it('converts comment postedOn strings to moment objects', () => {
+      const match = new MatchModel({
+        id: 1,
+        date: '2025-03-15T20:00:00',
+        competition: 'Vttl',
+        players: [],
+        games: [],
+        comments: [
+          {id: 1, text: 'Great match', postedOn: '2025-03-15T22:30:00', playerId: 1},
+        ],
+        opponent: {clubId: 1, teamCode: 'A'},
+        isHomeMatch: true,
+        score: {home: 10, out: 6},
+      });
+      expect(moment.isMoment(match.comments[0].postedOn)).toBe(true);
+      expect(match.comments[0].postedOn.hours()).toBe(22);
+      expect(match.comments[0].postedOn.minutes()).toBe(30);
+    });
+
+    it('preserves other comment properties alongside postedOn', () => {
+      const match = new MatchModel({
+        id: 1,
+        date: '2025-03-15T20:00:00',
+        competition: 'Vttl',
+        players: [],
+        games: [],
+        comments: [
+          {id: 42, text: 'Nice one', postedOn: '2025-03-15T23:00:00', playerId: 7},
+        ],
+        opponent: {clubId: 1, teamCode: 'A'},
+        isHomeMatch: true,
+        score: {home: 10, out: 6},
+      });
+      expect(match.comments[0].id).toBe(42);
+      expect(match.comments[0].text).toBe('Nice one');
+      expect(match.comments[0].playerId).toBe(7);
+    });
   });
 
   describe('date parsing', () => {
