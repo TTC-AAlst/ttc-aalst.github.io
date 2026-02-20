@@ -10,7 +10,7 @@ type QuillEditorProps = {
 }
 
 export const QuillEditor = (props: QuillEditorProps) => {
-  const quillRef = useRef<any>();
+  const quillRef = useRef<any>(null);
   return <Editor ref={quillRef} {...props} />;
 };
 
