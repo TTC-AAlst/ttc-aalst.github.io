@@ -29,7 +29,7 @@
     "quill": "^2.0.3",
     "react": "^19",
     "react-avatar-editor": "13.0.2",
-    "react-bootstrap": "2.10.10",
+    "react-bootstrap": "3.0.0-beta.5",
     "react-dom": "^19",
     "react-dropzone": "^15",
     "react-ga4": "^2.1.0",
@@ -38,6 +38,9 @@
     "react-select": "5.10.2",
     "redux": "^5.0.1",
     "stacktrace-js": "^2.0.2"
+  },
+  "overrides": {
+    "@restart/hooks": "^0.6.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
