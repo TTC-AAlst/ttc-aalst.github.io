@@ -23,6 +23,7 @@ import { getPreviousEncounters } from '../../../reducers/matchInfoReducer';
 import { OpponentPlayerSelector } from './OpponentPlayerSelector';
 import { TeamRankingBadges } from '../../teams/controls/TeamRankingBadges';
 import { MatchOtherRoundButton } from '../controls/ViewMatchDetailsButton';
+import { MatchCardAdmin } from '../Match/MatchCardAdmin';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
@@ -99,6 +100,7 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [showOpponentModal, setShowOpponentModal] = useState(false);
   const [showEncountersModal, setShowEncountersModal] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
   const user = useTtcSelector(selectUser);
   const dispatch = useTtcDispatch();
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match));
@@ -145,6 +147,11 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
                 {t('match.tabs.previousEncounters')}
               </Button>
             </OverlayTrigger>
+          )}
+          {user.isDev() && (
+            <Button variant="outline-secondary" aria-label="admin" onClick={() => setShowAdminModal(true)}>
+              <Icon fa="fa fa-cog" />
+            </Button>
           )}
         </ButtonGroup>
       </div>
@@ -195,6 +202,15 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
         </Modal.Header>
         <Modal.Body style={{padding: 6}}>
           <PreviousEncounters match={match} />
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showAdminModal} onHide={() => setShowAdminModal(false)} fullscreen style={{zIndex: 99999}}>
+        <Modal.Header closeButton>
+          <Modal.Title>admin</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{padding: 6}}>
+          <MatchCardAdmin match={match} />
         </Modal.Body>
       </Modal>
     </div>
