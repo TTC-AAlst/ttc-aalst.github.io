@@ -1,5 +1,3 @@
- 
-import request from 'superagent';
 import moment from 'moment';
 import t from '../locales';
 import { IMatch } from '../models/model-interfaces';
@@ -15,7 +13,6 @@ export function getUrl(path, appendApi = true) {
     console.error('HttpClient: path passed should not be prefixed with /api');
   }
   if (appendApi) {
-     
     path = `/api${path}`;
   }
 
@@ -24,33 +21,32 @@ export function getUrl(path, appendApi = true) {
     : `${config.backend}${path}`;
 }
 
-function bearer(req) {
+function authHeaders(): Record<string, string> {
   const token = localStorage.getItem('token');
-  if (token) {
-    req.set('Authorization', `Bearer ${token}`);
-  }
+  return token ? {Authorization: `Bearer ${token}`} : {};
 }
 
 const HttpClient = {
-  download: (path: string) => request.get(getUrl(path)).accept('json').use(bearer),
   get: <T>(path: string, qs?: any): Promise<T> => {
+    let url = getUrl(path);
+    if (qs) {
+      url += `?${new URLSearchParams(qs).toString()}`;
+    }
     const fullUrl = `GET ${qs ? `${path}?${new URLSearchParams(qs).toString()}` : path}`;
     return (async () => {
       if (LogRequestTimes) {
         console.time(fullUrl);
       }
 
-      const response = await request
-        .get(getUrl(path))
-        .query(qs)
-        .use(bearer)
-        .accept('application/json');
+      const response = await fetch(url, {
+        headers: {Accept: 'application/json', ...authHeaders()},
+      });
 
       if (LogRequestTimes) {
         console.timeEnd(fullUrl);
       }
 
-      return response.body;
+      return response.json();
     })();
   },
   post: <T>(url: string, data?: any): Promise<T> => {
@@ -60,54 +56,52 @@ const HttpClient = {
         console.time(fullUrl);
       }
 
-      const response = await request
-        .post(getUrl(url))
-        .send(data)
-        .use(bearer)
-        .set('Accept', 'application/json')
-        .set('Content-Type', 'application/json');
+      const response = await fetch(getUrl(url), {
+        method: 'POST',
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json', ...authHeaders()},
+        body: data !== undefined ? JSON.stringify(data) : undefined,
+      });
 
       if (LogRequestTimes) {
         console.timeEnd(fullUrl);
       }
 
-      return response.body;
+      return response.json();
     })();
   },
-  upload: (file: File, type = 'temp', typeId = 0) => new Promise<{fileName?: string}>((resolve, reject) => {
-    const req = request
-      .post(getUrl('/upload'))
-      .accept('application/json')
-      .use(bearer)
-      .field('uploadType', type)
-      .field('uploadTypeId', typeId)
-      .attach('file', file);
+  upload: async (file: File, type = 'temp', typeId = 0): Promise<{fileName?: string}> => {
+    const formData = new FormData();
+    formData.append('uploadType', type);
+    formData.append('uploadTypeId', String(typeId));
+    formData.append('file', file);
 
-    req.end((err, res) => {
-      if (err || !res.ok) {
-        console.error('/upload FAIL', err || '', res);  
-        reject();
-      } else {
-        resolve(res.body);
-      }
+    const response = await fetch(getUrl('/upload'), {
+      method: 'POST',
+      headers: {Accept: 'application/json', ...authHeaders()},
+      body: formData,
     });
-  }),
-  uploadImage: (imageBase64: string, dataId: number, type: string) => new Promise((resolve, reject) => {
-    request
-      .post(getUrl('/upload/image'))
-      .send({image: imageBase64, dataId, type})
-      .use(bearer)
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .end((err, res) => {
-        if (err || !res.ok) {
-          console.error('/upload/image', err || '', res);  
-          reject();
-        } else {
-          resolve(res.body);
-        }
-      });
-  }),
+
+    if (!response.ok) {
+      console.error('/upload FAIL', response.status, response.statusText);
+      throw new Error(`Upload failed: ${response.status}`);
+    }
+
+    return response.json();
+  },
+  uploadImage: async (imageBase64: string, dataId: number, type: string): Promise<any> => {
+    const response = await fetch(getUrl('/upload/image'), {
+      method: 'POST',
+      headers: {'Accept': 'application/json', 'Content-Type': 'application/json', ...authHeaders()},
+      body: JSON.stringify({image: imageBase64, dataId, type}),
+    });
+
+    if (!response.ok) {
+      console.error('/upload/image', response.status, response.statusText);
+      throw new Error(`Image upload failed: ${response.status}`);
+    }
+
+    return response.json();
+  },
 };
 
 function b64ToBlob(b64Data: string, contentType = '', sliceSize = 512) {
@@ -145,31 +139,32 @@ function downloadExcel(respBody: string, fileName: string, addTimestampToFileNam
   link.click();
 }
 
+async function downloadJson(path: string): Promise<string> {
+  const response = await fetch(getUrl(path), {
+    headers: {Accept: 'application/json', ...authHeaders()},
+  });
+  return response.json();
+}
 
 export const downloadPlayersExcel = async (fileName: string): Promise<void> => {
-  const res = await HttpClient.download('/players/ExcelExport');
-  downloadExcel(res.body, fileName, true);
+  const body = await downloadJson('/players/ExcelExport');
+  downloadExcel(body, fileName, true);
 };
 
-
-export const downloadScoresheetExcel = (match: IMatch) => {
-  return HttpClient.download(`/matches/ExcelScoresheet/${match.id}`).then(res => {
-    // fileName: '{frenoyId} Sporta {teamCode} vs {theirClub} {theirTeam}.xlsx',
-    const fileName = t('comp.scoresheetFileName', {
-      frenoyId: match.frenoyMatchId.replace('/', '-'),
-      teamCode: match.getTeam().teamCode,
-      theirClub: match.getOpponentClub()?.name,
-      theirTeam: match.opponent.teamCode,
-    });
-
-    downloadExcel(res.body, fileName);
+export const downloadScoresheetExcel = async (match: IMatch): Promise<void> => {
+  const body = await downloadJson(`/matches/ExcelScoresheet/${match.id}`);
+  const fileName = t('comp.scoresheetFileName', {
+    frenoyId: match.frenoyMatchId.replace('/', '-'),
+    teamCode: match.getTeam().teamCode,
+    theirClub: match.getOpponentClub()?.name,
+    theirTeam: match.opponent.teamCode,
   });
+  downloadExcel(body, fileName);
 };
 
-export const downloadTeamsExcel = (fileName: string) => {
-  return HttpClient.download('/teams/ExcelExport').then(res => {
-    downloadExcel(res.body, fileName, true);
-  });
+export const downloadTeamsExcel = async (fileName: string): Promise<void> => {
+  const body = await downloadJson('/teams/ExcelExport');
+  downloadExcel(body, fileName, true);
 };
 
 export default HttpClient;
