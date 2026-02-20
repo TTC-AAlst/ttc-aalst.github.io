@@ -1,30 +1,28 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../utils/test-utils';
 import { OpponentPlayerSelector } from '../OpponentPlayerSelector';
 import { IMatch } from '../../../../models/model-interfaces';
 import { ClubPlayer } from '../../../../reducers/clubPlayersReducer';
 
-jest.mock('../../../../storeUtil', () => ({
-  __esModule: true,
+vi.mock('../../../../storeUtil', () => ({
   default: {
-    getTeam: jest.fn(),
-    getTeams: jest.fn().mockReturnValue([]),
-    getClub: jest.fn(),
-    getPlayer: jest.fn(),
-    getMatch: jest.fn(),
-    getMatches: jest.fn().mockReturnValue([]),
-    matches: { getAllMatches: jest.fn().mockReturnValue([]) },
+    getTeam: vi.fn(),
+    getTeams: vi.fn().mockReturnValue([]),
+    getClub: vi.fn(),
+    getPlayer: vi.fn(),
+    getMatch: vi.fn(),
+    getMatches: vi.fn().mockReturnValue([]),
+    matches: { getAllMatches: vi.fn().mockReturnValue([]) },
   },
 }));
 
-jest.mock('../../../../utils/httpClient', () => ({
-  __esModule: true,
+vi.mock('../../../../utils/httpClient', () => ({
   default: {
-    get: jest.fn().mockResolvedValue([]),
-    post: jest.fn().mockResolvedValue({
+    get: vi.fn().mockResolvedValue([]),
+    post: vi.fn().mockResolvedValue({
       id: 1,
       players: [],
       games: [],
@@ -138,7 +136,7 @@ describe('OpponentPlayerSelector', () => {
         preloadedState: {
           ...defaultStoreState,
           clubPlayers: {
-            players: {},
+            players: { 'vttl-ob001': [] },
             loading: { 'vttl-ob001': true },
           },
         },
