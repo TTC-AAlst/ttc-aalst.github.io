@@ -31,7 +31,7 @@ export const App = ({Component}: {Component: any}) => {
     if (location.search.startsWith('?/')) {
       navigate(location.search.substring(2));
     }
-  }, []);
+  }, [navigate, location.search]);
 
   if (config.initialLoad !== 'done') {
     return <FullScreenSpinner />;

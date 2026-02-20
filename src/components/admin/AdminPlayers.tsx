@@ -29,7 +29,7 @@ export const AdminPlayers = () => {
 
   useEffect(() => {
     dispatch(fetchQuitters());
-  }, []);
+  }, [dispatch]);
 
   let playersContent: ReactElement | null = null;
   let otherContent: ReactElement | null = null;

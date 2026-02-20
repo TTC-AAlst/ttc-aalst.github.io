@@ -14,7 +14,7 @@ export const TeamMatchesWeek = ({team}: {team: ITeam}) => {
 
   useEffect(() => {
     dispatch(getOpponentMatches({teamId: team.id}));
-  }, [team.id]);
+  }, [team.id, dispatch]);
 
   const teamCompetition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
   const otherMatches = readonlyMatches

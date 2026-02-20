@@ -54,13 +54,7 @@ const Editor = forwardRef<EditorRef, QuillEditorProps>(
       }
 
       if (textRef.current) {
-        const delta = quill.clipboard.convert(textRef.current);
-        quill.setContents(delta);
-        // quill.setContents(textRef.current);
-      }
-
-      if (text) {
-        const delta = quill.clipboard.convert({html: text});
+        const delta = quill.clipboard.convert({html: textRef.current});
         quill.setContents(delta);
       }
 

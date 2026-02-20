@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BackIcon } from '../controls/Icons/BackIcon';
 import { OpponentMatches } from '../matches/Match/OpponentMatches';
@@ -18,7 +18,7 @@ export const OpponentOverview = () => {
   const navigate = useNavigate();
   const teams = useTtcSelector(selectTeams);
 
-  const opponent = {clubId: parseInt(clubId!, 10), teamCode: teamCode!};
+  const opponent = useMemo(() => ({clubId: parseInt(clubId!, 10), teamCode: teamCode!}), [clubId, teamCode]);
   const team = teams.find(tm => tm.competition === competition
     && tm.ranking.find(x => x.clubId === parseInt(clubId!, 10) && (!teamCode || x.teamCode === teamCode)));
 
@@ -38,13 +38,13 @@ export const OpponentOverview = () => {
     return () => {
       document.removeEventListener('keydown', escIsBack, false);
     };
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (team) {
       dispatch(getOpponentMatches({teamId: team.id, opponent}));
     }
-  }, [team?.id]);
+  }, [team, opponent, dispatch]);
 
   if (!team || !opponentClub || otherMatches.length === 0) {
     return null;

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { createSelector } from '@reduxjs/toolkit';
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
@@ -58,8 +58,10 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
   const viewport = useViewport();
   const user = useTtcSelector(selectUser);
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match, opponent));
-  const formations = getFormation(match, opponentMatches)
-    .sort((a, b) => b.count - a.count);
+  const formations = useMemo(
+    () => getFormation(match, opponentMatches).sort((a, b) => b.count - a.count),
+    [match, opponentMatches],
+  );
 
   useEffect(() => {
     if (user?.playerId && formations.length > 0) {
@@ -70,7 +72,7 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
         opponentPlayers,
       }));
     }
-  }, [user?.playerId, formations.length, match.id, dispatch]);
+  }, [user?.playerId, formations, match, dispatch]);
 
   if (formations.length === 0) {
     return <div className="match-card-tab-content"><h3><Spinner /></h3></div>;

@@ -13,7 +13,7 @@ export const TimeAgo = ({ date }: TimeAgoProps) => {
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), interval);
     return () => clearInterval(timer);
-  }, [interval]);
+  }, []);
 
   if (!date) {
     return null;

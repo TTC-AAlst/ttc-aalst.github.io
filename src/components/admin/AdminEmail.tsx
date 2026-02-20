@@ -17,7 +17,7 @@ export const AdminEmail = () => {
     if (!quitters.length) {
       dispatch(fetchQuitters());
     }
-  }, []);
+  }, [dispatch, quitters.length]);
 
   const filterPlayers = () => {
     if (filter === 'inactive') {

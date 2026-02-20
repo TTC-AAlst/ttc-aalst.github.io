@@ -63,7 +63,7 @@ export const useInitialLoad = () => {
     } catch (err) {
       console.error('Initial Load failed (catch block)', err);
     }
-  }, [playerId, config.initialLoad]);
+  }, [playerId, config.initialLoad, dispatch]);
 
   useEffect(() => {
     if (config.initialLoad === 'done') {
