@@ -11,8 +11,6 @@ root.render(
   </Provider>,
 );
 
-import moment from 'moment';
-import 'moment/locale/nl-be';
-moment.locale('nl-be');
+import './utils/dayjsSetup';
 
 import './index.scss';

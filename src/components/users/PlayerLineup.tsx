@@ -1,6 +1,6 @@
  
 import React, {Component} from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import cn from 'classnames';
 import { connect } from 'react-redux';
 import Table from 'react-bootstrap/Table';
@@ -62,7 +62,7 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
     const allMatchesToCome = teams
       .map(team => team.getMatches())
       .flat()
-      .filter(match => moment().isBefore(match.date))
+      .filter(match => dayjs().isBefore(match.date))
       .sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
     const {matches, hasMore} = getFirstOrLastMatches(allMatchesToCome, this.state.matchesFilter);

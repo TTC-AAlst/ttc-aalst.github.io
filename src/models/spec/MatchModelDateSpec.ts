@@ -1,8 +1,5 @@
-import moment from 'moment';
-import 'moment/dist/locale/nl-be';
+import dayjs from 'dayjs';
 import MatchModel from '../MatchModel';
-
-moment.locale('nl-be');
 
 const createMatch = (dateStr: string) => new MatchModel({
   id: 1,
@@ -75,13 +72,13 @@ describe('MatchModel date methods', () => {
 
   describe('isBeingPlayed', () => {
     it('returns true when match is within 14 hours of now', () => {
-      const nowIsh = moment().subtract(1, 'hour').format('YYYY-MM-DDTHH:mm:ss');
+      const nowIsh = dayjs().subtract(1, 'hour').format('YYYY-MM-DDTHH:mm:ss');
       const match = createMatch(nowIsh);
       expect(match.isBeingPlayed()).toBe(true);
     });
 
     it('returns true when match is upcoming within 14 hours', () => {
-      const soon = moment().add(2, 'hours').format('YYYY-MM-DDTHH:mm:ss');
+      const soon = dayjs().add(2, 'hours').format('YYYY-MM-DDTHH:mm:ss');
       const match = createMatch(soon);
       expect(match.isBeingPlayed()).toBe(true);
     });
@@ -92,7 +89,7 @@ describe('MatchModel date methods', () => {
     });
 
     it('returns false when match is days from now', () => {
-      const farFuture = moment().add(7, 'days').format('YYYY-MM-DDTHH:mm:ss');
+      const farFuture = dayjs().add(7, 'days').format('YYYY-MM-DDTHH:mm:ss');
       const match = createMatch(farFuture);
       expect(match.isBeingPlayed()).toBe(false);
     });
@@ -103,7 +100,7 @@ describe('MatchModel date methods', () => {
 
       // Match was 14 hours ago: Mar 14 20:00
       const match = createMatch('2025-03-14T20:00:00');
-      // Math.abs(diff) < 14 → 14 is NOT less than 14, so false
+      // Math.abs(diff) < 14 -> 14 is NOT less than 14, so false
       expect(match.isBeingPlayed()).toBe(false);
 
       vi.useRealTimers();
@@ -113,7 +110,7 @@ describe('MatchModel date methods', () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date(2025, 2, 15, 9, 59, 0)); // Mar 15 09:59
 
-      // Match was at Mar 14 20:00 → 13h59m ago
+      // Match was at Mar 14 20:00 -> 13h59m ago
       const match = createMatch('2025-03-14T20:00:00');
       expect(match.isBeingPlayed()).toBe(true);
 
@@ -122,7 +119,7 @@ describe('MatchModel date methods', () => {
   });
 
   describe('comment postedOn parsing', () => {
-    it('converts comment postedOn strings to moment objects', () => {
+    it('converts comment postedOn strings to dayjs objects', () => {
       const match = new MatchModel({
         id: 1,
         date: '2025-03-15T20:00:00',
@@ -136,9 +133,9 @@ describe('MatchModel date methods', () => {
         isHomeMatch: true,
         score: {home: 10, out: 6},
       });
-      expect(moment.isMoment(match.comments[0].postedOn)).toBe(true);
-      expect(match.comments[0].postedOn.hours()).toBe(22);
-      expect(match.comments[0].postedOn.minutes()).toBe(30);
+      expect(dayjs.isDayjs(match.comments[0].postedOn)).toBe(true);
+      expect(match.comments[0].postedOn.hour()).toBe(22);
+      expect(match.comments[0].postedOn.minute()).toBe(30);
     });
 
     it('preserves other comment properties alongside postedOn', () => {
@@ -162,23 +159,21 @@ describe('MatchModel date methods', () => {
   });
 
   describe('invalid date handling', () => {
-    it('null date creates an invalid moment', () => {
+    it('null date creates an invalid dayjs', () => {
       const match = createMatch(null as any);
       expect(match.date.isValid()).toBe(false);
-      expect(match.date.format('YYYY-MM-DD')).toBe('Invalid date');
+      expect(match.date.format('YYYY-MM-DD')).toBe('Invalid Date');
     });
 
     it('undefined date silently becomes current time', () => {
       const match = createMatch(undefined as any);
       expect(match.date.isValid()).toBe(true);
-      expect(match.date.diff(moment(), 'seconds')).toBeLessThan(2);
+      expect(match.date.diff(dayjs(), 'seconds')).toBeLessThan(2);
     });
 
-    it('garbage string date creates an invalid moment', () => {
-      moment.suppressDeprecationWarnings = true;
+    it('garbage string date creates an invalid dayjs', () => {
       const match = createMatch('not-a-date');
       expect(match.date.isValid()).toBe(false);
-      moment.suppressDeprecationWarnings = false;
     });
 
     it('isBeingPlayed returns false for invalid date', () => {
@@ -186,12 +181,12 @@ describe('MatchModel date methods', () => {
       expect(match.isBeingPlayed()).toBe(false);
     });
 
-    it('getDisplayDate returns "Invalid date" for null date', () => {
+    it('getDisplayDate returns "Invalid Date" for null date', () => {
       const match = createMatch(null as any);
-      expect(match.getDisplayDate()).toContain('Invalid date');
+      expect(match.getDisplayDate()).toContain('Invalid Date');
     });
 
-    it('null comment postedOn creates an invalid moment', () => {
+    it('null comment postedOn creates an invalid dayjs', () => {
       const match = new MatchModel({
         id: 1,
         date: '2025-03-15T20:00:00',
@@ -227,13 +222,13 @@ describe('MatchModel date methods', () => {
   });
 
   describe('date parsing', () => {
-    it('parses ISO date string into moment', () => {
+    it('parses ISO date string into dayjs', () => {
       const match = createMatch('2025-09-20T20:00:00');
       expect(match.date.year()).toBe(2025);
       expect(match.date.month()).toBe(8); // 0-indexed
       expect(match.date.date()).toBe(20);
-      expect(match.date.hours()).toBe(20);
-      expect(match.date.minutes()).toBe(0);
+      expect(match.date.hour()).toBe(20);
+      expect(match.date.minute()).toBe(0);
     });
 
     it('supports valueOf for sorting', () => {
@@ -244,7 +239,7 @@ describe('MatchModel date methods', () => {
 
     it('supports isBefore/isAfter/isSame', () => {
       const match = createMatch('2025-03-15T20:00:00');
-      const ref = moment('2025-03-15T10:00:00');
+      const ref = dayjs('2025-03-15T10:00:00');
       expect(match.date.isSame(ref, 'day')).toBe(true);
       expect(match.date.isAfter(ref, 'day')).toBe(false);
       expect(match.date.isBefore(ref, 'day')).toBe(false);
@@ -252,13 +247,13 @@ describe('MatchModel date methods', () => {
 
     it('isBefore returns true for earlier date', () => {
       const match = createMatch('2025-03-14T20:00:00');
-      const ref = moment('2025-03-15T10:00:00');
+      const ref = dayjs('2025-03-15T10:00:00');
       expect(match.date.isBefore(ref, 'day')).toBe(true);
     });
 
     it('isAfter returns true for later date', () => {
       const match = createMatch('2025-03-16T20:00:00');
-      const ref = moment('2025-03-15T10:00:00');
+      const ref = dayjs('2025-03-15T10:00:00');
       expect(match.date.isAfter(ref, 'day')).toBe(true);
     });
   });

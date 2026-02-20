@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import t from '../locales';
 import { IMatch } from '../models/model-interfaces';
 import { config, devUrl, isDev } from '../config';
@@ -128,7 +128,7 @@ function b64ToBlob(b64Data: string, contentType = '', sliceSize = 512) {
 function downloadExcel(respBody: string, fileName: string, addTimestampToFileName = false) {
   const blob = b64ToBlob(respBody);
   if (addTimestampToFileName) {
-    fileName += ` ${moment().format('YYYY-MM-DD')}.xlsx`;
+    fileName += ` ${dayjs().format('YYYY-MM-DD')}.xlsx`;
   }
 
   const link = document.createElement('a');

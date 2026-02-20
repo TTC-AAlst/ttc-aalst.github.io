@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import type { RootState, AppDispatch } from '../../store';
 import UserModel from '../../models/UserModel';
 import MatchModel from '../../models/MatchModel';
@@ -75,7 +75,7 @@ export const selectMatchesBeingPlayed = createSelector(
   }),
 );
 
-const today = moment();
+const today = dayjs();
 export const selectMatchesToday = createSelector(
   selectMatches,
   matches => matches.filter(m => m.date.isSame(today, 'day')),

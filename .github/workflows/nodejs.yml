@@ -1,27 +1,39 @@
-name: Node CI
+name: CI
 
 on:
   push:
     branches-ignore:
       - 'gh-pages'
+  pull_request:
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [22.12.x]
-
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+
+    - uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run lint
-        npm run build
-        npm test
+        node-version: 22
+        cache: 'npm'
+
+    - run: npm ci
+
+    - name: Lint
+      run: npm run lint
+
+    - name: Type check & build
+      run: npm run build
+
+    - name: Test with coverage
+      run: npm run test:coverage
+
+    - name: Audit production dependencies
+      run: npm audit --omit=dev --audit-level=high
+
+    - name: Secret detection
+      uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { createSelector } from '@reduxjs/toolkit';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Table from 'react-bootstrap/Table';
 import { OpponentPlayerLabel } from './OpponentPlayer';
 import { Spinner } from '../../controls/controls/Spinner';
@@ -146,7 +146,7 @@ const selectOpponentTeamEncounters = createSelector(
         }
         return false;
       })
-      .sort((a, b) => moment(b.matchDate).diff(moment(a.matchDate)));
+      .sort((a, b) => dayjs(b.matchDate).diff(dayjs(a.matchDate)));
   },
 );
 

@@ -1,10 +1,6 @@
-import moment from 'moment';
-import 'moment/dist/locale/nl-be';
 import { WeekCalcer } from '../WeekCalcer';
 import MatchModel from '../../../../models/MatchModel';
 import { IMatch } from '../../../../models/model-interfaces';
-
-moment.locale('nl-be');
 
 const createMatch = (dateStr: string, id = 1): IMatch => new MatchModel({
   id,
@@ -70,7 +66,7 @@ describe('WeekCalcer', () => {
       expect(weekMatches.map(m => m.id)).toEqual([1, 2]);
     });
 
-    it('includes match at exact week start boundary (Monday midnight in nl-be)', () => {
+    it('includes match at exact week start boundary (Monday midnight in nl)', () => {
       const matches = [
         createMatch('2025-03-10T00:00:00', 1), // Monday midnight = exact startOf('week')
         createMatch('2025-03-12T20:00:00', 2), // Wednesday same week
@@ -155,7 +151,7 @@ describe('WeekCalcer', () => {
   });
 
   describe('week boundaries', () => {
-    it('week start is Monday in nl-be locale', () => {
+    it('week start is Monday in nl locale', () => {
       const matches = [createMatch('2025-03-12T20:00:00', 1)]; // Wednesday
       const wc = new WeekCalcer(matches, 1);
       const week = wc.getWeek();
@@ -166,8 +162,8 @@ describe('WeekCalcer', () => {
       const matches = [createMatch('2025-03-12T20:00:00', 1)];
       const wc = new WeekCalcer(matches, 1);
       const week = wc.getWeek();
-      expect(week.end.hours()).toBe(23);
-      expect(week.end.minutes()).toBe(59);
+      expect(week.end.hour()).toBe(23);
+      expect(week.end.minute()).toBe(59);
     });
   });
 });

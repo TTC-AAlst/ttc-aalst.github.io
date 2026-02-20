@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Button, ButtonGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import OwnPlayer from '../Match/OwnPlayer';
@@ -30,8 +30,8 @@ type MobileLiveMatchInProgressProps = {
 
 export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressProps) => {
   const hasPlayersOrGames = match.games.length || match.getTheirPlayers().length;
-  const hasStarted = match.date.isBefore(moment());
-  const canEnterOpponents = match.date.clone().subtract(1, 'hour').isBefore(moment());
+  const hasStarted = match.date.isBefore(dayjs());
+  const canEnterOpponents = match.date.subtract(1, 'hour').isBefore(dayjs());
 
   // Pre-start: show our formation and away match details
   if (!hasPlayersOrGames) {

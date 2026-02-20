@@ -1,5 +1,5 @@
  
-import { Moment } from 'moment';
+import { Dayjs } from 'dayjs';
 import { UserRoles } from './UserModel';
 import { PlayerRanking } from './utils/rankingSorter';
 
@@ -61,7 +61,7 @@ export interface IStoreMatchCommon {
   week: number;
   competition: Competition;
   frenoyDivisionId: number;
-  date: Moment;
+  date: Dayjs;
   score: IMatchScore;
   scoreType: MatchScoreType;
   isPlayed: boolean;

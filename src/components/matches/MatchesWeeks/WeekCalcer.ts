@@ -1,4 +1,5 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { IMatch } from '../../../models/model-interfaces';
 
 export class WeekCalcer {
@@ -7,7 +8,7 @@ export class WeekCalcer {
   currentWeek!: number;
   firstWeek!: number;
   lastWeek!: number;
-  weeks!: {start: moment.Moment; end: moment.Moment}[];
+  weeks!: {start: Dayjs; end: Dayjs}[];
 
   constructor(matches: IMatch[], currentWeek?: number, includeFreeMatches = false) {
     this.includeFreeMatches = includeFreeMatches;
@@ -29,16 +30,16 @@ export class WeekCalcer {
       this.firstWeek = 1;
       this.currentWeek = 1;
       this.lastWeek = 22;
-      this.weeks = [{start: moment().startOf('week'), end: moment().endOf('week')}];
+      this.weeks = [{start: dayjs().startOf('week'), end: dayjs().endOf('week')}];
       return;
     }
     this.weeks = this.matches.reduce((acc, next) => {
-      const date = next.date.clone().startOf('week');
+      const date = next.date.startOf('week');
       if (!acc.length || !acc[acc.length - 1].start.isSame(date, 'day')) {
-        acc.push({start: date, end: next.date.clone().endOf('week')});
+        acc.push({start: date, end: next.date.endOf('week')});
       }
       return acc;
-    }, [] as {start: moment.Moment; end: moment.Moment}[]);
+    }, [] as {start: Dayjs; end: Dayjs}[]);
 
     // console.log('weekz', this.weeks.map(x => x.start.toString() + " -> " + x.end.toString())); // eslint-disable-line
 
@@ -46,7 +47,7 @@ export class WeekCalcer {
     this.lastWeek = this.weeks.length;
 
     if (!currentWeek) {
-      let testWeek = moment().startOf('week');
+      let testWeek = dayjs().startOf('week');
       const findWeek = w => w.start.isSame(testWeek, 'day');
       while (!this.currentWeek) {
         this.currentWeek = this.weeks.findIndex(findWeek) + 1;

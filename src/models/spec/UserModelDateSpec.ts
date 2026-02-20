@@ -1,11 +1,11 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import UserModel from '../UserModel';
 import { IMatch } from '../model-interfaces';
 
 const createUser = (playerId: number, securityRoles: string[] = []) => new UserModel({playerId, teams: [], security: securityRoles});
 
 const createMatchStub = (dateStr: string): IMatch => ({
-  date: moment(dateStr),
+  date: dayjs(dateStr),
 } as any);
 
 describe('UserModel.canEditPlayersOnMatchDay', () => {
@@ -17,7 +17,7 @@ describe('UserModel.canEditPlayersOnMatchDay', () => {
 
   it('returns true when player has id and match is today', () => {
     const user = createUser(1);
-    const today = moment().format('YYYY-MM-DDTHH:mm:ss');
+    const today = dayjs().format('YYYY-MM-DDTHH:mm:ss');
     const match = createMatchStub(today);
     expect(user.canEditPlayersOnMatchDay(match)).toBe(true);
   });
@@ -30,7 +30,7 @@ describe('UserModel.canEditPlayersOnMatchDay', () => {
 
   it('returns false when no player id even if match is today', () => {
     const user = createUser(0);
-    const today = moment().format('YYYY-MM-DDTHH:mm:ss');
+    const today = dayjs().format('YYYY-MM-DDTHH:mm:ss');
     const match = createMatchStub(today);
     expect(user.canEditPlayersOnMatchDay(match)).toBe(false);
   });

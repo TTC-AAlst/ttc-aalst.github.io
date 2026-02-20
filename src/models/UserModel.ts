@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import storeUtil from '../storeUtil';
 import {IPlayer, ITeam, IMatch, IStoreTeam} from './model-interfaces';
 
@@ -104,7 +104,7 @@ export default class UserModel implements IUser {
       return true;
     }
 
-    return !!this.playerId && match.date.isSame(moment(), 'day');
+    return !!this.playerId && match.date.isSame(dayjs(), 'day');
   }
 
   canPostReport(teamId: number): boolean {

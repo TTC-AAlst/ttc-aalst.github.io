@@ -1,5 +1,5 @@
  
-import { Moment } from "moment";
+import { Dayjs } from "dayjs";
 import { IMatch, ITeam } from "../../../../models/model-interfaces";
 import { TeamAchievementInfo } from "./achievement-models";
 
@@ -11,9 +11,9 @@ export function getTeamUndefeatedStreak(matches: IMatch[]): TeamAchievementInfo 
   interface TeamStreak {
     team: ITeam;
     currentStreak: number;
-    currentFrom: Moment | null;
+    currentFrom: Dayjs | null;
     longestStreak: number;
-    longestFrom: Moment | null;
+    longestFrom: Dayjs | null;
   }
 
   const streaksByTeam: Record<number, TeamStreak> = {};

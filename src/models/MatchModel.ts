@@ -1,4 +1,4 @@
-import moment, {Moment} from 'moment';
+import dayjs, {Dayjs} from 'dayjs';
 import storeUtil from '../storeUtil';
 import PlayerModel from './PlayerModel';
 import {OwnClubId} from './ClubModel';
@@ -32,7 +32,7 @@ export default class MatchModel implements IMatch {
   week: number;
   competition: Competition;
   frenoyDivisionId: number;
-  date: Moment;
+  date: Dayjs;
   score: IMatchScore;
   scoreType: MatchScoreType;
   isPlayed: boolean;
@@ -68,7 +68,7 @@ export default class MatchModel implements IMatch {
     this.week = json.week;
     this.competition = json.competition;
     this.frenoyDivisionId = json.frenoyDivisionId;
-    this.date = moment(json.date);
+    this.date = dayjs(json.date);
 
     this.score = json.score || { home: 0, out: 0 };
     this.scoreType = json.scoreType;
@@ -89,7 +89,7 @@ export default class MatchModel implements IMatch {
 
       const comments = json.comments.map(c => ({
         ...c,
-        postedOn: moment(c.postedOn),
+        postedOn: dayjs(c.postedOn),
       }));
       this.comments = comments;
 
@@ -113,14 +113,14 @@ export default class MatchModel implements IMatch {
       return this.date.format("ddd D/M");
     }
 
-    if (this.date.minutes()) {
+    if (this.date.minute()) {
       return this.date.format("ddd D/M HH:mm");
     }
     return this.date.format("ddd D/M HH");
   }
 
   getDisplayTime(): string {
-    if (this.date.minutes()) {
+    if (this.date.minute()) {
       return this.date.format("HH:mm");
     }
     return this.date.format("HH");
@@ -153,11 +153,11 @@ export default class MatchModel implements IMatch {
   }
 
   isStandardStartTime(): boolean {
-    return !this.date.minutes() && this.date.hours() === defaultStartHour;
+    return !this.date.minute() && this.date.hour() === defaultStartHour;
   }
 
   isBeingPlayed(): boolean {
-    const diff = moment.duration(moment().diff(this.date)).asHours();
+    const diff = dayjs().diff(this.date, 'hour', true);
     return Math.abs(diff) < 14;
   }
 

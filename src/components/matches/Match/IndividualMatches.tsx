@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { createSelector } from '@reduxjs/toolkit';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import cn from 'classnames';
 import Table from 'react-bootstrap/Table';
 import {matchOutcome} from '../../../models/MatchModel';
@@ -99,7 +99,7 @@ const selectPreviousEncounters = createSelector(
       }
       return false;
     })
-    .sort((a, b) => moment(b.matchDate).diff(moment(a.matchDate))),
+    .sort((a, b) => dayjs(b.matchDate).diff(dayjs(a.matchDate))),
 );
 
 

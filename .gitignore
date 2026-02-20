@@ -6,3 +6,7 @@ todo.txt
 .claude/settings.local.json
 .claude/
 _bmad/
+coverage/
+.env
+.env.*
+!.env.example

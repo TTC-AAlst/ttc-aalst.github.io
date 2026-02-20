@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { mergeInStore2 } from './immutableHelpers';
 import { IFullStoreMatchOwn, IMatchComment, IStoreMatchCommon, MatchPlayerStatus } from '../models/model-interfaces';
 import http from '../utils/httpClient';
@@ -25,7 +25,7 @@ export const fetchMatch = createAsyncThunk(
 );
 
 export const shouldSync = (match: IStoreMatchCommon) => !match.isSyncedWithFrenoy
-  && moment().isAfter(match.date)
+  && dayjs().isAfter(match.date)
   && match.shouldBePlayed;
 
 export const frenoyMatchSync = createAsyncThunk(

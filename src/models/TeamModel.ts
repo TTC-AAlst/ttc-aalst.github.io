@@ -1,4 +1,3 @@
-import moment from 'moment';
 import storeUtil from '../storeUtil';
 import {TeamFrenoyModel} from './TeamFrenoyModel';
 import {ITeam, Competition, ITeamOpponent, ITeamPlayer, ITeamRanking, ITeamFrenoy, teamPlayerType,

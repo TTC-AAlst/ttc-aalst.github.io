@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Table from 'react-bootstrap/Table';
 import { Button, Modal } from 'react-bootstrap';
 import {TrophyIcon} from '../../controls/Icons/TrophyIcon';
@@ -25,7 +25,7 @@ export const PreviousEncounters = ({match}: {match: IMatch}) => {
       }
       return false;
     }))
-    .sort((a, b) => moment(b.matchDate).diff(moment(a.matchDate)));
+    .sort((a, b) => dayjs(b.matchDate).diff(dayjs(a.matchDate)));
 
   const theirPlayers = match.getTheirPlayers();
 
@@ -189,7 +189,7 @@ export const EncountersTable = ({encounters, ourPlayerUniqueIndex}: {encounters:
         const won = (home && encounter.homePlayerSets > encounter.awayPlayerSets)
           || (!home && encounter.awayPlayerSets > encounter.homePlayerSets);
 
-        const date = moment(encounter.matchDate).format('D/M/YYYY');
+        const date = dayjs(encounter.matchDate).format('D/M/YYYY');
         return (
           <tr key={encounter.matchId}>
             <td>

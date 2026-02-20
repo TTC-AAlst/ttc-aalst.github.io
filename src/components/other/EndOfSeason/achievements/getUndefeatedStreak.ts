@@ -1,4 +1,4 @@
-import { Moment } from "moment";
+import { Dayjs } from "dayjs";
 import { Competition, IMatch, IPlayer, ITeamPlayerStats } from "../../../../models/model-interfaces";
 import { AchievementInfo } from "./otherAchievements";
 
@@ -9,9 +9,9 @@ export function getUndefeatedStreak(competition: Competition, playerStats: ITeam
 
   const playerStreaks: Record<number, {
     currentStreak: number,
-    currentFrom: Moment | null,
+    currentFrom: Dayjs | null,
     longestStreak: number,
-    longestFrom: Moment | null,
+    longestFrom: Dayjs | null,
     player: IPlayer,
   }> = {};
 

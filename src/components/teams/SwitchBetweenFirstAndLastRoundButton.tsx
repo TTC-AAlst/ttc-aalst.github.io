@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {ButtonStack} from '../controls/Buttons/ButtonStack';
 import { t } from '../../locales';
 import { IStoreMatchCommon } from '../../models/model-interfaces';
@@ -56,6 +56,6 @@ export function getFirstOrLastMatches<T extends IStoreMatchCommon>(allMatchesToC
 
 
 export function getFirstOrLast(): Filters {
-  const today = moment();
+  const today = dayjs();
   return today.month() >= 5 && !(today.month() === 11 && today.date() > 20) ? 'first' : 'last';
 }

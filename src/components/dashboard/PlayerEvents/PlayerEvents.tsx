@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Strike } from '../../controls/controls/Strike';
 import { PlayerEventItem } from './PlayerEventItem';
 import { useTtcSelector } from '../../../utils/hooks/storeHooks';
@@ -9,11 +9,11 @@ export const PlayerEvents = () => {
   const playerEvents = useTtcSelector(state => state.events);
 
   // Filter events from last 14 days
-  const twoWeeksAgo = moment().subtract(14, 'days');
+  const twoWeeksAgo = dayjs().subtract(14, 'days');
   const recentEvents = playerEvents
     .slice()
-    // .filter(event => moment(event.createdOn).isAfter(twoWeeksAgo))
-    .sort((a, b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
+    // .filter(event => dayjs(event.createdOn).isAfter(twoWeeksAgo))
+    .sort((a, b) => dayjs(b.createdOn).valueOf() - dayjs(a.createdOn).valueOf());
 
   if (recentEvents.length === 0) {
     return null;

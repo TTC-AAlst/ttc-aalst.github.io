@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { TrophyIcon } from '../controls/Icons/TrophyIcon';
 import { ThrillerIcon } from '../controls/Icons/ThrillerIcon';
 import { Icon } from '../controls/Icons/Icon';
@@ -46,7 +46,7 @@ const groupMatchesByDate = (matches: IMatch[]): GroupedMatches[] => {
 
 export const Matches = () => {
   const ownMatches = useTtcSelector(selectMatches);
-  const today = moment();
+  const today = dayjs();
   const todayRef = useRef<HTMLDivElement>(null);
 
   const matchesToday = ownMatches
@@ -101,7 +101,7 @@ type TodayMarkerProps = {
 
 const TodayMarker = ({ hasMatchesToday, todayGroup }: TodayMarkerProps) => {
   const user = useTtcSelector(selectUser);
-  const todayDate = moment().format('dd D MMM');
+  const todayDate = dayjs().format('dd D MMM');
   const todayColor = '#9b59b6';
 
   return (

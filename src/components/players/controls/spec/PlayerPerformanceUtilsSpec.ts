@@ -1,10 +1,10 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { collectPlayerGameResultsByMatch, getRecentResults, MatchGameResults } from '../PlayerPerformanceUtils';
 import { IMatch } from '../../../../models/model-interfaces';
 
 const createSyncedMatch = (id: number, dateStr: string, playerId: number, games: any[]): IMatch => ({
   id,
-  date: moment(dateStr),
+  date: dayjs(dateStr),
   isSyncedWithFrenoy: true,
   isHomeMatch: true,
   competition: 'Vttl',
@@ -88,7 +88,7 @@ describe('collectPlayerGameResultsByMatch', () => {
 describe('getRecentResults', () => {
   const makeMatchResults = (matchId: number, count: number): MatchGameResults => ({
     matchId,
-    matchDate: moment('2025-03-10'),
+    matchDate: dayjs('2025-03-10'),
     results: Array.from({length: count}, (_, i) => ({
       won: i % 2 === 0,
       playerRanking: 'D6' as any,

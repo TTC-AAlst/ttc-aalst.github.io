@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import t from '../../locales';
@@ -99,7 +99,7 @@ const TodaysEvents = () => {
     );
   }
 
-  const today = moment();
+  const today = dayjs();
   const lastPlayedMatches = matches
     .filter(cal => cal.date.isBefore(today, 'day'))
     .sort((a, b) => b.date.valueOf() - a.date.valueOf())

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import MatchForm from '../Match/MatchForm';
 import { MatchScore } from '../MatchScore';
 import { ViewMatchDetailsButton } from '../controls/ViewMatchDetailsButton';
@@ -105,7 +105,7 @@ const CornerRibbon = ({ type }: { type: 'topMatch' | 'degradationMatch' }) => {
 };
 
 const MatchScoreOrForm = ({ match, user }: { match: IMatch; user: IUser }) => {
-  const hasStarted = match.date.isBefore(moment());
+  const hasStarted = match.date.isBefore(dayjs());
 
   if (!hasStarted) {
     return <ViewMatchDetailsButton match={match} size="sm" />;

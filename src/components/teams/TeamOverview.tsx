@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { MatchesTable } from '../matches/MatchesTable';
 import { TeamPlayerAvatars } from './controls/TeamPlayerAvatars';
 import { TeamOverviewPlayers } from './controls/TeamOverviewPlayers';
@@ -14,7 +14,7 @@ type TeamOverviewProps = {
 };
 
 export const TeamOverview = ({team, small}: TeamOverviewProps) => {
-  const today = moment().startOf('day');
+  const today = dayjs().startOf('day');
   const sortedMatches = team.getMatches()
     .sort((a, b) => a.date.valueOf() - b.date.valueOf());
 

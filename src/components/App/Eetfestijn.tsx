@@ -1,6 +1,6 @@
 import React from 'react';
 import Paper from '@mui/material/Paper';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useTtcSelector } from '../../utils/hooks/storeHooks';
 import { EetfestijnModel } from '../admin/EetfestijnModel';
 import { parseEetfestijn } from '../../utils/paramParser';
@@ -31,7 +31,7 @@ export const Eetfestijn = () => {
         <h1 style={{fontSize: 26}}>
           Eetfestijn TTC Aalst
           <br />
-          {moment(eetfestijn.date).format('ddd DD MMMM YYYY')}
+          {dayjs(eetfestijn.date).format('ddd DD MMMM YYYY')}
         </h1>
 
         Van {eetfestijn.hour.from} tot {eetfestijn.hour.to} in zaal

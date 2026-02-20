@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { getFirstOrLastMatches, getFirstOrLast } from '../SwitchBetweenFirstAndLastRoundButton';
 import { IStoreMatchCommon } from '../../../models/model-interfaces';
 
@@ -10,7 +10,7 @@ const createStoreMatch = (dateStr: string): IStoreMatchCommon => ({
   week: 1,
   competition: 'Vttl',
   frenoyDivisionId: 0,
-  date: moment(dateStr),
+  date: dayjs(dateStr),
   score: {home: 0, out: 0},
   scoreType: 'NotYetPlayed',
   isPlayed: false,
@@ -20,10 +20,10 @@ const createStoreMatch = (dateStr: string): IStoreMatchCommon => ({
 });
 
 describe('getFirstOrLastMatches', () => {
-  const septMatch = createStoreMatch('2024-09-15T20:00:00'); // month=8, >= 7 → first round
-  const octMatch = createStoreMatch('2024-10-20T20:00:00');  // month=9, >= 7 → first round
-  const janMatch = createStoreMatch('2025-01-15T20:00:00');  // month=0, < 7 → last round
-  const febMatch = createStoreMatch('2025-02-20T20:00:00');  // month=1, < 7 → last round
+  const septMatch = createStoreMatch('2024-09-15T20:00:00'); // month=8, >= 7 -> first round
+  const octMatch = createStoreMatch('2024-10-20T20:00:00');  // month=9, >= 7 -> first round
+  const janMatch = createStoreMatch('2025-01-15T20:00:00');  // month=0, < 7 -> last round
+  const febMatch = createStoreMatch('2025-02-20T20:00:00');  // month=1, < 7 -> last round
   const allMatches = [septMatch, octMatch, janMatch, febMatch];
 
   it('returns all matches with "all" filter', () => {
@@ -88,7 +88,7 @@ describe('getFirstOrLast', () => {
   it('returns "first" during June (month=5)', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2025, 5, 15)); // Jun 15
-    // month >= 5 && !(month === 11 && date > 20) → 'first'
+    // month >= 5 && !(month === 11 && date > 20) -> 'first'
     expect(getFirstOrLast()).toBe('first');
     vi.useRealTimers();
   });
@@ -96,7 +96,7 @@ describe('getFirstOrLast', () => {
   it('returns "last" during May (month=4)', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2025, 4, 15)); // May 15
-    // month < 5 → 'last'
+    // month < 5 -> 'last'
     expect(getFirstOrLast()).toBe('last');
     vi.useRealTimers();
   });
@@ -104,7 +104,7 @@ describe('getFirstOrLast', () => {
   it('returns "last" late December (month=11, date > 20)', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2024, 11, 25)); // Dec 25
-    // month >= 5 but month === 11 && date > 20 → 'last'
+    // month >= 5 but month === 11 && date > 20 -> 'last'
     expect(getFirstOrLast()).toBe('last');
     vi.useRealTimers();
   });
@@ -112,7 +112,7 @@ describe('getFirstOrLast', () => {
   it('returns "first" early December (month=11, date <= 20)', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2024, 11, 15)); // Dec 15
-    // month >= 5 && !(month === 11 && date > 20) → 'first'
+    // month >= 5 && !(month === 11 && date > 20) -> 'first'
     expect(getFirstOrLast()).toBe('first');
     vi.useRealTimers();
   });
@@ -120,7 +120,7 @@ describe('getFirstOrLast', () => {
   it('returns "first" on exactly December 20 (boundary: date > 20 is strict)', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2024, 11, 20)); // Dec 20
-    // month >= 5 && !(month === 11 && 20 > 20) → !(false) → 'first'
+    // month >= 5 && !(month === 11 && 20 > 20) -> !(false) -> 'first'
     expect(getFirstOrLast()).toBe('first');
     vi.useRealTimers();
   });
@@ -128,7 +128,7 @@ describe('getFirstOrLast', () => {
   it('returns "last" on December 21 (first day of "last" in December)', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2024, 11, 21)); // Dec 21
-    // month >= 5 && !(month === 11 && 21 > 20) → !(true) → 'last'
+    // month >= 5 && !(month === 11 && 21 > 20) -> !(true) -> 'last'
     expect(getFirstOrLast()).toBe('last');
     vi.useRealTimers();
   });
@@ -136,13 +136,13 @@ describe('getFirstOrLast', () => {
 
 describe('getFirstOrLastMatches - July boundary', () => {
   it('July match (month=6) falls in last round, not first round', () => {
-    const julyMatch = createStoreMatch('2025-07-15T20:00:00'); // month=6, < 7 → last round
+    const julyMatch = createStoreMatch('2025-07-15T20:00:00'); // month=6, < 7 -> last round
     const result = getFirstOrLastMatches([julyMatch], 'last');
     expect(result.matches.length).toBe(1);
   });
 
   it('August match (month=7) falls in first round', () => {
-    const augMatch = createStoreMatch('2024-08-15T20:00:00'); // month=7, >= 7 → first round
+    const augMatch = createStoreMatch('2024-08-15T20:00:00'); // month=7, >= 7 -> first round
     const result = getFirstOrLastMatches([augMatch], 'first');
     expect(result.matches.length).toBe(1);
   });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 interface TimeAgoProps {
   date: Date | string | number;
@@ -19,5 +19,5 @@ export const TimeAgo = ({ date }: TimeAgoProps) => {
     return null;
   }
 
-  return <span>{moment(date).fromNow()}</span>;
+  return <span>{dayjs(date).fromNow()}</span>;
 };

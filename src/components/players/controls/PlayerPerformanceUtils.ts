@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { Dayjs } from 'dayjs';
 import { PlayerRanking } from '../../../models/utils/rankingSorter';
 import { IMatch, ITeam } from '../../../models/model-interfaces';
 
@@ -12,7 +12,7 @@ export type GameResult = {
 
 export type MatchGameResults = {
   matchId: number;
-  matchDate: moment.Moment;
+  matchDate: Dayjs;
   results: GameResult[];
 };
 

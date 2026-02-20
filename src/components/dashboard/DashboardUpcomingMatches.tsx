@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Button from 'react-bootstrap/Button';
 import { Strike } from '../controls/controls/Strike';
 import { UpcomingMatchMiniView } from './UpcomingMatchMiniView';
@@ -20,15 +20,15 @@ export const DashboardUpcomingMatches = () => {
 
   const currentPlayer = user.playerId ? players.find(p => p.id === user.playerId) : null;
 
-  const today = moment().startOf('day');
-  const nextWeek = moment().add(14, 'days').endOf('day');
+  const today = dayjs().startOf('day');
+  const nextWeek = dayjs().add(14, 'days').endOf('day');
 
   const userTeamIds = userTeams.map(team => team.id);
 
   // Get upcoming matches (next 2 weeks), exclude walk overs, forfeited opponents, and matches being played
   const upcomingMatches = matches
     .filter(match => {
-      const matchDate = moment(match.date);
+      const matchDate = dayjs(match.date);
       if (!matchDate.isBetween(today, nextWeek, 'day', '[]')) return false;
       if (match.isSyncedWithFrenoy) return false;
       if (match.scoreType === 'WalkOver') return false;

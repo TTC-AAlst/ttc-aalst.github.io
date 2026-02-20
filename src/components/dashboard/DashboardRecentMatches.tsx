@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Button from 'react-bootstrap/Button';
 import { Strike } from '../controls/controls/Strike';
 import { MatchMiniView } from './MatchMiniView';
@@ -14,15 +14,15 @@ export const DashboardRecentMatches = () => {
   const isLargeDevice = viewport.width >= 1200;
   const [showOtherMatches, setShowOtherMatches] = useState(false);
 
-  const today = moment();
-  const lastWeek = moment().subtract(7, 'days');
+  const today = dayjs();
+  const lastWeek = dayjs().subtract(7, 'days');
 
   const userTeamIds = userTeams.map(team => team.id);
 
   // Get matches from previous week and current week that have been synced, exclude walk overs and forfeited opponents
   const recentMatches = matches
     .filter(match => {
-      const matchDate = moment(match.date);
+      const matchDate = dayjs(match.date);
       if (!matchDate.isBetween(lastWeek, today, 'day', '[]')) return false;
       if (!match.isSyncedWithFrenoy) return false;
       if (match.scoreType === 'WalkOver') return false;

@@ -1,6 +1,6 @@
  
 import React, { ReactElement, useEffect, useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Table from 'react-bootstrap/Table';
 import TextField from '@mui/material/TextField';
 import { AdminPlayerForm } from './AdminPlayerForm';
@@ -193,7 +193,7 @@ const ActivesTable = ({players, onEditPlayer}: ActivesTableProps) => {
                     const newPlayer = {
                       ...ply,
                       active: false,
-                      quitYear: moment().year(),
+                      quitYear: dayjs().year(),
                       security: 'Player' as const,
                     };
                     dispatch(updatePlayer({player: newPlayer, switchActive: true}));
