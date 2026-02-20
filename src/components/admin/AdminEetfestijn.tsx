@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import { Box, Button, Grid2, IconButton, Paper, TextField, Typography } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { saveConfig } from '../../reducers/configReducer';

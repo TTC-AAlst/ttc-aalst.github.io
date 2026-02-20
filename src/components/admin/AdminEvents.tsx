@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Grid2, IconButton, TextField, Typography } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
