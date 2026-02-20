@@ -116,4 +116,34 @@ describe('getFirstOrLast', () => {
     expect(getFirstOrLast()).toBe('first');
     vi.useRealTimers();
   });
+
+  it('returns "first" on exactly December 20 (boundary: date > 20 is strict)', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2024, 11, 20)); // Dec 20
+    // month >= 5 && !(month === 11 && 20 > 20) → !(false) → 'first'
+    expect(getFirstOrLast()).toBe('first');
+    vi.useRealTimers();
+  });
+
+  it('returns "last" on December 21 (first day of "last" in December)', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2024, 11, 21)); // Dec 21
+    // month >= 5 && !(month === 11 && 21 > 20) → !(true) → 'last'
+    expect(getFirstOrLast()).toBe('last');
+    vi.useRealTimers();
+  });
+});
+
+describe('getFirstOrLastMatches - July boundary', () => {
+  it('July match (month=6) falls in last round, not first round', () => {
+    const julyMatch = createStoreMatch('2025-07-15T20:00:00'); // month=6, < 7 → last round
+    const result = getFirstOrLastMatches([julyMatch], 'last');
+    expect(result.matches.length).toBe(1);
+  });
+
+  it('August match (month=7) falls in first round', () => {
+    const augMatch = createStoreMatch('2024-08-15T20:00:00'); // month=7, >= 7 → first round
+    const result = getFirstOrLastMatches([augMatch], 'first');
+    expect(result.matches.length).toBe(1);
+  });
 });

@@ -17,7 +17,7 @@ export class WeekCalcer {
 
   getMatches() {
     const week = this.getWeek();
-    return this.matches.filter(match => match.date.isBetween(week.start, week.end));
+    return this.matches.filter(match => match.date.isBetween(week.start, week.end, undefined, '[]'));
   }
 
   getWeek() {

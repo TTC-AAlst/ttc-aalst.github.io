@@ -263,6 +263,52 @@ describe('moment.js API patterns used in codebase', () => {
     });
   });
 
+  describe('DST transitions (Belgium: last Sunday of March/October)', () => {
+    it('startOf week across spring DST (clocks forward) still returns Monday', () => {
+      // 2025 spring DST: Sunday March 30, 2:00 → 3:00
+      const duringDstWeek = moment('2025-03-31T20:00:00'); // Monday after DST
+      const weekStart = duringDstWeek.clone().startOf('week');
+      expect(weekStart.day()).toBe(1); // Monday
+      expect(weekStart.date()).toBe(31);
+    });
+
+    it('startOf week across autumn DST (clocks backward) still returns Monday', () => {
+      // 2025 autumn DST: Sunday October 26, 3:00 → 2:00
+      const duringDstWeek = moment('2025-10-27T20:00:00'); // Monday after DST
+      const weekStart = duringDstWeek.clone().startOf('week');
+      expect(weekStart.day()).toBe(1); // Monday
+      expect(weekStart.date()).toBe(27);
+    });
+
+    it('subtract 1 hour across spring DST gives correct result', () => {
+      // Match at 20:00 on Sunday March 30 (DST day)
+      const matchDate = moment('2025-03-30T20:00:00');
+      const oneHourBefore = matchDate.clone().subtract(1, 'hour');
+      expect(oneHourBefore.hours()).toBe(19);
+    });
+
+    it('isBeingPlayed diff is correct across DST boundary', () => {
+      vi.useFakeTimers();
+      // Set "now" to 21:00 on DST Sunday
+      vi.setSystemTime(new Date(2025, 2, 30, 21, 0, 0));
+
+      const matchDate = moment('2025-03-30T20:00:00');
+      const diff = moment.duration(moment().diff(matchDate)).asHours();
+      expect(Math.abs(diff)).toBeLessThan(2);
+      expect(Math.abs(diff) < 14).toBe(true);
+
+      vi.useRealTimers();
+    });
+
+    it('isBetween works correctly during DST week', () => {
+      // Match on DST Sunday
+      const match = moment('2025-03-30T20:00:00');
+      const weekStart = match.clone().startOf('week');
+      const weekEnd = match.clone().endOf('week');
+      expect(match.isBetween(weekStart, weekEnd, undefined, '[]')).toBe(true);
+    });
+  });
+
   describe('invalid input handling (MatchModel constructor, TimeAgo)', () => {
     it('moment(null) creates an invalid moment', () => {
       const m = moment(null as any);
@@ -276,8 +322,10 @@ describe('moment.js API patterns used in codebase', () => {
     });
 
     it('moment("garbage") creates an invalid moment', () => {
+      moment.suppressDeprecationWarnings = true;
       const m = moment('not-a-date');
       expect(m.isValid()).toBe(false);
+      moment.suppressDeprecationWarnings = false;
     });
 
     it('moment(validString).isValid() returns true', () => {

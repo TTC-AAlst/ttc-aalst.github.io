@@ -1,7 +1,10 @@
 import moment from 'moment';
+import 'moment/dist/locale/nl-be';
 import { WeekCalcer } from '../WeekCalcer';
 import MatchModel from '../../../../models/MatchModel';
 import { IMatch } from '../../../../models/model-interfaces';
+
+moment.locale('nl-be');
 
 const createMatch = (dateStr: string, id = 1): IMatch => new MatchModel({
   id,
@@ -67,13 +70,21 @@ describe('WeekCalcer', () => {
       expect(weekMatches.map(m => m.id)).toEqual([1, 2]);
     });
 
-    it('includes match at exact week start boundary', () => {
-      // Monday 00:00:00 is the startOf('week') in nl-be locale
-      // The week.start is set via clone().startOf('week'), so a match
-      // at exactly Monday 00:00 must be included
+    it('includes match at exact week start boundary (Monday midnight in nl-be)', () => {
       const matches = [
         createMatch('2025-03-10T00:00:00', 1), // Monday midnight = exact startOf('week')
         createMatch('2025-03-12T20:00:00', 2), // Wednesday same week
+      ];
+      const wc = new WeekCalcer(matches, 1);
+      const weekMatches = wc.getMatches();
+      expect(weekMatches.length).toBe(2);
+      expect(weekMatches.map(m => m.id)).toEqual([1, 2]);
+    });
+
+    it('includes match at exact week end boundary (Sunday 23:59)', () => {
+      const matches = [
+        createMatch('2025-03-12T20:00:00', 1),
+        createMatch('2025-03-16T23:59:00', 2), // Sunday end of week
       ];
       const wc = new WeekCalcer(matches, 1);
       const weekMatches = wc.getMatches();
@@ -110,7 +121,7 @@ describe('WeekCalcer', () => {
 
       const matches = [
         createMatch('2025-03-03T20:00:00', 1),  // week 1 (Mar 3-9)
-        createMatch('2025-03-10T20:00:00', 2),  // week 2 (Mar 10-16) ← today is here
+        createMatch('2025-03-10T20:00:00', 2),  // week 2 (Mar 10-16) <-- today is here
         createMatch('2025-03-17T20:00:00', 3),  // week 3 (Mar 17-23)
       ];
       const wc = new WeekCalcer(matches);
@@ -125,10 +136,9 @@ describe('WeekCalcer', () => {
 
       const matches = [
         createMatch('2025-03-10T20:00:00', 1),  // week 1 (Mar 10-16)
-        createMatch('2025-03-24T20:00:00', 2),  // week 2 (Mar 24-30) ← skipped Mar 17 week
+        createMatch('2025-03-24T20:00:00', 2),  // week 2 (Mar 24-30) <-- skipped Mar 17 week
       ];
       const wc = new WeekCalcer(matches);
-      // Loop should advance past Mar 17 week (no match) and find Mar 24 week
       expect(wc.currentWeek).toBe(2);
 
       vi.useRealTimers();
@@ -145,12 +155,11 @@ describe('WeekCalcer', () => {
   });
 
   describe('week boundaries', () => {
-    it('week start is beginning of the week', () => {
+    it('week start is Monday in nl-be locale', () => {
       const matches = [createMatch('2025-03-12T20:00:00', 1)]; // Wednesday
       const wc = new WeekCalcer(matches, 1);
       const week = wc.getWeek();
-      // startOf('week') should be Monday (locale-dependent)
-      expect(week.start.day()).toBe(moment('2025-03-12').startOf('week').day());
+      expect(week.start.day()).toBe(1); // Monday
     });
 
     it('week end is end of the week', () => {

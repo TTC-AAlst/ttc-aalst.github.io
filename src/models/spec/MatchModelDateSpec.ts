@@ -161,6 +161,71 @@ describe('MatchModel date methods', () => {
     });
   });
 
+  describe('invalid date handling', () => {
+    it('null date creates an invalid moment', () => {
+      const match = createMatch(null as any);
+      expect(match.date.isValid()).toBe(false);
+      expect(match.date.format('YYYY-MM-DD')).toBe('Invalid date');
+    });
+
+    it('undefined date silently becomes current time', () => {
+      const match = createMatch(undefined as any);
+      expect(match.date.isValid()).toBe(true);
+      expect(match.date.diff(moment(), 'seconds')).toBeLessThan(2);
+    });
+
+    it('garbage string date creates an invalid moment', () => {
+      moment.suppressDeprecationWarnings = true;
+      const match = createMatch('not-a-date');
+      expect(match.date.isValid()).toBe(false);
+      moment.suppressDeprecationWarnings = false;
+    });
+
+    it('isBeingPlayed returns false for invalid date', () => {
+      const match = createMatch(null as any);
+      expect(match.isBeingPlayed()).toBe(false);
+    });
+
+    it('getDisplayDate returns "Invalid date" for null date', () => {
+      const match = createMatch(null as any);
+      expect(match.getDisplayDate()).toContain('Invalid date');
+    });
+
+    it('null comment postedOn creates an invalid moment', () => {
+      const match = new MatchModel({
+        id: 1,
+        date: '2025-03-15T20:00:00',
+        competition: 'Vttl',
+        players: [],
+        games: [],
+        comments: [
+          {id: 1, text: 'Test', postedOn: null, playerId: 1},
+        ],
+        opponent: {clubId: 1, teamCode: 'A'},
+        isHomeMatch: true,
+        score: {home: 0, out: 0},
+      });
+      expect(match.comments[0].postedOn.isValid()).toBe(false);
+    });
+
+    it('undefined comment postedOn becomes current time', () => {
+      const match = new MatchModel({
+        id: 1,
+        date: '2025-03-15T20:00:00',
+        competition: 'Vttl',
+        players: [],
+        games: [],
+        comments: [
+          {id: 1, text: 'Test', postedOn: undefined, playerId: 1},
+        ],
+        opponent: {clubId: 1, teamCode: 'A'},
+        isHomeMatch: true,
+        score: {home: 0, out: 0},
+      });
+      expect(match.comments[0].postedOn.isValid()).toBe(true);
+    });
+  });
+
   describe('date parsing', () => {
     it('parses ISO date string into moment', () => {
       const match = createMatch('2025-09-20T20:00:00');
