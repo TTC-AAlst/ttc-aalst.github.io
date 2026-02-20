@@ -264,22 +264,13 @@ describe('OpponentPlayerSelector', () => {
     });
   });
 
-  it('allows saving with fewer players than required', async () => {
-    const user = userEvent.setup();
+  it('allows saving with no players selected', () => {
     renderWithProviders(
       <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
       { preloadedState: defaultStoreState },
     );
 
-    // Save button should be disabled with 0 players
     const saveButton = screen.getByRole('button', { name: /bewaren/i });
-    expect(saveButton).toBeDisabled();
-
-    // Select 1 player (team requires 4)
-    const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
-
-    // Save button should be enabled
     expect(saveButton).toBeEnabled();
   });
 

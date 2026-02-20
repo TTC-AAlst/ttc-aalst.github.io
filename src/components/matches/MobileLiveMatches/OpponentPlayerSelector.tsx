@@ -216,7 +216,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
           variant="primary"
           size="sm"
           onClick={() => handleSave()}
-          disabled={selectedPlayers.length === 0 || isSaving}
+          disabled={isSaving}
         >
           {isSaving ? (
             <>
