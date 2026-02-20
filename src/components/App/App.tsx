@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import ReactGA from 'react-ga4';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
@@ -54,7 +54,9 @@ export const App = ({Component}: {Component: any}) => {
             <Header navOpen={navOpen} setNavOpen={setNavOpen} />
             <Container style={containerStyle} ref={ref}>
               <ErrorBoundary>
-                <Component />
+                <Suspense fallback={<FullScreenSpinner />}>
+                  <Component />
+                </Suspense>
               </ErrorBoundary>
             </Container>
             <div className="push" />
