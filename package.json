@@ -2,6 +2,7 @@
   "name": "ttc-front",
   "version": "0.1.0",
   "private": false,
+  "type": "module",
   "homepage": "https://ttc-aalst.be",
   "scripts": {
     "start": "vite",
