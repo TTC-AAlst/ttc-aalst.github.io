@@ -4,10 +4,15 @@ Front: React-Redux
 Port `5193` for the development backend is hardcoded in:  
 `src/config.ts`
 
-## Deploy gh-pages
+## Commands
 
 ```sh
-npm run deploy
+bun start        # dev server (connects to localhost:5193 backend)
+bun run build    # tsc + vite build
+bun test         # jest
+bun run lint     # eslint
+bun run lint-fix # eslint --fix
+bun run deploy   # build + gh-pages
 ```
 
 

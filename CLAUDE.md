@@ -156,15 +156,14 @@ Tests use Jest with jsdom environment and React Testing Library for component te
 - Shared test utility: `src/utils/test-utils.tsx` (`renderWithProviders` with Redux store)
 - **Boy scout rule:** when touching a component, add or update tests for it
 
-### ESLint Rules
+### ESLint
 
-Extends Airbnb + React config with custom overrides:
+ESLint 9 flat config (`eslint.config.js`) with `typescript-eslint` and `eslint-plugin-react`:
 - Arrow functions preferred for components
-- No implicit arrow linebreak
-- Max 7 empty lines
-- No param reassign allowed (object mutation permitted)
-- Console logs allowed (console.error/warn/log)
-- Debugger statements warning only
+- Max line length: 160 characters
+- `no-console`: off, `no-debugger`: warn
+- `no-undef` / `no-unused-vars`: off (TypeScript handles these)
+- `react-hooks/exhaustive-deps`: warn (keep dependency arrays correct)
 
 ## Key Integrations
 
