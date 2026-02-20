@@ -1,4 +1,3 @@
-/* eslint-disable import/first, import/order, import/newline-after-import */
 import React from 'react';
 import ReactDOM from "react-dom/client";
 import {Provider} from 'react-redux';

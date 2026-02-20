@@ -281,7 +281,7 @@ function getPrevMatches(matches: IMatch[], players: IStorePlayer[]) {
       const beatings = opponentBeatings.find(b => ourScore >= b[`from${match.competition}`])!;
       let beating = getRandom(beatings.words);
       if (beatings.firstWordChance && (Math.random() * 100) <= beatings.firstWordChance) {
-        beating = beatings.words[0]; // eslint-disable-line
+        beating = beatings.words[0];  
       }
 
       if (!beating.includes('{ere}')) {

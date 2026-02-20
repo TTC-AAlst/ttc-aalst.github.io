@@ -41,10 +41,10 @@ export class TeamFrenoyModel implements ITeamFrenoy {
   getWeekUrl(weekName: number): string {
     const paddedWeekName = weekName < 10 ? `0${weekName}` : weekName;
     if (this.teamCompetition === 'Vttl' || this.teamCompetition === 'Jeugd') {
-      // eslint-disable-next-line
+       
       return `https://competitie.vttl.be/?menu=4&season=${this.seasonId}&province=5&club_id=282&div_id=${this.linkId}&modif=0&week_name=${paddedWeekName}`;
     }
-    // eslint-disable-next-line
+     
     return `https://ttonline.sporta.be/?menu=4&season=${this.seasonId}&province=4&club_id=37&div_id=${this.linkId}&modif=0&week_name=${paddedWeekName}`;
   }
 }

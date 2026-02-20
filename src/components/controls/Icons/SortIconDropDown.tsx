@@ -5,7 +5,7 @@ import {Icon} from './Icon';
 
 export type SortDirection = 'asc' | 'desc';
 
-const SortIcon = ({direction}: {direction: SortDirection}) => ( // eslint-disable-line
+const SortIcon = ({direction}: {direction: SortDirection}) => (  
   <Icon fa={`fa fa-2x fa-sort-alpha-${direction}`} translate tooltip="player.sort.tooltip" />
 );
 

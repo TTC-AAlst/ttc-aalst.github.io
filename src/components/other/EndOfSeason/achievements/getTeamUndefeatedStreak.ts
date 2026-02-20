@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax */
+ 
 import { Moment } from "moment";
 import { IMatch, ITeam } from "../../../../models/model-interfaces";
 import { TeamAchievementInfo } from "./achievement-models";

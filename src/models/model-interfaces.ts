@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define */
+ 
 import { Moment } from 'moment';
 import { UserRoles } from './UserModel';
 import { PlayerRanking } from './utils/rankingSorter';

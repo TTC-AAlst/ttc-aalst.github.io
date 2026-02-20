@@ -1,4 +1,4 @@
-/* eslint-disable no-nested-ternary */
+ 
 import React, { ReactElement, useEffect, useState } from 'react';
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';

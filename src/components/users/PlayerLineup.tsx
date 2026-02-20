@@ -1,4 +1,4 @@
-/* eslint-disable no-nested-ternary */
+ 
 import React, {Component} from 'react';
 import moment from 'moment';
 import cn from 'classnames';

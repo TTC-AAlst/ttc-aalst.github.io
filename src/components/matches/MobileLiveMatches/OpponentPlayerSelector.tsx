@@ -29,7 +29,6 @@ const getBackgroundColor = (isSelected: boolean, isDisabled: boolean): string =>
 };
 
 const PlayerRow = ({ player, isSelected, isDisabled, onToggle }: PlayerRowProps) => (
-  // eslint-disable-next-line jsx-a11y/label-has-associated-control
   <label
     style={{
       display: 'flex',

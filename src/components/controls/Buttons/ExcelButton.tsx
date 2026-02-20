@@ -21,7 +21,7 @@ export const ExcelButton = (props: ExcelButtonComponentProps) => {
 
     props.onClick()
       .catch(err => {
-        console.error('err', err); // eslint-disable-line
+        console.error('err', err);  
       })
       .then(() => setIsDownloading(false));
   };

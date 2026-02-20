@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax */
+ 
 import { AchievementInfo } from "./otherAchievements";
 import { Competition, IMatch, ITeamPlayerStats } from "../../../../models/model-interfaces";
 

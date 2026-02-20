@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
 import cn from 'classnames';
 import { Icon } from '../Icons/Icon';

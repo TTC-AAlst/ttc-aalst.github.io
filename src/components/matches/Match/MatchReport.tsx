@@ -1,4 +1,4 @@
-/* eslint-disable no-nested-ternary */
+ 
 import React, {useState} from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -70,7 +70,7 @@ export const MatchReport = ({match, skipContainerClass}: MatchReportProps) => {
 
   const readonlyReport = text ? (
     <pre
-      dangerouslySetInnerHTML={{__html: text}} // eslint-disable-line
+      dangerouslySetInnerHTML={{__html: text}}  
       style={{marginRight: 15, whiteSpace: 'pre-wrap', wordWrap: 'break-word', overflow: 'visible'}}
     />
   ) : null;
@@ -261,7 +261,7 @@ const Comment = ({comment}: CommentProps) => {
       {comment.imageUrl ? (
         <div><img src={getStaticFileUrl(comment.imageUrl)} style={{maxWidth: '95%'}} alt="Door de speler opgeladen" /></div>
       ) : (
-        <div dangerouslySetInnerHTML={{__html: comment.text}} /> // eslint-disable-line
+        <div dangerouslySetInnerHTML={{__html: comment.text}} />  
       )}
     </div>
   );

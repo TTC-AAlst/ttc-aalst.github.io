@@ -1,4 +1,4 @@
-/* eslint-disable object-property-newline */
+ 
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import http from '../utils/httpClient';
 import { t } from "../locales";

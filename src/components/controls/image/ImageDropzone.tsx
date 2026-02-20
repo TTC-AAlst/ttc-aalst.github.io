@@ -1,4 +1,4 @@
-/* eslint-disable react/no-string-refs */
+ 
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import http from '../../../utils/httpClient';
@@ -21,7 +21,7 @@ export default class ImageDropzone extends Component<ImageDropzoneProps> {
           self.props.fileUploaded(data.fileName);
         }
       }, err => {
-        console.error('upload fail!', err); // eslint-disable-line
+        console.error('upload fail!', err);  
       });
   }
 

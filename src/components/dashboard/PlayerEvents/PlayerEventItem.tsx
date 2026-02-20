@@ -217,7 +217,7 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
           {matchContent && (
             <div style={{ fontSize: '0.8em', color: '#555', marginTop: 4 }}>
               <div
-                dangerouslySetInnerHTML={{ __html: matchContent.html }} // eslint-disable-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: matchContent.html }}  
                 style={{
                   maxHeight: expanded ? 'none' : '4.5em',
                   overflow: 'hidden',

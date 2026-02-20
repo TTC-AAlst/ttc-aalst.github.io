@@ -2,7 +2,7 @@ Front: React-Redux
 ==================
 
 Port `5193` for the development backend is hardcoded in:  
-`src/utils/httpClient.js`
+`src/config.ts`
 
 ## Deploy gh-pages
 

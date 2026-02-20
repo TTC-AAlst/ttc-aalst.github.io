@@ -1,4 +1,4 @@
-/* eslint-disable arrow-body-style */
+ 
 import request from 'superagent';
 import moment from 'moment';
 import t from '../locales';
@@ -15,7 +15,7 @@ export function getUrl(path, appendApi = true) {
     console.error('HttpClient: path passed should not be prefixed with /api');
   }
   if (appendApi) {
-    // eslint-disable-next-line no-param-reassign
+     
     path = `/api${path}`;
   }
 
@@ -85,7 +85,7 @@ const HttpClient = {
 
     req.end((err, res) => {
       if (err || !res.ok) {
-        console.error('/upload FAIL', err || '', res); // eslint-disable-line
+        console.error('/upload FAIL', err || '', res);  
         reject();
       } else {
         resolve(res.body);
@@ -101,7 +101,7 @@ const HttpClient = {
       .set('Content-Type', 'application/json')
       .end((err, res) => {
         if (err || !res.ok) {
-          console.error('/upload/image', err || '', res); // eslint-disable-line
+          console.error('/upload/image', err || '', res);  
           reject();
         } else {
           resolve(res.body);

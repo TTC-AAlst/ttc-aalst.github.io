@@ -73,7 +73,7 @@ const Editor = forwardRef<EditorRef, QuillEditorProps>(
       //   onSelectionChangeRef.current?.(...args);
       // });
 
-      return () => { // eslint-disable-line
+      return () => {  
         if (ref && typeof ref !== 'function') {
           (ref as React.MutableRefObject<EditorRef>).current = null;
         }

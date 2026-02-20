@@ -9,7 +9,7 @@ import { fetchTeam, fetchTeams } from "../../reducers/teamsReducer";
 import { fetchMatch, fetchMatches } from "../../reducers/matchesReducer";
 import { fetchReadOnlyMatch } from "../../reducers/readonlyMatchesReducer";
 
-enum Entities { // eslint-disable-line no-shadow
+enum Entities {  
   Player,
   Match,
   Team,
