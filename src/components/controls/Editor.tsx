@@ -9,7 +9,7 @@ type QuillEditorProps = {
   readOnly: boolean;
 }
 
-export const QuillEditor = (props: QuillEditorProps) => {
+const QuillEditor = (props: QuillEditorProps) => {
   const quillRef = useRef<any>(null);
   return <Editor ref={quillRef} {...props} />;
 };
@@ -86,3 +86,5 @@ const Editor = forwardRef<EditorRef, QuillEditorProps>(
 );
 
 Editor.displayName = 'Editor';
+
+export default QuillEditor;

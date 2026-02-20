@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { Modal } from 'react-bootstrap';
 import { WeekTitle } from './WeekTitle';
 import { WeekCalcer } from './WeekCalcer';
-import { QuillEditor } from '../../controls/Editor';
+const QuillEditor = React.lazy(() => import('../../controls/Editor'));
 import { buildHtml } from './htmlBuilder';
 import { EmailButton } from '../../controls/Buttons/EmailButton';
 import { t } from '../../../locales';

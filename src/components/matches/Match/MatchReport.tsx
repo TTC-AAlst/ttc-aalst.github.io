@@ -4,7 +4,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {PlayerAutoComplete} from '../../players/PlayerAutoComplete';
 import ImageDropzone from '../../controls/image/ImageDropzone';
-import {QuillEditor} from '../../controls/Editor';
+const QuillEditor = React.lazy(() => import('../../controls/Editor'));
 import {MaterialButton} from '../../controls/Buttons/MaterialButton';
 import {Icon} from '../../controls/Icons/Icon';
 import {EditIcon} from '../../controls/Icons/EditIcon';
