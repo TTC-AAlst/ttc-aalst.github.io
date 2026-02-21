@@ -24,3 +24,27 @@
   padding-right: 8px;
   color: var(--brand-color);
 }
+
+.Header-carousel {
+  height: 24px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.Header-carousel-inner {
+  transition: transform 0.4s ease-in-out;
+}
+
+.Header-carousel-item {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  color: var(--brand-color);
+  font-size: 1em;
+  white-space: nowrap;
+}
+
+.Header-carousel-item .fa-home {
+  margin-right: 6px;
+  font-size: 0.85em;
+}

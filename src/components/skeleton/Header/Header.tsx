@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
@@ -7,10 +7,11 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Navigation } from './HeaderNavigation';
+import { HeaderScoreCarousel } from './HeaderScoreCarousel';
 import { Icon } from '../../controls/Icons/Icon';
 import { t } from '../../../locales';
 import { useViewport } from '../../../utils/hooks/useViewport';
-import { useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { selectMatchesBeingPlayed, useTtcSelector } from '../../../utils/hooks/storeHooks';
 
 import './Header.css';
 
@@ -30,8 +31,12 @@ type HeaderProps = {
 
 export const Header = ({navOpen, setNavOpen}: HeaderProps) => {
   const user = useTtcSelector(state => state.user);
+  const matchesToday = useTtcSelector(selectMatchesBeingPlayed);
+  const location = useLocation();
   const viewport = useViewport();
   const showExtraNavigationButtons = viewport.width > 700;
+  const isOnVandaag = location.pathname === t.route('matchesToday');
+  const showCarousel = matchesToday.length > 0 && !isOnVandaag;
 
   return (
     <div style={{flexGrow: 1}}>
@@ -47,7 +52,11 @@ export const Header = ({navOpen, setNavOpen}: HeaderProps) => {
           </IconButton>
 
           <Typography variant="subtitle1" color="inherit" style={{flexGrow: 1, fontSize: '1.7rem'}}>
-            <Link className="Header-link" to="/">{navOpen ? null : t('clubName')}</Link>
+            {showCarousel && !navOpen ? (
+              <HeaderScoreCarousel matches={matchesToday} />
+            ) : (
+              <Link className="Header-link" to="/">{navOpen ? null : t('clubName')}</Link>
+            )}
           </Typography>
 
           <div>
