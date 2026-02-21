@@ -353,6 +353,7 @@ export default {
         previousEncounters: "Onderling",
         previousEncountersTitle: "Onderlinge duels",
         admin: "Dev",
+        division: "Afdeling",
       },
       report: {
         title: "Wedstrijdverslag",

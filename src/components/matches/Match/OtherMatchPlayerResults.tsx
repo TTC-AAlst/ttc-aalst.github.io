@@ -4,16 +4,29 @@ import { ReadonlyIndividualMatches } from './IndividualMatches';
 import { IMatch } from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 
-export const OtherMatchPlayerResults = ({match}: {match: IMatch}) => {
+type OtherMatchPlayerResultsProps = {
+  match: IMatch;
+  onFullView?: (match: IMatch) => void;
+};
+
+export const OtherMatchPlayerResults = ({match, onFullView}: OtherMatchPlayerResultsProps) => {
   const [fullView, setFullView] = useState(false);
 
   if (!match) {
     return null;
   }
 
+  const handleFullViewClick = () => {
+    if (onFullView) {
+      onFullView(match);
+    } else {
+      setFullView(!fullView);
+    }
+  };
+
   const SwitchButton = (
     <div className="col-12 text-center">
-      <button type="button" className="btn btn-outline-secondary" style={{marginTop: 15}} onClick={() => setFullView(!fullView)}>
+      <button type="button" className="btn btn-outline-secondary" style={{marginTop: 15}} onClick={handleFullViewClick}>
         {fullView ? t('match.report.viewDetails') : t('match.report.viewFull')}
       </button>
     </div>

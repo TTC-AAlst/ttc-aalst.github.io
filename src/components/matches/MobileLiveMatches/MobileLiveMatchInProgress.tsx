@@ -17,8 +17,9 @@ import { PlayerCompetitionBadge } from '../../players/PlayerBadges';
 import { Icon } from '../../controls/Icons/Icon';
 import { EditIcon } from '../../controls/Icons/EditIcon';
 import { t } from '../../../locales';
-import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { selectReadOnlyMatches, selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
+import { DivisionMatchesSection } from './DivisionMatchesSection';
 import { getPreviousEncounters } from '../../../reducers/matchInfoReducer';
 import { OpponentPlayerSelector } from './OpponentPlayerSelector';
 import { OwnPlayerSelector } from './OwnPlayerSelector';
@@ -117,13 +118,24 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const [showOpponentModal, setShowOpponentModal] = useState(false);
   const [showEncountersModal, setShowEncountersModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
+  const [showDivision, setShowDivision] = useState(false);
   const user = useTtcSelector(selectUser);
   const dispatch = useTtcDispatch();
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match));
   const opponentMatchesList = [...opponentMatches.home, ...opponentMatches.away];
+  const readonlyMatches = useTtcSelector(selectReadOnlyMatches);
 
   const hasReportOrComments = !!match.description || match.comments.length > 0;
   const hasTheirPlayers = match.getTheirPlayers().length > 0;
+
+  // Calculate today's division matches
+  const team = match.getTeam();
+  const competition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
+  const todayDivisionMatches = readonlyMatches
+    .filter(m => m.competition === competition)
+    .filter(m => m.frenoyDivisionId === team.frenoy.divisionId)
+    .filter(m => m.shouldBePlayed && m.isBeingPlayed())
+    .filter(m => !m.isOurMatch);
 
   useEffect(() => {
     dispatch(getOpponentMatches({ teamId: match.teamId, opponent: match.opponent }));
@@ -164,6 +176,16 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
               </Button>
             </OverlayTrigger>
           )}
+          {todayDivisionMatches.length > 0 && (
+            <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.division')}</Tooltip>}>
+              <Button
+                variant={showDivision ? 'secondary' : 'outline-secondary'}
+                onClick={() => setShowDivision(!showDivision)}
+              >
+                {t('match.tabs.division')}
+              </Button>
+            </OverlayTrigger>
+          )}
           {user.isDev() && (
             <Button variant="outline-secondary" aria-label="admin" onClick={() => setShowAdminModal(true)}>
               <Icon fa="fa fa-cog" />
@@ -175,6 +197,12 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
       {showGames && (
         <div style={{ marginTop: 12, marginBottom: 8 }}>
           <IndividualMatches match={match} ownPlayerId={user.playerId} />
+        </div>
+      )}
+
+      {showDivision && (
+        <div style={{ marginTop: 12, marginBottom: 8 }}>
+          <DivisionMatchesSection match={match} />
         </div>
       )}
 
