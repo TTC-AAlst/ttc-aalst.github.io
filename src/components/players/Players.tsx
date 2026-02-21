@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { TabbedContainer } from '../controls/TabbedContainer';
 import { PlayersCardGallery } from './PlayersCardGallery';
 import { PlayersToolbar } from './Players/PlayersToolbar';
@@ -79,14 +78,6 @@ export const Players = () => {
     }
     return (
       <div>
-        {currentPlayer && (
-          <div style={{marginLeft: 15, marginBottom: 5}}>
-            <Link to={playerUrl} style={{fontWeight: 500, color: '#333', textDecoration: 'none'}}>
-              {t('nav.myPlayerPage')}
-              <i className="fa fa-arrow-right" style={{fontSize: '0.7em', marginLeft: 6, opacity: 0.5}} />
-            </Link>
-          </div>
-        )}
         <PlayersToolbar
           marginLeft={15}
           onFilterChange={text => setFilter(text)}
@@ -95,6 +86,7 @@ export const Players = () => {
           onSortDirectionChange={key => setSortDir(key)}
           activeSort={sort}
           activeSortDirection={sortDir}
+          myPlayerPageUrl={playerUrl || undefined}
         />
         {tabContent}
       </div>

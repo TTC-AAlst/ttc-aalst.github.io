@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { downloadPlayersExcel } from '../../../utils/httpClient';
 import {SortDirection, SortIconDropDown} from '../../controls/Icons/SortIconDropDown';
 import {ExcelButton} from '../../controls/Buttons/ExcelButton';
@@ -13,6 +16,7 @@ type PlayersToolbarProps = {
   activeSortDirection: SortDirection;
   onSortChange: Function;
   onSortDirectionChange: (dir: SortDirection) => void;
+  myPlayerPageUrl?: string;
 };
 
 export class PlayersToolbar extends Component<PlayersToolbarProps> {
@@ -34,6 +38,14 @@ export class PlayersToolbar extends Component<PlayersToolbarProps> {
         />
 
         <div className="button-bar-right" style={{marginTop: 5}}>
+          {this.props.myPlayerPageUrl && (
+            <OverlayTrigger placement="top" overlay={<Tooltip id="my-player-page">{t('nav.myPlayerPage')}</Tooltip>}>
+              <Link to={this.props.myPlayerPageUrl} className="btn btn-outline-secondary">
+                <i className="fa fa-user fa-2x" />
+              </Link>
+            </OverlayTrigger>
+          )}
+
           {this.props.canSort ? (
             <SortIconDropDown
               config={sortConfig}
