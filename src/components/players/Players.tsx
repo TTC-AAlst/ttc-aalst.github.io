@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { TabbedContainer } from '../controls/TabbedContainer';
 import { PlayersCardGallery } from './PlayersCardGallery';
 import { PlayersToolbar } from './Players/PlayersToolbar';
@@ -12,6 +13,7 @@ import { t } from '../../locales';
 import { useViewport } from '../../utils/hooks/useViewport';
 import { selectPlayers, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { SortDirection } from '../controls/Icons/SortIconDropDown';
+import PlayerModel from '../../models/PlayerModel';
 
 import './Players.css';
 
@@ -20,8 +22,12 @@ export const Players = () => {
   const [sort, setSort] = useState<Competition>('Vttl');
   const [sortDir, setSortDir] = useState<SortDirection>('asc');
   const viewport = useViewport();
+  const user = useTtcSelector(selectUser);
+  const allPlayers = useTtcSelector(selectPlayers);
+  const currentPlayer = user.playerId ? allPlayers.find(p => p.id === user.playerId) : null;
+  const playerUrl = currentPlayer ? t.route('player').replace(':playerId', encodeURI(new PlayerModel(currentPlayer).slug)) : '';
 
-  let players = useTtcSelector(selectPlayers).slice();
+  let players = allPlayers.slice();
   if (filter) {
     players = players.filter(x => x.name.toLowerCase().includes(filter));
   }
@@ -73,6 +79,14 @@ export const Players = () => {
     }
     return (
       <div>
+        {currentPlayer && (
+          <div style={{marginLeft: 15, marginBottom: 5}}>
+            <Link to={playerUrl} style={{fontWeight: 500, color: '#333', textDecoration: 'none'}}>
+              {t('nav.myPlayerPage')}
+              <i className="fa fa-arrow-right" style={{fontSize: '0.7em', marginLeft: 6, opacity: 0.5}} />
+            </Link>
+          </div>
+        )}
         <PlayersToolbar
           marginLeft={15}
           onFilterChange={text => setFilter(text)}

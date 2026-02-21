@@ -8,7 +8,8 @@ import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import { t } from '../../../locales';
-import { selectMatchesBeingPlayed, selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { selectMatchesBeingPlayed, selectPlayers, selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
+import PlayerModel from '../../../models/PlayerModel';
 
 type NavigationProps = {
   closeNav: () => void,
@@ -19,7 +20,10 @@ export const Navigation = ({navOpen, closeNav}: NavigationProps) => {
   const matchesToday = useTtcSelector(selectMatchesBeingPlayed);
   const navigate = useNavigate();
   const user = useTtcSelector(selectUser);
+  const players = useTtcSelector(selectPlayers);
   const hasYouthTeam = useTtcSelector(state => state.teams.some(team => team.competition === 'Jeugd'));
+  const currentPlayer = user.playerId ? players.find(p => p.id === user.playerId) : null;
+  const playerUrl = currentPlayer ? t.route('player').replace(':playerId', encodeURI(new PlayerModel(currentPlayer).slug)) : '';
 
   const handleClickHelpButton = () => {
     window.open('https://ttc-aalst.github.io/onboarding/', '_blank');
@@ -53,6 +57,7 @@ export const Navigation = ({navOpen, closeNav}: NavigationProps) => {
         <MenuItem onClick={() => goto(t.route('teams', {competition: 'Vttl'}))}>{t('nav.teamsVttl')}</MenuItem>
         <MenuItem onClick={() => goto(t.route('teams', {competition: 'Sporta'}))}>{t('nav.teamsSporta')}</MenuItem>
         {hasYouthTeam && <MenuItem onClick={() => goto(t.route('teams', {competition: 'Jeugd'}))}>{t('nav.teamsJeugd')}</MenuItem>}
+        {currentPlayer && <MenuItem onClick={() => goto(playerUrl)}>{t('nav.myPlayerPage')}</MenuItem>}
         <MenuItem onClick={() => goto(t.route('players'))}>{t('nav.players')}</MenuItem>
         {user.isAdmin() ? <MenuItem onClick={() => goto(t.route('admin'))}>{t('nav.admin')}</MenuItem> : null}
         <Divider />

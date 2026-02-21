@@ -7,6 +7,7 @@ import { UpcomingMatchMiniView } from './UpcomingMatchMiniView';
 import { selectMatches, selectMatchesBeingPlayed, selectPlayers, selectUser, selectUserTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { useViewport } from '../../utils/hooks/useViewport';
 import t from '../../locales';
+import PlayerModel from '../../models/PlayerModel';
 
 export const DashboardUpcomingMatches = () => {
   const matches = useTtcSelector(selectMatches);
@@ -19,6 +20,7 @@ export const DashboardUpcomingMatches = () => {
   const [showOtherMatches, setShowOtherMatches] = useState(false);
 
   const currentPlayer = user.playerId ? players.find(p => p.id === user.playerId) : null;
+  const playerUrl = currentPlayer ? t.route('player').replace(':playerId', encodeURI(new PlayerModel(currentPlayer).slug)) : '';
 
   const today = dayjs().startOf('day');
   const nextWeek = dayjs().add(14, 'days').endOf('day');
@@ -65,9 +67,10 @@ export const DashboardUpcomingMatches = () => {
     <div style={{marginBottom: 20}}>
       <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6}}>
         {currentPlayer && (
-          <span style={{fontSize: '1.1em', fontWeight: 500, color: '#333', whiteSpace: 'nowrap'}}>
+          <Link to={playerUrl} style={{fontSize: '1.1em', fontWeight: 500, color: '#333', whiteSpace: 'nowrap', textDecoration: 'none'}}>
             {t('dashboard.greeting', {name: currentPlayer.firstName})}
-          </span>
+            <i className="fa fa-arrow-right" style={{fontSize: '0.7em', marginLeft: 6, opacity: 0.5}} />
+          </Link>
         )}
         {isSmallDevice ? <div style={{flex: 1}} /> : <Strike text={t('dashboard.upcomingMatches')} style={{flex: 1, marginBottom: 0}} />}
         {matchesBeingPlayed.length > 0 && (

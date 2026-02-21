@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {MaterialButton} from '../controls/Buttons/MaterialButton';
 import {TabbedContainer} from '../controls/TabbedContainer';
 import {ChangePassword} from './ChangePassword';
@@ -109,25 +109,38 @@ type ProfilePlayerDetailsProps = {
   logoutAndGoHome: () => void,
 };
 
-const ProfilePlayerDetails = ({player, logoutAndGoHome}: ProfilePlayerDetailsProps) => (
-  <div style={{padding: 10}}>
-    <h3>{player.name}</h3>
-    <p>
-      <strong>{t('player.email')}</strong>&nbsp;{player.contact.email}
-      <br />
-      <strong>{t('player.gsm')}</strong>&nbsp;{displayMobile(player.contact.mobile)}
-      <br />
-      <strong>{t('player.address')}</strong>&nbsp;{player.contact.address}
-      <br />
-      <strong>{t('player.city')}</strong>&nbsp;{player.contact.city}
-    </p>
+const ProfilePlayerDetails = ({player, logoutAndGoHome}: ProfilePlayerDetailsProps) => {
+  const playerSlug = player.name.toLowerCase().replace(/\s/g, '-');
+  const playerUrl = t.route('player').replace(':playerId', encodeURI(playerSlug));
 
-    <MaterialButton
-      variant="contained"
-      label={t('login.logoutButton')}
-      color="secondary"
-      style={{marginTop: 15}}
-      onClick={() => logoutAndGoHome()}
-    />
-  </div>
-);
+  return (
+    <div style={{padding: 10}}>
+      <h3>{player.name}</h3>
+      <p>
+        <strong>{t('player.email')}</strong>&nbsp;{player.contact.email}
+        <br />
+        <strong>{t('player.gsm')}</strong>&nbsp;{displayMobile(player.contact.mobile)}
+        <br />
+        <strong>{t('player.address')}</strong>&nbsp;{player.contact.address}
+        <br />
+        <strong>{t('player.city')}</strong>&nbsp;{player.contact.city}
+      </p>
+
+      <Link to={playerUrl}>
+        <MaterialButton
+          variant="contained"
+          label={t('nav.myPlayerPage')}
+          color="primary"
+          style={{marginTop: 15, marginRight: 10}}
+        />
+      </Link>
+      <MaterialButton
+        variant="contained"
+        label={t('login.logoutButton')}
+        color="secondary"
+        style={{marginTop: 15}}
+        onClick={() => logoutAndGoHome()}
+      />
+    </div>
+  );
+};

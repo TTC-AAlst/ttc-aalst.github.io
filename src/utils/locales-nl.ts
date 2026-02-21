@@ -99,6 +99,7 @@ export default {
       teamsSporta: "Ploegen Sporta",
       teamsJeugd: "Jeugdploegen",
       players: "Spelers",
+      myPlayerPage: "Mijn spelerspagina",
       login: "Log in",
       links: "Links",
       facts: "TT Weetjes",
