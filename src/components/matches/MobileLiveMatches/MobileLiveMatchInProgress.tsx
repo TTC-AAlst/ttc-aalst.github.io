@@ -21,6 +21,7 @@ import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks
 import { getOpponentMatches } from '../../../reducers/readonlyMatchesReducer';
 import { getPreviousEncounters } from '../../../reducers/matchInfoReducer';
 import { OpponentPlayerSelector } from './OpponentPlayerSelector';
+import { OwnPlayerSelector } from './OwnPlayerSelector';
 import { TeamRankingBadges } from '../../teams/controls/TeamRankingBadges';
 import { MatchOtherRoundButton } from '../controls/ViewMatchDetailsButton';
 import { MatchCardAdmin } from '../Match/MatchCardAdmin';
@@ -60,13 +61,23 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
 
 const FormationsWithResults = ({ match }: { match: IMatch }) => {
   const [showEditOpponents, setShowEditOpponents] = useState(false);
-  const canEditOpponents = match.games.length === 0;
+  const [showEditOwn, setShowEditOwn] = useState(false);
+  const user = useTtcSelector(selectUser);
+  const canEditPlayers = match.games.length === 0;
 
   return (
     <div style={{ padding: 8 }}>
       <div style={{ display: 'flex', gap: 16 }}>
         <div style={{ flex: 1 }}>
-          <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+            <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
+            {canEditPlayers && user.playerId > 0 && (
+              <EditIcon
+                style={{ cursor: 'pointer' }}
+                onClick={() => setShowEditOwn(!showEditOwn)}
+              />
+            )}
+          </div>
           {match.getOwnPlayers().filter(ply => ply.status === match.block).map(ply => (
             <OwnPlayer key={ply.position} match={match} ply={ply} showRanking />
           ))}
@@ -74,7 +85,7 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => {
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
             <SectionTitle>{t('match.playersOpponentsTitle')}</SectionTitle>
-            {canEditOpponents && (
+            {canEditPlayers && (
               <EditIcon
                 style={{ cursor: 'pointer' }}
                 onClick={() => setShowEditOpponents(!showEditOpponents)}
@@ -86,6 +97,11 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => {
           ))}
         </div>
       </div>
+      {showEditOwn && (
+        <div style={{ marginTop: 16 }}>
+          <OwnPlayerSelector match={match} initialOpen onClose={() => setShowEditOwn(false)} />
+        </div>
+      )}
       {showEditOpponents && (
         <div style={{ marginTop: 16 }}>
           <OpponentPlayerSelector match={match} initialOpen onClose={() => setShowEditOpponents(false)} />
@@ -244,12 +260,22 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 
 const OurFormationPreStart = ({ match }: { match: IMatch }) => {
   const [showScoresheet, setShowScoresheet] = useState(false);
+  const [showEditOwn, setShowEditOwn] = useState(false);
+  const user = useTtcSelector(selectUser);
   const playingPlayers = match.getPlayerFormation('onlyFinal').map(x => x.player);
 
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-        <SectionTitle>{t('match.tabs.playersTitle')}</SectionTitle>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+          <SectionTitle>{t('match.tabs.playersTitle')}</SectionTitle>
+          {playingPlayers.length > 0 && user.playerId > 0 && match.games.length === 0 && (
+            <EditIcon
+              style={{ cursor: 'pointer' }}
+              onClick={() => setShowEditOwn(!showEditOwn)}
+            />
+          )}
+        </div>
         {playingPlayers.length > 0 && (
           <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.scoresheet')}</Tooltip>}>
             <Button
@@ -262,16 +288,24 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
           </OverlayTrigger>
         )}
       </div>
-      {playingPlayers.length === 0 && (
+      {playingPlayers.length === 0 && user.playerId > 0 && (
+        <OwnPlayerSelector match={match} />
+      )}
+      {playingPlayers.length === 0 && user.playerId <= 0 && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#666' }}>
           <Icon fa="fa fa-question-circle" />
           <span style={{ fontStyle: 'italic' }}>{t('match.formationUnknown')}</span>
         </div>
       )}
+      {playingPlayers.length > 0 && showEditOwn && (
+        <div style={{ marginBottom: 8 }}>
+          <OwnPlayerSelector match={match} initialOpen onClose={() => setShowEditOwn(false)} />
+        </div>
+      )}
       {playingPlayers.length > 0 && showScoresheet && (
         <Scoresheet match={match} hideDownload />
       )}
-      {playingPlayers.length > 0 && !showScoresheet && (
+      {playingPlayers.length > 0 && !showScoresheet && !showEditOwn && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {playingPlayers.map(ply => (
             <PlayerCompetitionBadge

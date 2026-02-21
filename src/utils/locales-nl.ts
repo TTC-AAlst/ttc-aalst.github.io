@@ -379,6 +379,7 @@ export default {
       playersOpponentsTitle: "Tegenstanders",
       theirFormation: "Hun opstelling",
       selectOpponents: "Selecteer tegenstanders",
+      selectOwnPlayers: "Selecteer spelers",
       opponentPlayersLocked: "Tegenstanders kunnen niet meer gewijzigd worden",
       noEncountersYet: "Geen vorige ontmoetingen",
       noDuels: "geen duels",
