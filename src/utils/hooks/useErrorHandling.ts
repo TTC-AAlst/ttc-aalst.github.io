@@ -13,7 +13,7 @@ export const useErrorHandling = () => {
           url: document.location.pathname,
           parsedStack: JSON.stringify(err, null, 2),
         };
-        httpClient.post('/config/Log', errObj);
+        httpClient.post('/config/Log', errObj).catch(() => { /* Swallow logging errors to prevent infinite loop */ });
       }).catch(err => {
         const errObj = {
           message: `handleGlobalError: ${event.filename}:${event.lineno}:${event.colno}: ${event.message}. Err from stacktrace-js: ${err}`,
@@ -21,7 +21,7 @@ export const useErrorHandling = () => {
           componentStack: null,
           url: document.location.pathname,
         };
-        httpClient.post('/config/Log', errObj);
+        httpClient.post('/config/Log', errObj).catch(() => { /* Swallow logging errors to prevent infinite loop */ });
       });
     };
 
@@ -39,7 +39,7 @@ export const useErrorHandling = () => {
         componentStack: null,
         url: document.location.pathname,
       };
-      httpClient.post('/config/Log', errObj);
+      httpClient.post('/config/Log', errObj).catch(() => { /* Swallow logging errors to prevent infinite loop */ });
     };
 
     window.addEventListener('unhandledrejection', handleRejection);
