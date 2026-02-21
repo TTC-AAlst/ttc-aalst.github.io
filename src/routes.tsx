@@ -33,7 +33,7 @@ const Routes = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path={`${t.route('matchesWeek')}/:week?/:comp?`} element={<App Component={MatchesWeek} />} />
+        <Route path={`${t.route('matchesWeek')}/:comp?`} element={<App Component={MatchesWeek} />} />
         <Route path={`${t.route('teams')}/:tabKey?/:view?`} element={<App Component={Teams} />} />
         <Route path={t.route('opponent')} element={<App Component={OpponentOverview} />} />
 

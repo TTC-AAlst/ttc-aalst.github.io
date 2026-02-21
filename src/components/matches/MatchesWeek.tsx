@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MatchesTable } from './MatchesTable';
-import { MatchesWeekEmail } from './MatchesWeeks/MatchesWeekEmail';
 import { WeekTitle } from './MatchesWeeks/WeekTitle';
 import { WeekCalcer } from './MatchesWeeks/WeekCalcer';
 import { ButtonStack } from '../controls/Buttons/ButtonStack';
@@ -13,21 +12,16 @@ import { selectFreeMatches, selectMatches, selectUser, useTtcSelector } from '..
 
 export const MatchesWeek = () => {
   const user = useTtcSelector(selectUser);
-  const {week, comp} = useParams();
-  const [currentWeek, setCurrentWeek] = useState(week ? parseInt(week, 10) : undefined);
+  const {comp} = useParams();
   const [editMode, setEditMode] = useState(false);
   const navigate = useNavigate();
   const realMatches = useTtcSelector(selectMatches);
   const freeMatches = useTtcSelector(selectFreeMatches);
+  const weekRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const hasScrolled = useRef(false);
 
-  const onChangeWeek = (curWeek: number, weekDiff: number) => {
-    const compFilter = comp && comp !== 'all' ? `/${comp}` : '';
-    navigate(`${t.route('matchesWeek')}/${curWeek + weekDiff}${compFilter}`);
-    setCurrentWeek(curWeek + weekDiff);
-  };
-
-  const onChangeCompetition = (curWeek: number, competition) => {
-    navigate(`${t.route('matchesWeek')}/${curWeek}${competition && competition !== 'all' ? `/${competition}` : ''}`);
+  const onChangeCompetition = (competition: string) => {
+    navigate(`${t.route('matchesWeek')}${competition && competition !== 'all' ? `/${competition}` : ''}`);
   };
 
   let allMatches = realMatches;
@@ -35,35 +29,27 @@ export const MatchesWeek = () => {
     allMatches = allMatches.concat(freeMatches);
   }
 
-  const weekCalcer = new WeekCalcer(allMatches, currentWeek, editMode);
-  const matches = weekCalcer.getMatches();
-  if (matches.length === 0) {
+  const weekCalcer = new WeekCalcer(allMatches, undefined, editMode);
+
+  // Scroll to current week on mount
+  useEffect(() => {
+    if (!hasScrolled.current && weekCalcer.weeks.length > 0) {
+      const currentWeekEl = weekRefs.current.get(weekCalcer.currentWeek - 1);
+      if (currentWeekEl) {
+        // Delay slightly to allow layout to settle
+        setTimeout(() => {
+          currentWeekEl.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }, 100);
+        hasScrolled.current = true;
+      }
+    }
+  }, [weekCalcer.currentWeek, weekCalcer.weeks.length]);
+
+  if (weekCalcer.weeks.length === 0) {
     return null;
   }
 
   const compFilter = (comp || 'all') as Competition | 'all';
-
-  let matchMailing: React.ReactNode = null;
-  if (compFilter !== 'all' && user.isAdmin() && matches.some(m => !m.isSyncedWithFrenoy)) {
-    let prevMatches = [] as IMatch[];
-    const curWeek = currentWeek || 1;
-    if (curWeek > 1) {
-      let prevWeekCalc = new WeekCalcer(allMatches, curWeek - 1, editMode);
-      prevMatches = prevWeekCalc.getMatches().filter(m => m.competition === compFilter);
-      if (curWeek > 2 && prevMatches.length === 0) {
-        prevWeekCalc = new WeekCalcer(allMatches, curWeek - 2, editMode);
-        prevMatches = prevWeekCalc.getMatches();
-      }
-    }
-    matchMailing = (
-      <MatchesWeekEmail
-        weekCalcer={weekCalcer}
-        matches={matches.filter(x => !compFilter || x.competition === compFilter).filter(x => x.shouldBePlayed)}
-        prevMatches={prevMatches.filter(x => !compFilter || x.competition === compFilter).filter(x => x.shouldBePlayed)}
-        compFilter={compFilter}
-      />
-    );
-  }
 
   const viewsConfig = [
     {key: 'all', text: t('common.all')},
@@ -71,30 +57,70 @@ export const MatchesWeek = () => {
     {key: 'Sporta', text: 'Sporta'},
   ];
 
-  return (
-    <div style={{paddingTop: 25}}>
-      <WeekTitle weekCalcer={weekCalcer} weekChange={diff => onChangeWeek(weekCalcer.currentWeek, diff)} />
+  const hasUnsyncedMatches = realMatches.some(m => !m.isSyncedWithFrenoy);
 
-      <span className="button-bar-right">
+  return (
+    <div style={{paddingTop: 10}}>
+      {/* Sticky filter bar */}
+      <div
+        style={{
+          position: 'sticky',
+          top: 48,
+          backgroundColor: 'white',
+          zIndex: 100,
+          padding: '8px 0',
+          borderBottom: '1px solid #eee',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 8,
+        }}
+      >
         <ButtonStack
           config={viewsConfig}
           small={false}
           activeView={compFilter}
-          onClick={newCompFilter => onChangeCompetition(weekCalcer.currentWeek, newCompFilter)}
+          onClick={newCompFilter => onChangeCompetition(newCompFilter)}
         />
-
-
-        {user.canManageTeams() && matches.some(m => !m.isSyncedWithFrenoy) ? (
+        {user.canManageTeams() && hasUnsyncedMatches ? (
           <EditButton onClick={() => setEditMode(!editMode)} />
         ) : null}
+      </div>
 
+      {/* Render all weeks */}
+      {weekCalcer.weeks.map((week, index) => {
+        const weekMatches = weekCalcer.getMatchesForWeek(index);
+        const isCurrentWeek = index === weekCalcer.currentWeek - 1;
 
-        {matchMailing}
-      </span>
+        return (
+          <div
+            key={index}
+            ref={el => {
+              if (el) weekRefs.current.set(index, el);
+            }}
+            style={{
+              marginTop: 24,
+              paddingTop: 12,
+              borderTop: index > 0 ? '1px solid #ddd' : undefined,
+              backgroundColor: isCurrentWeek ? '#f8f9fa' : undefined,
+              padding: isCurrentWeek ? '12px 8px' : undefined,
+              borderRadius: isCurrentWeek ? 4 : undefined,
+            }}
+          >
+            <WeekTitle weekCalcer={weekCalcer} weekIndex={index} style={{ marginBottom: 16 }} />
 
-      {compFilter !== 'Sporta' ? <MatchesWeekPerCompetition comp="Vttl" editMode={editMode} matches={matches} /> : null}
-      {compFilter !== 'Vttl' && compFilter !== 'Sporta' ? <hr style={{marginLeft: '10%', marginRight: '10%', marginTop: 50}} /> : null}
-      {compFilter !== 'Vttl' ? <MatchesWeekPerCompetition comp="Sporta" editMode={editMode} matches={matches} /> : null}
+            {compFilter !== 'Sporta' && (
+              <MatchesWeekPerCompetition comp="Vttl" editMode={editMode} matches={weekMatches} />
+            )}
+            {compFilter === 'all' && weekMatches.some(m => m.competition === 'Vttl') && weekMatches.some(m => m.competition === 'Sporta') && (
+              <hr style={{marginLeft: '10%', marginRight: '10%', marginTop: 30, marginBottom: 20}} />
+            )}
+            {compFilter !== 'Vttl' && (
+              <MatchesWeekPerCompetition comp="Sporta" editMode={editMode} matches={weekMatches} />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };
