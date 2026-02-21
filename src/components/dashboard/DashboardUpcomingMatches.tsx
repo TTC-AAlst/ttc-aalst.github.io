@@ -69,7 +69,6 @@ export const DashboardUpcomingMatches = () => {
         {currentPlayer && (
           <Link to={playerUrl} style={{fontSize: '1.1em', fontWeight: 500, color: '#333', whiteSpace: 'nowrap', textDecoration: 'none'}}>
             {t('dashboard.greeting', {name: currentPlayer.firstName})}
-            <i className="fa fa-arrow-right" style={{fontSize: '0.7em', marginLeft: 6, opacity: 0.5}} />
           </Link>
         )}
         {isSmallDevice ? <div style={{flex: 1}} /> : <Strike text={t('dashboard.upcomingMatches')} style={{flex: 1, marginBottom: 0}} />}

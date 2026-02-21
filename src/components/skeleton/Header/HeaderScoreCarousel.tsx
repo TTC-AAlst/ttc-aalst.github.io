@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { IMatch } from '../../../models/model-interfaces';
 import { Icon } from '../../controls/Icons/Icon';
 import { t } from '../../../locales';
-import { useViewport } from '../../../utils/hooks/useViewport';
 
 type HeaderScoreCarouselProps = {
   matches: IMatch[];
@@ -11,8 +10,6 @@ type HeaderScoreCarouselProps = {
 
 export const HeaderScoreCarousel = ({ matches }: HeaderScoreCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const viewport = useViewport();
-  const showOpponent = viewport.width > 400;
 
   useEffect(() => {
     if (matches.length <= 1) return;
@@ -50,12 +47,7 @@ export const HeaderScoreCarousel = ({ matches }: HeaderScoreCarouselProps) => {
         {matches.map(match => {
           const team = match.getTeam();
           const teamLabel = `${match.competition} ${team.teamCode}`;
-          const hasScore = match.score.home > 0 || match.score.out > 0;
-          const scoreOrTime = hasScore
-            ? `${match.score.home}-${match.score.out}`
-            : match.date.format('HH:mm');
-          const opponentClub = match.isHomeMatch ? match.getOpponentClub() : match.getOpponentClub();
-          const opponentLabel = opponentClub?.name || match.opponent.teamCode;
+          const score = `${match.score.home}-${match.score.out}`;
 
           return (
             <div
@@ -74,9 +66,7 @@ export const HeaderScoreCarousel = ({ matches }: HeaderScoreCarouselProps) => {
                 <Icon fa="fa fa-home" style={{ marginRight: 6, fontSize: '0.85em' }} />
               )}
               <span>
-                {teamLabel}
-                {showOpponent && ` vs ${opponentLabel}`}
-                : {scoreOrTime}
+                {teamLabel}: {score}
               </span>
             </div>
           );
