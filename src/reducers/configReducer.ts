@@ -60,6 +60,7 @@ const defaultConfigState = {
   },
   newMatchComments: {} as {[matchId: number]: boolean},
   opponentMatchesLoaded: {} as {[opponentKey: string]: boolean},
+  expandedMatchCards: {} as {[matchId: number]: boolean},
   caches: defaultCaches,
 };
 
@@ -117,6 +118,10 @@ export const configSlice = createSlice({
       const key = `${teamId}-${opponent?.teamCode}-${opponent?.clubId}`;
       state.opponentMatchesLoaded[key] = true;
     },
+    toggleMatchCardExpanded: (state, action: PayloadAction<number>) => {
+      const matchId = action.payload;
+      state.expandedMatchCards[matchId] = !state.expandedMatchCards[matchId];
+    },
   },
   extraReducers: builder => {
     builder.addCase(fetchConfig.fulfilled, (state, action) => {
@@ -159,7 +164,7 @@ export const configSlice = createSlice({
   },
 });
 
-export const { setInitialLoad, clearSnackbar, showSnackbar, setSetting, setNewMatchComment, setOpponentMatchesLoaded } = configSlice.actions;
+export const { setInitialLoad, clearSnackbar, showSnackbar, setSetting, setNewMatchComment, setOpponentMatchesLoaded, toggleMatchCardExpanded } = configSlice.actions;
 
 const configReducer = configSlice.reducer;
 export default configReducer;

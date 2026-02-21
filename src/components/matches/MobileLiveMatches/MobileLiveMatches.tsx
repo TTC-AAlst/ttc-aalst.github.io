@@ -7,6 +7,7 @@ import { Icon } from '../../controls/Icons/Icon';
 import { t } from '../../../locales';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { frenoyMatchSync } from '../../../reducers/matchesReducer';
+import { toggleMatchCardExpanded } from '../../../reducers/configReducer';
 
 const SYNC_COOLDOWN_MS = 10 * 60 * 1000;
 
@@ -19,6 +20,7 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
   const isMobile = viewport.width < 992;
   const dispatch = useTtcDispatch();
   const user = useTtcSelector(selectUser);
+  const expandedMatchCards = useTtcSelector(state => state.config.expandedMatchCards);
   const [syncDisabled, setSyncDisabled] = useState(false);
   const syncTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -32,30 +34,18 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
   // Only collapsible on mobile with multiple matches
   const isCollapsible = isMobile && matches.length > 1;
 
-  // On mobile with multiple matches: start collapsed. Otherwise: start expanded.
-  const [expandedIds, setExpandedIds] = useState<Set<number>>(() => (
-    isCollapsible ? new Set() : new Set(matches.map(m => m.id))
-  ));
-
-  const allExpanded = matches.every(m => expandedIds.has(m.id));
+  const allExpanded = matches.every(m => !!expandedMatchCards[m.id]);
   const toggleAll = () => {
-    if (allExpanded) {
-      setExpandedIds(new Set());
-    } else {
-      setExpandedIds(new Set(matches.map(m => m.id)));
-    }
+    const shouldExpand = !allExpanded;
+    matches.forEach(m => {
+      if (!!expandedMatchCards[m.id] !== shouldExpand) {
+        dispatch(toggleMatchCardExpanded(m.id));
+      }
+    });
   };
 
   const toggleMatch = (matchId: number) => {
-    setExpandedIds(prev => {
-      const next = new Set(prev);
-      if (next.has(matchId)) {
-        next.delete(matchId);
-      } else {
-        next.add(matchId);
-      }
-      return next;
-    });
+    dispatch(toggleMatchCardExpanded(matchId));
   };
 
   return (
@@ -71,7 +61,7 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
           <MobileLiveMatchCard
             key={match.id}
             match={match}
-            expanded={!isCollapsible || expandedIds.has(match.id)}
+            expanded={!isCollapsible || !!expandedMatchCards[match.id]}
             onToggle={() => toggleMatch(match.id)}
             isCollapsible={isCollapsible}
           />
