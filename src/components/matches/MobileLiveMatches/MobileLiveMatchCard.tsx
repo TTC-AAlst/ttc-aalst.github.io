@@ -4,6 +4,8 @@ import { MobileLiveMatchHeader } from './MobileLiveMatchHeader';
 import { MobileLiveMatchInProgress } from './MobileLiveMatchInProgress';
 import { Icon } from '../../controls/Icons/Icon';
 import { getRankingResults } from '../Match/OwnPlayer';
+import { PlayerLink } from '../../players/controls/PlayerLink';
+import { selectPlayers, useTtcSelector } from '../../../utils/hooks/storeHooks';
 
 type MobileLiveMatchCardProps = {
   match: IMatch;
@@ -14,6 +16,7 @@ type MobileLiveMatchCardProps = {
 };
 
 const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
+  const allPlayers = useTtcSelector(selectPlayers);
   const hasPlayersOrGames = match.games.length > 0 || match.getTheirPlayers().length > 0;
 
   let players: IMatchPlayer[];
@@ -34,10 +37,16 @@ const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
     <div style={{ padding: '4px 8px', fontSize: '0.8em', color: '#666', textAlign: 'center' }}>
       {players.map((ply, i) => {
         const wins = hasGames ? getRankingResults(match, ply).win.length : 0;
+        const storePlayer = ply.playerId ? allPlayers.find(p => p.id === ply.playerId) : null;
         return (
           <span key={ply.uniqueIndex || i}>
             {i > 0 && ' · '}
-            {ply.alias} {ply.ranking}
+            {storePlayer ? (
+              <PlayerLink player={storePlayer} alias style={{ color: 'inherit' }}/>
+            ) : (
+              ply.alias
+            )}
+            {' '}{ply.ranking}
             {hasGames && ` (${wins})`}
           </span>
         );
