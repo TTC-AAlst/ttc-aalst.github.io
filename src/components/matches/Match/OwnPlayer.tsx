@@ -72,13 +72,13 @@ function renderWinsNode(result: RankingResult, teamPlayerCount: 2 | 3 | 4) {
   return winNode;
 }
 
-type RankingResult = {
+export type RankingResult = {
   win: PlayerRanking[];
   lost: PlayerRanking[];
   wo: boolean;
 }
 
-function getRankingResults(match: IMatch, ply: IMatchPlayer): RankingResult {
+export function getRankingResults(match: IMatch, ply: IMatchPlayer): RankingResult {
   const getAdversaryRanking = (game: IGetGameMatches) => (game.home.uniqueIndex === ply.uniqueIndex ? game.out.ranking : game.home.ranking);
 
   const plyMatches = match.getGameMatches().filter(game => game.ownPlayer === ply);

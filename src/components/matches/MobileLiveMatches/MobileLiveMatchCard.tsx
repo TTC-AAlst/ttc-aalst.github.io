@@ -1,8 +1,9 @@
 import React from 'react';
-import { IMatch } from '../../../models/model-interfaces';
+import { IMatch, IMatchPlayer } from '../../../models/model-interfaces';
 import { MobileLiveMatchHeader } from './MobileLiveMatchHeader';
 import { MobileLiveMatchInProgress } from './MobileLiveMatchInProgress';
 import { Icon } from '../../controls/Icons/Icon';
+import { getRankingResults } from '../Match/OwnPlayer';
 
 type MobileLiveMatchCardProps = {
   match: IMatch;
@@ -10,6 +11,39 @@ type MobileLiveMatchCardProps = {
   onToggle: () => void;
   /** When false, the card is always expanded and not collapsible */
   isCollapsible: boolean;
+};
+
+const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
+  const hasPlayersOrGames = match.games.length > 0 || match.getTheirPlayers().length > 0;
+
+  let players: IMatchPlayer[];
+  if (hasPlayersOrGames) {
+    players = match.getOwnPlayers().filter(ply => ply.status === match.block);
+  } else {
+    const formation = match.getPlayerFormation('onlyFinal');
+    players = formation.map(f => f.matchPlayer);
+  }
+
+  if (players.length === 0) {
+    return null;
+  }
+
+  const hasGames = match.games.length > 0;
+
+  return (
+    <div style={{ padding: '4px 8px', fontSize: '0.8em', color: '#666', textAlign: 'center' }}>
+      {players.map((ply, i) => {
+        const wins = hasGames ? getRankingResults(match, ply).win.length : 0;
+        return (
+          <span key={ply.uniqueIndex || i}>
+            {i > 0 && ' · '}
+            {ply.alias} {ply.ranking}
+            {hasGames && ` (${wins})`}
+          </span>
+        );
+      })}
+    </div>
+  );
 };
 
 export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible }: MobileLiveMatchCardProps) => {
@@ -51,6 +85,7 @@ export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible }
           </button>
         )}
       </div>
+      {isCollapsible && !expanded && <CollapsedPlayerSummary match={match} />}
       {showContent && <MobileLiveMatchInProgress match={match} />}
     </div>
   );
