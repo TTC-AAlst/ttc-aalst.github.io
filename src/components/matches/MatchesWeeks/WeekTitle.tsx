@@ -7,14 +7,12 @@ import { useViewport } from '../../../utils/hooks/useViewport';
 type WeekTitleProps = {
   weekCalcer: WeekCalcer,
   weekChange?: Function,
-  weekIndex?: number,
   style?: React.CSSProperties,
 }
 
-export const WeekTitle = ({weekCalcer, style, weekChange, weekIndex}: WeekTitleProps) => {
+export const WeekTitle = ({weekCalcer, style, weekChange}: WeekTitleProps) => {
   const viewport = useViewport();
-  const displayWeekNumber = weekIndex !== undefined ? weekIndex + 1 : weekCalcer.currentWeek;
-  const week = weekIndex !== undefined ? weekCalcer.weeks[weekIndex] : weekCalcer.getWeek();
+  const week = weekCalcer.getWeek();
 
   if (!week) {
     return null;
@@ -48,7 +46,7 @@ export const WeekTitle = ({weekCalcer, style, weekChange, weekIndex}: WeekTitleP
 
       {t('match.week')}
       &nbsp;
-      {displayWeekNumber}
+      {weekCalcer.currentWeek}
       {extraTitle}
 
       {weekChange && weekCalcer.currentWeek < weekCalcer.lastWeek ? (
