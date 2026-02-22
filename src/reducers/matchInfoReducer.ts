@@ -21,7 +21,7 @@ export const getPreviousEncounters = createAsyncThunk(
     }
 
     try {
-      const encounters = await http.get<PlayerEncounter[]>('/matches/GetPreviousEncounters', data);
+      const encounters = await http.post<PlayerEncounter[]>('/matches/GetPreviousEncounters', data);
       return encounters;
     } catch (err) {
       console.error('GetPreviousEncounters', err);
@@ -63,7 +63,7 @@ export const getOpponentTeamEncounters = createAsyncThunk(
     };
 
     try {
-      const encounters = await http.get<PlayerEncounter[]>('/matches/GetPreviousEncounters', data);
+      const encounters = await http.post<PlayerEncounter[]>('/matches/GetPreviousEncounters', data);
       return { opponentKey, encounters, skipUpdate: false };
     } catch (err) {
       console.error('getOpponentTeamEncounters', err);
