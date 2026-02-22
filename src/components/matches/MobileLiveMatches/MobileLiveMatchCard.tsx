@@ -13,6 +13,8 @@ type MobileLiveMatchCardProps = {
   onToggle: () => void;
   /** When false, the card is always expanded and not collapsible */
   isCollapsible: boolean;
+  /** When true, hides the "Details" link (use when already on match detail page) */
+  hideDetailsLink?: boolean;
 };
 
 const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
@@ -55,7 +57,7 @@ const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
   );
 };
 
-export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible }: MobileLiveMatchCardProps) => {
+export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible, hideDetailsLink }: MobileLiveMatchCardProps) => {
   const showContent = !isCollapsible || expanded;
 
   return (
@@ -68,7 +70,7 @@ export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible }
       }}
     >
       <div style={{ position: 'relative' }}>
-        <MobileLiveMatchHeader match={match} />
+        <MobileLiveMatchHeader match={match} hideDetailsLink={hideDetailsLink} />
         {isCollapsible && (
           <button
             type="button"

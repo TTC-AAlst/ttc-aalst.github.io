@@ -25,6 +25,7 @@ export const RoutedMatchCard = () => {
         expanded={true}
         onToggle={() => {}}
         isCollapsible={false}
+        hideDetailsLink
       />
     </div>
   );

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { Button, ButtonGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
@@ -44,7 +43,6 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
         {!match.isHomeMatch && !hasStarted && <AwayMatchDetails match={match} />}
         {canEnterOpponents && <OpponentPlayersPreStart match={match} />}
         <MatchActionButtons match={match} />
-        {hasStarted && <MatchDetailsLink match={match} />}
       </div>
     );
   }
@@ -54,7 +52,6 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <FormationsWithResults match={match} />
       <MatchActionButtons match={match} />
-      {!match.isSyncedWithFrenoy && <MatchDetailsLink match={match} />}
     </div>
   );
 };
@@ -263,17 +260,6 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
     </div>
   );
 };
-
-const MatchDetailsLink = ({ match }: { match: IMatch }) => (
-  <div style={{ textAlign: 'center', marginTop: 4 }}>
-    <Link
-      to={t.route('match').replace(':matchId', match.id.toString())}
-      style={{ color: '#007bff', fontSize: '0.9em' }}
-    >
-      {t('match.details')} &rarr;
-    </Link>
-  </div>
-);
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <div
