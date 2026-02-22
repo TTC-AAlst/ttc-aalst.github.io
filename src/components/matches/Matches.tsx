@@ -10,7 +10,6 @@ import { selectMatches, selectUser, useTtcSelector } from '../../utils/hooks/sto
 import { getPlayerFormation } from './MatchesTable/matchesTableUtil';
 import { browseTo } from '../../routes';
 
-const matchesToShow = 30;
 // Header height (AppBar dense toolbar)
 const HEADER_HEIGHT = 48;
 
@@ -58,14 +57,11 @@ export const Matches = () => {
 
   const matchesNext = ownMatches
     .filter(cal => cal.date.isAfter(today, 'day'))
-    .sort((a, b) => a.date.valueOf() - b.date.valueOf())
-    .slice(0, matchesToShow);
+    .sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
   const matchesPlayed = ownMatches
     .filter(cal => cal.date.isBefore(today, 'day'))
-    .sort((a, b) => b.date.valueOf() - a.date.valueOf())
-    .slice(0, matchesToShow)
-    .reverse();
+    .sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
   const pastGroups = groupMatchesByDate(matchesPlayed);
   const todayGroup = matchesToday.length > 0 ? groupMatchesByDate(matchesToday)[0] : null;
