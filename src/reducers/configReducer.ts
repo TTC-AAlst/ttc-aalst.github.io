@@ -93,14 +93,14 @@ function getDefaultConfig(initialState: IConfig): IConfig {
   // }
 }
 
-export type ConfigParams = typeof defaultConfigState.params;
+type ConfigParams = typeof defaultConfigState.params;
 type Settings = typeof defaultConfigState.settings;
 type SettingPair<K extends keyof Settings> = {
   key: K;
   value: Settings[K];
 };
 
-export const configSlice = createSlice({
+const configSlice = createSlice({
   name: 'config',
   initialState: getDefaultConfig(defaultConfigState),
   reducers: {
@@ -172,8 +172,7 @@ export const configSlice = createSlice({
   },
 });
 
-export const { setInitialLoad, clearSnackbar, showSnackbar, setSetting, setNewMatchComment, setOpponentMatchesLoaded, toggleMatchCardExpanded } =
-  configSlice.actions;
+export const { setInitialLoad, clearSnackbar, showSnackbar, setOpponentMatchesLoaded, toggleMatchCardExpanded } = configSlice.actions;
 
 const configReducer = configSlice.reducer;
 export default configReducer;

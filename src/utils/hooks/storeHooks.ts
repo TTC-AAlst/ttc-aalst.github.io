@@ -17,11 +17,6 @@ export const selectTeams = createSelector([(state: RootState) => state.teams, (s
   teams.map(t => new TeamModel(t, rankings[t.id])),
 );
 
-export const selectTeamRanking = createSelector(
-  [(state: RootState) => state.teamRankings, (_, teamId: number) => teamId],
-  (teamRankings, teamId) => teamRankings[teamId] ?? [],
-);
-
 export const selectMatches = createSelector([(state: RootState) => state.matches], matches => matches.map(m => new MatchModel(m) as IMatch));
 
 export const selectFreeMatches = createSelector([(state: RootState) => state.freeMatches], matches => matches.map(m => new MatchModel(m) as IMatch));
@@ -43,9 +38,6 @@ export const selectMatchesBeingPlayed = createSelector([selectMatches, selectTea
     return true;
   }),
 );
-
-const today = dayjs();
-export const selectMatchesToday = createSelector(selectMatches, matches => matches.filter(m => m.date.isSame(today, 'day')));
 
 /**
  * Selector to determine "your teams" based on match participation.

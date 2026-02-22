@@ -143,7 +143,7 @@ type PlayerCardCompetitionProps = {
   player: IPlayer;
 };
 
-export const PlayerCardCompetition = ({ player }: PlayerCardCompetitionProps) => (
+const PlayerCardCompetition = ({ player }: PlayerCardCompetitionProps) => (
   <div style={{ marginTop: 5 }}>
     <strong>{t('common.competition')}</strong>
     <br />

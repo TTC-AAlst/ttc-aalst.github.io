@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export type Viewport = {
+type Viewport = {
   width: number;
   height: number;
 };

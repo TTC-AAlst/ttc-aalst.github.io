@@ -20,7 +20,7 @@ class ButtonComponent extends Component<ButtonComponentProps> {
   }
 }
 
-export const Button = withTooltip(ButtonComponent);
+const Button = withTooltip(ButtonComponent);
 
 export type IconButtonComponentProps = {
   onClick: () => void;
@@ -39,4 +39,4 @@ class IconButtonComponent extends Component<IconButtonComponentProps> {
   }
 }
 
-export const IconButton = withTooltip(IconButtonComponent);
+const IconButton = withTooltip(IconButtonComponent);

@@ -117,7 +117,7 @@ export const selectPlayer = createAsyncThunk(
   },
 );
 
-export type EditMatchPlayersParams = {
+type EditMatchPlayersParams = {
   matchId: number;
   playerIds: number[];
   blockAlso: boolean;
@@ -157,7 +157,7 @@ export const emailFormation = createAsyncThunk(
   },
 );
 
-export const matchesSlice = createSlice({
+const matchesSlice = createSlice({
   name: 'matches',
   initialState: [] as IFullStoreMatchOwn[],
   reducers: {

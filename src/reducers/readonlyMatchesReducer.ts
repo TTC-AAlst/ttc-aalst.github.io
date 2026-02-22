@@ -50,7 +50,7 @@ export const fetchReadOnlyMatch = createAsyncThunk('matches/GetOpponentOne', asy
   return response;
 });
 
-export const readonlyMatchesSlice = createSlice({
+const readonlyMatchesSlice = createSlice({
   name: 'readonlyMatches',
   initialState: [] as IMatch[],
   reducers: {

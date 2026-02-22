@@ -146,7 +146,7 @@ export function getPlayingStatusClass(playingStatus?: MatchPlayerStatus | ''): u
   }
 }
 
-export function getPlayingStatusColor(playingStatus?: { status: MatchPlayerStatus }): null | string {
+function getPlayingStatusColor(playingStatus?: { status: MatchPlayerStatus }): null | string {
   if (!playingStatus) {
     return null;
   }

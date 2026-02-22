@@ -214,7 +214,7 @@ export const PreviousEncountersButtonModal = ({ encounters, ourPlayerUniqueIndex
   );
 };
 
-export const EncountersTable = ({ encounters, ourPlayerUniqueIndex }: { encounters: PlayerEncounter[]; ourPlayerUniqueIndex: number }) => (
+const EncountersTable = ({ encounters, ourPlayerUniqueIndex }: { encounters: PlayerEncounter[]; ourPlayerUniqueIndex: number }) => (
   <Table size="sm" striped>
     <thead>
       <tr>

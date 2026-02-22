@@ -49,7 +49,7 @@ function getInitialState(): IClub[] {
   // }
 }
 
-export const clubsSlice = createSlice({
+const clubsSlice = createSlice({
   name: 'clubs',
   initialState: getInitialState(),
   reducers: {
@@ -65,7 +65,5 @@ export const clubsSlice = createSlice({
     builder.addCase(updateClub.fulfilled, (state, action) => mergeInStore2(state, action.payload));
   },
 });
-
-export const { simpleLoaded } = clubsSlice.actions;
 
 export default clubsSlice.reducer;

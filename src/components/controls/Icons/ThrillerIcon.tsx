@@ -9,7 +9,7 @@ export const ThrillerIcon = ({ color = undefined }: { color?: string }) => (
   <Icon fa="fa fa-heartbeat faa-pulse animated" style={{ marginLeft: 3, marginRight: 7, marginTop: 3, color }} translate tooltip="match.thrillerMatch" />
 );
 
-export type BadgyProps = {
+type BadgyProps = {
   type: string;
   style?: React.CSSProperties;
   children?: any;
@@ -31,7 +31,7 @@ export class Badgy extends Component<BadgyProps> {
   }
 }
 
-export const ThrillerBadge = ({ match }: { match: IMatch }) => {
+const ThrillerBadge = ({ match }: { match: IMatch }) => {
   const team = match.getTeam();
   const thrillerType = team.getThriller(match);
   if (thrillerType) {

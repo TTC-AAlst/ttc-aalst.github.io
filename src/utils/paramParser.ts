@@ -39,7 +39,7 @@ export function parseEetfestijn(json: string): EetfestijnModel {
   }
 }
 
-export const defaultEetfestijn: EetfestijnModel = {
+const defaultEetfestijn: EetfestijnModel = {
   show: false,
   date: '2025-10-25',
   hour: {

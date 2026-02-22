@@ -16,7 +16,7 @@ export type MatchGameResults = {
   results: GameResult[];
 };
 
-export type PlayerGameResultsSummary = {
+type PlayerGameResultsSummary = {
   allResults: GameResult[];
   recentResults: GameResult[];
 };
@@ -105,12 +105,12 @@ export const collectPlayerPerformanceData = (
 /**
  * Get the ranking index (lower = better)
  */
-export const getRankingIndex = (ranking: PlayerRanking): number => rankings.indexOf(ranking);
+const getRankingIndex = (ranking: PlayerRanking): number => rankings.indexOf(ranking);
 
 /**
  * Get the ranking difference (positive = opponent is better, negative = opponent is weaker)
  */
-export const getRankingDifference = (playerRanking: PlayerRanking, opponentRanking: PlayerRanking): number => {
+const getRankingDifference = (playerRanking: PlayerRanking, opponentRanking: PlayerRanking): number => {
   const playerIdx = getRankingIndex(playerRanking);
   const opponentIdx = getRankingIndex(opponentRanking);
   return playerIdx - opponentIdx; // positive means opponent is better ranked
@@ -153,7 +153,7 @@ const shouldIgnoreLoss = (result: GameResult): boolean => {
  * Calculate weighted score for a game result
  * Wins against higher ranked players worth more, losses against lower ranked players penalized more
  */
-export const calculateGameWeight = (result: GameResult): number => {
+const calculateGameWeight = (result: GameResult): number => {
   const diff = getRankingDifference(result.playerRanking, result.opponentRanking);
   // diff > 0 means opponent is better (higher ranked)
   // diff < 0 means opponent is weaker (lower ranked)

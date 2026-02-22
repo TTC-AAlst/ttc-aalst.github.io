@@ -98,7 +98,7 @@ function getOpponentKey(match: IMatch): string {
   return `${match.competition.toLowerCase()}-${match.opponent.clubId}-${match.opponent.teamCode}`;
 }
 
-export const matchInfoSlice = createSlice({
+const matchInfoSlice = createSlice({
   name: 'matchInfo',
   initialState: getInitialState(),
   reducers: {

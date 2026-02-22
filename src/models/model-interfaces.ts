@@ -86,14 +86,7 @@ interface IMatchCommon extends IStoreMatchCommon {
 /** If you are unsure what kind of match it is */
 export interface IMatch extends IMatchCommon, IMatchOwn, IMatchOther {}
 
-/** If you know it needs a TTC Aalst match, use this one */
-export interface IFullMatchOwn extends IMatchCommon, IMatchOwn {}
-
-/** If you know it needs a ReadonlyMatch, use this one */
-export interface IFullMatchOther extends IMatchCommon, IMatchOther {}
-
 export interface IFullStoreMatchOwn extends IStoreMatchCommon, IStoreMatchOwn {}
-export interface IFullStoreMatchOther extends IStoreMatchCommon, IStoreMatchOther {}
 
 interface IStoreMatchOwn {
   isHomeMatch: boolean;

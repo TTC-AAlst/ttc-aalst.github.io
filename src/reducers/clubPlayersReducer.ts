@@ -37,7 +37,7 @@ export const fetchClubPlayers = createAsyncThunk('clubPlayers/fetch', async (par
   return { key, players, cached: false };
 });
 
-export type EditOpponentPlayersParams = {
+type EditOpponentPlayersParams = {
   matchId: number;
   players: ClubPlayer[];
 };
@@ -62,7 +62,7 @@ function getInitialState(): ClubPlayersState {
   };
 }
 
-export const clubPlayersSlice = createSlice({
+const clubPlayersSlice = createSlice({
   name: 'clubPlayers',
   initialState: getInitialState(),
   reducers: {},

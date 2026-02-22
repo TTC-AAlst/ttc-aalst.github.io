@@ -73,7 +73,7 @@ function renderWinsNode(result: RankingResult, teamPlayerCount: 2 | 3 | 4) {
   return winNode;
 }
 
-export type RankingResult = {
+type RankingResult = {
   win: PlayerRanking[];
   lost: PlayerRanking[];
   wo: boolean;

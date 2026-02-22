@@ -31,7 +31,7 @@ const rootReducer = combineReducers({
   clubPlayers: clubPlayersReducer,
 });
 
-export function createTestStore(preloadedState?: DeepPartial<RootState>) {
+function createTestStore(preloadedState?: DeepPartial<RootState>) {
   return configureStore({
     reducer: rootReducer,
     preloadedState: preloadedState as any,

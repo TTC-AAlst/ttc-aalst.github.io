@@ -130,7 +130,7 @@ function getInitialState(): IStorePlayer[] {
   // }
 }
 
-export const playersSlice = createSlice({
+const playersSlice = createSlice({
   name: 'players',
   initialState: getInitialState(),
   reducers: {
@@ -227,7 +227,5 @@ export const eventsSlice = createSlice({
     });
   },
 });
-
-export const { simpleLoaded } = playersSlice.actions;
 
 export default playersSlice.reducer;

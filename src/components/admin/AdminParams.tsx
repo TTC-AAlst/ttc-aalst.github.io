@@ -44,7 +44,7 @@ export const AdminParams = () => {
   );
 };
 
-export const AdminParamsSimple = () => {
+const AdminParamsSimple = () => {
   const storeParams = useTtcSelector(state => state.config.params);
   const [params, setParams] = useState(storeParams);
   const dispatch = useTtcDispatch();

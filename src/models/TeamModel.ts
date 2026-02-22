@@ -227,7 +227,7 @@ export function getPlayerStats(matches: IMatch[], withBelles = false): ITeamPlay
   return Object.keys(result).map(key => result[key]);
 }
 
-export function sortMappedPlayers(competition: Competition): (plyA: ITeamPlayerInfo, plyB: ITeamPlayerInfo) => number {
+function sortMappedPlayers(competition: Competition): (plyA: ITeamPlayerInfo, plyB: ITeamPlayerInfo) => number {
   return (plyA, plyB) => {
     const aComp = plyA.player.getCompetition(competition);
     const bComp = plyB.player.getCompetition(competition);

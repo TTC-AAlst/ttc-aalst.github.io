@@ -57,7 +57,7 @@ function getInitialState(): IStoreTeam[] {
   // }
 }
 
-export const teamsSlice = createSlice({
+const teamsSlice = createSlice({
   name: 'teams',
   initialState: getInitialState(),
   reducers: {

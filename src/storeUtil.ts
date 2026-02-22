@@ -6,12 +6,12 @@ import TeamModel from './models/TeamModel';
 import MatchModel from './models/MatchModel';
 
 /** How many players of a ranking beat */
-export interface IOpponentFormationRankingInfo {
+interface IOpponentFormationRankingInfo {
   ranking: string;
   amount: number;
 }
 
-export interface IOponnentFormation {
+interface IOponnentFormation {
   key: string;
   details: IOpponentFormationRankingInfo[];
   amount: number;

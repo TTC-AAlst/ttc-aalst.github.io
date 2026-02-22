@@ -19,7 +19,7 @@ type CommentFormProps = {
   onUpdate: (comment: MatchCommentForm) => void;
 };
 
-export const CommentForm = ({ model, onUpdate }: CommentFormProps) => (
+const CommentForm = ({ model, onUpdate }: CommentFormProps) => (
   <div style={{ width: '50%' }}>
     {model.edit ? (
       <FormControl type="text" value={model.value} placeholder={t('match.plys.extraComment')} onChange={e => onUpdate({ ...model, value: e.target.value })} />
