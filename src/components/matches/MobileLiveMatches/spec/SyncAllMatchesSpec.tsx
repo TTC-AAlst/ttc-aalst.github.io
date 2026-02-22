@@ -1,8 +1,8 @@
 import React from 'react';
-import { screen, act } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { vi, beforeEach, afterEach } from 'vitest';
+import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../utils/test-utils';
 import { MobileLiveMatches } from '../MobileLiveMatches';
 import { IMatch } from '../../../../models/model-interfaces';
@@ -55,17 +55,9 @@ const createMockMatch = (id: number): IMatch => ({
 } as any);
 
 const renderMatches = (matches: IMatch[], userState = {}) => renderWithProviders(
-    <MemoryRouter><MobileLiveMatches matches={matches} /></MemoryRouter>,
-    { preloadedState: { user: { playerId: 1, teams: [1], security: [], ...userState }, readonlyMatches: [] } },
-  );
-
-beforeEach(() => {
-  vi.useFakeTimers({ shouldAdvanceTime: true });
-});
-
-afterEach(() => {
-  vi.useRealTimers();
-});
+  <MemoryRouter><MobileLiveMatches matches={matches} /></MemoryRouter>,
+  { preloadedState: { user: { playerId: 1, teams: [1], security: [], ...userState }, readonlyMatches: [] } },
+);
 
 describe('Sync all matches button', () => {
   it('shows sync button for logged-in users', () => {
@@ -80,16 +72,16 @@ describe('Sync all matches button', () => {
     expect(screen.queryByRole('button', { name: 'sync' })).not.toBeInTheDocument();
   });
 
-  it('disables sync button for 10 minutes after clicking', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it('allows multiple clicks on sync button', async () => {
+    const user = userEvent.setup();
     renderMatches([createMockMatch(1)]);
 
     const syncButton = screen.getByRole('button', { name: 'sync' });
     await user.click(syncButton);
 
-    expect(syncButton).toBeDisabled();
+    expect(syncButton).toBeEnabled();
 
-    act(() => { vi.advanceTimersByTime(10 * 60 * 1000); });
+    await user.click(syncButton);
 
     expect(syncButton).toBeEnabled();
   });

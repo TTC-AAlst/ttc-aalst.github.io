@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Button } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import { MobileLiveMatchCard } from './MobileLiveMatchCard';
@@ -8,8 +8,6 @@ import { t } from '../../../locales';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { frenoyMatchSync } from '../../../reducers/matchesReducer';
 import { toggleMatchCardExpanded } from '../../../reducers/configReducer';
-
-const SYNC_COOLDOWN_MS = 10 * 60 * 1000;
 
 type MobileLiveMatchesProps = {
   matches: IMatch[];
@@ -21,14 +19,9 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
   const dispatch = useTtcDispatch();
   const user = useTtcSelector(selectUser);
   const expandedMatchCards = useTtcSelector(state => state.config.expandedMatchCards);
-  const [syncDisabled, setSyncDisabled] = useState(false);
-  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleSyncAll = useCallback(() => {
     matches.forEach(match => dispatch(frenoyMatchSync({ match, forceSync: true })));
-    setSyncDisabled(true);
-    clearTimeout(syncTimerRef.current);
-    syncTimerRef.current = setTimeout(() => setSyncDisabled(false), SYNC_COOLDOWN_MS);
   }, [matches, dispatch]);
 
   // Only collapsible on mobile with multiple matches
@@ -76,7 +69,7 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
           </Button>
         )}
         {user.playerId > 0 && (
-          <Button variant="outline-secondary" size="sm" aria-label="sync" onClick={handleSyncAll} disabled={syncDisabled}>
+          <Button variant="outline-secondary" size="sm" aria-label="sync" onClick={handleSyncAll}>
             <Icon fa="fa fa-refresh" />
           </Button>
         )}

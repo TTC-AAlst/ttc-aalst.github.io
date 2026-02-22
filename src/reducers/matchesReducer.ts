@@ -32,7 +32,6 @@ export const frenoyMatchSync = createAsyncThunk(
   'matches/FrenoyMatchSync',
   async (data: {match: IStoreMatchCommon, forceSync?: boolean}, { dispatch }) => {
     if (data.forceSync || shouldSync(data.match)) {
-      console.log(`FrenoySync for ${data.match.id}`);
       try {
         const newMatch = await http.post<IFullStoreMatchOwn>(`/matches/FrenoyMatchSync?forceSync=${data.forceSync || false}`, {id: data.match.id});
         dispatch(simpleLoaded(newMatch));

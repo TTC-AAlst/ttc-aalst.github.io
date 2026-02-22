@@ -14,7 +14,6 @@ export const MatchCardAdmin = ({match}: MatchCardAdminProps) => {
     .slice()
     .sort((a, b) => `${a.status}-${a.alias}`.localeCompare(`${b.status}-${b.alias}`))
     .map(ply => `${ply.status}: ${ply.alias}`);
-  console.log('playerDetails', playerDetails);
 
   return (
     <div style={{padding: 7}}>
