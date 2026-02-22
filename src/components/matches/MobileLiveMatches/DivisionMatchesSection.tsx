@@ -51,31 +51,34 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
     <div>
       <Table size="sm" striped hover style={{ marginBottom: 0 }}>
         <tbody>
-          {todayDivisionMatches.map(m => (
-            <React.Fragment key={m.id}>
-              <tr
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleRowClick(m.id)}
-              >
-                <td style={{ whiteSpace: 'nowrap' }}>
-                  {m.getClub('home')?.name} {m.home.teamCode}
-                </td>
-                <td style={{ textAlign: 'center', fontWeight: 600 }}>
-                  <OpponentMatchScore readonlyMatch={m} />
-                </td>
-                <td style={{ whiteSpace: 'nowrap', textAlign: 'right' }}>
-                  {m.getClub('away')?.name} {m.away.teamCode}
-                </td>
-              </tr>
-              {expandedMatch === m.id && (
-                <tr>
-                  <td colSpan={3} style={{ padding: 8 }}>
-                    <OtherMatchPlayerResults match={m} onFullView={handleFullView} />
+          {todayDivisionMatches.map(m => {
+            const hasPlayers = m.players.length > 0;
+            return (
+              <React.Fragment key={m.id}>
+                <tr
+                  style={{ cursor: hasPlayers ? 'pointer' : 'default' }}
+                  onClick={() => hasPlayers && handleRowClick(m.id)}
+                >
+                  <td style={{ whiteSpace: 'nowrap' }}>
+                    {m.getClub('home')?.name} {m.home.teamCode}
+                  </td>
+                  <td style={{ textAlign: 'center', fontWeight: 600 }}>
+                    <OpponentMatchScore readonlyMatch={m} />
+                  </td>
+                  <td style={{ whiteSpace: 'nowrap', textAlign: 'right' }}>
+                    {m.getClub('away')?.name} {m.away.teamCode}
                   </td>
                 </tr>
-              )}
-            </React.Fragment>
-          ))}
+                {expandedMatch === m.id && hasPlayers && (
+                  <tr>
+                    <td colSpan={3} style={{ padding: 8 }}>
+                      <OtherMatchPlayerResults match={m} onFullView={handleFullView} />
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            );
+          })}
         </tbody>
       </Table>
 
