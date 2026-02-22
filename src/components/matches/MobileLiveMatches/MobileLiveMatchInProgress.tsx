@@ -86,7 +86,7 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => {
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
             <SectionTitle>{t('match.playersOpponentsTitle')}</SectionTitle>
-            {canEditPlayers && (
+            {canEditPlayers && user.playerId > 0 && (
               <EditIcon
                 style={{ cursor: 'pointer' }}
                 onClick={() => setShowEditOpponents(!showEditOpponents)}
