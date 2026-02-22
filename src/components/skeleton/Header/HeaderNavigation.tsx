@@ -45,6 +45,7 @@ export const Navigation = ({navOpen, closeNav}: NavigationProps) => {
       </AppBar>
 
       <div style={{marginTop: 60, width: 250}}>
+        <MenuItem onClick={() => goto('/')}>{t('nav.home')}</MenuItem>
         <MenuItem onClick={() => goto(t.route('matches'))}>{t('nav.matches')}</MenuItem>
         {matchesToday.length ? (
           <MenuItem onClick={() => goto(t.route('matchesToday'))}>

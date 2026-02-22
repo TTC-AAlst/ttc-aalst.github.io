@@ -92,6 +92,7 @@ export default {
       playerSelect: "Wie ben je?",
     },
     nav: {
+      home: "Home",
       matches: "Kalender",
       matchesToday: "Vandaag",
       matchesWeek: "Speelweek",
