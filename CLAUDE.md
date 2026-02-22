@@ -26,6 +26,9 @@ bun run lint-fix
 bun run format
 bun run format:check
 
+# Find dead code (unused files/exports)
+bun run knip
+
 # Build production bundle
 bun run build
 

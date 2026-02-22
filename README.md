@@ -13,13 +13,14 @@ bun run test       # vitest
 bun run lint       # eslint
 bun run lint-fix   # eslint --fix
 bun run format     # prettier --write
+bun run knip       # find dead code (unused files/exports)
 bun run deploy     # build + gh-pages
 ```
 
 ## Git Hooks (Husky)
 
 - **pre-commit**: Runs lint-staged (eslint --fix + prettier) on staged files
-- **pre-push**: Runs tests
+- **pre-push**: Runs knip (dead code check) + tests
 
 
 ## Bootstrap Breakpoints
