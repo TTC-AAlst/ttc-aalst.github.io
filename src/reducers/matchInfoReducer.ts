@@ -56,7 +56,7 @@ export const getOpponentTeamEncounters = createAsyncThunk(
     }
 
     const data = {
-      matchId: null,
+      matchId: 0,
       opponentPlayerNames: Object.fromEntries(opponentPlayers.map(player => [player.name, player.uniqueIndex])),
       ownPlayerIds: { [ourPlayerId]: playerCompetition.uniqueIndex },
       competition: match.competition,
