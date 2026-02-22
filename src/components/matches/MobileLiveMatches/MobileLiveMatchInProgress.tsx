@@ -7,7 +7,7 @@ import OwnPlayer from '../Match/OwnPlayer';
 import OpponentPlayer from '../Match/OpponentPlayer';
 import { IndividualMatches } from '../Match/IndividualMatches';
 import { MatchReport } from '../Match/MatchReport';
-import { OpponentsLastMatches } from '../Match/OpponentsLastMatches';
+import { OpponentMatches } from '../Match/OpponentMatches';
 import { OpponentsFormation } from '../Match/OpponentsFormation';
 import { OpponentsTeamFormation } from '../Match/OpponentsTeamFormation';
 import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponentMatches';
@@ -236,8 +236,8 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
           <h4 style={{marginTop: 24}}>{t('teamCalendar.individual')}</h4>
           <OpponentsFormation match={match} opponent={match.opponent} />
 
-          <h4 style={{marginTop: 24}}>{t('match.tabs.opponentsRankingTitle')}</h4>
-          <OpponentsLastMatches match={match} />
+          <h4 style={{marginTop: 24}}>{t('teamCalendar.matches')}</h4>
+          <OpponentMatches team={match.getTeam()} readonlyMatches={opponentMatchesList} opponent={match.opponent} roundSwitchButton />
         </Modal.Body>
       </Modal>
 
