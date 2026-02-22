@@ -7,18 +7,33 @@ import storeUtil from '../storeUtil';
 export const getPreviousEncounters = createAsyncThunk(
   'matches/getPreviousEncounters',
   async (match: IMatch, { getState }) => {
-    const data = {
-      matchId: match.id,
-      opponentPlayerNames: Object.fromEntries(match.getTheirPlayers().map(player => [player.name, player.uniqueIndex])),
-      ownPlayerIds: Object.fromEntries(match.getOwnPlayers().map(x => [x.playerId, x.uniqueIndex])),
-      competition: match.competition,
-    };
-
     const store = getState() as RootState;
-    const hasBeenFetched = store.matchInfo.previousEncounters.some(encounter => encounter.requestMatchId === data.matchId);
+    const hasBeenFetched = store.matchInfo.previousEncounters.some(encounter => encounter.requestMatchId === match.id);
     if (hasBeenFetched) {
       return [] as PlayerEncounter[];
     }
+
+    // Build ownPlayerIds from match players
+    const ownPlayerIds: Record<number, number> = Object.fromEntries(
+      match.getOwnPlayers().map(x => [x.playerId, x.uniqueIndex]),
+    );
+
+    // Also include current logged-in user if they're not already in the formation
+    const currentUserId = store.user.playerId;
+    if (currentUserId && !ownPlayerIds[currentUserId]) {
+      const currentPlayer = storeUtil.getPlayer(currentUserId);
+      const playerCompetition = currentPlayer?.getCompetition(match.competition);
+      if (playerCompetition?.uniqueIndex) {
+        ownPlayerIds[currentUserId] = playerCompetition.uniqueIndex;
+      }
+    }
+
+    const data = {
+      matchId: match.id,
+      opponentPlayerNames: Object.fromEntries(match.getTheirPlayers().map(player => [player.name, player.uniqueIndex])),
+      ownPlayerIds,
+      competition: match.competition,
+    };
 
     try {
       const encounters = await http.post<PlayerEncounter[]>('/matches/GetPreviousEncounters', data);

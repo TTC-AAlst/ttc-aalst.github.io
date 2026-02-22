@@ -7,24 +7,46 @@ import {ThumbsUpIcon, ThumbsDownIcon} from '../../controls/Icons/ThumbsIcons';
 import {Icon} from '../../controls/Icons/Icon';
 import {IMatch, PlayerEncounter} from '../../../models/model-interfaces';
 import { t } from '../../../locales';
-import { useTtcSelector } from '../../../utils/hooks/storeHooks';
+import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { useViewport } from '../../../utils/hooks/useViewport';
+import storeUtil from '../../../storeUtil';
 
+
+type OurPlayerInfo = {
+  playerId: number;
+  alias: string;
+  uniqueIndex: number;
+};
 
 export const PreviousEncounters = ({match}: {match: IMatch}) => {
-  const ourPlayers = match.getOwnPlayers().filter(ply => ply.status === match.block);
-  const ourPlayersUniqueIds = ourPlayers.map(player => player.uniqueIndex);
+  const user = useTtcSelector(selectUser);
+  const formationPlayers = match.getOwnPlayers().filter(ply => ply.status === match.block);
+
+  // Build list of players to show: formation players + current user if not in formation
+  const playersToShow: OurPlayerInfo[] = formationPlayers.map(ply => ({
+    playerId: ply.playerId,
+    alias: ply.alias,
+    uniqueIndex: ply.uniqueIndex,
+  }));
+
+  // Add current user if they're not in the formation
+  const currentPlayer = user?.playerId ? storeUtil.getPlayer(user.playerId) : null;
+  const currentPlayerUniqueIndex = currentPlayer?.getCompetition(match.competition)?.uniqueIndex;
+  const isCurrentUserPlaying = formationPlayers.some(ply => ply.playerId === user?.playerId);
+
+  if (!isCurrentUserPlaying && currentPlayer && currentPlayerUniqueIndex) {
+    playersToShow.push({
+      playerId: currentPlayer.id,
+      alias: currentPlayer.alias,
+      uniqueIndex: currentPlayerUniqueIndex,
+    });
+  }
+
+  const allUniqueIds = playersToShow.map(p => p.uniqueIndex);
   const encounters = useTtcSelector(state => state.matchInfo.previousEncounters
     .filter(encounter => encounter.requestMatchId === match.id)
-    .filter(encounter => {
-      if (ourPlayersUniqueIds.includes(encounter.homePlayerUniqueId)) {
-        return true;
-      }
-      if (ourPlayersUniqueIds.includes(encounter.awayPlayerUniqueId)) {
-        return true;
-      }
-      return false;
-    }))
+    .filter(encounter =>
+      allUniqueIds.includes(encounter.homePlayerUniqueId) || allUniqueIds.includes(encounter.awayPlayerUniqueId)))
     .sort((a, b) => dayjs(b.matchDate).diff(dayjs(a.matchDate)));
 
   const theirPlayers = match.getTheirPlayers();
@@ -39,39 +61,59 @@ export const PreviousEncounters = ({match}: {match: IMatch}) => {
 
   return (
     <div className="match-card-tab-content">
-      {ourPlayers.map((player, index) => {
-        const playerEncounters = encounters.filter(encounter => encounter.homePlayerUniqueId === player.uniqueIndex
-          || encounter.awayPlayerUniqueId === player.uniqueIndex);
+      {playersToShow.map((player, index) => (
+        <PlayerEncountersSection
+          key={player.playerId}
+          player={player}
+          encounters={encounters}
+          theirPlayers={theirPlayers}
+          showDivider={index > 0}
+        />
+      ))}
+    </div>
+  );
+};
 
-        // Check if this player has any encounters with the current opponents
-        const hasAnyEncountersWithCurrentOpponents = theirPlayers.some(theirPlayer => playerEncounters.some(
-          enc => enc.homePlayerUniqueId === theirPlayer.uniqueIndex || enc.awayPlayerUniqueId === theirPlayer.uniqueIndex,
-        ));
+type PlayerEncountersSectionProps = {
+  player: OurPlayerInfo;
+  encounters: PlayerEncounter[];
+  theirPlayers: { name: string; uniqueIndex: number; ranking: string }[];
+  showDivider: boolean;
+};
 
-        return (
-          <div key={player.playerId}>
-            {index > 0 && <hr />}
-            <h2>{player.alias}</h2>
-            {!hasAnyEncountersWithCurrentOpponents ? (
-              <div style={{ fontStyle: 'italic', color: '#666' }}>{t('match.noEncountersYet')}</div>
-            ) : (
-              theirPlayers.map(theirPlayer => {
-                const vsEncounter = playerEncounters.filter(encounter => encounter.homePlayerUniqueId === theirPlayer.uniqueIndex
-                  || encounter.awayPlayerUniqueId === theirPlayer.uniqueIndex);
+const PlayerEncountersSection = ({ player, encounters, theirPlayers, showDivider }: PlayerEncountersSectionProps) => {
+  const playerEncounters = encounters.filter(
+    enc => enc.homePlayerUniqueId === player.uniqueIndex || enc.awayPlayerUniqueId === player.uniqueIndex,
+  );
 
-                return (
-                  <OpponentEncounterRow
-                    key={theirPlayer.uniqueIndex}
-                    theirPlayer={theirPlayer}
-                    encounters={vsEncounter}
-                    ourPlayerUniqueIndex={player.uniqueIndex}
-                  />
-                );
-              })
-            )}
-          </div>
-        );
-      })}
+  const hasAnyEncountersWithCurrentOpponents = theirPlayers.some(theirPlayer =>
+    playerEncounters.some(
+      enc => enc.homePlayerUniqueId === theirPlayer.uniqueIndex || enc.awayPlayerUniqueId === theirPlayer.uniqueIndex,
+    ),
+  );
+
+  return (
+    <div>
+      {showDivider && <hr />}
+      <h2>{player.alias}</h2>
+      {!hasAnyEncountersWithCurrentOpponents ? (
+        <div style={{ fontStyle: 'italic', color: '#666' }}>{t('match.noEncountersYet')}</div>
+      ) : (
+        theirPlayers.map(theirPlayer => {
+          const vsEncounter = playerEncounters.filter(
+            enc => enc.homePlayerUniqueId === theirPlayer.uniqueIndex || enc.awayPlayerUniqueId === theirPlayer.uniqueIndex,
+          );
+
+          return (
+            <OpponentEncounterRow
+              key={theirPlayer.uniqueIndex}
+              theirPlayer={theirPlayer}
+              encounters={vsEncounter}
+              ourPlayerUniqueIndex={player.uniqueIndex}
+            />
+          );
+        })
+      )}
     </div>
   );
 };
