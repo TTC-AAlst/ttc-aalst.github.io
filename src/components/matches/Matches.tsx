@@ -11,6 +11,8 @@ import { getPlayerFormation } from './MatchesTable/matchesTableUtil';
 import { browseTo } from '../../routes';
 
 const matchesToShow = 30;
+// Header height (AppBar dense toolbar)
+const HEADER_HEIGHT = 48;
 
 type GroupedMatches = {
   date: string;
@@ -47,6 +49,7 @@ const groupMatchesByDate = (matches: IMatch[]): GroupedMatches[] => {
 export const Matches = () => {
   const ownMatches = useTtcSelector(selectMatches);
   const today = dayjs();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const todayRef = useRef<HTMLDivElement>(null);
 
   const matchesToday = ownMatches
@@ -68,28 +71,55 @@ export const Matches = () => {
   const todayGroup = matchesToday.length > 0 ? groupMatchesByDate(matchesToday)[0] : null;
   const futureGroups = groupMatchesByDate(matchesNext);
 
+  // Scroll to center today marker on mount
   useEffect(() => {
-    if (todayRef.current) {
-      todayRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const container = scrollContainerRef.current;
+    const todayEl = todayRef.current;
+    if (container && todayEl) {
+      setTimeout(() => {
+        const containerHeight = container.clientHeight;
+        const elementTop = todayEl.offsetTop;
+        const elementHeight = todayEl.offsetHeight;
+        const scrollTo = elementTop - (containerHeight / 2) + (elementHeight / 2);
+        container.scrollTop = Math.max(0, scrollTo);
+      }, 100);
     }
   }, []);
 
+  // Hide body scrollbar when this component is mounted
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto', padding: '20px 16px' }}>
-      {/* Past matches */}
-      {pastGroups.map(group => (
-        <DayCard key={group.date} group={group} isPast />
-      ))}
+    <div
+      ref={scrollContainerRef}
+      style={{
+        height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+        overflowY: 'auto',
+        overflowX: 'hidden',
+      }}
+    >
+      <div style={{ maxWidth: 700, margin: '0 auto', padding: '20px 16px' }}>
+        {/* Past matches */}
+        {pastGroups.map(group => (
+          <DayCard key={group.date} group={group} isPast />
+        ))}
 
-      {/* Today marker and matches */}
-      <div ref={todayRef}>
-        <TodayMarker hasMatchesToday={matchesToday.length > 0} todayGroup={todayGroup} />
+        {/* Today marker and matches */}
+        <div ref={todayRef}>
+          <TodayMarker hasMatchesToday={matchesToday.length > 0} todayGroup={todayGroup} />
+        </div>
+
+        {/* Future matches */}
+        {futureGroups.map(group => (
+          <DayCard key={group.date} group={group} />
+        ))}
       </div>
-
-      {/* Future matches */}
-      {futureGroups.map(group => (
-        <DayCard key={group.date} group={group} />
-      ))}
     </div>
   );
 };
