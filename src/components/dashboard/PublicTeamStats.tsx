@@ -5,82 +5,15 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { Strike } from '../controls/controls/Strike';
 import { TeamPosition } from '../teams/controls/TeamPosition';
+import { TeamMatchButton } from './TeamMatchButton';
 import { selectMatchesBeingPlayed, selectTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { browseTo } from '../../routes';
-import { IMatch, ITeam } from '../../models/model-interfaces';
+import { ITeam } from '../../models/model-interfaces';
 import t from '../../locales';
 import { Icon } from '../controls/Icons/Icon';
 
-const getTeamLatestMatch = (team: ITeam): IMatch | undefined => {
-  const matches = team.getMatches();
-
-  // First check if there's a match being played
-  const beingPlayed = matches.find(m => m.isBeingPlayed());
-  if (beingPlayed) {
-    return beingPlayed;
-  }
-
-  // Otherwise get the most recent played match (synced with Frenoy)
-  const playedMatches = matches
-    .filter(m => m.isSyncedWithFrenoy && m.scoreType !== 'WalkOver')
-    .sort((a, b) => b.date.valueOf() - a.date.valueOf());
-
-  return playedMatches[0];
-};
-
-const getScoreColors = (match: IMatch): { bg: string; hoverBg: string } => {
-  const { score, isHomeMatch, isDerby } = match;
-
-  if (!score || isDerby) {
-    return { bg: '#6BCBFF', hoverBg: '#49bfff' }; // won
-  }
-
-  if (score.home === score.out) {
-    return { bg: '#FF9E4F', hoverBg: '#ff8b2d' }; // draw
-  }
-
-  const won = isHomeMatch ? score.home > score.out : score.out > score.home;
-  return won
-    ? { bg: '#6BCBFF', hoverBg: '#49bfff' }  // won
-    : { bg: '#FF5144', hoverBg: '#ff3122' }; // lost
-};
-
-const ScoreButton = ({ match }: { match: IMatch }) => {
-  const colors = getScoreColors(match);
-
-  return (
-    <Link
-      to={t.route('match', {matchId: match.id})}
-      className="btn"
-      style={{
-        width: 70,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '0.95em',
-        fontWeight: 'bold',
-        textDecoration: 'none',
-        backgroundColor: colors.bg,
-        borderColor: colors.bg,
-        color: 'white',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.backgroundColor = colors.hoverBg;
-        e.currentTarget.style.borderColor = colors.hoverBg;
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.backgroundColor = colors.bg;
-        e.currentTarget.style.borderColor = colors.bg;
-      }}
-    >
-      {match.score ? `${match.score.home} - ${match.score.out}` : '-'}
-    </Link>
-  );
-};
-
 const CompactTeamCard = ({ team }: { team: ITeam }) => {
   const ranking = team.getDivisionRanking();
-  const latestMatch = getTeamLatestMatch(team);
 
   if (ranking.empty) {
     return null;
@@ -114,21 +47,7 @@ const CompactTeamCard = ({ team }: { team: ITeam }) => {
           <span style={{color: '#f44336'}}><Icon fa="fa fa-thumbs-down" style={{marginRight: 2}} />{ranking.gamesLost}</span>
         </div>
       </Link>
-      {latestMatch ? (
-        <ScoreButton match={latestMatch} />
-      ) : (
-        <div
-          className="btn btn-secondary disabled"
-          style={{
-            width: 70,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          -
-        </div>
-      )}
+      <TeamMatchButton team={team} />
     </div>
   );
 };
