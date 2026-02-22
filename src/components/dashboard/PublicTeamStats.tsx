@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 import { Strike } from '../controls/controls/Strike';
 import { TeamPosition } from '../teams/controls/TeamPosition';
-import { selectTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectMatchesBeingPlayed, selectTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { browseTo } from '../../routes';
 import { IMatch, ITeam } from '../../models/model-interfaces';
 import t from '../../locales';
@@ -134,6 +135,7 @@ const CompactTeamCard = ({ team }: { team: ITeam }) => {
 
 export const PublicTeamStats = () => {
   const teams = useTtcSelector(selectTeams);
+  const matchesBeingPlayed = useTtcSelector(selectMatchesBeingPlayed);
 
   const vttlTeams = teams.filter(team => team.competition === 'Vttl' && !team.getDivisionRanking().empty);
   const sportaTeams = teams.filter(team => team.competition === 'Sporta' && !team.getDivisionRanking().empty);
@@ -144,7 +146,16 @@ export const PublicTeamStats = () => {
 
   return (
     <div style={{marginBottom: 20}}>
-      <Strike text={t('dashboard.globalTeamStats')} style={{marginBottom: 6}} />
+      <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6}}>
+        <Strike text={t('dashboard.globalTeamStats')} style={{flex: 1, marginBottom: 0}} />
+        {matchesBeingPlayed.length > 0 && (
+          <Link to={t.route('matchesToday')}>
+            <Button variant="success" size="sm" style={{whiteSpace: 'nowrap'}}>
+              {t('dashboard.matchesBeingPlayed', {count: matchesBeingPlayed.length})}
+            </Button>
+          </Link>
+        )}
+      </div>
       <Row>
         <Col md={6}>
           {vttlTeams.map(team => (
