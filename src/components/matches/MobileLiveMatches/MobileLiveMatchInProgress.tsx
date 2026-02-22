@@ -36,9 +36,19 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
   const canEnterOpponents = match.date.subtract(1, 'hour').isBefore(dayjs());
 
   // Pre-start: show our formation and away match details
+  const isToday = match.date.isSame(dayjs(), 'day');
   if (!hasPlayersOrGames) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 8 }}>
+        {!isToday && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Icon fa="fa fa-calendar" />
+            <span style={{ fontWeight: 600 }}>{match.date.format('dddd D MMMM')}</span>
+            {!match.isStandardStartTime() && (
+              <span style={{ color: '#666' }}>- {match.date.format('HH:mm')}</span>
+            )}
+          </div>
+        )}
         <OurFormationPreStart match={match} />
         {!match.isHomeMatch && !hasStarted && <AwayMatchDetails match={match} />}
         {canEnterOpponents && <OpponentPlayersPreStart match={match} />}
