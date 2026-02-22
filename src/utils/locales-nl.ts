@@ -411,6 +411,8 @@ export default {
         locationTitle: "Clublokaal",
         locationUnknown: "Niet gekend",
         websiteKnown: "Ga naar website",
+        alternativeLocations: "Andere locaties",
+        showInfo: "Toon extra info",
       },
       chooseOtherPlayer: "Andere speler opstellen",
     },

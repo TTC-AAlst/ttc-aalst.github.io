@@ -353,8 +353,11 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
 };
 
 const AwayMatchDetails = ({ match }: { match: IMatch }) => {
+  const [showInfo, setShowInfo] = useState(false);
   const club = match.getOpponentClub();
   const loc = club?.mainLocation;
+  const altLocations = club?.alternativeLocations?.filter(l => l.address) || [];
+  const hasExtraInfo = loc?.comment || altLocations.length > 0;
 
   return (
     <div>
@@ -373,21 +376,63 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
                 <Icon fa="fa fa-map-marker" />
                 <span style={{ fontWeight: 600 }}>{loc.description}</span>
               </div>
-              <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.navigateToClub')}</Tooltip>}>
-                <Button
-                  size="sm"
-                  variant="outline-secondary"
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${loc.address}, ${loc.postalCode} ${loc.city}`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon fa="fa fa-location-arrow" />
-                </Button>
-              </OverlayTrigger>
+              <ButtonGroup size="sm">
+                {hasExtraInfo && (
+                  <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.club.showInfo')}</Tooltip>}>
+                    <Button
+                      variant={showInfo ? 'secondary' : 'outline-secondary'}
+                      onClick={() => setShowInfo(!showInfo)}
+                    >
+                      <Icon fa="fa fa-info-circle" />
+                    </Button>
+                  </OverlayTrigger>
+                )}
+                <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.navigateToClub')}</Tooltip>}>
+                  <Button
+                    variant="outline-secondary"
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${loc.address}, ${loc.postalCode} ${loc.city}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon fa="fa fa-location-arrow" />
+                  </Button>
+                </OverlayTrigger>
+              </ButtonGroup>
             </div>
             <div style={{ fontSize: '0.9em', color: '#666', marginLeft: 17, textTransform: 'capitalize' }}>
               {loc.address}, {loc.postalCode} {loc.city}
             </div>
+            {showInfo && (
+              <div style={{ marginTop: 8, marginLeft: 17 }}>
+                {loc.comment && (
+                  <div style={{ fontSize: '0.85em', color: '#856404', backgroundColor: '#fff3cd', padding: '4px 8px', borderRadius: 4, marginBottom: 8 }}>
+                    <Icon fa="fa fa-info-circle" style={{ marginRight: 4 }} />
+                    {loc.comment}
+                  </div>
+                )}
+                {altLocations.length > 0 && (
+                  <div>
+                    <div style={{ fontSize: '0.8em', color: '#666', textTransform: 'uppercase', marginBottom: 4 }}>
+                      {t('match.club.alternativeLocations')}
+                    </div>
+                    {altLocations.map((altLoc, i) => (
+                      <div key={i} style={{ marginBottom: 8 }}>
+                        <div style={{ fontWeight: 600 }}>{altLoc.description}</div>
+                        <div style={{ fontSize: '0.9em', color: '#666', textTransform: 'capitalize' }}>
+                          {altLoc.address}, {altLoc.postalCode} {altLoc.city}
+                        </div>
+                        {altLoc.comment && (
+                          <div style={{ fontSize: '0.85em', color: '#856404', backgroundColor: '#fff3cd', padding: '4px 8px', borderRadius: 4, marginTop: 4 }}>
+                            <Icon fa="fa fa-info-circle" style={{ marginRight: 4 }} />
+                            {altLoc.comment}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <div style={{ color: '#666', fontStyle: 'italic' }}>
