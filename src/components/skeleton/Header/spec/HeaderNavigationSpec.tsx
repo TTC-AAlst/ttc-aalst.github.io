@@ -23,7 +23,6 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
   alias: firstName,
   firstName,
   lastName,
-  name: `${firstName} ${lastName}`,
   active: true,
   vttl: { clubId: 1, competition: 'Vttl', frenoyLink: '', position: 1, ranking: 'B6', nextRanking: null, prediction: null, uniqueIndex: 100, rankingIndex: 1, rankingValue: 50 } as any,
   sporta: undefined as any,

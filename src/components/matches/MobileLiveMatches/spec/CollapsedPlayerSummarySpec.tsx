@@ -1,5 +1,6 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../utils/test-utils';
 import { MobileLiveMatchCard } from '../MobileLiveMatchCard';
@@ -35,21 +36,33 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
   teamId: 1,
   games: [],
   players: [],
+  comments: [],
   block: 'Captain',
+  description: '',
   isSyncedWithFrenoy: false,
   opponent: { clubId: 10, teamCode: 'A' },
-  date: { format: () => '19:45' } as any,
+  date: { format: () => '19:45', isBefore: () => true, subtract: () => ({ isBefore: () => true }), isSame: () => true } as any,
   score: { home: 0, out: 0 },
   isHomeMatch: true,
   getOwnPlayers: () => [],
   getTheirPlayers: () => [],
   getTeamPlayerCount: () => 4,
-  getTeam: () => ({ teamCode: 'A', competition: 'Vttl', getDivisionRanking: () => ({ empty: true }) } as any),
+  getTeam: () => ({ teamCode: 'A', competition: 'Vttl', getDivisionRanking: () => ({ empty: true }), getThriller: () => null, renderOwnTeamTitle: () => 'TTC Aalst A' } as any),
   getPlayerFormation: () => [],
   getGameMatches: () => [],
   renderScore: () => '0-0',
+  renderOpponentTitle: () => 'Opponent A',
+  getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '' }),
   ...overrides,
 } as any);
+
+const renderCard = (match: IMatch, expanded = false) =>
+  renderWithProviders(
+    <MemoryRouter>
+      <MobileLiveMatchCard match={match} expanded={expanded} onToggle={() => {}} isCollapsible />
+    </MemoryRouter>,
+    { preloadedState: { players: [], user: { playerId: 0, teams: [], security: [] } } as any },
+  );
 
 describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
   it('shows player names with rankings when formation is confirmed (pre-match)', () => {
@@ -67,9 +80,7 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
       })) as IMatchPlayerInfo[],
     });
 
-    renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded={false} onToggle={() => {}} isCollapsible />,
-    );
+    renderCard(match);
 
     expect(screen.getByText(/Wouter B2/)).toBeInTheDocument();
     expect(screen.getByText(/Jan B6/)).toBeInTheDocument();
@@ -88,9 +99,7 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
       getGameMatches: () => [],
     });
 
-    renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded={false} onToggle={() => {}} isCollapsible />,
-    );
+    renderCard(match);
 
     // With games, should show win counts
     expect(screen.getByText(/Wouter B2 \(0\)/)).toBeInTheDocument();
@@ -102,9 +111,7 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
       getPlayerFormation: () => [],
     });
 
-    const { container } = renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded={false} onToggle={() => {}} isCollapsible />,
-    );
+    const { container } = renderCard(match);
 
     // No player summary should be shown
     expect(container.querySelector('div[style*="font-size: 0.8em"]')).toBeNull();
@@ -117,18 +124,15 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
 
     const match = createMockMatch({
       getPlayerFormation: () => players.map(p => ({
-        player: { id: p.playerId, name: p.alias } as any,
+        id: p.playerId,
+        player: { id: p.playerId, name: p.alias, getCompetition: () => ({ ranking: p.ranking, position: 1 }) } as any,
         matchPlayer: p,
       })) as IMatchPlayerInfo[],
     });
 
-    renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded onToggle={() => {}} isCollapsible />,
-    );
+    renderCard(match, true);
 
     // When expanded, mini body is not shown
-    const miniBody = screen.queryByText(/Wouter B2/);
-    // The player name might appear in the expanded content, but not in mini body
     // We check that mini body is not rendered specifically
     expect(document.querySelector('div[style*="font-size: 0.8em"]')).toBeNull();
   });
@@ -146,9 +150,7 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
       })) as IMatchPlayerInfo[],
     });
 
-    renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded={false} onToggle={() => {}} isCollapsible />,
-    );
+    renderCard(match);
 
     // The separator should be present
     expect(screen.getByText(/·/)).toBeInTheDocument();

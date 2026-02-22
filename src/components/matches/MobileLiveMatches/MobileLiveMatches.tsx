@@ -22,7 +22,7 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
   const user = useTtcSelector(selectUser);
   const expandedMatchCards = useTtcSelector(state => state.config.expandedMatchCards);
   const [syncDisabled, setSyncDisabled] = useState(false);
-  const syncTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleSyncAll = useCallback(() => {
     matches.forEach(match => dispatch(frenoyMatchSync({ match, forceSync: true })));

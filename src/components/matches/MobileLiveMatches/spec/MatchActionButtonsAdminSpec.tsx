@@ -39,7 +39,7 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
   description: '',
   opponent: { clubId: 10, teamCode: 'A' },
   teamId: 1,
-  date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00' } as any,
+  date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true } as any,
   getTeam: () => ({
     renderOwnTeamTitle: () => 'TTC Aalst A',
     getDivisionRanking: () => ({ empty: true }),

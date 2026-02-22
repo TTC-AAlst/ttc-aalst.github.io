@@ -23,7 +23,6 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
   alias: firstName,
   firstName,
   lastName,
-  name: `${firstName} ${lastName}`,
   active: true,
   vttl: { clubId: 1, competition: 'Vttl', frenoyLink: '', position: id, ranking: 'B6', nextRanking: null, prediction: null, uniqueIndex: 100 + id, rankingIndex: id, rankingValue: 50 } as any,
   sporta: { clubId: 1, competition: 'Sporta', frenoyLink: '', position: id, ranking: 'C2', nextRanking: null, prediction: null, uniqueIndex: 200 + id, rankingIndex: id, rankingValue: 40 } as any,
@@ -33,7 +32,6 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
   security: 'Player' as any,
   hasKey: false,
   imageVersion: 0,
-  getCompetition: (comp: string) => comp === 'Vttl' ? { position: id, ranking: 'B6' } : { position: id, ranking: 'C2' },
 });
 
 const testPlayer = createPlayer(42, 'Wouter', 'Test');

@@ -4,7 +4,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../utils/test-utils';
 import { MobileLiveMatchInProgress } from '../MobileLiveMatchInProgress';
-import { IMatch, IStorePlayer } from '../../../../models/model-interfaces';
+import { IMatch, IStorePlayer, IPlayerCompetition } from '../../../../models/model-interfaces';
+import { PlayerRanking } from '../../../../models/utils/rankingSorter';
 
 vi.mock('../../../../storeUtil', () => ({
   default: {
@@ -25,8 +26,8 @@ vi.mock('../../../../utils/httpClient', () => ({
   },
 }));
 
-const vttl = (pos: number, ranking: string, idx: number, val: number) => ({
-  clubId: 1, competition: 'Vttl' as const, frenoyLink: '', position: pos,
+const vttl = (pos: number, ranking: PlayerRanking, idx: number, val: number): IPlayerCompetition => ({
+  clubId: 1, competition: 'Vttl', frenoyLink: '', position: pos,
   ranking, nextRanking: null, prediction: null, uniqueIndex: 100 + pos, rankingIndex: pos, rankingValue: val,
 });
 
@@ -59,7 +60,7 @@ const baseMockMatch: IMatch = {
   description: '',
   opponent: { clubId: 10, teamCode: 'A' },
   teamId: 1,
-  date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00' } as any,
+  date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true } as any,
   getTeam: () => mockTeam as any,
   renderOpponentTitle: () => 'Opponent A',
   getOwnPlayers: () => [],
@@ -131,10 +132,10 @@ describe('OwnPlayerSelector gating (AC9: login, AC10: games played)', () => {
       expect(getEditIcons().length).toBe(2);
     });
 
-    it('shows only 1 edit icon (opponents) when user is not logged in', () => {
+    it('shows no edit icons when user is not logged in', () => {
       renderMatch(inProgressMatch(), 0);
 
-      expect(getEditIcons().length).toBe(1);
+      expect(getEditIcons().length).toBe(0);
     });
   });
 

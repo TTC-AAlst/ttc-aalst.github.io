@@ -11,7 +11,19 @@ vi.mock('../../../storeUtil', () => ({
     getTeam: vi.fn(),
     getTeams: vi.fn().mockReturnValue([]),
     getClub: vi.fn(),
-    getPlayer: vi.fn(),
+    getPlayer: vi.fn().mockReturnValue({
+      id: 42,
+      alias: 'Wouter',
+      firstName: 'Wouter',
+      lastName: 'Test',
+      name: 'Wouter Test',
+      slug: 'wouter-test',
+      active: true,
+      contact: { playerId: 42, email: 'test@test.com', mobile: '0471234567', address: 'Test Street 1', city: 'Aalst' },
+      getCompetition: () => ({ ranking: 'B6', position: 1 }),
+      getTeam: () => null,
+      getTeams: () => [],
+    }),
     getMatch: vi.fn(),
     getMatches: vi.fn().mockReturnValue([]),
     matches: { getAllMatches: vi.fn().mockReturnValue([]) },
@@ -23,7 +35,6 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
   alias: firstName,
   firstName,
   lastName,
-  name: `${firstName} ${lastName}`,
   active: true,
   vttl: { clubId: 1, competition: 'Vttl', frenoyLink: '', position: 1, ranking: 'B6', nextRanking: null, prediction: null, uniqueIndex: 100, rankingIndex: 1, rankingValue: 50 } as any,
   sporta: undefined as any,
@@ -37,20 +48,11 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
 
 const testPlayer = createPlayer(42, 'Wouter', 'Test');
 
-// Mock User model with getPlayer method
+// User state (will be wrapped in UserModel by selectUser)
 const mockUser = {
   playerId: 42,
   teams: [],
   security: [],
-  token: 'test',
-  alias: 'Wouter',
-  isSystem: () => false,
-  isAdmin: () => false,
-  getPlayer: () => ({
-    ...testPlayer,
-    name: 'Wouter Test',
-    contact: { email: 'test@test.com', mobile: '0471234567', address: 'Test Street 1', city: 'Aalst' },
-  }),
 };
 
 describe('Profile', () => {

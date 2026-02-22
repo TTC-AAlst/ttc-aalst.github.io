@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 type MaterialButtonProps = {
   label: string;
   color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';
-  onClick: React.MouseEventHandler<any>;
+  onClick?: React.MouseEventHandler<any>;
   disabled?: boolean;
 
   style?: React.CSSProperties;
