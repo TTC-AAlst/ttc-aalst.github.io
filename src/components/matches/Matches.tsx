@@ -84,10 +84,9 @@ export const Matches = () => {
 
   // Hide body scrollbar when this component is mounted
   useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.setProperty('overflow', 'hidden');
     return () => {
-      document.body.style.overflow = originalOverflow;
+      document.body.style.removeProperty('overflow');
     };
   }, []);
 
