@@ -4,6 +4,7 @@ import { IMatch } from '../../../models/model-interfaces';
 import { OtherMatchPlayerResults } from '../Match/OtherMatchPlayerResults';
 import { ReadonlyIndividualMatches } from '../Match/IndividualMatches';
 import { OpponentMatchScore } from '../Match/OpponentMatchScore';
+import { Icon } from '../../controls/Icons/Icon';
 import { selectReadOnlyMatches, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { frenoyReadOnlyMatchSync } from '../../../reducers/readonlyMatchesReducer';
 
@@ -53,6 +54,13 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
         <tbody>
           {todayDivisionMatches.map(m => {
             const hasPlayers = m.players.length > 0;
+            const homeRanking = team.getDivisionRanking(m.home);
+            const awayRanking = team.getDivisionRanking(m.away);
+            const homePosition = homeRanking.empty ? null : homeRanking.position;
+            const awayPosition = awayRanking.empty ? null : awayRanking.position;
+            const isPlayed = m.isSyncedWithFrenoy && m.score;
+            const homeWon = isPlayed && m.score.home > m.score.out;
+            const awayWon = isPlayed && m.score.out > m.score.home;
             return (
               <React.Fragment key={m.id}>
                 <tr
@@ -60,12 +68,16 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
                   onClick={() => hasPlayers && handleRowClick(m.id)}
                 >
                   <td style={{ whiteSpace: 'nowrap' }}>
+                    {homePosition && <small style={{ color: '#888' }}>{homePosition}. </small>}
                     {m.getClub('home')?.name} {m.home.teamCode}
+                    {homeWon && <Icon fa="fa fa-trophy" style={{ marginLeft: 4, color: '#ffc107' }} />}
                   </td>
                   <td style={{ textAlign: 'center', fontWeight: 600 }}>
                     <OpponentMatchScore readonlyMatch={m} />
                   </td>
                   <td style={{ whiteSpace: 'nowrap', textAlign: 'right' }}>
+                    {awayWon && <Icon fa="fa fa-trophy" style={{ marginRight: 4, color: '#ffc107' }} />}
+                    {awayPosition && <small style={{ color: '#888' }}>{awayPosition}. </small>}
                     {m.getClub('away')?.name} {m.away.teamCode}
                   </td>
                 </tr>
