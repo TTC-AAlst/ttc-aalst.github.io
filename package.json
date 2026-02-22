@@ -42,10 +42,8 @@
   },
   "overrides": {
     "@restart/hooks": "^0.6.2",
-    "react-avatar-editor": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
+    "react-avatar-editor>react": "$react",
+    "react-avatar-editor>react-dom": "$react-dom"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
