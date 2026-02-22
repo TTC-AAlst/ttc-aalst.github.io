@@ -354,6 +354,7 @@ export default {
         previousEncountersTitle: "Onderlinge duels",
         admin: "Dev",
         division: "Afdeling",
+        vsMe: "VS mij",
       },
       report: {
         title: "Wedstrijdverslag",

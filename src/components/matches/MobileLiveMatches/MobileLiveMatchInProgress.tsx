@@ -117,6 +117,7 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [showOpponentModal, setShowOpponentModal] = useState(false);
   const [showEncountersModal, setShowEncountersModal] = useState(false);
+  const [showVsMeModal, setShowVsMeModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [showDivision, setShowDivision] = useState(false);
   const user = useTtcSelector(selectUser);
@@ -173,6 +174,13 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
             <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.previousEncountersTitle')}</Tooltip>}>
               <Button variant="outline-secondary" onClick={() => setShowEncountersModal(true)}>
                 {t('match.tabs.previousEncounters')}
+              </Button>
+            </OverlayTrigger>
+          )}
+          {hasTheirPlayers && user.playerId > 0 && (
+            <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.vsMe')}</Tooltip>}>
+              <Button variant="outline-secondary" onClick={() => setShowVsMeModal(true)}>
+                <Icon fa="fa fa-exchange" />
               </Button>
             </OverlayTrigger>
           )}
@@ -246,6 +254,15 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
         </Modal.Header>
         <Modal.Body style={{padding: 6}}>
           <PreviousEncounters match={match} />
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showVsMeModal} onHide={() => setShowVsMeModal(false)} fullscreen style={{zIndex: 99999}}>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('match.tabs.vsMe')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{padding: 6}}>
+          <OpponentsFormation match={match} opponent={match.opponent} />
         </Modal.Body>
       </Modal>
 
