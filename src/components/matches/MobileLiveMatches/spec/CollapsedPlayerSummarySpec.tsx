@@ -47,7 +47,10 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
   getOwnPlayers: () => [],
   getTheirPlayers: () => [],
   getTeamPlayerCount: () => 4,
-  getTeam: () => ({ teamCode: 'A', competition: 'Vttl', getDivisionRanking: () => ({ empty: true }), getThriller: () => null, renderOwnTeamTitle: () => 'TTC Aalst A' } as any),
+  getTeam: () => ({
+    teamCode: 'A', competition: 'Vttl', getDivisionRanking: () => ({ empty: true }),
+    getThriller: () => null, renderOwnTeamTitle: () => 'TTC Aalst A',
+  } as any),
   getPlayerFormation: () => [],
   getGameMatches: () => [],
   renderScore: () => '0-0',
@@ -56,8 +59,7 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
   ...overrides,
 } as any);
 
-const renderCard = (match: IMatch, expanded = false) =>
-  renderWithProviders(
+const renderCard = (match: IMatch, expanded = false) => renderWithProviders(
     <MemoryRouter>
       <MobileLiveMatchCard match={match} expanded={expanded} onToggle={() => {}} isCollapsible />
     </MemoryRouter>,

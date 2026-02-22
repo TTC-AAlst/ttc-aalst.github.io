@@ -161,7 +161,7 @@ Tests use Vitest with happy-dom environment and React Testing Library for compon
 
 ### ESLint
 
-ESLint 10 flat config (`eslint.config.js`) with `typescript-eslint` and `eslint-plugin-react`:
+ESLint 9 flat config (`eslint.config.js`) with `typescript-eslint` and `eslint-plugin-react`:
 - Arrow functions preferred for components
 - Max line length: 160 characters
 - `no-console`: off, `no-debugger`: warn

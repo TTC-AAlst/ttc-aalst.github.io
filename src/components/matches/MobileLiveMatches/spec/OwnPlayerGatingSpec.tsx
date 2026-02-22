@@ -77,8 +77,7 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
   ...overrides,
 }) as any;
 
-const renderMatch = (match: IMatch, playerId: number) =>
-  renderWithProviders(
+const renderMatch = (match: IMatch, playerId: number) => renderWithProviders(
     <MemoryRouter><MobileLiveMatchInProgress match={match} /></MemoryRouter>,
     { preloadedState: { user: { playerId, teams: [1], security: [] }, readonlyMatches: [], players: testPlayers } },
   );

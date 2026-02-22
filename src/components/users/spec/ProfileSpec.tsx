@@ -36,7 +36,10 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
   firstName,
   lastName,
   active: true,
-  vttl: { clubId: 1, competition: 'Vttl', frenoyLink: '', position: 1, ranking: 'B6', nextRanking: null, prediction: null, uniqueIndex: 100, rankingIndex: 1, rankingValue: 50 } as any,
+  vttl: {
+    clubId: 1, competition: 'Vttl', frenoyLink: '', position: 1, ranking: 'B6',
+    nextRanking: null, prediction: null, uniqueIndex: 100, rankingIndex: 1, rankingValue: 50,
+  } as any,
   sporta: undefined as any,
   contact: { playerId: id, email: 'test@test.com', mobile: '0471234567', address: 'Test Street 1', city: 'Aalst' },
   style: {} as any,

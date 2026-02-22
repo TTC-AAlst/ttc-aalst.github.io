@@ -54,8 +54,7 @@ const createMockMatch = (id: number): IMatch => ({
   getTeamPlayerCount: () => 4,
 } as any);
 
-const renderMatches = (matches: IMatch[], userState = {}) =>
-  renderWithProviders(
+const renderMatches = (matches: IMatch[], userState = {}) => renderWithProviders(
     <MemoryRouter><MobileLiveMatches matches={matches} /></MemoryRouter>,
     { preloadedState: { user: { playerId: 1, teams: [1], security: [], ...userState }, readonlyMatches: [] } },
   );

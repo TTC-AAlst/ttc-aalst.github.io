@@ -45,8 +45,7 @@ export const PreviousEncounters = ({match}: {match: IMatch}) => {
   const allUniqueIds = playersToShow.map(p => p.uniqueIndex);
   const encounters = useTtcSelector(state => state.matchInfo.previousEncounters
     .filter(encounter => encounter.requestMatchId === match.id)
-    .filter(encounter =>
-      allUniqueIds.includes(encounter.homePlayerUniqueId) || allUniqueIds.includes(encounter.awayPlayerUniqueId)))
+    .filter(encounter => allUniqueIds.includes(encounter.homePlayerUniqueId) || allUniqueIds.includes(encounter.awayPlayerUniqueId)))
     .sort((a, b) => dayjs(b.matchDate).diff(dayjs(a.matchDate)));
 
   const theirPlayers = match.getTheirPlayers();
@@ -86,8 +85,7 @@ const PlayerEncountersSection = ({ player, encounters, theirPlayers, showDivider
     enc => enc.homePlayerUniqueId === player.uniqueIndex || enc.awayPlayerUniqueId === player.uniqueIndex,
   );
 
-  const hasAnyEncountersWithCurrentOpponents = theirPlayers.some(theirPlayer =>
-    playerEncounters.some(
+  const hasAnyEncountersWithCurrentOpponents = theirPlayers.some(theirPlayer => playerEncounters.some(
       enc => enc.homePlayerUniqueId === theirPlayer.uniqueIndex || enc.awayPlayerUniqueId === theirPlayer.uniqueIndex,
     ),
   );
