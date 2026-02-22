@@ -122,7 +122,7 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const user = useTtcSelector(selectUser);
   const dispatch = useTtcDispatch();
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match));
-  const opponentMatchesList = [...opponentMatches.home, ...opponentMatches.away];
+  const opponentMatchesList = [...opponentMatches.home, ...opponentMatches.away].filter(m => m.shouldBePlayed);
   const readonlyMatches = useTtcSelector(selectReadOnlyMatches);
 
   const hasReportOrComments = !!match.description || match.comments.length > 0;
