@@ -13,7 +13,8 @@
     "lint": "eslint src",
     "lint-fix": "eslint --fix src",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --cname ttc-aalst.be"
+    "deploy": "gh-pages -d dist --cname ttc-aalst.be",
+    "prepare": "husky"
   },
   "license": "MIT",
   "dependencies": {
@@ -62,6 +63,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "gh-pages": "^6.3.0",
     "happy-dom": "^20.6.3",
+    "husky": "^9.1.7",
     "sass": "^1.97.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0",
