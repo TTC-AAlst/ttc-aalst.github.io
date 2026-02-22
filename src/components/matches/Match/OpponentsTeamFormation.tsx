@@ -16,7 +16,9 @@ const INITIAL_ROW_LIMIT = 5;
 
 export const OpponentsTeamFormation = ({matches, opponent, hideHeader, limitRows}: OpponentsTeamFormationProps) => {
   const [showAll, setShowAll] = useState(false);
-  const formations = getOpponentFormations(matches, opponent).sort((a, b) => b.value - a.value);
+  const formations = getOpponentFormations(matches, opponent)
+    .filter(f => f.value > 0) // Filter out forfeits with no real players
+    .sort((a, b) => b.value - a.value);
 
   const shouldLimit = limitRows && !showAll && formations.length > INITIAL_ROW_LIMIT;
   const displayedFormations = shouldLimit ? formations.slice(0, INITIAL_ROW_LIMIT) : formations;
