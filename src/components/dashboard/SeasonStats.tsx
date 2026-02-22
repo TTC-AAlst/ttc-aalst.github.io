@@ -105,23 +105,23 @@ export const SeasonStats = () => {
   const winRate = Math.round((wins / totalMatches) * 100);
 
   return (
-    <div style={{marginBottom: 20}}>
-      <Strike text="Seizoen in cijfers" style={{marginBottom: 12}} />
+    <div style={{ marginBottom: 20 }}>
+      <Strike text="Seizoen in cijfers" style={{ marginBottom: 12 }} />
 
       {/* Match stats */}
-      <div style={{marginBottom: 16}}>
-        <div style={{fontSize: '1.1em', marginBottom: 8}}>
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: '1.1em', marginBottom: 8 }}>
           <strong>{totalMatches}</strong> matchen gespeeld
-          <span style={{color: '#666', marginLeft: 8}}>({winRate}% winst)</span>
+          <span style={{ color: '#666', marginLeft: 8 }}>({winRate}% winst)</span>
         </div>
-        <div style={{display: 'flex', gap: 16, fontSize: '0.95em'}}>
-          <span style={{color: '#4CAF50'}}>
+        <div style={{ display: 'flex', gap: 16, fontSize: '0.95em' }}>
+          <span style={{ color: '#4CAF50' }}>
             <strong>{wins}</strong> gewonnen
           </span>
-          <span style={{color: '#FF9800'}}>
+          <span style={{ color: '#FF9800' }}>
             <strong>{draws}</strong> gelijk
           </span>
-          <span style={{color: '#f44336'}}>
+          <span style={{ color: '#f44336' }}>
             <strong>{losses}</strong> verloren
           </span>
         </div>
@@ -129,18 +129,14 @@ export const SeasonStats = () => {
 
       {/* Top performers */}
       {topPerformers.length > 0 && (
-        <div style={{marginBottom: 16}}>
-          <div style={{fontWeight: 500, marginBottom: 6, color: '#495057'}}>
-            Top spelers
-          </div>
-          <div style={{display: 'flex', flexDirection: 'column', gap: 4}}>
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontWeight: 500, marginBottom: 6, color: '#495057' }}>Top spelers</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             {topPerformers.map((p, i) => (
-              <div key={p.player.id} style={{display: 'flex', alignItems: 'center', gap: 8}}>
-                <span style={{fontSize: '1.2em'}}>
-                  {i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}
-                </span>
+              <div key={p.player.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: '1.2em' }}>{i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
                 <PlayerLink player={p.player} />
-                <span style={{color: '#666', fontSize: '0.9em'}}>
+                <span style={{ color: '#666', fontSize: '0.9em' }}>
                   {p.winPercentage}% ({p.victories}/{p.gamesPlayed})
                 </span>
               </div>
@@ -152,10 +148,8 @@ export const SeasonStats = () => {
       {/* Top stijgers */}
       {topStijgers.length > 0 && (
         <div>
-          <div style={{fontWeight: 500, marginBottom: 6, color: '#495057'}}>
-            Opkomende talenten
-          </div>
-          <div style={{display: 'flex', flexWrap: 'wrap', gap: 6}}>
+          <div style={{ fontWeight: 500, marginBottom: 6, color: '#495057' }}>Opkomende talenten</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {topStijgers.slice(0, 4).map(s => (
               <span
                 key={`${s.player.id}-${s.competition}`}
@@ -168,8 +162,8 @@ export const SeasonStats = () => {
                   fontSize: '0.85em',
                 }}
               >
-                <PlayerLink player={s.player} alias style={{fontWeight: 500, marginRight: 4}} />
-                <span style={{color: '#4CAF50', fontWeight: 500}}>
+                <PlayerLink player={s.player} alias style={{ fontWeight: 500, marginRight: 4 }} />
+                <span style={{ color: '#4CAF50', fontWeight: 500 }}>
                   {s.current} → {s.predicted}
                 </span>
               </span>

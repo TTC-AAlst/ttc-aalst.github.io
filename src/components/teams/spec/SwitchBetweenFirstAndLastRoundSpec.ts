@@ -11,7 +11,7 @@ const createStoreMatch = (dateStr: string): IStoreMatchCommon => ({
   competition: 'Vttl',
   frenoyDivisionId: 0,
   date: dayjs(dateStr),
-  score: {home: 0, out: 0},
+  score: { home: 0, out: 0 },
   scoreType: 'NotYetPlayed',
   isPlayed: false,
   players: [],
@@ -21,9 +21,9 @@ const createStoreMatch = (dateStr: string): IStoreMatchCommon => ({
 
 describe('getFirstOrLastMatches', () => {
   const septMatch = createStoreMatch('2024-09-15T20:00:00'); // month=8, >= 7 -> first round
-  const octMatch = createStoreMatch('2024-10-20T20:00:00');  // month=9, >= 7 -> first round
-  const janMatch = createStoreMatch('2025-01-15T20:00:00');  // month=0, < 7 -> last round
-  const febMatch = createStoreMatch('2025-02-20T20:00:00');  // month=1, < 7 -> last round
+  const octMatch = createStoreMatch('2024-10-20T20:00:00'); // month=9, >= 7 -> first round
+  const janMatch = createStoreMatch('2025-01-15T20:00:00'); // month=0, < 7 -> last round
+  const febMatch = createStoreMatch('2025-02-20T20:00:00'); // month=1, < 7 -> last round
   const allMatches = [septMatch, octMatch, janMatch, febMatch];
 
   it('returns all matches with "all" filter', () => {

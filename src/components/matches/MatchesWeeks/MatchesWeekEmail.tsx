@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { Modal } from 'react-bootstrap';
 import { WeekTitle } from './WeekTitle';
@@ -18,11 +18,10 @@ type MatchesWeekEmailProps = {
   matches: IMatch[];
   prevMatches: IMatch[];
   compFilter: Competition;
-}
-
+};
 
 /** EmailButton that turns into a MatchWeekEmailComposeComponent (Modal) */
-export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}: MatchesWeekEmailProps) => {
+export const MatchesWeekEmail = ({ compFilter, weekCalcer, matches, prevMatches }: MatchesWeekEmailProps) => {
   const [mailFormOpen, setMailFormOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [playersPlaying, setPlayersPlaying] = useState({});
@@ -42,7 +41,7 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
         console.warn(errObj.message);
         httpClient.post('/config/Log', errObj);
       } else {
-        dispatch(getOpponentMatches({teamId: match.teamId, opponent: match.opponent}));
+        dispatch(getOpponentMatches({ teamId: match.teamId, opponent: match.opponent }));
       }
     });
   });
@@ -50,7 +49,7 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
   const emailFormationWrapper = (justMe: boolean) => {
     const week = weekCalcer.getWeek();
     const title = `${compFilter} Week ${weekCalcer.currentWeek}: ${week.start.format('D/M')} - ${week.end.format('D/M')}`;
-    dispatch(emailFormation({title, email, justMe, players: playersPlaying}));
+    dispatch(emailFormation({ title, email, justMe, players: playersPlaying }));
     setMailFormOpen(false);
   };
 
@@ -70,12 +69,7 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
   }
 
   return (
-    <Modal
-      size="xl"
-      show
-      onHide={() => setMailFormOpen(false)}
-      centered
-    >
+    <Modal size="xl" show onHide={() => setMailFormOpen(false)} centered>
       <Modal.Header closeButton>
         <Modal.Title>
           {compFilter} {t('week.emailTitle')}
@@ -84,18 +78,11 @@ export const MatchesWeekEmail = ({compFilter, weekCalcer, matches, prevMatches}:
 
       <Modal.Body style={{ height: 420 }}>
         <WeekTitle weekCalcer={weekCalcer} style={{ marginTop: 0 }} />
-        <QuillEditor
-          text={email}
-          style={{ height: 300 }}
-          onChange={value => setEmail(value)}
-          readOnly={false}
-        />
+        <QuillEditor text={email} style={{ height: 300 }} onChange={value => setEmail(value)} readOnly={false} />
       </Modal.Body>
 
       <Modal.Footer>
-        <Button onClick={() => setMailFormOpen(false)}>
-          {t('common.cancel')}
-        </Button>
+        <Button onClick={() => setMailFormOpen(false)}>{t('common.cancel')}</Button>
         <Button variant="danger" onClick={() => emailFormationWrapper(false)}>
           {t('week.sendEmail')}
         </Button>

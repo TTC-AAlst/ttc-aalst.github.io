@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import {MaterialButton} from '../controls/Buttons/MaterialButton';
-import {TabbedContainer} from '../controls/TabbedContainer';
-import {ChangePassword} from './ChangePassword';
+import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import { TabbedContainer } from '../controls/TabbedContainer';
+import { ChangePassword } from './ChangePassword';
 import { ChangePlayerDetails } from './ChangePlayerDetails';
-import ProfilePhotoForm, {ProfilePhotoAvatarForm} from './ProfilePhotoForm';
+import ProfilePhotoForm, { ProfilePhotoAvatarForm } from './ProfilePhotoForm';
 import PlayerLineup from './PlayerLineup';
 import { IPlayer } from '../../models/model-interfaces';
 import { t } from '../../locales';
@@ -22,7 +22,6 @@ const tabEventKeys = {
   editHolidays: 'editHolidays',
   editCaptain: 'editCaptain',
 };
-
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -79,42 +78,35 @@ export const Profile = () => {
     return (
       <div>
         <h1>SYSTEM USER</h1>
-        <MaterialButton
-          variant="contained"
-          label={t('login.logoutButton')}
-          color="secondary"
-          style={{marginTop: -15}}
-          onClick={logoutAndGoHome}
-        />
+        <MaterialButton variant="contained" label={t('login.logoutButton')} color="secondary" style={{ marginTop: -15 }} onClick={logoutAndGoHome} />
       </div>
     );
   }
 
   return (
-    <div style={{marginTop: 15, marginBottom: 20}}>
+    <div style={{ marginTop: 15, marginBottom: 20 }}>
       <TabbedContainer
         widthTreshold={760}
         selectedTab={tabEventKeys.main}
         tabKeys={tabConfig}
-        route={{base: t.route('profile'), subs: 'profileTabs'}}
+        route={{ base: t.route('profile'), subs: 'profileTabs' }}
         tabRenderer={eventKey => renderTabContent(eventKey)}
       />
     </div>
   );
 };
 
-
 type ProfilePlayerDetailsProps = {
-  player: IPlayer,
-  logoutAndGoHome: () => void,
+  player: IPlayer;
+  logoutAndGoHome: () => void;
 };
 
-const ProfilePlayerDetails = ({player, logoutAndGoHome}: ProfilePlayerDetailsProps) => {
+const ProfilePlayerDetails = ({ player, logoutAndGoHome }: ProfilePlayerDetailsProps) => {
   const playerSlug = player.name.toLowerCase().replace(/\s/g, '-');
   const playerUrl = t.route('player').replace(':playerId', encodeURI(playerSlug));
 
   return (
-    <div style={{padding: 10}}>
+    <div style={{ padding: 10 }}>
       <h3>{player.name}</h3>
       <p>
         <strong>{t('player.email')}</strong>&nbsp;{player.contact.email}
@@ -127,20 +119,9 @@ const ProfilePlayerDetails = ({player, logoutAndGoHome}: ProfilePlayerDetailsPro
       </p>
 
       <Link to={playerUrl}>
-        <MaterialButton
-          variant="contained"
-          label={t('nav.myPlayerPage')}
-          color="primary"
-          style={{marginTop: 15, marginRight: 10}}
-        />
+        <MaterialButton variant="contained" label={t('nav.myPlayerPage')} color="primary" style={{ marginTop: 15, marginRight: 10 }} />
       </Link>
-      <MaterialButton
-        variant="contained"
-        label={t('login.logoutButton')}
-        color="secondary"
-        style={{marginTop: 15}}
-        onClick={() => logoutAndGoHome()}
-      />
+      <MaterialButton variant="contained" label={t('login.logoutButton')} color="secondary" style={{ marginTop: 15 }} onClick={() => logoutAndGoHome()} />
     </div>
   );
 };

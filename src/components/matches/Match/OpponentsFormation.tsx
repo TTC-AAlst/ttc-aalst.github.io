@@ -15,11 +15,10 @@ import storeUtil from '../../../storeUtil';
 import { PreviousEncountersButtonModal } from './PreviousEncounters';
 import { getOpponentTeamEncounters } from '../../../reducers/matchInfoReducer';
 
-
 type OpponentsFormationProps = {
-  match: IMatch,
-  opponent: ITeamOpponent,
-}
+  match: IMatch;
+  opponent: ITeamOpponent;
+};
 
 interface IMatchFormation {
   player: IMatchPlayer;
@@ -28,17 +27,24 @@ interface IMatchFormation {
 }
 
 function getFormation(match: IMatch, matches: ReturnType<typeof selectOpponentMatches>) {
-  let opponentPlayers: IMatchPlayer[] = matches.home.map(m => m.players).flat().filter(m => m.home);
-  opponentPlayers = opponentPlayers.concat(matches.away.map(m => m.players).flat().filter(m => !m.home));
+  let opponentPlayers: IMatchPlayer[] = matches.home
+    .map(m => m.players)
+    .flat()
+    .filter(m => m.home);
+  opponentPlayers = opponentPlayers.concat(
+    matches.away
+      .map(m => m.players)
+      .flat()
+      .filter(m => !m.home),
+  );
 
   // TODO: this assumes that if you forfeited, you lost that match (ply has won but not lost property)
   // could be calculated more correctly by looking at the individual match results
-  const result: {[key: number]: IMatchFormation} = {};
+  const result: { [key: number]: IMatchFormation } = {};
   opponentPlayers.forEach(ply => {
     if (result[ply.uniqueIndex]) {
       result[ply.uniqueIndex].count++;
       result[ply.uniqueIndex].won += +ply.won || 0;
-
     } else {
       result[ply.uniqueIndex] = {
         player: ply,
@@ -49,33 +55,37 @@ function getFormation(match: IMatch, matches: ReturnType<typeof selectOpponentMa
   });
 
   const matchesPerPlayer = match.getTeamPlayerCount();
-  return Object.values(result).map(ply => Object.assign(ply, {lost: (matchesPerPlayer * ply.count) - ply.won}));
+  return Object.values(result).map(ply => Object.assign(ply, { lost: matchesPerPlayer * ply.count - ply.won }));
 }
 
-
-export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) => {
+export const OpponentsFormation = ({ match, opponent }: OpponentsFormationProps) => {
   const dispatch = useTtcDispatch();
   const viewport = useViewport();
   const user = useTtcSelector(selectUser);
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match, opponent));
-  const formations = useMemo(
-    () => getFormation(match, opponentMatches).sort((a, b) => b.count - a.count),
-    [match, opponentMatches],
-  );
+  const formations = useMemo(() => getFormation(match, opponentMatches).sort((a, b) => b.count - a.count), [match, opponentMatches]);
 
   useEffect(() => {
     if (user?.playerId && formations.length > 0) {
       const opponentPlayers = formations.map(f => ({ name: f.player.name, uniqueIndex: f.player.uniqueIndex }));
-      dispatch(getOpponentTeamEncounters({
-        match,
-        ourPlayerId: user.playerId,
-        opponentPlayers,
-      }));
+      dispatch(
+        getOpponentTeamEncounters({
+          match,
+          ourPlayerId: user.playerId,
+          opponentPlayers,
+        }),
+      );
     }
   }, [user?.playerId, formations, match, dispatch]);
 
   if (formations.length === 0) {
-    return <div className="match-card-tab-content"><h3><Spinner /></h3></div>;
+    return (
+      <div className="match-card-tab-content">
+        <h3>
+          <Spinner />
+        </h3>
+      </div>
+    );
   }
 
   const showTimesPlayed = viewport.width > 600;
@@ -103,17 +113,13 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
               <ThumbsUpIcon />
               {f.won}
 
-              <ThumbsDownIcon style={{marginLeft: 8}} />
+              <ThumbsDownIcon style={{ marginLeft: 8 }} />
               {f.lost}
             </td>
-            <td style={{textAlign: 'right'}}>{`${((f.won / (f.lost + f.won)) * 100).toFixed(0)}%`}</td>
+            <td style={{ textAlign: 'right' }}>{`${((f.won / (f.lost + f.won)) * 100).toFixed(0)}%`}</td>
             {currentPlayer ? (
               <td>
-                <PreviousEncountersButton
-                  ourPlayer={currentPlayer}
-                  opponent={f.player}
-                  match={match}
-                />
+                <PreviousEncountersButton ourPlayer={currentPlayer} opponent={f.player} match={match} />
               </td>
             ) : null}
           </tr>
@@ -122,7 +128,6 @@ export const OpponentsFormation = ({match, opponent}: OpponentsFormationProps) =
     </Table>
   );
 };
-
 
 const selectOpponentTeamEncounters = createSelector(
   [
@@ -150,13 +155,7 @@ const selectOpponentTeamEncounters = createSelector(
   },
 );
 
-
-const PreviousEncountersButton = ({ourPlayer, opponent, match}: {ourPlayer: IPlayer, opponent: IMatchPlayer, match: IMatch}) => {
+const PreviousEncountersButton = ({ ourPlayer, opponent, match }: { ourPlayer: IPlayer; opponent: IMatchPlayer; match: IMatch }) => {
   const encounters = useTtcSelector(state => selectOpponentTeamEncounters(state, ourPlayer, opponent, match));
-  return (
-    <PreviousEncountersButtonModal
-      encounters={encounters}
-      ourPlayerUniqueIndex={ourPlayer.getCompetition(match.competition)?.uniqueIndex ?? 0}
-    />
-  );
+  return <PreviousEncountersButtonModal encounters={encounters} ourPlayerUniqueIndex={ourPlayer.getCompetition(match.competition)?.uniqueIndex ?? 0} />;
 };

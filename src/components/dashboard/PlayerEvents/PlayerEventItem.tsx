@@ -99,11 +99,7 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
             )}
             {data.Style ? ` aangepast naar ${data.Style}` : ' aangepast'}
           </div>
-          {data.BestStroke && (
-            <div style={{ fontSize: '0.8em', color: '#666', marginTop: 2 }}>
-              🔥 {data.BestStroke}
-            </div>
-          )}
+          {data.BestStroke && <div style={{ fontSize: '0.8em', color: '#666', marginTop: 2 }}>🔥 {data.BestStroke}</div>}
         </>
       );
     } catch {
@@ -164,9 +160,7 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
           scoreText = ` (${score.home}-${score.out})`;
         }
 
-        const matchTitle = matchModel.isHomeMatch
-          ? `${teamTitle} - ${opponentTitle}${scoreText}`
-          : `${opponentTitle} - ${teamTitle}${scoreText}`;
+        const matchTitle = matchModel.isHomeMatch ? `${teamTitle} - ${opponentTitle}${scoreText}` : `${opponentTitle} - ${teamTitle}${scoreText}`;
 
         return (
           <Link to={matchUrl} style={{ color: '#2196F3', fontSize: '0.85em' }}>
@@ -202,22 +196,16 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
           {getEventIcon(event.type)}
         </span>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: '0.85em', fontWeight: 'bold', color: '#333' }}>
-            {event.createdBy}
-          </div>
+          <div style={{ fontSize: '0.85em', fontWeight: 'bold', color: '#333' }}>{event.createdBy}</div>
 
           {event.type === 'PlayerStyleUpdated' && getPlayerStyleContent()}
 
-          {(event.type === 'MatchReport' || event.type === 'MatchComment') && (
-            <div style={{ marginTop: 2 }}>
-              {getMatchInfo()}
-            </div>
-          )}
+          {(event.type === 'MatchReport' || event.type === 'MatchComment') && <div style={{ marginTop: 2 }}>{getMatchInfo()}</div>}
 
           {matchContent && (
             <div style={{ fontSize: '0.8em', color: '#555', marginTop: 4 }}>
               <div
-                dangerouslySetInnerHTML={{ __html: matchContent.html }}  
+                dangerouslySetInnerHTML={{ __html: matchContent.html }}
                 style={{
                   maxHeight: expanded ? 'none' : '4.5em',
                   overflow: 'hidden',

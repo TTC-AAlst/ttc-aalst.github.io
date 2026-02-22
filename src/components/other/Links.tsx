@@ -1,35 +1,63 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { t } from '../../locales';
 
 export default class Links extends Component {
   render() {
     return (
-      <div style={{marginTop: 10}}>
+      <div style={{ marginTop: 10 }}>
         <table className="table table-striped table-bordered table-hover">
           <tbody>
             <tr className="info">
               <td className="tableHeader">{t('links.federations')}</td>
             </tr>
             <tr>
-              <td><a href="https://www.vttl.be" target="_blank" rel="noopener noreferrer">{t('links.vttl')}</a></td>
+              <td>
+                <a href="https://www.vttl.be" target="_blank" rel="noopener noreferrer">
+                  {t('links.vttl')}
+                </a>
+              </td>
             </tr>
             <tr>
-              <td><a href="https://www.ovl.vttl.be/" target="_blank" rel="noopener noreferrer">{t('links.vttlovl')}</a></td>
+              <td>
+                <a href="https://www.ovl.vttl.be/" target="_blank" rel="noopener noreferrer">
+                  {t('links.vttlovl')}
+                </a>
+              </td>
             </tr>
             <tr>
-              <td><a href="https://sportateam.be/public/tafeltennis" target="_blank" rel="noopener noreferrer">{t('links.sporta')}</a></td>
+              <td>
+                <a href="https://sportateam.be/public/tafeltennis" target="_blank" rel="noopener noreferrer">
+                  {t('links.sporta')}
+                </a>
+              </td>
             </tr>
             <tr>
-              <td><a href="https://www.ittf.com/" target="_blank" rel="noopener noreferrer">{t('links.ittf')}</a></td>
+              <td>
+                <a href="https://www.ittf.com/" target="_blank" rel="noopener noreferrer">
+                  {t('links.ittf')}
+                </a>
+              </td>
             </tr>
             <tr>
-              <td><a href="https://www.ettu.org/" target="_blank" rel="noopener noreferrer">{t('links.ettu')}</a></td>
+              <td>
+                <a href="https://www.ettu.org/" target="_blank" rel="noopener noreferrer">
+                  {t('links.ettu')}
+                </a>
+              </td>
             </tr>
             <tr>
-              <td><a href="https://competitie.vttl.be/?menu=0" target="_blank" rel="noopener noreferrer">{t('links.vttlResults')}</a></td>
+              <td>
+                <a href="https://competitie.vttl.be/?menu=0" target="_blank" rel="noopener noreferrer">
+                  {t('links.vttlResults')}
+                </a>
+              </td>
             </tr>
             <tr>
-              <td><a href="https://ttonline.sporta.be/" target="_blank" rel="noopener noreferrer">{t('links.sportaResults')}</a></td>
+              <td>
+                <a href="https://ttonline.sporta.be/" target="_blank" rel="noopener noreferrer">
+                  {t('links.sportaResults')}
+                </a>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -71,10 +99,18 @@ export default class Links extends Component {
               <td><a href="https://www.ttcdepinte.be/classify" target="_blank" rel="noopener noreferrer">{t('links.vttlCalculationTwo')}</a></td>
             </tr> */}
             <tr>
-              <td><a href="https://www.tafeltennis.be/" target="_blank" rel="noopener noreferrer">{t('links.killypong')}</a></td>
+              <td>
+                <a href="https://www.tafeltennis.be/" target="_blank" rel="noopener noreferrer">
+                  {t('links.killypong')}
+                </a>
+              </td>
             </tr>
             <tr>
-              <td><a href="https://nl.dandoy-sports.eu/" target="_blank" rel="noopener noreferrer">{t('links.dandoy')}</a></td>
+              <td>
+                <a href="https://nl.dandoy-sports.eu/" target="_blank" rel="noopener noreferrer">
+                  {t('links.dandoy')}
+                </a>
+              </td>
             </tr>
           </tbody>
         </table>

@@ -13,28 +13,24 @@ import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponen
 type ViewMatchDetailsButtonProps = {
   match: IMatch;
   size: 'sm' | null;
-}
+};
 
 export class ViewMatchDetailsButton extends Component<ViewMatchDetailsButtonProps> {
   render() {
-    const {match} = this.props;
+    const { match } = this.props;
     if (!match.shouldBePlayed) {
       return null;
     }
 
-    const {size} = this.props;
+    const { size } = this.props;
     const score = match.renderScore();
     return (
-      <Link
-        className={cn({'btn btn-outline-secondary': !score, clickable: !!score, [`btn-${size}`]: !!size})}
-        to={t.route('match', {matchId: match.id})}
-      >
-        {score ? <MatchScore match={match} style={{fontSize: size === 'sm' ? 12 : 16}} showComments noLink /> : t('match.details')}
+      <Link className={cn({ 'btn btn-outline-secondary': !score, clickable: !!score, [`btn-${size}`]: !!size })} to={t.route('match', { matchId: match.id })}>
+        {score ? <MatchScore match={match} style={{ fontSize: size === 'sm' ? 12 : 16 }} showComments noLink /> : t('match.details')}
       </Link>
     );
   }
 }
-
 
 type MatchOtherRoundButtonProps = {
   match: IMatch;
@@ -42,17 +38,17 @@ type MatchOtherRoundButtonProps = {
   shortLabel?: boolean;
   /** Render as small button suitable for ButtonGroup */
   small?: boolean;
-}
+};
 
-export const MatchOtherRoundButton = ({match, shortLabel, small}: MatchOtherRoundButtonProps) => {
+export const MatchOtherRoundButton = ({ match, shortLabel, small }: MatchOtherRoundButtonProps) => {
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match));
-  const matches = opponentMatches.away.concat(opponentMatches.home)
-    .filter(m => m.id !== match.id);
+  const matches = opponentMatches.away.concat(opponentMatches.home).filter(m => m.id !== match.id);
 
-  const firstRoundMatchInfo = matches.find(m => (
-    (m.home.clubId === OwnClubId && m.home.teamCode === match.getTeam().teamCode)
-    || (m.away.clubId === OwnClubId && m.away.teamCode === match.getTeam().teamCode)
-  ));
+  const firstRoundMatchInfo = matches.find(
+    m =>
+      (m.home.clubId === OwnClubId && m.home.teamCode === match.getTeam().teamCode) ||
+      (m.away.clubId === OwnClubId && m.away.teamCode === match.getTeam().teamCode),
+  );
 
   const otherRoundMatch = firstRoundMatchInfo ? storeUtil.getMatch(firstRoundMatchInfo.id) : null;
   if (!otherRoundMatch || !otherRoundMatch.isSyncedWithFrenoy) {
@@ -71,9 +67,9 @@ export const MatchOtherRoundButton = ({match, shortLabel, small}: MatchOtherRoun
 
   const linkElement = (
     <Link
-      to={t.route('match', {matchId: otherRoundMatch.id})}
-      className={cn('btn btn-outline-secondary', {'btn-sm': small})}
-      style={small ? undefined : {margin: 7}}
+      to={t.route('match', { matchId: otherRoundMatch.id })}
+      className={cn('btn btn-outline-secondary', { 'btn-sm': small })}
+      style={small ? undefined : { margin: 7 }}
     >
       {label} <MatchScore match={otherRoundMatch} forceDisplay noLink />
     </Link>

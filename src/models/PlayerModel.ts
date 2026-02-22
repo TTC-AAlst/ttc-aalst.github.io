@@ -1,8 +1,7 @@
 import { config, getStaticFileUrl } from '../config';
 import storeUtil from '../storeUtil';
-import {IPlayer, IPlayerContact, IPlayerCompetition, IPlayerStyle, Competition, ITeam, MatchPlayerStatus} from './model-interfaces';
+import { IPlayer, IPlayerContact, IPlayerCompetition, IPlayerStyle, Competition, ITeam, MatchPlayerStatus } from './model-interfaces';
 import { UserRoles } from './UserModel';
-
 
 export default class PlayerModel implements IPlayer {
   alias: string;
@@ -19,7 +18,7 @@ export default class PlayerModel implements IPlayer {
   hasKey: boolean;
   imageVersion: number;
 
-  constructor(json: any = {security: 'Player'}) {
+  constructor(json: any = { security: 'Player' }) {
     this.alias = json.alias || json.name || '';
     this.contact = new PlayerContactModel(json.contact || {}); // playerId, email, mobile, address, city
     this.id = json.id;
@@ -54,13 +53,11 @@ export default class PlayerModel implements IPlayer {
   }
 
   getTeams(): ITeam[] {
-    const teams = storeUtil.getTeams()
-      .filter(team => team.players.some(tp => tp.playerId === this.id && (tp.type === 'Captain' || tp.type === 'Standard')));
+    const teams = storeUtil.getTeams().filter(team => team.players.some(tp => tp.playerId === this.id && (tp.type === 'Captain' || tp.type === 'Standard')));
 
     return teams;
   }
 }
-
 
 export function displayMobile(n: string): string {
   if (!n) {
@@ -68,7 +65,6 @@ export function displayMobile(n: string): string {
   }
   return n.replace(/^(\d{3,4})(\d{2})(\d{2})(\d{2})$/, '$1/$2 $3 $4');
 }
-
 
 class PlayerContactModel implements IPlayerContact {
   playerId: number;
@@ -90,15 +86,14 @@ class PlayerContactModel implements IPlayerContact {
   }
 }
 
-
 export const playerUtils = {
-  getPlayerImageSize(): {width: number, height: number} {
+  getPlayerImageSize(): { width: number; height: number } {
     return {
       width: 200,
       height: 200,
     };
   },
-  getPlayerAvatarImageSize(): {width: number, height: number} {
+  getPlayerAvatarImageSize(): { width: number; height: number } {
     return {
       width: 40,
       height: 40,
@@ -121,7 +116,6 @@ export function createFrenoyLink(comp: IPlayerCompetition): string {
     return `https://competitie.vttl.be/?menu=6&result=1&sel=${comp.frenoyLink}`;
   }
   return `https://ttonline.sporta.be/?menu=6&result=1&sel=${comp.frenoyLink}`;
-
 }
 
 export function createFrenoyLinkByUniqueId(comp: Competition, uniqueId: number): string {
@@ -129,7 +123,7 @@ export function createFrenoyLinkByUniqueId(comp: Competition, uniqueId: number):
   if (comp === 'Vttl' || comp === 'Jeugd') {
     return `https://competitie.vttl.be/${uniqueId}`;
   }
-  return `https://ttonline.sporta.be/${(`000000${uniqueId}`).slice(-6)}`;
+  return `https://ttonline.sporta.be/${`000000${uniqueId}`.slice(-6)}`;
 }
 
 export function getPlayingStatusClass(playingStatus?: MatchPlayerStatus | ''): undefined | 'success' | 'danger' | 'info' | 'warning' {
@@ -152,8 +146,7 @@ export function getPlayingStatusClass(playingStatus?: MatchPlayerStatus | ''): u
   }
 }
 
-
-export function getPlayingStatusColor(playingStatus?: {status: MatchPlayerStatus}): null | string {
+export function getPlayingStatusColor(playingStatus?: { status: MatchPlayerStatus }): null | string {
   if (!playingStatus) {
     return null;
   }

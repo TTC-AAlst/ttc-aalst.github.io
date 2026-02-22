@@ -1,4 +1,4 @@
-import React, {Component, MouseEventHandler} from 'react';
+import React, { Component, MouseEventHandler } from 'react';
 import cn from 'classnames';
 import { withTooltip } from '../../../utils/decorators/withTooltip';
 
@@ -8,7 +8,7 @@ export type IconProps = {
   style?: React.CSSProperties;
   onClick?: MouseEventHandler<any> | undefined;
   className?: string;
-}
+};
 
 class IconComponent extends Component<IconProps> {
   static defaultProps = {
@@ -19,26 +19,11 @@ class IconComponent extends Component<IconProps> {
   };
 
   render() {
-    const {fa, color, style, onClick, className, ...props} = this.props;
+    const { fa, color, style, onClick, className, ...props } = this.props;
     if (!onClick) {
-      return (
-        <i
-          {...props}
-          className={cn(fa, className, {clickable: !!onClick})}
-          style={{color, ...style}}
-        />
-      );
+      return <i {...props} className={cn(fa, className, { clickable: !!onClick })} style={{ color, ...style }} />;
     }
-    return (
-      <i
-        {...props}
-        className={cn(fa, className, {clickable: !!onClick})}
-        onClick={onClick}
-        style={{color, ...style}}
-        role="button"
-        tabIndex={0}
-      />
-    );
+    return <i {...props} className={cn(fa, className, { clickable: !!onClick })} onClick={onClick} style={{ color, ...style }} role="button" tabIndex={0} />;
   }
 }
 

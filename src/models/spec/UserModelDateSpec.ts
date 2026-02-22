@@ -2,11 +2,12 @@ import dayjs from 'dayjs';
 import UserModel from '../UserModel';
 import { IMatch } from '../model-interfaces';
 
-const createUser = (playerId: number, securityRoles: string[] = []) => new UserModel({playerId, teams: [], security: securityRoles});
+const createUser = (playerId: number, securityRoles: string[] = []) => new UserModel({ playerId, teams: [], security: securityRoles });
 
-const createMatchStub = (dateStr: string): IMatch => ({
-  date: dayjs(dateStr),
-} as any);
+const createMatchStub = (dateStr: string): IMatch =>
+  ({
+    date: dayjs(dateStr),
+  }) as any;
 
 describe('UserModel.canEditPlayersOnMatchDay', () => {
   it('returns true for admin regardless of date', () => {
@@ -39,7 +40,7 @@ describe('UserModel.canEditPlayersOnMatchDay', () => {
     const user = createUser(1);
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2025, 2, 15, 10, 0, 0)); // 10:00
-    const match = createMatchStub('2025-03-15T20:00:00');  // 20:00 same day
+    const match = createMatchStub('2025-03-15T20:00:00'); // 20:00 same day
     expect(user.canEditPlayersOnMatchDay(match)).toBe(true);
     vi.useRealTimers();
   });

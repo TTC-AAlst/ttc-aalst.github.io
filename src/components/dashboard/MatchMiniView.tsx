@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { IMatch, IStorePlayer } from '../../models/model-interfaces';
 import { MatchScore } from '../matches/MatchScore';
 import MatchVs from '../matches/Match/MatchVs';
@@ -19,7 +19,7 @@ type OpponentNameProps = {
   onClick: (e: React.MouseEvent) => void;
 };
 
-const OpponentName = ({name, ranking, showFull, onClick}: OpponentNameProps) => {
+const OpponentName = ({ name, ranking, showFull, onClick }: OpponentNameProps) => {
   const firstName = name.split(' ')[0];
   const displayName = showFull ? name : firstName;
 
@@ -38,7 +38,10 @@ const OpponentName = ({name, ranking, showFull, onClick}: OpponentNameProps) => 
       }}
     >
       {displayName}
-      <span style={{opacity: 0.7}}> <small>({ranking})</small></span>
+      <span style={{ opacity: 0.7 }}>
+        {' '}
+        <small>({ranking})</small>
+      </span>
     </button>
   );
 };
@@ -73,17 +76,19 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
     }
 
     const gameResults = match.getGameMatches();
-    const playerSummary: {[playerId: number]: {
-      playerId: number,
-      name: string,
-      ranking: PlayerRanking,
-      won: {name: string, ranking: string}[],
-      lost: {name: string, ranking: string}[]
-    }} = {};
+    const playerSummary: {
+      [playerId: number]: {
+        playerId: number;
+        name: string;
+        ranking: PlayerRanking;
+        won: { name: string; ranking: string }[];
+        lost: { name: string; ranking: string }[];
+      };
+    } = {};
 
     gameResults.forEach(game => {
       const ownPlayer = game.ownPlayer as any;
-      const {playerId} = ownPlayer;
+      const { playerId } = ownPlayer;
       if (!playerId) return; // Skip doubles
 
       if (!playerSummary[playerId]) {
@@ -110,11 +115,12 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
     });
 
     // Sort opponents by ranking, then by first name
-    const sortOpponents = (opponents: {name: string, ranking: string}[]) => opponents.sort((a, b) => {
-      const rankingDiff = rankingSorter(a.ranking as PlayerRanking, b.ranking as PlayerRanking);
-      if (rankingDiff !== 0) return rankingDiff;
-      return a.name.split(' ')[0].localeCompare(b.name.split(' ')[0]);
-    });
+    const sortOpponents = (opponents: { name: string; ranking: string }[]) =>
+      opponents.sort((a, b) => {
+        const rankingDiff = rankingSorter(a.ranking as PlayerRanking, b.ranking as PlayerRanking);
+        if (rankingDiff !== 0) return rankingDiff;
+        return a.name.split(' ')[0].localeCompare(b.name.split(' ')[0]);
+      });
 
     // Sort players by most wins (descending), then by ranking
     const sortedPlayers = Object.values(playerSummary)
@@ -132,22 +138,15 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
     const isExpanded = (playerId: number) => expandedPlayers.has(playerId);
 
     return (
-      <div style={{marginTop: 8, fontSize: '0.85em', color: '#555'}}>
+      <div style={{ marginTop: 8, fontSize: '0.85em', color: '#555' }}>
         {sortedPlayers.map(summary => {
           const player = getPlayer(summary.playerId);
           return (
-            <div key={summary.playerId} style={{marginBottom: 4}}>
-              <strong>
-                {player ? (
-                  <PlayerLink player={player}>{summary.name}</PlayerLink>
-                ) : (
-                  summary.name
-                )}
-                :
-              </strong>
+            <div key={summary.playerId} style={{ marginBottom: 4 }}>
+              <strong>{player ? <PlayerLink player={player}>{summary.name}</PlayerLink> : summary.name}:</strong>
               {summary.won.length > 0 && (
-                <span style={{marginLeft: 5}}>
-                  <ThumbsUpIcon color="#4CAF50" style={{marginRight: 3}} />
+                <span style={{ marginLeft: 5 }}>
+                  <ThumbsUpIcon color="#4CAF50" style={{ marginRight: 3 }} />
                   {summary.won.map((opponent, i) => (
                     <span key={i}>
                       {i > 0 && ', '}
@@ -162,8 +161,8 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
                 </span>
               )}
               {summary.lost.length > 0 && (
-                <span style={{marginLeft: 8}}>
-                  <ThumbsDownIcon color="#f44336" style={{marginRight: 3}} />
+                <span style={{ marginLeft: 8 }}>
+                  <ThumbsDownIcon color="#f44336" style={{ marginRight: 3 }} />
                   {summary.lost.map((opponent, i) => (
                     <span key={i}>
                       {i > 0 && ', '}
@@ -193,15 +192,15 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
         border: userPlayedInMatch ? '2px solid #4CAF50' : '1px solid #ddd',
       }}
     >
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <MatchVs match={match} withLinks withPosition ownTeamLink="main" />
-          <div style={{fontSize: '0.85em', color: '#666'}}>
+          <div style={{ fontSize: '0.85em', color: '#666' }}>
             <MatchDate match={match} bigDisplayMinWidth={0} />
           </div>
         </div>
-        <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
-          <MatchScore match={match} showComments style={{fontSize: 16}} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <MatchScore match={match} showComments style={{ fontSize: 16 }} />
         </div>
       </div>
       {renderPlayerResults()}

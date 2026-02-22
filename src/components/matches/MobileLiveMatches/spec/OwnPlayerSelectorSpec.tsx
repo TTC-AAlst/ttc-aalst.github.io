@@ -57,15 +57,32 @@ vi.mock('../../../../utils/httpClient', () => ({
 }));
 
 const vttl = (pos: number, ranking: string, idx: number, val: number) => ({
-  clubId: 1, competition: 'Vttl' as const, frenoyLink: '', position: pos,
-  ranking, nextRanking: null, prediction: null, uniqueIndex: 100 + pos, rankingIndex: pos, rankingValue: val,
+  clubId: 1,
+  competition: 'Vttl' as const,
+  frenoyLink: '',
+  position: pos,
+  ranking,
+  nextRanking: null,
+  prediction: null,
+  uniqueIndex: 100 + pos,
+  rankingIndex: pos,
+  rankingValue: val,
 });
 
 const ply = (id: number, alias: string, first: string, last: string, active: boolean, v?: any): IStorePlayer => ({
-  id, alias, firstName: first, lastName: last, active,
-  vttl: v, sporta: undefined as any,
+  id,
+  alias,
+  firstName: first,
+  lastName: last,
+  active,
+  vttl: v,
+  sporta: undefined as any,
   contact: { playerId: id, email: '', mobile: '', address: '', city: '' },
-  style: {} as any, quitYear: null, security: 'Player' as any, hasKey: false, imageVersion: 0,
+  style: {} as any,
+  quitYear: null,
+  security: 'Player' as any,
+  hasKey: false,
+  imageVersion: 0,
 });
 
 const testPlayers: IStorePlayer[] = [
@@ -80,48 +97,42 @@ const testPlayers: IStorePlayer[] = [
 
 const mockTeamMatches: any[] = [];
 
-const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
-  id: 1,
-  competition: 'Vttl',
-  frenoyDivisionId: 1,
-  teamId: 1,
-  games: [],
-  players: [],
-  block: '',
-  isSyncedWithFrenoy: false,
-  opponent: { clubId: 10, teamCode: 'A' },
-  date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) } as any,
-  getOwnPlayers: () => [],
-  getTheirPlayers: () => [],
-  getTeamPlayerCount: () => 4,
-  getTeam: () => ({ getMatches: () => mockTeamMatches } as any),
-  getPlayerFormation: () => [],
-  ...overrides,
-} as any);
+const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
+  ({
+    id: 1,
+    competition: 'Vttl',
+    frenoyDivisionId: 1,
+    teamId: 1,
+    games: [],
+    players: [],
+    block: '',
+    isSyncedWithFrenoy: false,
+    opponent: { clubId: 10, teamCode: 'A' },
+    date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) } as any,
+    getOwnPlayers: () => [],
+    getTheirPlayers: () => [],
+    getTeamPlayerCount: () => 4,
+    getTeam: () => ({ getMatches: () => mockTeamMatches }) as any,
+    getPlayerFormation: () => [],
+    ...overrides,
+  }) as any;
 
 const defaultStoreState = {
   players: testPlayers,
 };
-
 
 describe('OwnPlayerSelector', () => {
   beforeEach(() => {
     mockPost.mockClear();
   });
   it('renders "Selecteer spelers" button when form is closed', () => {
-    renderWithProviders(
-      <OwnPlayerSelector match={createMockMatch()} />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={createMockMatch()} />, { preloadedState: defaultStoreState });
 
     expect(screen.getByRole('button', { name: /selecteer spelers/i })).toBeInTheDocument();
   });
 
   it('shows player list when opened with data', () => {
-    renderWithProviders(
-      <OwnPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     expect(screen.getByText('Jean-François')).toBeInTheDocument();
     expect(screen.getByText('B6')).toBeInTheDocument();
@@ -131,10 +142,7 @@ describe('OwnPlayerSelector', () => {
 
   it('filters players with latinize search (accent-insensitive)', async () => {
     const user = userEvent.setup();
-    renderWithProviders(
-      <OwnPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const searchInput = screen.getByPlaceholderText('Zoeken...');
     await user.type(searchInput, 'francois');
@@ -145,10 +153,7 @@ describe('OwnPlayerSelector', () => {
 
   it('toggles player selection', async () => {
     const user = userEvent.setup();
-    renderWithProviders(
-      <OwnPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
     expect(checkboxes[0]).not.toBeChecked();
@@ -163,10 +168,7 @@ describe('OwnPlayerSelector', () => {
   it('disables excess players when max reached', async () => {
     const match = createMockMatch({ getTeamPlayerCount: () => 2 as any });
     const user = userEvent.setup();
-    renderWithProviders(
-      <OwnPlayerSelector match={match} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
     await user.click(checkboxes[0]);
@@ -185,10 +187,7 @@ describe('OwnPlayerSelector', () => {
       ],
     });
 
-    renderWithProviders(
-      <OwnPlayerSelector match={match} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
     const checkedBoxes = checkboxes.filter(cb => (cb as HTMLInputElement).checked);
@@ -198,15 +197,10 @@ describe('OwnPlayerSelector', () => {
   it('sorts selected players to top of list', () => {
     const match = createMockMatch({
       block: 'Captain' as any,
-      getOwnPlayers: () => [
-        { playerId: 5, status: 'Captain', home: true, position: 1 } as any,
-      ],
+      getOwnPlayers: () => [{ playerId: 5, status: 'Captain', home: true, position: 1 } as any],
     });
 
-    renderWithProviders(
-      <OwnPlayerSelector match={match} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const labels = screen.getAllByText(/Jean-François|Marc|André|Luc|Pieter/);
     expect(labels[0]).toHaveTextContent('Pieter');
@@ -215,10 +209,7 @@ describe('OwnPlayerSelector', () => {
   it('auto-saves when reaching required player count', async () => {
     const match = createMockMatch({ getTeamPlayerCount: () => 2 as any });
     const user = userEvent.setup();
-    renderWithProviders(
-      <OwnPlayerSelector match={match} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
     await user.click(checkboxes[0]);
@@ -239,10 +230,7 @@ describe('OwnPlayerSelector', () => {
 
   it('cancel button closes form and resets state', async () => {
     const user = userEvent.setup();
-    renderWithProviders(
-      <OwnPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
     await user.click(checkboxes[0]);
@@ -254,10 +242,7 @@ describe('OwnPlayerSelector', () => {
   });
 
   it('only shows active players with competition ranking', () => {
-    renderWithProviders(
-      <OwnPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OwnPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     // 5 active players with vttl ranking should be shown
     const checkboxes = screen.getAllByRole('checkbox');

@@ -12,13 +12,13 @@ import { deleteBoardMember, saveBoardMember } from '../../reducers/playersReduce
 // ATTN: This corresponds to an enum in the backend: ClubManagerType
 const ManagerTypeOther = 6;
 const clubManagerTypes = [
-  {key: 0, text: 'Default'},
-  {key: 1, text: 'Chairman'},
-  {key: 2, text: 'Secretary'},
-  {key: 3, text: 'Treasurer'},
-  {key: 4, text: 'Vttl'},
-  {key: 5, text: 'Sporta'},
-  {key: ManagerTypeOther, text: 'Other'},
+  { key: 0, text: 'Default' },
+  { key: 1, text: 'Chairman' },
+  { key: 2, text: 'Secretary' },
+  { key: 3, text: 'Treasurer' },
+  { key: 4, text: 'Vttl' },
+  { key: 5, text: 'Sporta' },
+  { key: ManagerTypeOther, text: 'Other' },
 ];
 
 export const AdminBoardMembers = () => {
@@ -57,16 +57,13 @@ export const AdminBoardMembers = () => {
   return (
     <div style={paperStyle}>
       <h3>{t('clubs.managementTitle')}</h3>
-      <PlayerAutoComplete
-        selectPlayer={playerSelected}
-        label={t('login.loginName')}
-      />
+      <PlayerAutoComplete selectPlayer={playerSelected} label={t('login.loginName')} />
 
       <br />
       <br />
 
       <DropdownButton
-        title={t(`clubs.managerTypes.${(clubManagerTypes.find(x => x.key === boardFunction) || {text: 'Default'}).text}`)}
+        title={t(`clubs.managerTypes.${(clubManagerTypes.find(x => x.key === boardFunction) || { text: 'Default' }).text}`)}
         id="boardFunction"
         size="lg"
         onSelect={fn => {
@@ -101,22 +98,17 @@ export const AdminBoardMembers = () => {
       <br />
       <br />
 
-      <TextField
-        label={t('admin.board.sort')}
-        type="number"
-        onChange={e => setSort(parseInt(e.target.value, 10))}
-        value={sort}
-      />
+      <TextField label={t('admin.board.sort')} type="number" onChange={e => setSort(parseInt(e.target.value, 10))} value={sort} />
 
       <br />
 
       <MaterialButton
         variant="contained"
         label={t('admin.board.save')}
-        style={{marginTop: 15, marginRight: 8}}
+        style={{ marginTop: 15, marginRight: 8 }}
         onClick={() => {
           const boardfn = boardFunctionCustom || clubManagerTypes[boardFunction].text;
-          dispatch(saveBoardMember({playerId, boardFunction: boardfn, sort}));
+          dispatch(saveBoardMember({ playerId, boardFunction: boardfn, sort }));
         }}
         disabled={!playerId}
       />
@@ -124,8 +116,8 @@ export const AdminBoardMembers = () => {
       <MaterialButton
         variant="contained"
         label={t('admin.board.del')}
-        style={{marginTop: 15}}
-        onClick={() => dispatch(deleteBoardMember({playerId}))}
+        style={{ marginTop: 15 }}
+        onClick={() => dispatch(deleteBoardMember({ playerId }))}
         disabled={!playerId}
       />
     </div>

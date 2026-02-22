@@ -1,14 +1,16 @@
- 
-import { IMatch, ITeam } from "../../../../models/model-interfaces";
-import { TeamAchievementInfo } from "./achievement-models";
+import { IMatch, ITeam } from '../../../../models/model-interfaces';
+import { TeamAchievementInfo } from './achievement-models';
 
 export function getTeamMostCloseWins(matches: IMatch[]): TeamAchievementInfo {
   const filtered = matches.filter(m => m.shouldBePlayed && m.isSyncedWithFrenoy && m.isPlayed);
 
-  const closeWinStats: Record<number, {
-    team: ITeam;
-    count: number;
-  }> = {};
+  const closeWinStats: Record<
+    number,
+    {
+      team: ITeam;
+      count: number;
+    }
+  > = {};
 
   for (const match of filtered) {
     const { home, out } = match.score;

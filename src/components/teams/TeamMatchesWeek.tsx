@@ -7,13 +7,13 @@ import { IMatch, ITeam } from '../../models/model-interfaces';
 import { selectReadOnlyMatches, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { getOpponentMatches } from '../../reducers/readonlyMatchesReducer';
 
-export const TeamMatchesWeek = ({team}: {team: ITeam}) => {
+export const TeamMatchesWeek = ({ team }: { team: ITeam }) => {
   const dispatch = useTtcDispatch();
   const readonlyMatches = useTtcSelector(selectReadOnlyMatches);
   const [currentWeek, setCurrentWeek] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    dispatch(getOpponentMatches({teamId: team.id}));
+    dispatch(getOpponentMatches({ teamId: team.id }));
   }, [team.id, dispatch]);
 
   const teamCompetition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
@@ -31,13 +31,13 @@ export const TeamMatchesWeek = ({team}: {team: ITeam}) => {
   }
 
   return (
-    <div style={{paddingTop: 10, paddingRight: 2}}>
-      <FrenoyWeekButton team={team} week={weekCalcer.currentWeek} className="pull-right" style={{marginRight: 10}} />
+    <div style={{ paddingTop: 10, paddingRight: 2 }}>
+      <FrenoyWeekButton team={team} week={weekCalcer.currentWeek} className="pull-right" style={{ marginRight: 10 }} />
       <WeekTitle weekCalcer={weekCalcer} weekChange={weekDiff => setCurrentWeek(weekCalcer.currentWeek + weekDiff)} />
       <OpponentMatches team={team} readonlyMatches={weekCalcer.getMatches()} />
 
       {prevWeekMatches.length ? (
-        <div style={{marginTop: 50}}>
+        <div style={{ marginTop: 50 }}>
           <WeekTitle weekCalcer={new WeekCalcer(otherMatches, weekCalcer.currentWeek - 1)} />
           <OpponentMatches team={team} readonlyMatches={prevWeekMatches} />
         </div>

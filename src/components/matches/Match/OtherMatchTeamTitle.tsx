@@ -7,9 +7,9 @@ type OtherMatchTeamTitleProps = {
   readonlyMatch: IMatch;
   isHome: boolean;
   withPosition: boolean;
-}
+};
 
-export const OtherMatchTeamTitle = ({team, readonlyMatch, isHome, withPosition}: OtherMatchTeamTitleProps) => {
+export const OtherMatchTeamTitle = ({ team, readonlyMatch, isHome, withPosition }: OtherMatchTeamTitleProps) => {
   const opponent = isHome ? readonlyMatch.home : readonlyMatch.away;
   return <OpponentLink team={team} opponent={opponent} withPosition={withPosition} />;
 };

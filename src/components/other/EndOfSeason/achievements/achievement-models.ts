@@ -1,4 +1,4 @@
-import { ITeam } from "../../../../models/model-interfaces";
+import { ITeam } from '../../../../models/model-interfaces';
 
 export type TeamAchievementInfo = {
   title: string;
@@ -7,4 +7,4 @@ export type TeamAchievementInfo = {
     throphy: string;
     team: ITeam;
   }[];
-}
+};

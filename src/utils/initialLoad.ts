@@ -57,9 +57,12 @@ export const useInitialLoad = () => {
     };
 
     try {
-      initialLoad().then(() => {}, err => {
-        console.error('Initial Load failed (promise)', err);
-      });
+      initialLoad().then(
+        () => {},
+        err => {
+          console.error('Initial Load failed (promise)', err);
+        },
+      );
     } catch (err) {
       console.error('Initial Load failed (catch block)', err);
     }
@@ -70,7 +73,7 @@ export const useInitialLoad = () => {
       console.log('Secondary load started');
       console.log('Teams', teams.length);
       teams.forEach(team => {
-        dispatch(loadTeamRanking({team}));
+        dispatch(loadTeamRanking({ team }));
       });
 
       dispatch(fetchRankingPredictions())
@@ -87,7 +90,7 @@ export const useInitialLoad = () => {
 
       console.log('Matches', matches.length);
       matches.forEach(match => {
-        dispatch(frenoyMatchSync({match}));
+        dispatch(frenoyMatchSync({ match }));
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

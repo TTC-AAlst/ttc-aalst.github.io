@@ -7,75 +7,52 @@ import { showSnackbar } from './configReducer';
 import { uploadPlayer } from './userActions';
 import { RootState } from '../store';
 
-export const fetchPlayers = createAsyncThunk(
-  'players/Get',
-  async (_, { getState }) => {
-    const state = getState() as RootState;
-    const lastChecked = state.config.caches.players;
-    const response = await http.get<ICacheResponse<IStorePlayer>>('/players', {lastChecked});
-    return response;
-  },
-);
+export const fetchPlayers = createAsyncThunk('players/Get', async (_, { getState }) => {
+  const state = getState() as RootState;
+  const lastChecked = state.config.caches.players;
+  const response = await http.get<ICacheResponse<IStorePlayer>>('/players', { lastChecked });
+  return response;
+});
 
-export const fetchQuitters = createAsyncThunk(
-  'players/GetQuitters',
-  async () => {
-    const response = await http.get<IStorePlayer[]>('/players/Quitters');
-    return response;
-  },
-);
+export const fetchQuitters = createAsyncThunk('players/GetQuitters', async () => {
+  const response = await http.get<IStorePlayer[]>('/players/Quitters');
+  return response;
+});
 
-export const fetchRankingPredictions = createAsyncThunk(
-  'players/RankingPredictions',
-  async () => {
-    const response = await http.get<PredictionResult[]>('/players/GetNextYearRankings');
-    return response;
-  },
-);
+export const fetchRankingPredictions = createAsyncThunk('players/RankingPredictions', async () => {
+  const response = await http.get<PredictionResult[]>('/players/GetNextYearRankings');
+  return response;
+});
 
-export const fetchPlayerEvents = createAsyncThunk(
-  'players/Events',
-  async () => {
-    const response = await http.get<IPlayerEvent[]>('/players/Events');
-    return response;
-  },
-);
+export const fetchPlayerEvents = createAsyncThunk('players/Events', async () => {
+  const response = await http.get<IPlayerEvent[]>('/players/Events');
+  return response;
+});
 
+export const fetchPlayer = createAsyncThunk('players/GetOne', async ({ id }: { id: number }) => {
+  const response = await http.get<IStorePlayer>(`/players/${id}`);
+  return response;
+});
 
-export const fetchPlayer = createAsyncThunk(
-  'players/GetOne',
-  async ({id}: {id: number}) => {
-    const response = await http.get<IStorePlayer>(`/players/${id}`);
-    return response;
-  },
-);
+export const deletePlayer = createAsyncThunk('players/DeletePlayer', async (data: { playerId: number }, { dispatch }) => {
+  try {
+    await http.post<IStorePlayer>(`/players/DeletePlayer/${data.playerId}`);
+    dispatch(showSnackbar(t('player.deletePlaterSuccess')));
+    return data.playerId;
+  } catch (err) {
+    dispatch(showSnackbar(t('player.deletePlayerFail')));
+    return null;
+  }
+});
 
-
-export const deletePlayer = createAsyncThunk(
-  'players/DeletePlayer',
-  async (data: {playerId: number}, { dispatch }) => {
-    try {
-      await http.post<IStorePlayer>(`/players/DeletePlayer/${data.playerId}`);
-      dispatch(showSnackbar(t('player.deletePlaterSuccess')));
-      return data.playerId;
-    } catch (err) {
-      dispatch(showSnackbar(t('player.deletePlayerFail')));
-      return null;
-    }
-  },
-);
-
-export const frenoySync = createAsyncThunk(
-  'players/FrenoySync',
-  async (_, { dispatch }) => {
-    try {
-      await http.post('/players/FrenoySync');
-      dispatch(showSnackbar(t('common.apiSuccess')));
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-    }
-  },
-);
+export const frenoySync = createAsyncThunk('players/FrenoySync', async (_, { dispatch }) => {
+  try {
+    await http.post('/players/FrenoySync');
+    dispatch(showSnackbar(t('common.apiSuccess')));
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+  }
+});
 
 // TODO: player sync?
 // export function frenoySync() {
@@ -89,49 +66,40 @@ export const frenoySync = createAsyncThunk(
 //       });
 //   };
 
-export const updatePlayer = createAsyncThunk(
-  'players/UpdatePlayer',
-  async (data: {player: IStorePlayer, switchActive?: boolean}, { dispatch }) => {
-    try {
-      const response = await http.post<IStorePlayer>('/players/UpdatePlayer', data.player);
-      dispatch(showSnackbar(t('player.updatePlayerSuccess')));
-      return {player: response, switchActive: data.switchActive};
-    } catch (err) {
-      dispatch(showSnackbar(t('player.updatePlayerFail')));
-      return null;
-    }
-  },
-);
+export const updatePlayer = createAsyncThunk('players/UpdatePlayer', async (data: { player: IStorePlayer; switchActive?: boolean }, { dispatch }) => {
+  try {
+    const response = await http.post<IStorePlayer>('/players/UpdatePlayer', data.player);
+    dispatch(showSnackbar(t('player.updatePlayerSuccess')));
+    return { player: response, switchActive: data.switchActive };
+  } catch (err) {
+    dispatch(showSnackbar(t('player.updatePlayerFail')));
+    return null;
+  }
+});
 
-export const saveBoardMember = createAsyncThunk(
-  'clubs/Board/save',
-  async (data: {playerId: number, boardFunction: string, sort: number}, { dispatch }) => {
-    try {
-      await http.post('/clubs/Board', data);
-      dispatch(showSnackbar(t('common.apiSuccess')));
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-    }
-  },
-);
+export const saveBoardMember = createAsyncThunk('clubs/Board/save', async (data: { playerId: number; boardFunction: string; sort: number }, { dispatch }) => {
+  try {
+    await http.post('/clubs/Board', data);
+    dispatch(showSnackbar(t('common.apiSuccess')));
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+  }
+});
 
-export const deleteBoardMember = createAsyncThunk(
-  'clubs/Board/delete',
-  async (data: {playerId: number}, { dispatch }) => {
-    try {
-      await http.post(`/clubs/Board/${data.playerId}`);
-      dispatch(showSnackbar(t('common.apiSuccess')));
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-    }
-  },
-);
+export const deleteBoardMember = createAsyncThunk('clubs/Board/delete', async (data: { playerId: number }, { dispatch }) => {
+  try {
+    await http.post(`/clubs/Board/${data.playerId}`);
+    dispatch(showSnackbar(t('common.apiSuccess')));
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+  }
+});
 
 export const updateStyle = createAsyncThunk(
   'players/UpdateStyle',
-  async (data: {player: IStorePlayer, newStyle: Omit<IPlayerStyle, 'playerId'>, updatedBy: number | 'system'}, { dispatch }) => {
+  async (data: { player: IStorePlayer; newStyle: Omit<IPlayerStyle, 'playerId'>; updatedBy: number | 'system' }, { dispatch }) => {
     try {
-      const response = await http.post<IStorePlayer>('/players/UpdateStyle', {playerId: data.player.id, ...data.newStyle});
+      const response = await http.post<IStorePlayer>('/players/UpdateStyle', { playerId: data.player.id, ...data.newStyle });
       dispatch(showSnackbar(t('common.apiSuccess')));
       // const user = storeUtil.getPlayer(data.updatedBy) || {alias: ''};
       // TODO: broadcastSnackbar(t('player.editStyle.saved', {
@@ -161,7 +129,6 @@ function getInitialState(): IStorePlayer[] {
   //   return [];
   // }
 }
-
 
 export const playersSlice = createSlice({
   name: 'players',

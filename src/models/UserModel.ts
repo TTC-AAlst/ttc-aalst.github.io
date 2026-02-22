@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import storeUtil from '../storeUtil';
-import {IPlayer, ITeam, IMatch, IStoreTeam} from './model-interfaces';
+import { IPlayer, ITeam, IMatch, IStoreTeam } from './model-interfaces';
 
 export const userRoles = ['Player', 'Board', 'Dev', 'System'] as const;
-export type UserRoles = typeof userRoles[number];
+export type UserRoles = (typeof userRoles)[number];
 
 const security = {
   CAN_MANAGETEAM: 'CAN_MANAGETEAM',

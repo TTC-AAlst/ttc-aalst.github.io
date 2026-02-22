@@ -18,7 +18,8 @@ Object.defineProperty(globalThis, 'localStorage', {
 });
 
 // Mock fetch to prevent actual HTTP requests during tests
-globalThis.fetch = vi.fn(() => Promise.resolve({
+globalThis.fetch = vi.fn(() =>
+  Promise.resolve({
     ok: true,
     json: () => Promise.resolve([]),
   } as Response),

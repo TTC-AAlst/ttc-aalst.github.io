@@ -1,16 +1,15 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import Table from 'react-bootstrap/Table';
 import { Button, Modal } from 'react-bootstrap';
-import {TrophyIcon} from '../../controls/Icons/TrophyIcon';
-import {ThumbsUpIcon, ThumbsDownIcon} from '../../controls/Icons/ThumbsIcons';
-import {Icon} from '../../controls/Icons/Icon';
-import {IMatch, PlayerEncounter} from '../../../models/model-interfaces';
+import { TrophyIcon } from '../../controls/Icons/TrophyIcon';
+import { ThumbsUpIcon, ThumbsDownIcon } from '../../controls/Icons/ThumbsIcons';
+import { Icon } from '../../controls/Icons/Icon';
+import { IMatch, PlayerEncounter } from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { useViewport } from '../../../utils/hooks/useViewport';
 import storeUtil from '../../../storeUtil';
-
 
 type OurPlayerInfo = {
   playerId: number;
@@ -18,7 +17,7 @@ type OurPlayerInfo = {
   uniqueIndex: number;
 };
 
-export const PreviousEncounters = ({match}: {match: IMatch}) => {
+export const PreviousEncounters = ({ match }: { match: IMatch }) => {
   const user = useTtcSelector(selectUser);
   const formationPlayers = match.getOwnPlayers().filter(ply => ply.status === match.block);
 
@@ -43,10 +42,11 @@ export const PreviousEncounters = ({match}: {match: IMatch}) => {
   }
 
   const allUniqueIds = playersToShow.map(p => p.uniqueIndex);
-  const encounters = useTtcSelector(state => state.matchInfo.previousEncounters
-    .filter(encounter => encounter.requestMatchId === match.id)
-    .filter(encounter => allUniqueIds.includes(encounter.homePlayerUniqueId) || allUniqueIds.includes(encounter.awayPlayerUniqueId)))
-    .sort((a, b) => dayjs(b.matchDate).diff(dayjs(a.matchDate)));
+  const encounters = useTtcSelector(state =>
+    state.matchInfo.previousEncounters
+      .filter(encounter => encounter.requestMatchId === match.id)
+      .filter(encounter => allUniqueIds.includes(encounter.homePlayerUniqueId) || allUniqueIds.includes(encounter.awayPlayerUniqueId)),
+  ).sort((a, b) => dayjs(b.matchDate).diff(dayjs(a.matchDate)));
 
   const theirPlayers = match.getTheirPlayers();
 
@@ -61,13 +61,7 @@ export const PreviousEncounters = ({match}: {match: IMatch}) => {
   return (
     <div className="match-card-tab-content">
       {playersToShow.map((player, index) => (
-        <PlayerEncountersSection
-          key={player.playerId}
-          player={player}
-          encounters={encounters}
-          theirPlayers={theirPlayers}
-          showDivider={index > 0}
-        />
+        <PlayerEncountersSection key={player.playerId} player={player} encounters={encounters} theirPlayers={theirPlayers} showDivider={index > 0} />
       ))}
     </div>
   );
@@ -81,13 +75,10 @@ type PlayerEncountersSectionProps = {
 };
 
 const PlayerEncountersSection = ({ player, encounters, theirPlayers, showDivider }: PlayerEncountersSectionProps) => {
-  const playerEncounters = encounters.filter(
-    enc => enc.homePlayerUniqueId === player.uniqueIndex || enc.awayPlayerUniqueId === player.uniqueIndex,
-  );
+  const playerEncounters = encounters.filter(enc => enc.homePlayerUniqueId === player.uniqueIndex || enc.awayPlayerUniqueId === player.uniqueIndex);
 
-  const hasAnyEncountersWithCurrentOpponents = theirPlayers.some(theirPlayer => playerEncounters.some(
-      enc => enc.homePlayerUniqueId === theirPlayer.uniqueIndex || enc.awayPlayerUniqueId === theirPlayer.uniqueIndex,
-    ),
+  const hasAnyEncountersWithCurrentOpponents = theirPlayers.some(theirPlayer =>
+    playerEncounters.some(enc => enc.homePlayerUniqueId === theirPlayer.uniqueIndex || enc.awayPlayerUniqueId === theirPlayer.uniqueIndex),
   );
 
   return (
@@ -103,12 +94,7 @@ const PlayerEncountersSection = ({ player, encounters, theirPlayers, showDivider
           );
 
           return (
-            <OpponentEncounterRow
-              key={theirPlayer.uniqueIndex}
-              theirPlayer={theirPlayer}
-              encounters={vsEncounter}
-              ourPlayerUniqueIndex={player.uniqueIndex}
-            />
+            <OpponentEncounterRow key={theirPlayer.uniqueIndex} theirPlayer={theirPlayer} encounters={vsEncounter} ourPlayerUniqueIndex={player.uniqueIndex} />
           );
         })
       )}
@@ -129,19 +115,30 @@ const OpponentEncounterRow = ({ theirPlayer, encounters, ourPlayerUniqueIndex }:
 
   const wins = encounters.filter(encounter => {
     const home = encounter.homePlayerUniqueId === ourPlayerUniqueIndex;
-    return (home && encounter.homePlayerSets > encounter.awayPlayerSets)
-      || (!home && encounter.awayPlayerSets > encounter.homePlayerSets);
+    return (home && encounter.homePlayerSets > encounter.awayPlayerSets) || (!home && encounter.awayPlayerSets > encounter.homePlayerSets);
   }).length;
   const losses = encounters.length - wins;
 
   return (
     <div style={{ marginBottom: 8 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <h5 style={{ margin: 0 }}>{theirPlayer.name} <small>({theirPlayer.ranking})</small></h5>
+        <h5 style={{ margin: 0 }}>
+          {theirPlayer.name} <small>({theirPlayer.ranking})</small>
+        </h5>
         {encounters.length > 0 ? (
           <Button size="sm" variant="outline-secondary" onClick={() => setShowTable(!showTable)} style={{ padding: '2px 6px' }}>
-            {!!wins && <><ThumbsUpIcon /><span>{wins}</span></>}
-            {!!losses && <><ThumbsDownIcon style={{ marginLeft: wins ? 16 : 0 }} /><span>{losses}</span></>}
+            {!!wins && (
+              <>
+                <ThumbsUpIcon />
+                <span>{wins}</span>
+              </>
+            )}
+            {!!losses && (
+              <>
+                <ThumbsDownIcon style={{ marginLeft: wins ? 16 : 0 }} />
+                <span>{losses}</span>
+              </>
+            )}
           </Button>
         ) : (
           <span style={{ fontStyle: 'italic', color: '#999' }}>{t('match.noDuels')}</span>
@@ -156,11 +153,7 @@ const OpponentEncounterRow = ({ theirPlayer, encounters, ourPlayerUniqueIndex }:
   );
 };
 
-
-
-
-
-export const PreviousEncountersButtonModal = ({encounters, ourPlayerUniqueIndex}: {encounters: PlayerEncounter[], ourPlayerUniqueIndex: number}) => {
+export const PreviousEncountersButtonModal = ({ encounters, ourPlayerUniqueIndex }: { encounters: PlayerEncounter[]; ourPlayerUniqueIndex: number }) => {
   const [open, setOpen] = useState(false);
   const viewport = useViewport();
   const isSmallDevice = viewport.width < 500;
@@ -172,20 +165,29 @@ export const PreviousEncountersButtonModal = ({encounters, ourPlayerUniqueIndex}
   // Calculate wins and losses
   const wins = encounters.filter(encounter => {
     const home = encounter.homePlayerUniqueId === ourPlayerUniqueIndex;
-    return (home && encounter.homePlayerSets > encounter.awayPlayerSets)
-      || (!home && encounter.awayPlayerSets > encounter.homePlayerSets);
+    return (home && encounter.homePlayerSets > encounter.awayPlayerSets) || (!home && encounter.awayPlayerSets > encounter.homePlayerSets);
   }).length;
   const losses = encounters.length - wins;
 
   if (!open) {
     return (
-      <Button size="sm" variant="outline-secondary" onClick={() => setOpen(true)} style={{padding: '2px 6px'}}>
+      <Button size="sm" variant="outline-secondary" onClick={() => setOpen(true)} style={{ padding: '2px 6px' }}>
         {isSmallDevice ? (
           <Icon fa="fa fa-history" />
         ) : (
           <>
-            {!!wins && <><ThumbsUpIcon />{wins}</>}
-            {!!losses && <><ThumbsDownIcon style={{marginLeft: wins ? 8 : 0}} />{losses}</>}
+            {!!wins && (
+              <>
+                <ThumbsUpIcon />
+                {wins}
+              </>
+            )}
+            {!!losses && (
+              <>
+                <ThumbsDownIcon style={{ marginLeft: wins ? 8 : 0 }} />
+                {losses}
+              </>
+            )}
           </>
         )}
       </Button>
@@ -194,9 +196,11 @@ export const PreviousEncountersButtonModal = ({encounters, ourPlayerUniqueIndex}
 
   const names = encounters.find(x => x.awayName && x.homeName) || encounters[0];
   return (
-    <Modal size="lg" show onHide={() => setOpen(false)} centered style={{zIndex: 100000}}>
+    <Modal size="lg" show onHide={() => setOpen(false)} centered style={{ zIndex: 100000 }}>
       <Modal.Header closeButton>
-        <Modal.Title>{names.homeName} vs {names.awayName}</Modal.Title>
+        <Modal.Title>
+          {names.homeName} vs {names.awayName}
+        </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -204,41 +208,43 @@ export const PreviousEncountersButtonModal = ({encounters, ourPlayerUniqueIndex}
       </Modal.Body>
 
       <Modal.Footer>
-        <Button onClick={() => setOpen(false)}>
-          {t('common.close')}
-        </Button>
+        <Button onClick={() => setOpen(false)}>{t('common.close')}</Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-
-export const EncountersTable = ({encounters, ourPlayerUniqueIndex}: {encounters: PlayerEncounter[], ourPlayerUniqueIndex: number}) => (
+export const EncountersTable = ({ encounters, ourPlayerUniqueIndex }: { encounters: PlayerEncounter[]; ourPlayerUniqueIndex: number }) => (
   <Table size="sm" striped>
     <thead>
       <tr>
-        <th style={{width: '30%'}}>{t('match.individual.matchTitle')}</th>
-        <th style={{width: '30%'}}>Thuis</th>
-        <th style={{width: '30%'}}>Bezoeker</th>
-        <th style={{width: '10%'}}>{t('match.individual.resultTitle')}</th>
+        <th style={{ width: '30%' }}>{t('match.individual.matchTitle')}</th>
+        <th style={{ width: '30%' }}>Thuis</th>
+        <th style={{ width: '30%' }}>Bezoeker</th>
+        <th style={{ width: '10%' }}>{t('match.individual.resultTitle')}</th>
       </tr>
     </thead>
     <tbody>
       {encounters.map(encounter => {
         const home = encounter.homePlayerUniqueId === ourPlayerUniqueIndex;
-        const won = (home && encounter.homePlayerSets > encounter.awayPlayerSets)
-          || (!home && encounter.awayPlayerSets > encounter.homePlayerSets);
+        const won = (home && encounter.homePlayerSets > encounter.awayPlayerSets) || (!home && encounter.awayPlayerSets > encounter.homePlayerSets);
 
         const date = dayjs(encounter.matchDate).format('D/M/YYYY');
         return (
           <tr key={encounter.matchId}>
             <td>
-              {won && <TrophyIcon style={{marginRight: 6}} />}
+              {won && <TrophyIcon style={{ marginRight: 6 }} />}
               {encounter.competition} {date}
             </td>
-            <td>{encounter.homeName.split(' ')[0]} <small>({encounter.homeRanking})</small></td>
-            <td>{encounter.awayName.split(' ')[0]} <small>({encounter.awayRanking})</small></td>
-            <td>{encounter.homePlayerSets}-{encounter.awayPlayerSets}</td>
+            <td>
+              {encounter.homeName.split(' ')[0]} <small>({encounter.homeRanking})</small>
+            </td>
+            <td>
+              {encounter.awayName.split(' ')[0]} <small>({encounter.awayRanking})</small>
+            </td>
+            <td>
+              {encounter.homePlayerSets}-{encounter.awayPlayerSets}
+            </td>
           </tr>
         );
       })}

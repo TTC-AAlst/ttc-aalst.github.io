@@ -9,10 +9,10 @@ import { browseTo } from '../../../routes';
 type OpponentLinkProps = {
   team: ITeam;
   opponent: ITeamOpponent;
-  withPosition?: boolean,
-}
+  withPosition?: boolean;
+};
 
-export const OpponentLink = ({withPosition = true, team, opponent}: OpponentLinkProps) => {
+export const OpponentLink = ({ withPosition = true, team, opponent }: OpponentLinkProps) => {
   const club = storeUtil.getClub(opponent.clubId);
   let teamTitle: any = `${club?.name || 'Unknown'} ${opponent.teamCode || ''}`;
   if (opponent.clubId !== OwnClubId && browseTo.getOpponent(team.competition, opponent) !== document.location.pathname) {

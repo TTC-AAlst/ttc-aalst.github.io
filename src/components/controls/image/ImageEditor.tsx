@@ -5,19 +5,19 @@ import { MaterialButton } from '../Buttons/MaterialButton';
 import { t } from '../../../locales';
 
 type ImageEditorProps = {
-  image: string,
-  updateImage: (preview: HTMLCanvasElement) => void,
+  image: string;
+  updateImage: (preview: HTMLCanvasElement) => void;
   size: {
-    width: number,
-    height: number,
-  },
-  borderRadius: number,
-}
+    width: number;
+    height: number;
+  };
+  borderRadius: number;
+};
 
 type ImageEditorState = {
   scale: number;
   borderRadius: number;
-}
+};
 
 export default class ImageEditor extends React.Component<ImageEditorProps, ImageEditorState> {
   editor?: AvatarEditor | null;
@@ -32,7 +32,7 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
 
   render() {
     return (
-      <div style={{display: 'inline-block', width: '100%'}}>
+      <div style={{ display: 'inline-block', width: '100%' }}>
         <AvatarEditor
           ref={editor => {
             this.editor = editor;
@@ -42,7 +42,7 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
           image={this.props.image}
           width={this.props.size.width}
           height={this.props.size.height}
-          style={{cursor: 'hand'}}
+          style={{ cursor: 'hand' }}
           crossOrigin="anonymous"
         />
 
@@ -51,18 +51,13 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
           min={0.1}
           max={5}
           step={0.01}
-          style={{width: '100%', marginBottom: 20, marginTop: 20}}
-          onChange={(event, newScale) => this.setState({scale: newScale as number})}
+          style={{ width: '100%', marginBottom: 20, marginTop: 20 }}
+          onChange={(event, newScale) => this.setState({ scale: newScale as number })}
         />
 
         <br />
 
-        <MaterialButton
-          label={t('photos.preview')}
-          color="secondary"
-          style={{marginBottom: 10}}
-          onClick={this.onClickSave}
-        />
+        <MaterialButton label={t('photos.preview')} color="secondary" style={{ marginBottom: 10 }} onClick={this.onClickSave} />
       </div>
     );
   }

@@ -27,7 +27,6 @@ export const store = configureStore({
   },
 });
 
-
 // TODO: Disabled this on frontend & backend
 // Idea was to store store in localStorage
 // Problem: loggedIn vs cleaned data
@@ -52,12 +51,10 @@ export const store = configureStore({
 //   }
 // };
 
-
 // store.subscribe(() => {
 //   console.log('saving state to localStorage');
 //   saveStateToLocalStorage(store.getState());
 // });
-
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

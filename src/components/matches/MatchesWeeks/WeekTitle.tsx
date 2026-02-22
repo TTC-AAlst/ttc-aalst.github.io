@@ -5,12 +5,12 @@ import { t } from '../../../locales';
 import { useViewport } from '../../../utils/hooks/useViewport';
 
 type WeekTitleProps = {
-  weekCalcer: WeekCalcer,
-  weekChange?: Function,
-  style?: React.CSSProperties,
-}
+  weekCalcer: WeekCalcer;
+  weekChange?: Function;
+  style?: React.CSSProperties;
+};
 
-export const WeekTitle = ({weekCalcer, style, weekChange}: WeekTitleProps) => {
+export const WeekTitle = ({ weekCalcer, style, weekChange }: WeekTitleProps) => {
   const viewport = useViewport();
   const week = weekCalcer.getWeek();
 
@@ -22,8 +22,7 @@ export const WeekTitle = ({weekCalcer, style, weekChange}: WeekTitleProps) => {
   if (viewport.width > 450) {
     extraTitle = (
       <span>
-        :
-        &nbsp;
+        : &nbsp;
         {week.start.format('D/M')}
         &nbsp;-&nbsp;
         {week.end.format('D/M')}
@@ -32,32 +31,23 @@ export const WeekTitle = ({weekCalcer, style, weekChange}: WeekTitleProps) => {
   }
 
   return (
-    <h3 style={{textAlign: 'center', ...style}}>
+    <h3 style={{ textAlign: 'center', ...style }}>
       {weekChange ? (
         <Icon
           fa="fa fa-arrow-left"
-          style={{marginRight: 10, visibility: weekCalcer.currentWeek > weekCalcer.firstWeek ? undefined : 'hidden'}}
+          style={{ marginRight: 10, visibility: weekCalcer.currentWeek > weekCalcer.firstWeek ? undefined : 'hidden' }}
           onClick={() => weekChange(-1)}
           translate
           tooltip="week.prevWeek"
           tooltipPlacement="bottom"
         />
       ) : null}
-
       {t('match.week')}
       &nbsp;
       {weekCalcer.currentWeek}
       {extraTitle}
-
       {weekChange && weekCalcer.currentWeek < weekCalcer.lastWeek ? (
-        <Icon
-          fa="fa fa-arrow-right"
-          style={{marginLeft: 10}}
-          onClick={() => weekChange(1)}
-          translate
-          tooltip="week.nextWeek"
-          tooltipPlacement="bottom"
-        />
+        <Icon fa="fa fa-arrow-right" style={{ marginLeft: 10 }} onClick={() => weekChange(1)} translate tooltip="week.nextWeek" tooltipPlacement="bottom" />
       ) : null}
     </h3>
   );

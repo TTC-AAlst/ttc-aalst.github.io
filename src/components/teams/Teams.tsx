@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { downloadTeamsExcel } from '../../utils/httpClient';
-import {TabbedContainer, TabKey} from '../controls/TabbedContainer';
-import {DivisionRanking} from './DivisionRanking';
-import {TeamOverview} from './TeamOverview';
-import {TeamHeader} from './controls/TeamHeader';
-import {TeamTabTitle} from './controls/TeamTabTitle';
-import {SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOrLast} from './SwitchBetweenFirstAndLastRoundButton';
-import {PlayersCardGallery} from '../players/PlayersCardGallery';
-import {MatchesTable} from '../matches/MatchesTable';
-import {TeamMatchesWeek} from './TeamMatchesWeek';
-import {ButtonStack} from '../controls/Buttons/ButtonStack';
-import {SaveButton} from '../controls/Buttons/SaveButton';
-import {EditButton} from '../controls/Buttons/EditButton';
-import {ExcelButton} from '../controls/Buttons/ExcelButton';
-import {FrenoyButton} from '../controls/Buttons/FrenoyButton';
+import { TabbedContainer, TabKey } from '../controls/TabbedContainer';
+import { DivisionRanking } from './DivisionRanking';
+import { TeamOverview } from './TeamOverview';
+import { TeamHeader } from './controls/TeamHeader';
+import { TeamTabTitle } from './controls/TeamTabTitle';
+import { SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOrLast } from './SwitchBetweenFirstAndLastRoundButton';
+import { PlayersCardGallery } from '../players/PlayersCardGallery';
+import { MatchesTable } from '../matches/MatchesTable';
+import { TeamMatchesWeek } from './TeamMatchesWeek';
+import { ButtonStack } from '../controls/Buttons/ButtonStack';
+import { SaveButton } from '../controls/Buttons/SaveButton';
+import { EditButton } from '../controls/Buttons/EditButton';
+import { ExcelButton } from '../controls/Buttons/ExcelButton';
+import { FrenoyButton } from '../controls/Buttons/FrenoyButton';
 import { t } from '../../locales';
 import { selectMatches, selectTeams, selectUser, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { useViewport } from '../../utils/hooks/useViewport';
@@ -24,7 +24,6 @@ import { MatchesTablePlayerLineUp } from '../matches/MatchesTable/MatchesTablePl
 import { MatchesTableEditPlayerLineUp } from '../matches/MatchesTable/MatchesTableEditPlayerLineUp';
 import { getPlayerFormation } from '../matches/MatchesTable/matchesTableUtil';
 import { Icon } from '../controls/Icons/Icon';
-
 
 export const Teams = () => {
   const dispatch = useTtcDispatch();
@@ -42,7 +41,7 @@ export const Teams = () => {
       let alreadyPicked: PickedPlayer[] = [];
       allMatches.forEach(match => {
         const formation = getPlayerFormation(match);
-        const matchPicked = formation.map(frm => ({...frm, matchId: match.id}));
+        const matchPicked = formation.map(frm => ({ ...frm, matchId: match.id }));
         alreadyPicked = alreadyPicked.concat(matchPicked);
       });
       return alreadyPicked;
@@ -55,9 +54,7 @@ export const Teams = () => {
 
   const getDefaultTeam = () => {
     if (user.playerId) {
-      const yourTeams = teams
-        .filter(team => user.teams.includes(team.id))
-        .filter(team => team.competition === params.competition);
+      const yourTeams = teams.filter(team => user.teams.includes(team.id)).filter(team => team.competition === params.competition);
 
       if (yourTeams.length === 0) {
         return 'A';
@@ -74,7 +71,7 @@ export const Teams = () => {
   const isSmall = viewport.width < 700;
 
   const getUrl = (view: string) => {
-    let url = t.route('teams', {competition: params.competition});
+    let url = t.route('teams', { competition: params.competition });
     url += `/${params.tabKey || getDefaultTeam()}`;
     if (view !== 'main') {
       url += `/${view}`;
@@ -96,13 +93,13 @@ export const Teams = () => {
     if (user.canEditMatchesOrIsCaptain() && viewport.width > 1000) {
       viewsKeys.splice(3, 0, 'matchesTable');
     }
-    const viewsConfig = viewsKeys.map(v => ({key: v, text: transView(v)}));
+    const viewsConfig = viewsKeys.map(v => ({ key: v, text: transView(v) }));
 
     const view = params.view || 'main';
-    const {matches} = getFirstOrLastMatches(team.getMatches(), matchesFilter);
+    const { matches } = getFirstOrLastMatches(team.getMatches(), matchesFilter);
     return (
       <div>
-        <div className="button-bar-right" style={{padding: 12}}>
+        <div className="button-bar-right" style={{ padding: 12 }}>
           <ExcelButton
             onClick={() => downloadTeamsExcel(t('teamCalendar.downloadExcelFileName'))}
             tooltip={t('teamCalendar.downloadExcel')}
@@ -112,42 +109,29 @@ export const Teams = () => {
           <FrenoyButton team={team} linkTo="ranking" />
         </div>
 
-        <div className="btn-toolbar" style={{padding: 10}}>
-          <div style={{marginBottom: 8}}>
-            <ButtonStack
-              config={viewsConfig}
-              small={isSmall}
-              activeView={view}
-              onClick={newView => navigate(getUrl(newView))}
-            />
+        <div className="btn-toolbar" style={{ padding: 10 }}>
+          <div style={{ marginBottom: 8 }}>
+            <ButtonStack config={viewsConfig} small={isSmall} activeView={view} onClick={newView => navigate(getUrl(newView))} />
           </div>
 
           {view.startsWith('matches') && user.canEditMatchesOrIsCaptain() && matches.some(m => !m.isSyncedWithFrenoy) ? (
-            <div className="pull-right" style={{marginLeft: 5}}>
+            <div className="pull-right" style={{ marginLeft: 5 }}>
               {editMode && view !== 'matches' ? (
-                <div style={{display: 'inline'}}>
+                <div style={{ display: 'inline' }}>
                   {user.canManageTeams() && (
-                    <button type="button" className="btn btn-success" style={{marginRight: 5}} onClick={() => saveAndBlockAll(true, 'Major')}>
-                      <Icon fa="fa fa-angle-double-up" style={{marginRight: 6}} translate tooltip="match.block.Captain" />
+                    <button type="button" className="btn btn-success" style={{ marginRight: 5 }} onClick={() => saveAndBlockAll(true, 'Major')}>
+                      <Icon fa="fa fa-angle-double-up" style={{ marginRight: 6 }} translate tooltip="match.block.Captain" />
                       {t('match.plys.saveAndBlockAll')}
                     </button>
                   )}
-                  <button type="button" className="btn btn-warning" style={{marginRight: 5}} onClick={() => saveAndBlockAll(true, 'Captain')}>
-                    <Icon fa="fa fa-star" style={{marginRight: 6}} translate tooltip="match.block.Captain" />
+                  <button type="button" className="btn btn-warning" style={{ marginRight: 5 }} onClick={() => saveAndBlockAll(true, 'Captain')}>
+                    <Icon fa="fa fa-star" style={{ marginRight: 6 }} translate tooltip="match.block.Captain" />
                     {t('match.plys.saveAndBlockAll')}
                   </button>
-                  <SaveButton
-                    onClick={() => saveAndBlockAll(false, 'Captain')}
-                    title={t('match.plys.tooltipSave')}
-                    style={{marginRight: 5}}
-                  />
+                  <SaveButton onClick={() => saveAndBlockAll(false, 'Captain')} title={t('match.plys.tooltipSave')} style={{ marginRight: 5 }} />
                 </div>
               ) : null}
-              <EditButton
-                onClick={() => setEditMode(!editMode)}
-                fa=""
-                title={t('match.plys.tooltipOpenForm')}
-              />
+              <EditButton onClick={() => setEditMode(!editMode)} fa="" title={t('match.plys.tooltipOpenForm')} />
             </div>
           ) : null}
         </div>
@@ -157,17 +141,18 @@ export const Teams = () => {
     );
   };
 
-
-
   const saveAndBlockAll = (blockAlso: boolean, playerStatus: 'Captain' | 'Major') => {
     if (!tableMatches.length) {
       return;
     }
 
-    const perMatch = tableMatches.reduce((acc, matchId) => {
-      acc[matchId] = [];
-      return acc;
-    }, {} as {[matchId: number]: PickedPlayer[]});
+    const perMatch = tableMatches.reduce(
+      (acc, matchId) => {
+        acc[matchId] = [];
+        return acc;
+      },
+      {} as { [matchId: number]: PickedPlayer[] },
+    );
 
     tablePlayers.forEach(ply => {
       if (perMatch[ply.matchId]) {
@@ -176,13 +161,15 @@ export const Teams = () => {
     });
 
     Object.entries(perMatch).forEach(([matchId, plyInfos]) => {
-      dispatch(editMatchPlayers({
-        matchId: parseInt(matchId, 10),
-        playerIds: plyInfos.map(x => x.id),
-        blockAlso,
-        newStatus: playerStatus,
-        comment: '',
-      }));
+      dispatch(
+        editMatchPlayers({
+          matchId: parseInt(matchId, 10),
+          playerIds: plyInfos.map(x => x.id),
+          blockAlso,
+          newStatus: playerStatus,
+          comment: '',
+        }),
+      );
     });
 
     setTableMatches([]);
@@ -211,12 +198,7 @@ export const Teams = () => {
                 )}
               </>
             ) : (
-              <MatchesTable
-                matches={matches}
-                allowOpponentOnly
-                striped
-                editMode={canEditMatches}
-              />
+              <MatchesTable matches={matches} allowOpponentOnly striped editMode={canEditMatches} />
             )}
 
             <SwitchBetweenFirstAndLastRoundButton setMatchesFilter={setMatchesFilter} matchesFilter={matchesFilter} />
@@ -238,19 +220,21 @@ export const Teams = () => {
     }
   };
 
-  const tabConfig: TabKey[] = teams.filter(team => team.competition === params.competition).map(team => ({
-    key: team.teamCode,
-    title: '',
-    headerChildren: <TeamTabTitle team={team} showRanking={viewport.width < 900} />,
-  }));
+  const tabConfig: TabKey[] = teams
+    .filter(team => team.competition === params.competition)
+    .map(team => ({
+      key: team.teamCode,
+      title: '',
+      headerChildren: <TeamTabTitle team={team} showRanking={viewport.width < 900} />,
+    }));
 
   return (
-    <div style={{marginTop: 20, marginBottom: 20}}>
+    <div style={{ marginTop: 20, marginBottom: 20 }}>
       <TabbedContainer
         selectedTab={params.tabKey || getDefaultTeam()}
         tabKeys={tabConfig}
         tabRenderer={eventKey => renderTabContent(eventKey)}
-        route={{base: t.route('teams', {competition: params.competition}), suffix: params.view}}
+        route={{ base: t.route('teams', { competition: params.competition }), suffix: params.view }}
         widthTreshold={900}
       />
     </div>

@@ -9,9 +9,9 @@ type PlayerAutoCompleteProps = {
   label: string;
   style?: React.CSSProperties;
   selectPlayer: (playerId: number | 'system') => void;
-}
+};
 
-export const PlayerAutoComplete = ({competition, label, style, selectPlayer, ...props}: PlayerAutoCompleteProps) => {
+export const PlayerAutoComplete = ({ competition, label, style, selectPlayer, ...props }: PlayerAutoCompleteProps) => {
   const [searchText, setSearchText] = useState('');
   const players = useTtcSelector(selectPlayers);
 
@@ -34,10 +34,10 @@ export const PlayerAutoComplete = ({competition, label, style, selectPlayer, ...
     value: ply.id.toString(),
     label: ply.name + (competition ? ` (${ply[competition.toLowerCase()].ranking})` : ''),
   }));
-  const systemPlayerItem = {value: 'system', label: 'Systeem'};
+  const systemPlayerItem = { value: 'system', label: 'Systeem' };
 
   return (
-    <div style={{...style, overflow: 'visible'}}>
+    <div style={{ ...style, overflow: 'visible' }}>
       <Select
         value={searchText}
         placeholder={label}

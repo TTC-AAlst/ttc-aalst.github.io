@@ -12,12 +12,12 @@ export type TabKey = {
   label?: string;
   show?: boolean;
   headerChildren?: any;
-}
+};
 
 type TabbedContainerComponentProps = {
   selectedTab: string;
   tabKeys: TabKey[];
-  tabRenderer: (eventKey: string) => (React.ReactElement | null);
+  tabRenderer: (eventKey: string) => React.ReactElement | null;
   onTabSelect?: (eventKey: string) => void;
   forceTabs?: boolean;
   widthTreshold?: number;
@@ -27,8 +27,7 @@ type TabbedContainerComponentProps = {
     subs?: string;
     suffix?: string;
   };
-}
-
+};
 
 export const TabbedContainer = (props: TabbedContainerComponentProps) => {
   const viewport = useViewport();
@@ -38,9 +37,7 @@ export const TabbedContainer = (props: TabbedContainerComponentProps) => {
   const routeTranslatedTabKey = useParams().tabKey;
 
   // Otherwise show tabs
-  const showAccordion = !!props.widthTreshold
-    && viewport.width < props.widthTreshold
-    && !props.forceTabs;
+  const showAccordion = !!props.widthTreshold && viewport.width < props.widthTreshold && !props.forceTabs;
 
   const getUrl = (eventKey: string): string => {
     let url: string;
@@ -87,11 +84,7 @@ export const TabbedContainer = (props: TabbedContainerComponentProps) => {
     if (!showAccordion) {
       // Tabs
       return (
-        <Nav.Item
-          title={tab.label ? tab.title : undefined}
-          key={tab.key}
-          onClick={e => e.preventDefault()}
-        >
+        <Nav.Item title={tab.label ? tab.title : undefined} key={tab.key} onClick={e => e.preventDefault()}>
           <Nav.Link eventKey={tab.key} href={getUrl(tab.key)}>
             {tab.label || tab.title} {tab.headerChildren}
           </Nav.Link>
@@ -103,8 +96,10 @@ export const TabbedContainer = (props: TabbedContainerComponentProps) => {
     return (
       <Accordion.Item className="match-card-panel" eventKey={tab.key} key={tab.key}>
         <Accordion.Header>
-          <div className="clickable" onClick={() => onTabSelect(tab.key)} role="button" tabIndex={0} style={{width: '100%'}}>
-            <div style={{fontSize: 24, width: '100%'}}>{tab.title} {tab.headerChildren}</div>
+          <div className="clickable" onClick={() => onTabSelect(tab.key)} role="button" tabIndex={0} style={{ width: '100%' }}>
+            <div style={{ fontSize: 24, width: '100%' }}>
+              {tab.title} {tab.headerChildren}
+            </div>
           </div>
         </Accordion.Header>
         <Accordion.Body>{props.tabRenderer(tab.key)}</Accordion.Body>
@@ -128,9 +123,7 @@ export const TabbedContainer = (props: TabbedContainerComponentProps) => {
       <Nav variant="tabs" activeKey={activeTabKey} onSelect={eventKey => onTabSelect(eventKey)}>
         {props.tabKeys.filter(tab => tab.show !== false).map(tab => renderTabHeader(tab))}
       </Nav>
-      <div className="match-card-tab">
-        {props.tabRenderer(activeTabKey)}
-      </div>
+      <div className="match-card-tab">{props.tabRenderer(activeTabKey)}</div>
     </div>
   );
 };

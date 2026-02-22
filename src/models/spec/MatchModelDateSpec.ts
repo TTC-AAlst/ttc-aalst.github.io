@@ -1,17 +1,18 @@
 import dayjs from 'dayjs';
 import MatchModel from '../MatchModel';
 
-const createMatch = (dateStr: string) => new MatchModel({
-  id: 1,
-  date: dateStr,
-  competition: 'Vttl',
-  players: [],
-  games: [],
-  comments: [],
-  opponent: {},
-  isHomeMatch: true,
-  score: {home: 0, out: 0},
-});
+const createMatch = (dateStr: string) =>
+  new MatchModel({
+    id: 1,
+    date: dateStr,
+    competition: 'Vttl',
+    players: [],
+    games: [],
+    comments: [],
+    opponent: {},
+    isHomeMatch: true,
+    score: { home: 0, out: 0 },
+  });
 
 describe('MatchModel date methods', () => {
   describe('getDisplayDate', () => {
@@ -126,12 +127,10 @@ describe('MatchModel date methods', () => {
         competition: 'Vttl',
         players: [],
         games: [],
-        comments: [
-          {id: 1, text: 'Great match', postedOn: '2025-03-15T22:30:00', playerId: 1},
-        ],
-        opponent: {clubId: 1, teamCode: 'A'},
+        comments: [{ id: 1, text: 'Great match', postedOn: '2025-03-15T22:30:00', playerId: 1 }],
+        opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
-        score: {home: 10, out: 6},
+        score: { home: 10, out: 6 },
       });
       expect(dayjs.isDayjs(match.comments[0].postedOn)).toBe(true);
       expect(match.comments[0].postedOn.hour()).toBe(22);
@@ -145,12 +144,10 @@ describe('MatchModel date methods', () => {
         competition: 'Vttl',
         players: [],
         games: [],
-        comments: [
-          {id: 42, text: 'Nice one', postedOn: '2025-03-15T23:00:00', playerId: 7},
-        ],
-        opponent: {clubId: 1, teamCode: 'A'},
+        comments: [{ id: 42, text: 'Nice one', postedOn: '2025-03-15T23:00:00', playerId: 7 }],
+        opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
-        score: {home: 10, out: 6},
+        score: { home: 10, out: 6 },
       });
       expect(match.comments[0].id).toBe(42);
       expect(match.comments[0].text).toBe('Nice one');
@@ -193,12 +190,10 @@ describe('MatchModel date methods', () => {
         competition: 'Vttl',
         players: [],
         games: [],
-        comments: [
-          {id: 1, text: 'Test', postedOn: null, playerId: 1},
-        ],
-        opponent: {clubId: 1, teamCode: 'A'},
+        comments: [{ id: 1, text: 'Test', postedOn: null, playerId: 1 }],
+        opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
-        score: {home: 0, out: 0},
+        score: { home: 0, out: 0 },
       });
       expect(match.comments[0].postedOn.isValid()).toBe(false);
     });
@@ -210,12 +205,10 @@ describe('MatchModel date methods', () => {
         competition: 'Vttl',
         players: [],
         games: [],
-        comments: [
-          {id: 1, text: 'Test', postedOn: undefined, playerId: 1},
-        ],
-        opponent: {clubId: 1, teamCode: 'A'},
+        comments: [{ id: 1, text: 'Test', postedOn: undefined, playerId: 1 }],
+        opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
-        score: {home: 0, out: 0},
+        score: { home: 0, out: 0 },
       });
       expect(match.comments[0].postedOn.isValid()).toBe(true);
     });

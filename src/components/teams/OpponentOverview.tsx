@@ -11,16 +11,16 @@ import { Competition } from '../../models/model-interfaces';
 import { getOpponentMatches } from '../../reducers/readonlyMatchesReducer';
 import { selectOpponentMatchesForTeam } from '../../reducers/selectors/selectOpponentMatchesForTeam';
 
-
 export const OpponentOverview = () => {
-  const {competition, clubId, teamCode} = useParams(); // /tegenstander/:competition/:clubId/:teamCode
+  const { competition, clubId, teamCode } = useParams(); // /tegenstander/:competition/:clubId/:teamCode
   const dispatch = useTtcDispatch();
   const navigate = useNavigate();
   const teams = useTtcSelector(selectTeams);
 
-  const opponent = useMemo(() => ({clubId: parseInt(clubId!, 10), teamCode: teamCode!}), [clubId, teamCode]);
-  const team = teams.find(tm => tm.competition === competition
-    && tm.ranking.find(x => x.clubId === parseInt(clubId!, 10) && (!teamCode || x.teamCode === teamCode)));
+  const opponent = useMemo(() => ({ clubId: parseInt(clubId!, 10), teamCode: teamCode! }), [clubId, teamCode]);
+  const team = teams.find(
+    tm => tm.competition === competition && tm.ranking.find(x => x.clubId === parseInt(clubId!, 10) && (!teamCode || x.teamCode === teamCode)),
+  );
 
   const opponentClub = useTtcSelector(state => state.clubs.find(club => club.id === opponent.clubId));
   const otherMatches = useTtcSelector(state => selectOpponentMatchesForTeam(state, competition as Competition, opponent.clubId, teamCode));
@@ -42,7 +42,7 @@ export const OpponentOverview = () => {
 
   useEffect(() => {
     if (team) {
-      dispatch(getOpponentMatches({teamId: team.id, opponent}));
+      dispatch(getOpponentMatches({ teamId: team.id, opponent }));
     }
   }, [team, opponent, dispatch]);
 
@@ -51,14 +51,16 @@ export const OpponentOverview = () => {
   }
 
   return (
-    <div style={{marginBottom: 30}}>
+    <div style={{ marginBottom: 30 }}>
       <BackIcon className="pull-right" />
       <h1>
         <span>
           {opponentClub.name}: {team.competition} {opponent.teamCode}
         </span>
         <br />
-        <small><DivisionHeader team={team} opponent={opponent} /></small>
+        <small>
+          <DivisionHeader team={team} opponent={opponent} />
+        </small>
       </h1>
 
       <div className="col-md-4">
@@ -71,7 +73,7 @@ export const OpponentOverview = () => {
         <OpponentsFormation match={otherMatches[0]} opponent={opponent} />
       </div>
 
-      <div className="col-md-12" style={{marginTop: 20}}>
+      <div className="col-md-12" style={{ marginTop: 20 }}>
         <h3>{t('teamCalendar.matches')}</h3>
         <OpponentMatches team={team} readonlyMatches={otherMatches} roundSwitchButton opponent={opponent} />
       </div>

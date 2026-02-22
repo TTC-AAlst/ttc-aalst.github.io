@@ -1,14 +1,14 @@
 import React from 'react';
 import OpponentPlayer from './OpponentPlayer';
 import OwnPlayer from './OwnPlayer';
-import {IMatch} from '../../../models/model-interfaces';
+import { IMatch } from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 
 type MatchPlayerResultsProps = {
   match: IMatch;
-}
+};
 
-const MatchPlayerResults = ({match}: MatchPlayerResultsProps) => (
+const MatchPlayerResults = ({ match }: MatchPlayerResultsProps) => (
   <div className="match-card-tab-content">
     <div>
       <h3>{t('match.playersVictoryTitle')}</h3>
@@ -18,7 +18,9 @@ const MatchPlayerResults = ({match}: MatchPlayerResultsProps) => (
     </div>
     <div>
       <h3>{t('match.playersOpponentsTitle')}</h3>
-      {match.getTheirPlayers().map(ply => <OpponentPlayer ply={ply} key={ply.position} t={t} competition={match.competition} />)}
+      {match.getTheirPlayers().map(ply => (
+        <OpponentPlayer ply={ply} key={ply.position} t={t} competition={match.competition} />
+      ))}
     </div>
   </div>
 );

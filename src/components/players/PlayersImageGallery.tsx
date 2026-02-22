@@ -27,16 +27,15 @@ const editStyleIcon: React.CSSProperties = {
   color: '#d3d3d3',
 };
 
-
 type PlayersImageGalleryProps = {
   players: IPlayer[];
-  competition: Competition,
-  viewportWidthContainerCount?: number,
-  subtitle?: Function,
-  forceSmall?: boolean,
-}
+  competition: Competition;
+  viewportWidthContainerCount?: number;
+  subtitle?: Function;
+  forceSmall?: boolean;
+};
 
-export const PlayersImageGallery = ({competition, players, ...props}: PlayersImageGalleryProps) => {
+export const PlayersImageGallery = ({ competition, players, ...props }: PlayersImageGalleryProps) => {
   const viewport = useViewport();
 
   // This one is used in the MatchCard
@@ -45,21 +44,18 @@ export const PlayersImageGallery = ({competition, players, ...props}: PlayersIma
     // big image gallery
     return (
       <div style={gridStylesRoot}>
-        <ImageList
-          rowHeight={PlayersImageHeight}
-          cols={Math.min(5, Math.floor((viewport.width / (props.viewportWidthContainerCount || 1)) / PlayersImageWidth))}
-        >
+        <ImageList rowHeight={PlayersImageHeight} cols={Math.min(5, Math.floor(viewport.width / (props.viewportWidthContainerCount || 1) / PlayersImageWidth))}>
           {players.map(ply => {
             const comp = ply.getCompetition(competition);
             return (
               <ImageListItem key={ply.id}>
                 <ImageListItemBar
-                  title={(
+                  title={
                     <span>
-                      <PlayerLink player={ply} style={{color: 'white'}} />
-                      <small style={{marginLeft: 5}}>{comp ? comp.ranking : '??'}</small>
+                      <PlayerLink player={ply} style={{ color: 'white' }} />
+                      <small style={{ marginLeft: 5 }}>{comp ? comp.ranking : '??'}</small>
                     </span>
-                  )}
+                  }
                   subtitle={props.subtitle ? props.subtitle(ply) : <PlayerPlayingStyle ply={ply} allowEdit={false} />}
                 />
                 <PlayerPlayingStyleForm player={ply} iconStyle="edit-icon" style={editStyleIcon} />
@@ -75,7 +71,7 @@ export const PlayersImageGallery = ({competition, players, ...props}: PlayersIma
   return (
     <div style={gridStylesRoot}>
       {players.map(ply => (
-        <div key={ply.id} className="col-6" style={{padding: 8, textAlign: 'center'}}>
+        <div key={ply.id} className="col-6" style={{ padding: 8, textAlign: 'center' }}>
           <div className="media">
             <div className="media-left">
               <PlayerPlayingStyleForm player={ply} iconStyle="avatar" />
@@ -93,11 +89,13 @@ export const PlayersImageGallery = ({competition, players, ...props}: PlayersIma
   );
 };
 
-const SmallPlayerAvatarCard = ({competition, ply}: {competition: Competition, ply: IPlayer}) => {
+const SmallPlayerAvatarCard = ({ competition, ply }: { competition: Competition; ply: IPlayer }) => {
   const comp = ply.getCompetition(competition);
   return (
     <span>
-      <span className="ellipsis" style={{marginTop: 7, marginRight: 6}}>{ply.style.name}</span>
+      <span className="ellipsis" style={{ marginTop: 7, marginRight: 6 }}>
+        {ply.style.name}
+      </span>
       {comp ? (
         <FrenoyLink competition={competition} uniqueIndex={comp.uniqueIndex}>
           {`${comp.ranking} `}

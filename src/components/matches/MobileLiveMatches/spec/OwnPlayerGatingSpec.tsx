@@ -27,16 +27,33 @@ vi.mock('../../../../utils/httpClient', () => ({
 }));
 
 const vttl = (pos: number, ranking: PlayerRanking, idx: number, val: number): IPlayerCompetition => ({
-  clubId: 1, competition: 'Vttl', frenoyLink: '', position: pos,
-  ranking, nextRanking: null, prediction: null, uniqueIndex: 100 + pos, rankingIndex: pos, rankingValue: val,
+  clubId: 1,
+  competition: 'Vttl',
+  frenoyLink: '',
+  position: pos,
+  ranking,
+  nextRanking: null,
+  prediction: null,
+  uniqueIndex: 100 + pos,
+  rankingIndex: pos,
+  rankingValue: val,
 });
 
 const testPlayers: IStorePlayer[] = [
   {
-    id: 1, alias: 'Jean', firstName: 'Jean', lastName: 'Dupont', active: true,
-    vttl: vttl(1, 'B6', 101, 50), sporta: undefined as any,
+    id: 1,
+    alias: 'Jean',
+    firstName: 'Jean',
+    lastName: 'Dupont',
+    active: true,
+    vttl: vttl(1, 'B6', 101, 50),
+    sporta: undefined as any,
     contact: { playerId: 1, email: '', mobile: '', address: '', city: '' },
-    style: {} as any, quitYear: null, security: 'Player' as any, hasKey: false, imageVersion: 0,
+    style: {} as any,
+    quitYear: null,
+    security: 'Player' as any,
+    hasKey: false,
+    imageVersion: 0,
   },
 ];
 
@@ -72,13 +89,17 @@ const baseMockMatch: IMatch = {
   getPlayerFormation: () => [],
 } as any;
 
-const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
-  ...baseMockMatch,
-  ...overrides,
-}) as any;
+const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
+  ({
+    ...baseMockMatch,
+    ...overrides,
+  }) as any;
 
-const renderMatch = (match: IMatch, playerId: number) => renderWithProviders(
-    <MemoryRouter><MobileLiveMatchInProgress match={match} /></MemoryRouter>,
+const renderMatch = (match: IMatch, playerId: number) =>
+  renderWithProviders(
+    <MemoryRouter>
+      <MobileLiveMatchInProgress match={match} />
+    </MemoryRouter>,
     { preloadedState: { user: { playerId, teams: [1], security: [] }, readonlyMatches: [], players: testPlayers } },
   );
 
@@ -101,11 +122,11 @@ describe('OwnPlayerSelector gating (AC9: login, AC10: games played)', () => {
   });
 
   describe('pre-start mode (has formation)', () => {
-    const matchWithFormation = () => createMockMatch({
-      getPlayerFormation: () => [
-        { id: 1, player: { id: 1, alias: 'Jean', getCompetition: () => ({ ranking: 'B6', position: 1 }) }, matchPlayer: { status: 'Major' } },
-      ] as any,
-    });
+    const matchWithFormation = () =>
+      createMockMatch({
+        getPlayerFormation: () =>
+          [{ id: 1, player: { id: 1, alias: 'Jean', getCompetition: () => ({ ranking: 'B6', position: 1 }) }, matchPlayer: { status: 'Major' } }] as any,
+      });
 
     it('shows edit icon for own formation when user is logged in', () => {
       renderMatch(matchWithFormation(), 1);
@@ -121,9 +142,10 @@ describe('OwnPlayerSelector gating (AC9: login, AC10: games played)', () => {
   });
 
   describe('in-progress mode (has their players, no games)', () => {
-    const inProgressMatch = () => createMockMatch({
-      getTheirPlayers: () => [{ position: 1, name: 'Opp', ranking: 'C6', uniqueIndex: 200, won: 0, home: false, status: 'Major', alias: 'Opp' }] as any,
-    });
+    const inProgressMatch = () =>
+      createMockMatch({
+        getTheirPlayers: () => [{ position: 1, name: 'Opp', ranking: 'C6', uniqueIndex: 200, won: 0, home: false, status: 'Major', alias: 'Opp' }] as any,
+      });
 
     it('shows 2 edit icons when user is logged in (own + opponents)', () => {
       renderMatch(inProgressMatch(), 1);
@@ -139,10 +161,11 @@ describe('OwnPlayerSelector gating (AC9: login, AC10: games played)', () => {
   });
 
   describe('in-progress mode with games played (AC10)', () => {
-    const inProgressWithGames = () => createMockMatch({
-      getTheirPlayers: () => [{ position: 1, name: 'Opp', ranking: 'C6', uniqueIndex: 200, won: 0, home: false, status: 'Major', alias: 'Opp' }] as any,
-      games: [{ id: 1 }] as any,
-    });
+    const inProgressWithGames = () =>
+      createMockMatch({
+        getTheirPlayers: () => [{ position: 1, name: 'Opp', ranking: 'C6', uniqueIndex: 200, won: 0, home: false, status: 'Major', alias: 'Opp' }] as any,
+        games: [{ id: 1 }] as any,
+      });
 
     it('shows no edit icons when games have been played', () => {
       renderMatch(inProgressWithGames(), 1);

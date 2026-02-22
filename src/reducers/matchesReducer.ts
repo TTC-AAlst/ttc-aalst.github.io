@@ -8,97 +8,73 @@ import { showSnackbar } from './configReducer';
 import storeUtil from '../storeUtil';
 import { PlayersPlaying } from '../components/matches/MatchesWeeks/htmlBuilder';
 
-export const fetchMatches = createAsyncThunk(
-  'matches/Get',
-  async () => {
-    const response = await http.get<IFullStoreMatchOwn[]>('/matches');
-    return response;
-  },
-);
+export const fetchMatches = createAsyncThunk('matches/Get', async () => {
+  const response = await http.get<IFullStoreMatchOwn[]>('/matches');
+  return response;
+});
 
-export const fetchMatch = createAsyncThunk(
-  'matches/GetOne',
-  async ({id}: {id: number}) => {
-    const response = await http.get<IFullStoreMatchOwn>(`/matches/${id}`);
-    return response;
-  },
-);
+export const fetchMatch = createAsyncThunk('matches/GetOne', async ({ id }: { id: number }) => {
+  const response = await http.get<IFullStoreMatchOwn>(`/matches/${id}`);
+  return response;
+});
 
-export const shouldSync = (match: IStoreMatchCommon) => !match.isSyncedWithFrenoy
-  && dayjs().isAfter(match.date)
-  && match.shouldBePlayed;
+export const shouldSync = (match: IStoreMatchCommon) => !match.isSyncedWithFrenoy && dayjs().isAfter(match.date) && match.shouldBePlayed;
 
-export const frenoyMatchSync = createAsyncThunk(
-  'matches/FrenoyMatchSync',
-  async (data: {match: IStoreMatchCommon, forceSync?: boolean}, { dispatch }) => {
-    if (data.forceSync || shouldSync(data.match)) {
-      try {
-        const newMatch = await http.post<IFullStoreMatchOwn>(`/matches/FrenoyMatchSync?forceSync=${data.forceSync || false}`, {id: data.match.id});
-        dispatch(simpleLoaded(newMatch));
-      } catch (err) {
-        if (data.forceSync) {
-          dispatch(showSnackbar(t('common.apiFail')));
-        }
+export const frenoyMatchSync = createAsyncThunk('matches/FrenoyMatchSync', async (data: { match: IStoreMatchCommon; forceSync?: boolean }, { dispatch }) => {
+  if (data.forceSync || shouldSync(data.match)) {
+    try {
+      const newMatch = await http.post<IFullStoreMatchOwn>(`/matches/FrenoyMatchSync?forceSync=${data.forceSync || false}`, { id: data.match.id });
+      dispatch(simpleLoaded(newMatch));
+    } catch (err) {
+      if (data.forceSync) {
+        dispatch(showSnackbar(t('common.apiFail')));
       }
     }
-  },
-);
+  }
+});
 
-export const updateScore = createAsyncThunk(
-  'matches/UpdateScore',
-  async (data: {matchId: number, home: number, out: number}, { dispatch }) => {
-    try {
-      const newMatch = await http.post<IFullStoreMatchOwn>('/matches/UpdateScore', data);
-      dispatch(simpleLoaded(newMatch));
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-    }
-  },
-);
+export const updateScore = createAsyncThunk('matches/UpdateScore', async (data: { matchId: number; home: number; out: number }, { dispatch }) => {
+  try {
+    const newMatch = await http.post<IFullStoreMatchOwn>('/matches/UpdateScore', data);
+    dispatch(simpleLoaded(newMatch));
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+  }
+});
 
-export const postReport = createAsyncThunk(
-  'matches/Report',
-  async (report: {matchId: number, text: string, playerId: number}, { dispatch }) => {
-    try {
-      const newMatch = await http.post<IFullStoreMatchOwn>('/matches/Report', report);
-      dispatch(simpleLoaded(newMatch));
-      dispatch(showSnackbar(t('match.report.reportPosted')));
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-    }
-  },
-);
+export const postReport = createAsyncThunk('matches/Report', async (report: { matchId: number; text: string; playerId: number }, { dispatch }) => {
+  try {
+    const newMatch = await http.post<IFullStoreMatchOwn>('/matches/Report', report);
+    dispatch(simpleLoaded(newMatch));
+    dispatch(showSnackbar(t('match.report.reportPosted')));
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+  }
+});
 
-export const postComment = createAsyncThunk(
-  'matches/Comment',
-  async (comment: IMatchComment, { dispatch }) => {
-    try {
-      const newMatch = await http.post<IFullStoreMatchOwn>('/matches/Comment', comment);
-      dispatch(simpleLoaded(newMatch));
-      dispatch(showSnackbar(t('match.report.commentPosted')));
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-    }
-  },
-);
+export const postComment = createAsyncThunk('matches/Comment', async (comment: IMatchComment, { dispatch }) => {
+  try {
+    const newMatch = await http.post<IFullStoreMatchOwn>('/matches/Comment', comment);
+    dispatch(simpleLoaded(newMatch));
+    dispatch(showSnackbar(t('match.report.commentPosted')));
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+  }
+});
 
-export const deleteComment = createAsyncThunk(
-  'matches/DeleteComment',
-  async (data: {id: number}, { dispatch }) => {
-    try {
-      const newMatch = await http.post<IFullStoreMatchOwn>('/matches/DeleteComment', data);
-      dispatch(simpleLoaded(newMatch));
-      dispatch(showSnackbar(t('match.report.commentDeleted')));
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-    }
-  },
-);
-
+export const deleteComment = createAsyncThunk('matches/DeleteComment', async (data: { id: number }, { dispatch }) => {
+  try {
+    const newMatch = await http.post<IFullStoreMatchOwn>('/matches/DeleteComment', data);
+    dispatch(simpleLoaded(newMatch));
+    dispatch(showSnackbar(t('match.report.commentDeleted')));
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+  }
+});
 
 export const selectPlayer = createAsyncThunk(
   'matches/SelectPlayer',
-  async (data: {matchId: number, status: MatchPlayerStatus, statusNote: string | null, playerId: number}, { dispatch }) => {
+  async (data: { matchId: number; status: MatchPlayerStatus; statusNote: string | null; playerId: number }, { dispatch }) => {
     const match = storeUtil.getMatch(data.matchId);
     const player = storeUtil.getPlayer(data.playerId);
     const comp = player.getCompetition(match.competition);
@@ -142,44 +118,36 @@ export const selectPlayer = createAsyncThunk(
 );
 
 export type EditMatchPlayersParams = {
-  matchId: number,
-  playerIds: number[],
-  blockAlso: boolean,
-  newStatus: string,
-  comment: string,
-}
+  matchId: number;
+  playerIds: number[];
+  blockAlso: boolean;
+  newStatus: string;
+  comment: string;
+};
 
-export const editMatchPlayers = createAsyncThunk(
-  'matches/EditMatchPlayers',
-  async (data: EditMatchPlayersParams, { dispatch }) => {
-    try {
-      const result = await http.post<IFullStoreMatchOwn>('/matches/EditMatchPlayers', data);
-      dispatch(simpleLoaded(result));
-      dispatch(showSnackbar(t('common.apiSuccess')));
-    } catch (err) {
-      console.error('editMatchPlayers', data, err);
-    }
-  },
-);
-
+export const editMatchPlayers = createAsyncThunk('matches/EditMatchPlayers', async (data: EditMatchPlayersParams, { dispatch }) => {
+  try {
+    const result = await http.post<IFullStoreMatchOwn>('/matches/EditMatchPlayers', data);
+    dispatch(simpleLoaded(result));
+    dispatch(showSnackbar(t('common.apiSuccess')));
+  } catch (err) {
+    console.error('editMatchPlayers', data, err);
+  }
+});
 
 /** New season team sync */
-export const frenoyTeamSync = createAsyncThunk(
-  'matches/FrenoyTeamSync',
-  async (data: {teamId: number}, { dispatch }) => {
-    try {
-      await http.post('/matches/FrenoyTeamSync', {id: data.teamId});
-      dispatch(showSnackbar(`${t('common.apiSuccess')}: Duw F5 om de wijzigingen te zien`));
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-    }
-  },
-);
-
+export const frenoyTeamSync = createAsyncThunk('matches/FrenoyTeamSync', async (data: { teamId: number }, { dispatch }) => {
+  try {
+    await http.post('/matches/FrenoyTeamSync', { id: data.teamId });
+    dispatch(showSnackbar(`${t('common.apiSuccess')}: Duw F5 om de wijzigingen te zien`));
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+  }
+});
 
 export const emailFormation = createAsyncThunk(
   'matches/WeekCompetitionEmail',
-  async (data: {title: string, email: string, justMe: boolean, players: PlayersPlaying}, { dispatch }) => {
+  async (data: { title: string; email: string; justMe: boolean; players: PlayersPlaying }, { dispatch }) => {
     try {
       await http.post('/matches/WeekCompetitionEmail', data);
       dispatch(showSnackbar(t('week.formationMailed')));
@@ -188,7 +156,6 @@ export const emailFormation = createAsyncThunk(
     }
   },
 );
-
 
 export const matchesSlice = createSlice({
   name: 'matches',
@@ -204,7 +171,6 @@ export const matchesSlice = createSlice({
     builder.addCase(fetchMatch.fulfilled, (state, action) => mergeInStore2(state, action.payload, m => m.shouldBePlayed));
   },
 });
-
 
 export const freeMatchesSlice = createSlice({
   name: 'freeMatches',

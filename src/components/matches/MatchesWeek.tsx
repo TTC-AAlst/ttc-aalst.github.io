@@ -10,10 +10,9 @@ import { Competition, IMatch } from '../../models/model-interfaces';
 import { t } from '../../locales';
 import { selectFreeMatches, selectMatches, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 
-
 export const MatchesWeek = () => {
   const user = useTtcSelector(selectUser);
-  const {week, comp} = useParams();
+  const { week, comp } = useParams();
   const [currentWeek, setCurrentWeek] = useState(week ? parseInt(week, 10) : undefined);
   const [editMode, setEditMode] = useState(false);
   const navigate = useNavigate();
@@ -66,13 +65,13 @@ export const MatchesWeek = () => {
   }
 
   const viewsConfig = [
-    {key: 'all', text: t('common.all')},
-    {key: 'Vttl', text: 'Vttl'},
-    {key: 'Sporta', text: 'Sporta'},
+    { key: 'all', text: t('common.all') },
+    { key: 'Vttl', text: 'Vttl' },
+    { key: 'Sporta', text: 'Sporta' },
   ];
 
   return (
-    <div style={{paddingTop: 25}}>
+    <div style={{ paddingTop: 25 }}>
       <WeekTitle weekCalcer={weekCalcer} weekChange={diff => onChangeWeek(weekCalcer.currentWeek, diff)} />
 
       <span className="button-bar-right">
@@ -83,22 +82,17 @@ export const MatchesWeek = () => {
           onClick={newCompFilter => onChangeCompetition(weekCalcer.currentWeek, newCompFilter)}
         />
 
-
-        {user.canManageTeams() && matches.some(m => !m.isSyncedWithFrenoy) ? (
-          <EditButton onClick={() => setEditMode(!editMode)} />
-        ) : null}
-
+        {user.canManageTeams() && matches.some(m => !m.isSyncedWithFrenoy) ? <EditButton onClick={() => setEditMode(!editMode)} /> : null}
 
         {matchMailing}
       </span>
 
       {compFilter !== 'Sporta' ? <MatchesWeekPerCompetition comp="Vttl" editMode={editMode} matches={matches} /> : null}
-      {compFilter !== 'Vttl' && compFilter !== 'Sporta' ? <hr style={{marginLeft: '10%', marginRight: '10%', marginTop: 50}} /> : null}
+      {compFilter !== 'Vttl' && compFilter !== 'Sporta' ? <hr style={{ marginLeft: '10%', marginRight: '10%', marginTop: 50 }} /> : null}
       {compFilter !== 'Vttl' ? <MatchesWeekPerCompetition comp="Sporta" editMode={editMode} matches={matches} /> : null}
     </div>
   );
 };
-
 
 type MatchesWeekPerCompetitionProps = {
   comp: Competition;
@@ -106,7 +100,7 @@ type MatchesWeekPerCompetitionProps = {
   matches: IMatch[];
 };
 
-const MatchesWeekPerCompetition = ({comp, editMode, matches}: MatchesWeekPerCompetitionProps) => {
+const MatchesWeekPerCompetition = ({ comp, editMode, matches }: MatchesWeekPerCompetitionProps) => {
   const matchSorter = (a: IMatch, b: IMatch) => a.getTeam().teamCode.localeCompare(b.getTeam().teamCode);
 
   matches = matches.filter(x => x.competition === comp);
@@ -116,12 +110,10 @@ const MatchesWeekPerCompetition = ({comp, editMode, matches}: MatchesWeekPerComp
 
   return (
     <div>
-      <h4><strong>{comp}</strong></h4>
-      <MatchesTable
-        editMode={editMode}
-        matches={matches.sort(matchSorter)}
-        ownTeamLink="week"
-      />
+      <h4>
+        <strong>{comp}</strong>
+      </h4>
+      <MatchesTable editMode={editMode} matches={matches.sort(matchSorter)} ownTeamLink="week" />
     </div>
   );
 };

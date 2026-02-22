@@ -1,7 +1,7 @@
-import {getPlayerStats} from '../../../models/TeamModel';
+import { getPlayerStats } from '../../../models/TeamModel';
 import PlayerAchievements, { teamAchievements } from './PlayerAchievements';
-import {getRankingValue} from '../../../models/utils/playerRankingValueMapper';
-import {IPlayer, IMatch, ITeam, Competition, ITeamPlayerStats} from '../../../models/model-interfaces';
+import { getRankingValue } from '../../../models/utils/playerRankingValueMapper';
+import { IPlayer, IMatch, ITeam, Competition, ITeamPlayerStats } from '../../../models/model-interfaces';
 import { AchievementInfo } from './achievements/otherAchievements';
 import { TeamAchievementInfo } from './achievements/achievement-models';
 
@@ -11,7 +11,7 @@ export type NewPlayerRanking = {
   oldValue: number;
   new: string | null;
   newValue: number;
-}
+};
 
 export class AchievementsCalculator {
   players: IPlayer[];
@@ -33,7 +33,9 @@ export class AchievementsCalculator {
     this.vttlPlayerStats = getPlayerStats(vttlMatches, true).filter(x => x.ply.id);
 
     const sportaMatches = this.matches.filter(m => m.competition === 'Sporta');
-    this.sportaplayerStats = getPlayerStats(sportaMatches, true).filter(x => !x.isDoubles).filter(x => x.ply.id);
+    this.sportaplayerStats = getPlayerStats(sportaMatches, true)
+      .filter(x => !x.isDoubles)
+      .filter(x => x.ply.id);
 
     // this.sportaTeams = this.teams.filter(t => t.competition === 'Sporta');
     // this.vttlTeams = this.teams.filter(t => t.competition === 'Vttl' || t.competition === 'Jeugd');
@@ -56,7 +58,7 @@ export class AchievementsCalculator {
   }
 
   getAchievements(type: Competition | 'belles') {
-    const {playerStats, matches} = this.getPlayerStats(type);
+    const { playerStats, matches } = this.getPlayerStats(type);
     if (playerStats.length !== 0) {
       return PlayerAchievements[type].reduce((acc, achievementGetter) => {
         const achievement = achievementGetter(playerStats, matches);
@@ -97,22 +99,22 @@ export class AchievementsCalculator {
         return result as NewPlayerRanking;
       })
       .filter(x => x.old && x.new && x.old !== x.new)
-      .sort((a, b) => (a.oldValue - a.newValue) - (b.oldValue - b.newValue));
+      .sort((a, b) => a.oldValue - a.newValue - (b.oldValue - b.newValue));
 
     return players;
   }
 
-  getPlayerStats(type: Competition | 'belles'): {playerStats: ITeamPlayerStats[], matches: IMatch[]} {
+  getPlayerStats(type: Competition | 'belles'): { playerStats: ITeamPlayerStats[]; matches: IMatch[] } {
     switch (type) {
       case 'Vttl':
-        return {playerStats: this.vttlPlayerStats, matches: this.vttlMatches};
+        return { playerStats: this.vttlPlayerStats, matches: this.vttlMatches };
 
       case 'Sporta':
-        return {playerStats: this.sportaplayerStats, matches: this.sportaMatches};
+        return { playerStats: this.sportaplayerStats, matches: this.sportaMatches };
 
       case 'belles':
       default:
-        return {playerStats: this.playerStats, matches: this.matches};
+        return { playerStats: this.playerStats, matches: this.matches };
     }
   }
 }

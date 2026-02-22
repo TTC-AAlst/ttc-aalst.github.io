@@ -22,18 +22,14 @@ export const PublicDashboard = () => {
 
   if (isLoading) {
     return (
-      <div style={{marginTop: 25}}>
+      <div style={{ marginTop: 25 }}>
         <Row>
           <Col md={6}>
             <IntroClub />
           </Col>
           <Col md={6}>
-            <div style={{textAlign: 'center', padding: 40}}>
-              <img
-                src="/img/schlager.gif"
-                style={{borderRadius: 25, maxWidth: '100%'}}
-                alt="Loading..."
-              />
+            <div style={{ textAlign: 'center', padding: 40 }}>
+              <img src="/img/schlager.gif" style={{ borderRadius: 25, maxWidth: '100%' }} alt="Loading..." />
             </div>
           </Col>
         </Row>
@@ -42,7 +38,7 @@ export const PublicDashboard = () => {
   }
 
   return (
-    <div style={{marginTop: 25}}>
+    <div style={{ marginTop: 25 }}>
       <Row>
         <ClubEvents />
       </Row>
@@ -51,9 +47,7 @@ export const PublicDashboard = () => {
         <Col md={6}>
           <IntroClub />
         </Col>
-        <Col md={6}>
-          {hasEetfestijn ? <Eetfestijn /> : <SeasonStats />}
-        </Col>
+        <Col md={6}>{hasEetfestijn ? <Eetfestijn /> : <SeasonStats />}</Col>
       </Row>
 
       <PublicTeamStats />

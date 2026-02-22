@@ -26,9 +26,7 @@ const getTeamMatchInfo = (team: ITeam): { match: IMatch | undefined; status: Mat
   }
 
   // Otherwise get the most recent played match (synced with Frenoy)
-  const playedMatches = matches
-    .filter(m => m.isSyncedWithFrenoy && m.scoreType !== 'WalkOver')
-    .sort((a, b) => b.date.valueOf() - a.date.valueOf());
+  const playedMatches = matches.filter(m => m.isSyncedWithFrenoy && m.scoreType !== 'WalkOver').sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
   return { match: playedMatches[0], status: 'played' };
 };
@@ -45,9 +43,7 @@ const getScoreColors = (match: IMatch): { bg: string; hoverBg: string } => {
   }
 
   const won = isHomeMatch ? score.home > score.out : score.out > score.home;
-  return won
-    ? { bg: '#6BCBFF', hoverBg: '#49bfff' }
-    : { bg: '#FF5144', hoverBg: '#ff3122' };
+  return won ? { bg: '#6BCBFF', hoverBg: '#49bfff' } : { bg: '#FF5144', hoverBg: '#ff3122' };
 };
 
 export const TeamMatchButton = ({ team }: { team: ITeam }) => {
@@ -73,7 +69,7 @@ export const TeamMatchButton = ({ team }: { team: ITeam }) => {
   if (status === 'notStarted') {
     return (
       <Link
-        to={t.route('match', {matchId: match.id})}
+        to={t.route('match', { matchId: match.id })}
         className="btn btn-outline-secondary"
         style={{
           width: 70,
@@ -95,7 +91,7 @@ export const TeamMatchButton = ({ team }: { team: ITeam }) => {
     const colors = getScoreColors(match);
     return (
       <Link
-        to={t.route('match', {matchId: match.id})}
+        to={t.route('match', { matchId: match.id })}
         className="btn"
         style={{
           width: 70,
@@ -120,15 +116,17 @@ export const TeamMatchButton = ({ team }: { team: ITeam }) => {
           e.currentTarget.style.borderColor = colors.bg;
         }}
       >
-        <span style={{
-          position: 'absolute',
-          left: 6,
-          width: 8,
-          height: 8,
-          backgroundColor: '#dc3545',
-          borderRadius: '50%',
-          animation: 'pulse 1.5s ease-in-out infinite',
-        }} />
+        <span
+          style={{
+            position: 'absolute',
+            left: 6,
+            width: 8,
+            height: 8,
+            backgroundColor: '#dc3545',
+            borderRadius: '50%',
+            animation: 'pulse 1.5s ease-in-out infinite',
+          }}
+        />
         {match.score ? `${match.score.home} - ${match.score.out}` : '0 - 0'}
       </Link>
     );
@@ -138,7 +136,7 @@ export const TeamMatchButton = ({ team }: { team: ITeam }) => {
   const colors = getScoreColors(match);
   return (
     <Link
-      to={t.route('match', {matchId: match.id})}
+      to={t.route('match', { matchId: match.id })}
       className="btn"
       style={{
         width: 70,

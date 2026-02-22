@@ -22,48 +22,59 @@ describe('TeamModel', () => {
           isHomeMatch: true,
           opponent: {},
           comments: [],
-          players: [{
-            playerId: 1,
-            name: 'ply1',
-            uniqueIndex: 1,
-            ranking: 'D6',
-          }, {
-            playerId: 2,
-            name: 'ply2',
-            uniqueIndex: 2,
-            ranking: 'D2',
-          }, {
-            name: 'opp1',
-            uniqueIndex: -1,
-            ranking: 'E6',
-          }, {
-            name: 'opp2',
-            uniqueIndex: -2,
-            ranking: 'E2',
-          }],
-          games: [{
-            homePlayerUniqueIndex: 1,
-            outPlayerUniqueIndex: -1,
-            outcome: 'Won',
-          }, {
-            homePlayerUniqueIndex: 1,
-            outPlayerUniqueIndex: -1,
-            outcome: 'Lost',
-          }, {
-            homePlayerUniqueIndex: 1,
-            outPlayerUniqueIndex: -1,
-            outcome: 'Lost',
-          }, {
-            homePlayerUniqueIndex: 2,
-            outPlayerUniqueIndex: -1,
-            outcome: 'Lost',
-            homePlayerSets: 2, // belle
-          }, {
-            homePlayerUniqueIndex: 2,
-            outPlayerUniqueIndex: -2,
-            outcome: 'Won',
-            outPlayerSets: 2, // belle
-          }],
+          players: [
+            {
+              playerId: 1,
+              name: 'ply1',
+              uniqueIndex: 1,
+              ranking: 'D6',
+            },
+            {
+              playerId: 2,
+              name: 'ply2',
+              uniqueIndex: 2,
+              ranking: 'D2',
+            },
+            {
+              name: 'opp1',
+              uniqueIndex: -1,
+              ranking: 'E6',
+            },
+            {
+              name: 'opp2',
+              uniqueIndex: -2,
+              ranking: 'E2',
+            },
+          ],
+          games: [
+            {
+              homePlayerUniqueIndex: 1,
+              outPlayerUniqueIndex: -1,
+              outcome: 'Won',
+            },
+            {
+              homePlayerUniqueIndex: 1,
+              outPlayerUniqueIndex: -1,
+              outcome: 'Lost',
+            },
+            {
+              homePlayerUniqueIndex: 1,
+              outPlayerUniqueIndex: -1,
+              outcome: 'Lost',
+            },
+            {
+              homePlayerUniqueIndex: 2,
+              outPlayerUniqueIndex: -1,
+              outcome: 'Lost',
+              homePlayerSets: 2, // belle
+            },
+            {
+              homePlayerUniqueIndex: 2,
+              outPlayerUniqueIndex: -2,
+              outcome: 'Won',
+              outPlayerSets: 2, // belle
+            },
+          ],
         }),
       ];
     });
@@ -102,8 +113,8 @@ describe('TeamModel', () => {
 
       it('should count belles per player ranking', () => {
         const result = getPlayerStats(matches, true);
-        expect(result[1].belles.E2).toEqual({won: 1, lost: 0});
-        expect(result[1].belles.E6).toEqual({won: 0, lost: 1});
+        expect(result[1].belles.E2).toEqual({ won: 1, lost: 0 });
+        expect(result[1].belles.E6).toEqual({ won: 0, lost: 1 });
       });
 
       it('should count calc belle totals', () => {

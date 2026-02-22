@@ -13,7 +13,7 @@ type ScoresheetProps = {
   hideDownload?: boolean;
 };
 
-export const Scoresheet = ({match, hideDownload}: ScoresheetProps) => {
+export const Scoresheet = ({ match, hideDownload }: ScoresheetProps) => {
   const viewport = useViewport();
   const isSmall = viewport.width < 550;
 
@@ -25,18 +25,18 @@ export const Scoresheet = ({match, hideDownload}: ScoresheetProps) => {
             onClick={() => downloadScoresheetExcel(match)}
             tooltip={match.isHomeMatch ? 'Download Scoresheet' : 'Download Scoresheet (UIT match???)'}
             className={`pull-right ${match.isHomeMatch ? 'btn-success' : 'btn-danger'}`}
-            style={{margin: 6}}
+            style={{ margin: 6 }}
           />
         )}
         <Table size="sm" className="match-card-tab-table">
           <thead>
             <tr>
-              <th colSpan={2}><FrenoyWeekLink match={match} /></th>
+              <th colSpan={2}>
+                <FrenoyWeekLink match={match} />
+              </th>
               <th>{t('comp.sporta.uniqueIndex')}</th>
               <th>{t('comp.ranking')}</th>
-              <th>
-                {t('comp.sporta.rankingValue')}
-              </th>
+              <th>{t('comp.sporta.rankingValue')}</th>
             </tr>
           </thead>
           <tbody>
@@ -45,7 +45,9 @@ export const Scoresheet = ({match, hideDownload}: ScoresheetProps) => {
               return (
                 <tr key={player.name}>
                   <td>{i + 1}</td>
-                  <td><PlayerLink player={player} /></td>
+                  <td>
+                    <PlayerLink player={player} />
+                  </td>
                   <td>{comp.uniqueIndex}</td>
                   <td>{comp.ranking}</td>
                   <td>{comp.rankingValue}</td>
@@ -56,7 +58,8 @@ export const Scoresheet = ({match, hideDownload}: ScoresheetProps) => {
               <td colSpan={2}>{t('space')}</td>
               <td colSpan={2}>{t('comp.sporta.teamValue')}</td>
               <td>
-                {match.getOwnPlayerModels()
+                {match
+                  .getOwnPlayerModels()
                   .map(player => player.getCompetition(match.competition).rankingValue)
                   .reduce((prev, cur) => prev + cur, 0)}
               </td>

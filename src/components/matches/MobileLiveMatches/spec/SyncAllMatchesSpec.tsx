@@ -26,38 +26,43 @@ vi.mock('../../../../utils/httpClient', () => ({
   },
 }));
 
-const createMockMatch = (id: number): IMatch => ({
-  id,
-  competition: 'Vttl',
-  frenoyDivisionId: 1,
-  frenoyMatchId: `OVLH01/00${id}`,
-  games: [],
-  players: [],
-  comments: [],
-  block: 'Major',
-  isHomeMatch: true,
-  description: '',
-  opponent: { clubId: 10, teamCode: 'A' },
-  teamId: id,
-  date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true } as any,
-  getTeam: () => ({
-    renderOwnTeamTitle: () => `TTC Aalst ${String.fromCharCode(64 + id)}`,
-    getDivisionRanking: () => ({ empty: true }),
-    getThriller: () => null,
-  }) as any,
-  renderOpponentTitle: () => `Opponent ${id}`,
-  getOwnPlayers: () => [],
-  getTheirPlayers: () => [{ position: 1, name: 'Player', ranking: 'C6', uniqueIndex: 100, won: 0, home: false, status: 'Major', alias: 'P' }],
-  getOpponentClub: () => ({ id: 10, name: 'Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }) as any,
-  isSyncedWithFrenoy: false,
-  isStandardStartTime: () => true,
-  getTeamPlayerCount: () => 4,
-} as any);
+const createMockMatch = (id: number): IMatch =>
+  ({
+    id,
+    competition: 'Vttl',
+    frenoyDivisionId: 1,
+    frenoyMatchId: `OVLH01/00${id}`,
+    games: [],
+    players: [],
+    comments: [],
+    block: 'Major',
+    isHomeMatch: true,
+    description: '',
+    opponent: { clubId: 10, teamCode: 'A' },
+    teamId: id,
+    date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true } as any,
+    getTeam: () =>
+      ({
+        renderOwnTeamTitle: () => `TTC Aalst ${String.fromCharCode(64 + id)}`,
+        getDivisionRanking: () => ({ empty: true }),
+        getThriller: () => null,
+      }) as any,
+    renderOpponentTitle: () => `Opponent ${id}`,
+    getOwnPlayers: () => [],
+    getTheirPlayers: () => [{ position: 1, name: 'Player', ranking: 'C6', uniqueIndex: 100, won: 0, home: false, status: 'Major', alias: 'P' }],
+    getOpponentClub: () => ({ id: 10, name: 'Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }) as any,
+    isSyncedWithFrenoy: false,
+    isStandardStartTime: () => true,
+    getTeamPlayerCount: () => 4,
+  }) as any;
 
-const renderMatches = (matches: IMatch[], userState = {}) => renderWithProviders(
-  <MemoryRouter><MobileLiveMatches matches={matches} /></MemoryRouter>,
-  { preloadedState: { user: { playerId: 1, teams: [1], security: [], ...userState }, readonlyMatches: [] } },
-);
+const renderMatches = (matches: IMatch[], userState = {}) =>
+  renderWithProviders(
+    <MemoryRouter>
+      <MobileLiveMatches matches={matches} />
+    </MemoryRouter>,
+    { preloadedState: { user: { playerId: 1, teams: [1], security: [], ...userState }, readonlyMatches: [] } },
+  );
 
 describe('Sync all matches button', () => {
   it('shows sync button for logged-in users', () => {

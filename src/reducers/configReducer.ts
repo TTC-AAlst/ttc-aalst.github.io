@@ -1,39 +1,32 @@
- 
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import http from '../utils/httpClient';
-import { t } from "../locales";
+import { t } from '../locales';
 import { ITeamOpponent } from '../models/model-interfaces';
-import { login, validateToken } from "./userActions";
-import { fetchClubs } from "./clubsReducer";
-import { fetchPlayers } from "./playersReducer";
-import { fetchTeams } from "./teamsReducer";
+import { login, validateToken } from './userActions';
+import { fetchClubs } from './clubsReducer';
+import { fetchPlayers } from './playersReducer';
+import { fetchTeams } from './teamsReducer';
 
 type IConfig = typeof defaultConfigState;
 type IConfigParams = typeof defaultConfigState.params;
-type IBackendConfigParams = Omit<IConfigParams, 'endOfSeason'> & {endOfSeason: 'true' | 'false'};
+type IBackendConfigParams = Omit<IConfigParams, 'endOfSeason'> & { endOfSeason: 'true' | 'false' };
 
-export const fetchConfig = createAsyncThunk(
-  'config/Get',
-  async () => {
-    const response = await http.get<IBackendConfigParams>('/config');
-    return response;
-  },
-);
+export const fetchConfig = createAsyncThunk('config/Get', async () => {
+  const response = await http.get<IBackendConfigParams>('/config');
+  return response;
+});
 
-export const saveConfig = createAsyncThunk(
-  'config/Save',
-  async (pair: {key: string, value: string}, { dispatch }) => {
-    try {
-      await http.post('/config', pair);
-      dispatch(showSnackbar('Parameter saved'));
-      return pair;
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-      console.log('saveConfigParam!', err);
-      throw err;
-    }
-  },
-);
+export const saveConfig = createAsyncThunk('config/Save', async (pair: { key: string; value: string }, { dispatch }) => {
+  try {
+    await http.post('/config', pair);
+    dispatch(showSnackbar('Parameter saved'));
+    return pair;
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+    console.log('saveConfigParam!', err);
+    throw err;
+  }
+});
 
 type InitialLoad = 'evaluating-start' | 'should-start' | 'done';
 
@@ -46,11 +39,27 @@ const defaultCaches = {
 const defaultConfigState = {
   initialLoad: 'evaluating-start' as InitialLoad,
   params: {
-    email: '', googleMapsUrl: '', location: '', trainingDays: '', competitionDays: '',
-    adultMembership: '', youthMembership: '', additionalMembership: '', recreationalMembers: '',
-    frenoyClubIdVttl: '', frenoyClubIdSporta: '', compBalls: '', clubBankNr: '', clubOrgNr: '',
-    year: '', endOfSeason: false, trainingDays2: '', trainingDays3: '', trainingDays4: '',
-    eetfestijn: '', events: '',
+    email: '',
+    googleMapsUrl: '',
+    location: '',
+    trainingDays: '',
+    competitionDays: '',
+    adultMembership: '',
+    youthMembership: '',
+    additionalMembership: '',
+    recreationalMembers: '',
+    frenoyClubIdVttl: '',
+    frenoyClubIdSporta: '',
+    compBalls: '',
+    clubBankNr: '',
+    clubOrgNr: '',
+    year: '',
+    endOfSeason: false,
+    trainingDays2: '',
+    trainingDays3: '',
+    trainingDays4: '',
+    eetfestijn: '',
+    events: '',
     // ModifiedOn: '',
   },
   snackbar: '',
@@ -58,9 +67,9 @@ const defaultConfigState = {
     /** 100% width container and hides the footer for today matches on big screen */
     container100PerWidth: false,
   },
-  newMatchComments: {} as {[matchId: number]: boolean},
-  opponentMatchesLoaded: {} as {[opponentKey: string]: boolean},
-  expandedMatchCards: {} as {[matchId: number]: boolean},
+  newMatchComments: {} as { [matchId: number]: boolean },
+  opponentMatchesLoaded: {} as { [opponentKey: string]: boolean },
+  expandedMatchCards: {} as { [matchId: number]: boolean },
   caches: defaultCaches,
 };
 
@@ -84,7 +93,6 @@ function getDefaultConfig(initialState: IConfig): IConfig {
   // }
 }
 
-
 export type ConfigParams = typeof defaultConfigState.params;
 type Settings = typeof defaultConfigState.settings;
 type SettingPair<K extends keyof Settings> = {
@@ -106,15 +114,15 @@ export const configSlice = createSlice({
       state.snackbar = action.payload;
     },
     setSetting: <K extends keyof Settings>(state: typeof defaultConfigState, action: PayloadAction<SettingPair<K>>) => {
-      const {key, value} = action.payload;
+      const { key, value } = action.payload;
       state.settings[key] = value;
     },
-    setNewMatchComment: (state, action: PayloadAction<{matchId: number, isNew: boolean}>) => {
-      const {matchId, isNew} = action.payload;
+    setNewMatchComment: (state, action: PayloadAction<{ matchId: number; isNew: boolean }>) => {
+      const { matchId, isNew } = action.payload;
       state.newMatchComments[matchId] = isNew;
     },
-    setOpponentMatchesLoaded: (state, action: PayloadAction<{teamId: number, opponent?: ITeamOpponent}>) => {
-      const {teamId, opponent} = action.payload;
+    setOpponentMatchesLoaded: (state, action: PayloadAction<{ teamId: number; opponent?: ITeamOpponent }>) => {
+      const { teamId, opponent } = action.payload;
       const key = `${teamId}-${opponent?.teamCode}-${opponent?.clubId}`;
       state.opponentMatchesLoaded[key] = true;
     },
@@ -164,10 +172,8 @@ export const configSlice = createSlice({
   },
 });
 
-export const {
-  setInitialLoad, clearSnackbar, showSnackbar, setSetting,
-  setNewMatchComment, setOpponentMatchesLoaded, toggleMatchCardExpanded,
-} = configSlice.actions;
+export const { setInitialLoad, clearSnackbar, showSnackbar, setSetting, setNewMatchComment, setOpponentMatchesLoaded, toggleMatchCardExpanded } =
+  configSlice.actions;
 
 const configReducer = configSlice.reducer;
 export default configReducer;

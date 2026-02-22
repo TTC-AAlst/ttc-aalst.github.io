@@ -113,25 +113,21 @@ export const PlayerPerformanceCard = ({
     };
   };
 
-  const renderCompetitionStats = (
-    label: string,
-    stats: PlayerCompetitionStats | null,
-    ranking: string | undefined,
-  ) => {
+  const renderCompetitionStats = (label: string, stats: PlayerCompetitionStats | null, ranking: string | undefined) => {
     if (!stats) return null;
     const losses = stats.games - stats.victories;
     const winPercentage = stats.games > 0 ? Math.round((stats.victories / stats.games) * 100) : 0;
 
     return (
-      <div style={{fontSize: '0.8em', color: '#666', marginTop: 4}}>
-        <strong style={{color: '#333'}}>{label}</strong>
-        {ranking && <span style={{color: '#888'}}> ({ranking})</span>}
-        <span style={{marginLeft: 6}}>
-          <Icon fa="fa fa-thumbs-up" style={{color: '#4CAF50', marginRight: 2}} />
+      <div style={{ fontSize: '0.8em', color: '#666', marginTop: 4 }}>
+        <strong style={{ color: '#333' }}>{label}</strong>
+        {ranking && <span style={{ color: '#888' }}> ({ranking})</span>}
+        <span style={{ marginLeft: 6 }}>
+          <Icon fa="fa fa-thumbs-up" style={{ color: '#4CAF50', marginRight: 2 }} />
           {stats.victories}
-          <Icon fa="fa fa-thumbs-down" style={{color: '#f44336', marginLeft: 6, marginRight: 2}} />
+          <Icon fa="fa fa-thumbs-down" style={{ color: '#f44336', marginLeft: 6, marginRight: 2 }} />
           {losses}
-          <span style={{marginLeft: 4}}>({winPercentage}%)</span>
+          <span style={{ marginLeft: 4 }}>({winPercentage}%)</span>
         </span>
       </div>
     );
@@ -197,24 +193,26 @@ export const PlayerPerformanceCard = ({
     <div style={getCardStyle()}>
       {isOnFire && <FireRibbon />}
       {renderAvatar()}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 6,
-        fontSize: '0.9em',
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 4,
-      }}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 6,
+          fontSize: '0.9em',
+          fontWeight: 'bold',
+          color: '#333',
+          marginBottom: 4,
+        }}
       >
         <PlayerLink player={player} alias />
         {badge && badge.type !== 'neutral' && (
-          <span style={{
-            display: 'inline-flex',
-            border: `1px solid ${badge.color}`,
-            borderRadius: 14,
-          }}
+          <span
+            style={{
+              display: 'inline-flex',
+              border: `1px solid ${badge.color}`,
+              borderRadius: 14,
+            }}
           >
             <PlayerPerformanceBadge allResults={allResults} recentResults={recentResults} size="lg" showLabel={false} />
           </span>

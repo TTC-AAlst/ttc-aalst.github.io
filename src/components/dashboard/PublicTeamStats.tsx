@@ -20,7 +20,7 @@ const CompactTeamCard = ({ team }: { team: ITeam }) => {
   }
 
   return (
-    <div style={{display: 'flex', alignItems: 'stretch', gap: 8, marginBottom: 4}}>
+    <div style={{ display: 'flex', alignItems: 'stretch', gap: 8, marginBottom: 4 }}>
       <Link
         to={browseTo.getTeam(team)}
         style={{
@@ -37,14 +37,23 @@ const CompactTeamCard = ({ team }: { team: ITeam }) => {
           fontSize: '0.85em',
         }}
       >
-        <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
-          <TeamPosition team={team} style={{marginRight: 4, marginTop: 0, fontSize: '0.9em'}} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <TeamPosition team={team} style={{ marginRight: 4, marginTop: 0, fontSize: '0.9em' }} />
           <span>{team.renderOwnTeamTitle()}</span>
         </div>
-        <div style={{display: 'flex', alignItems: 'center', gap: 4, fontSize: '1.2em'}}>
-          <span style={{color: '#4CAF50', marginRight: 4}}><Icon fa="fa fa-thumbs-up" style={{marginRight: 2}} />{ranking.gamesWon}</span>
-          <span style={{color: '#FF9800', marginRight: 4}}><Icon fa="fa fa-meh-o" style={{marginRight: 2}} />{ranking.gamesDraw}</span>
-          <span style={{color: '#f44336'}}><Icon fa="fa fa-thumbs-down" style={{marginRight: 2}} />{ranking.gamesLost}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '1.2em' }}>
+          <span style={{ color: '#4CAF50', marginRight: 4 }}>
+            <Icon fa="fa fa-thumbs-up" style={{ marginRight: 2 }} />
+            {ranking.gamesWon}
+          </span>
+          <span style={{ color: '#FF9800', marginRight: 4 }}>
+            <Icon fa="fa fa-meh-o" style={{ marginRight: 2 }} />
+            {ranking.gamesDraw}
+          </span>
+          <span style={{ color: '#f44336' }}>
+            <Icon fa="fa fa-thumbs-down" style={{ marginRight: 2 }} />
+            {ranking.gamesLost}
+          </span>
         </div>
       </Link>
       <TeamMatchButton team={team} />
@@ -64,13 +73,13 @@ export const PublicTeamStats = () => {
   }
 
   return (
-    <div style={{marginBottom: 20}}>
-      <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6}}>
-        <Strike text={t('dashboard.globalTeamStats')} style={{flex: 1, marginBottom: 0}} />
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+        <Strike text={t('dashboard.globalTeamStats')} style={{ flex: 1, marginBottom: 0 }} />
         {matchesBeingPlayed.length > 0 && (
           <Link to={t.route('matchesToday')}>
-            <Button variant="success" size="sm" style={{whiteSpace: 'nowrap'}}>
-              {t('dashboard.matchesBeingPlayed', {count: matchesBeingPlayed.length})}
+            <Button variant="success" size="sm" style={{ whiteSpace: 'nowrap' }}>
+              {t('dashboard.matchesBeingPlayed', { count: matchesBeingPlayed.length })}
             </Button>
           </Link>
         )}

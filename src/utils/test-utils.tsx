@@ -42,13 +42,8 @@ type RenderWithStoreOptions = {
   preloadedState?: DeepPartial<RootState>;
 } & Omit<RenderOptions, 'wrapper'>;
 
-export function renderWithProviders(
-  ui: React.ReactElement,
-  { preloadedState, ...renderOptions }: RenderWithStoreOptions = {},
-) {
+export function renderWithProviders(ui: React.ReactElement, { preloadedState, ...renderOptions }: RenderWithStoreOptions = {}) {
   const store = createTestStore(preloadedState);
-  const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <Provider store={store}>{children}</Provider>
-  );
+  const Wrapper = ({ children }: { children: React.ReactNode }) => <Provider store={store}>{children}</Provider>;
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
 }

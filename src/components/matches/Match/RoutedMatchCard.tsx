@@ -6,7 +6,7 @@ import { NotFound } from '../../other/NotFound';
 import { selectMatches, useTtcSelector } from '../../../utils/hooks/storeHooks';
 
 export const RoutedMatchCard = () => {
-  const params = useParams<{matchId: string, tabKey: string}>();
+  const params = useParams<{ matchId: string; tabKey: string }>();
   const matches = useTtcSelector(selectMatches);
   const initialLoad = useTtcSelector(state => state.config.initialLoad);
   const match = !!params.matchId && matches.find(x => x.id === parseInt(params.matchId as string, 10));
@@ -19,14 +19,8 @@ export const RoutedMatchCard = () => {
   }
 
   return (
-    <div style={{marginBottom: 20, marginTop: 20, marginLeft: 5, marginRight: 5}}>
-      <MobileLiveMatchCard
-        match={match}
-        expanded={true}
-        onToggle={() => {}}
-        isCollapsible={false}
-        hideDetailsLink
-      />
+    <div style={{ marginBottom: 20, marginTop: 20, marginLeft: 5, marginRight: 5 }}>
+      <MobileLiveMatchCard match={match} expanded={true} onToggle={() => {}} isCollapsible={false} hideDetailsLink />
     </div>
   );
 };

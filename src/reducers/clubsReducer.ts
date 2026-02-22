@@ -6,42 +6,33 @@ import { showSnackbar } from './configReducer';
 import { t } from '../locales';
 import { RootState } from '../store';
 
-export const fetchClubs = createAsyncThunk(
-  'clubs/Get',
-  async (_, { getState }) => {
-    const lastChecked = (getState() as RootState).config.caches.clubs;
-    const response = await http.get<ICacheResponse<IClub>>('/clubs', {lastChecked});
+export const fetchClubs = createAsyncThunk('clubs/Get', async (_, { getState }) => {
+  const lastChecked = (getState() as RootState).config.caches.clubs;
+  const response = await http.get<ICacheResponse<IClub>>('/clubs', { lastChecked });
+  return response;
+});
+
+export const updateClub = createAsyncThunk('clubs/UpdateClub', async (club: IClub, { dispatch }) => {
+  try {
+    await http.post('/clubs/UpdateClub', club);
+    dispatch(showSnackbar('Club saved'));
+    return club;
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+    throw err;
+  }
+});
+
+export const frenoyClubSync = createAsyncThunk('clubs/Sync', async (_, { dispatch }) => {
+  try {
+    const response = await http.post<IClub[]>('/clubs/Sync');
+    dispatch(showSnackbar('Clubs synced with Frenoy'));
     return response;
-  },
-);
-
-export const updateClub = createAsyncThunk(
-  'clubs/UpdateClub',
-  async (club: IClub, { dispatch }) => {
-    try {
-      await http.post('/clubs/UpdateClub', club);
-      dispatch(showSnackbar('Club saved'));
-      return club;
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-      throw err;
-    }
-  },
-);
-
-export const frenoyClubSync = createAsyncThunk(
-  'clubs/Sync',
-  async (_, { dispatch }) => {
-    try {
-      const response = await http.post<IClub[]>('/clubs/Sync');
-      dispatch(showSnackbar('Clubs synced with Frenoy'));
-      return response;
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-      throw err;
-    }
-  },
-);
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+    throw err;
+  }
+});
 
 function getInitialState(): IClub[] {
   return [];

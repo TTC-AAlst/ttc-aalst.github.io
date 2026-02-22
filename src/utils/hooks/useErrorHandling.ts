@@ -1,28 +1,34 @@
-import { useEffect } from "react";
-import StackTrace from "stacktrace-js";
-import httpClient from "../httpClient";
+import { useEffect } from 'react';
+import StackTrace from 'stacktrace-js';
+import httpClient from '../httpClient';
 
 export const useErrorHandling = () => {
   useEffect(() => {
     const handleGlobalError = (event: ErrorEvent) => {
-      StackTrace.fromError(event.error).then(err => {
-        const errObj = {
-          message: `handleGlobalError: ${event.filename}:${event.lineno}:${event.colno}: ${event.message}`,
-          stack: event.error?.stack,
-          componentStack: null,
-          url: document.location.pathname,
-          parsedStack: JSON.stringify(err, null, 2),
-        };
-        httpClient.post('/config/Log', errObj).catch(() => { /* Swallow logging errors to prevent infinite loop */ });
-      }).catch(err => {
-        const errObj = {
-          message: `handleGlobalError: ${event.filename}:${event.lineno}:${event.colno}: ${event.message}. Err from stacktrace-js: ${err}`,
-          stack: event.error?.stack,
-          componentStack: null,
-          url: document.location.pathname,
-        };
-        httpClient.post('/config/Log', errObj).catch(() => { /* Swallow logging errors to prevent infinite loop */ });
-      });
+      StackTrace.fromError(event.error)
+        .then(err => {
+          const errObj = {
+            message: `handleGlobalError: ${event.filename}:${event.lineno}:${event.colno}: ${event.message}`,
+            stack: event.error?.stack,
+            componentStack: null,
+            url: document.location.pathname,
+            parsedStack: JSON.stringify(err, null, 2),
+          };
+          httpClient.post('/config/Log', errObj).catch(() => {
+            /* Swallow logging errors to prevent infinite loop */
+          });
+        })
+        .catch(err => {
+          const errObj = {
+            message: `handleGlobalError: ${event.filename}:${event.lineno}:${event.colno}: ${event.message}. Err from stacktrace-js: ${err}`,
+            stack: event.error?.stack,
+            componentStack: null,
+            url: document.location.pathname,
+          };
+          httpClient.post('/config/Log', errObj).catch(() => {
+            /* Swallow logging errors to prevent infinite loop */
+          });
+        });
     };
 
     window.addEventListener('error', handleGlobalError);
@@ -39,7 +45,9 @@ export const useErrorHandling = () => {
         componentStack: null,
         url: document.location.pathname,
       };
-      httpClient.post('/config/Log', errObj).catch(() => { /* Swallow logging errors to prevent infinite loop */ });
+      httpClient.post('/config/Log', errObj).catch(() => {
+        /* Swallow logging errors to prevent infinite loop */
+      });
     };
 
     window.addEventListener('unhandledrejection', handleRejection);

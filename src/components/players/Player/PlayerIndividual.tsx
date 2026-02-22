@@ -1,8 +1,8 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
-import {getPlayerStats} from '../../../models/TeamModel';
-import {WonLostLabel} from '../../controls/controls/WonLostLabel';
-import {PercentageLabel} from '../../controls/controls/PercentageLabel';
+import { getPlayerStats } from '../../../models/TeamModel';
+import { WonLostLabel } from '../../controls/controls/WonLostLabel';
+import { PercentageLabel } from '../../controls/controls/PercentageLabel';
 import { t } from '../../../locales';
 import { Competition, IPlayer } from '../../../models/model-interfaces';
 import { selectMatches, useTtcSelector } from '../../../utils/hooks/storeHooks';
@@ -10,9 +10,9 @@ import { selectMatches, useTtcSelector } from '../../../utils/hooks/storeHooks';
 type PlayerIndividualProps = {
   player: IPlayer;
   competition: Competition;
-}
+};
 
-export const PlayerIndividual = ({player, competition}: PlayerIndividualProps) => {
+export const PlayerIndividual = ({ player, competition }: PlayerIndividualProps) => {
   const matches = useTtcSelector(selectMatches);
   const comp = player.getCompetition(competition);
   if (!comp.ranking) {
@@ -23,15 +23,15 @@ export const PlayerIndividual = ({player, competition}: PlayerIndividualProps) =
     .filter(match => match.isSyncedWithFrenoy && match.competition === competition)
     .filter(match => match.games.some(game => game.homePlayerUniqueIndex === comp.uniqueIndex || game.outPlayerUniqueIndex === comp.uniqueIndex));
 
-
-  const playerResults = getPlayerStats(matchesWithPlayer, true)
-    .find(stats => stats.ply.id === player.id);
+  const playerResults = getPlayerStats(matchesWithPlayer, true).find(stats => stats.ply.id === player.id);
 
   if (!playerResults) {
     return <span>{t('match.opponents.noMatchesPlayed')}</span>;
   }
 
-  const playedAgainst = Object.keys(playerResults.lost).concat(Object.keys(playerResults.won)).concat([comp.ranking])
+  const playedAgainst = Object.keys(playerResults.lost)
+    .concat(Object.keys(playerResults.won))
+    .concat([comp.ranking])
     .filter((value, index, self) => self.indexOf(value) === index)
     .sort((a, b) => a.localeCompare(b));
 
@@ -44,12 +44,12 @@ export const PlayerIndividual = ({player, competition}: PlayerIndividualProps) =
   };
 
   return (
-    <Table size="sm" striped style={{maxWidth: 350}}>
+    <Table size="sm" striped style={{ maxWidth: 350 }}>
       <thead>
         <tr>
           <th colSpan={2}>{t('match.opponents.victories')}</th>
-          <th style={{width: 30, textAlign: 'right'}}>%</th>
-          <th style={{width: 120}}>{t('common.belles')}</th>
+          <th style={{ width: 30, textAlign: 'right' }}>%</th>
+          <th style={{ width: 120 }}>{t('common.belles')}</th>
         </tr>
       </thead>
       <tbody>
@@ -61,8 +61,12 @@ export const PlayerIndividual = ({player, competition}: PlayerIndividualProps) =
           return (
             <tr key={ranking} className={comp.ranking === ranking ? 'accentuate' : undefined}>
               <td>{ranking}</td>
-              <td><WonLostLabel won={won} lost={lost} /></td>
-              <td><PercentageLabel won={won} lost={lost} /></td>
+              <td>
+                <WonLostLabel won={won} lost={lost} />
+              </td>
+              <td>
+                <PercentageLabel won={won} lost={lost} />
+              </td>
               <td>{belles ? <WonLostLabel won={belles.won} lost={belles.lost} /> : null}</td>
             </tr>
           );
@@ -71,9 +75,15 @@ export const PlayerIndividual = ({player, competition}: PlayerIndividualProps) =
       <tfoot>
         <tr className="accentuate">
           <td>{total.total}</td>
-          <td><WonLostLabel won={total.won} lost={total.lost} /></td>
-          <td><PercentageLabel won={total.won} lost={total.lost} decimals={2} /></td>
-          <td><WonLostLabel won={total.bellesWon} lost={total.bellesLost} /></td>
+          <td>
+            <WonLostLabel won={total.won} lost={total.lost} />
+          </td>
+          <td>
+            <PercentageLabel won={total.won} lost={total.lost} decimals={2} />
+          </td>
+          <td>
+            <WonLostLabel won={total.bellesWon} lost={total.bellesLost} />
+          </td>
         </tr>
       </tfoot>
     </Table>

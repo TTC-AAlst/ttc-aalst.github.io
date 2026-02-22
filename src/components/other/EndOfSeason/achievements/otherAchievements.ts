@@ -5,7 +5,6 @@ import storeUtil from '../../../../storeUtil';
 
 const getPerGames = cur => Math.floor((cur.victories / cur.games) * 1000) / 10;
 
-
 export type AchievementInfo = {
   title: string;
   desc: string;
@@ -13,8 +12,7 @@ export type AchievementInfo = {
     throphy: string;
     player: IPlayer;
   }[];
-}
-
+};
 
 export function getMostMatchesWon(playerStats: ITeamPlayerStats[]): AchievementInfo {
   const highest = playerStats.reduce((acc, cur) => (acc.victories > cur.victories ? acc : cur), playerStats[0]);
@@ -37,7 +35,7 @@ export function getHighestJumper(competition: Competition, playerStats: ITeamPla
   };
 
   const playersWithJumps = playerStats.map(player => {
-    const {ranking, nextRanking} = player.ply.getCompetition(competition);
+    const { ranking, nextRanking } = player.ply.getCompetition(competition);
     if (!nextRanking) {
       return undefined;
     }
@@ -77,7 +75,6 @@ export function getHighestJumper(competition: Competition, playerStats: ITeamPla
   };
 }
 
-
 export function getMostMatchesPercentageWon(comp: Competition, playerStats: ITeamPlayerStats[]): AchievementInfo {
   const sortedPlayers = [...playerStats].sort((a, b) => getPerGames(b) - getPerGames(a));
 
@@ -86,13 +83,9 @@ export function getMostMatchesPercentageWon(comp: Competition, playerStats: ITea
 
   const allHighestAreARanking = highestPlayers.every(player => player.ply.getCompetition(comp).ranking === 'A');
   if (allHighestAreARanking) {
-    const secondHighestPercentage = getPerGames(
-      sortedPlayers.find(player => getPerGames(player) < highestPercentage) || sortedPlayers[0],
-    );
+    const secondHighestPercentage = getPerGames(sortedPlayers.find(player => getPerGames(player) < highestPercentage) || sortedPlayers[0]);
 
-    highestPlayers = highestPlayers.concat(
-      sortedPlayers.filter(player => getPerGames(player) === secondHighestPercentage),
-    );
+    highestPlayers = highestPlayers.concat(sortedPlayers.filter(player => getPerGames(player) === secondHighestPercentage));
   }
 
   return {
@@ -104,9 +97,6 @@ export function getMostMatchesPercentageWon(comp: Competition, playerStats: ITea
     })),
   };
 }
-
-
-
 
 export function getRankingDestroyer(competition: Competition, playerStats: ITeamPlayerStats[]): AchievementInfo {
   const getValue = r => getRankingValue(competition, r);
@@ -132,9 +122,7 @@ export function getRankingDestroyer(competition: Competition, playerStats: ITeam
   });
 
   const highest = result.reduce((acc, cur) => (acc.difference > cur.difference ? acc : cur), result[0]);
-  let players = result
-    .filter(cur => cur.difference === highest.difference)
-    .sort((a, b) => b.times - a.times);
+  let players = result.filter(cur => cur.difference === highest.difference).sort((a, b) => b.times - a.times);
 
   if (players.length > 4) {
     players = players.slice(0, 4);
@@ -150,9 +138,6 @@ export function getRankingDestroyer(competition: Competition, playerStats: ITeam
   };
 }
 
-
-
-
 export function getMostBellesPlayed(playerStats: ITeamPlayerStats[]): AchievementInfo {
   const highest = playerStats.reduce((acc, cur) => (acc.belleGames > cur.belleGames ? acc : cur), playerStats[0]);
 
@@ -167,8 +152,6 @@ export function getMostBellesPlayed(playerStats: ITeamPlayerStats[]): Achievemen
   };
 }
 
-
-
 export function getMostBellesWon(playerStats: ITeamPlayerStats[]): AchievementInfo {
   const highest = playerStats.reduce((acc, cur) => (acc.belleVictories > cur.belleVictories ? acc : cur), playerStats[0]);
 
@@ -182,7 +165,6 @@ export function getMostBellesWon(playerStats: ITeamPlayerStats[]): AchievementIn
     })),
   };
 }
-
 
 export function getMostBellesPercentageWon(playerStats: ITeamPlayerStats[]): AchievementInfo {
   const getPer = cur => Math.floor((cur.belleVictories / cur.belleGames) * 1000) / 10;
@@ -208,8 +190,6 @@ export function getMostBellesPercentageWon(playerStats: ITeamPlayerStats[]): Ach
   };
 }
 
-
-
 export function getMostBellesPercentageLost(playerStats: ITeamPlayerStats[]): AchievementInfo {
   const getPer = cur => Math.floor((cur.belleVictories / cur.belleGames) * 1000) / 10;
 
@@ -229,14 +209,14 @@ export function getMostBellesPercentageLost(playerStats: ITeamPlayerStats[]): Ac
   return {
     title: '😢 Grootste Pechvogel',
     desc: 'Meest verloren belles',
-    players: [{
-      throphy: `${getPer(highest)}% gewonnen belles (${highest.belleGames} gespeeld)`,
-      player: highest.ply,
-    }],
+    players: [
+      {
+        throphy: `${getPer(highest)}% gewonnen belles (${highest.belleGames} gespeeld)`,
+        player: highest.ply,
+      },
+    ],
   };
 }
-
-
 
 export function getMostGamesPlayer(playerStats: ITeamPlayerStats[]): AchievementInfo {
   const highest = playerStats.reduce((acc, cur) => (acc.games > cur.games ? acc : cur), playerStats[0]);
@@ -252,19 +232,19 @@ export function getMostGamesPlayer(playerStats: ITeamPlayerStats[]): Achievement
   };
 }
 
-
 export function getMostNetjesTegen(playerStats: ITeamPlayerStats[]): AchievementInfo {
   const gerdo = playerStats.find(x => x.ply.alias === 'Gerdo')!;
   return {
     title: '🥴 Meeste netjes tegen',
     desc: '',
-    players: [{
-      throphy: '+Infinity',
-      player: gerdo.ply,
-    }],
+    players: [
+      {
+        throphy: '+Infinity',
+        player: gerdo.ply,
+      },
+    ],
   };
 }
-
 
 export function getMostMatchesAllWon(competition: Competition, playerStats: ITeamPlayerStats[], matches: IMatch[]): AchievementInfo {
   const toWinCount = matches[0].getTeamPlayerCount();
@@ -277,17 +257,18 @@ export function getMostMatchesAllWon(competition: Competition, playerStats: ITea
     return acc;
   }, [] as number[]);
 
-
-  let playerWins = playerIds.reduce((acc, id) => {
-    let existing = acc.find(x => x.id === id);
-    if (!existing) {
-      existing = {id, ply: storeUtil.getPlayer(id), wins: 0};
-      acc.push(existing);
-    }
-    existing.wins++;
-    return acc;
-  }, [] as {id: number, ply: IPlayer, wins: number}[]);
-
+  let playerWins = playerIds.reduce(
+    (acc, id) => {
+      let existing = acc.find(x => x.id === id);
+      if (!existing) {
+        existing = { id, ply: storeUtil.getPlayer(id), wins: 0 };
+        acc.push(existing);
+      }
+      existing.wins++;
+      return acc;
+    },
+    [] as { id: number; ply: IPlayer; wins: number }[],
+  );
 
   playerWins = playerWins.sort((a, b) => b.wins - a.wins);
   const highest = playerWins[0];

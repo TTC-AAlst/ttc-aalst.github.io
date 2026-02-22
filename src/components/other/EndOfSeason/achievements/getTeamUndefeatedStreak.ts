@@ -1,7 +1,6 @@
- 
-import { Dayjs } from "dayjs";
-import { IMatch, ITeam } from "../../../../models/model-interfaces";
-import { TeamAchievementInfo } from "./achievement-models";
+import { Dayjs } from 'dayjs';
+import { IMatch, ITeam } from '../../../../models/model-interfaces';
+import { TeamAchievementInfo } from './achievement-models';
 
 export function getTeamUndefeatedStreak(matches: IMatch[]): TeamAchievementInfo {
   const sortedMatches = matches

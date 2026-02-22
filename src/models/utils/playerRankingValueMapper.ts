@@ -1,4 +1,4 @@
-import {Competition} from '../model-interfaces';
+import { Competition } from '../model-interfaces';
 
 const vttlRankingValues = {
   A: 18,

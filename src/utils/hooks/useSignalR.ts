@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
-import { getSignalRUrl } from "../../config";
-import { useTtcDispatch, useTtcSelector } from "./storeHooks";
-import { fetchPlayer, fetchPlayers } from "../../reducers/playersReducer";
-import { fetchConfig } from "../../reducers/configReducer";
-import { fetchClubs } from "../../reducers/clubsReducer";
-import { fetchTeam, fetchTeams } from "../../reducers/teamsReducer";
-import { fetchMatch, fetchMatches } from "../../reducers/matchesReducer";
-import { fetchReadOnlyMatch } from "../../reducers/readonlyMatchesReducer";
+import { useEffect, useState } from 'react';
+import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import { getSignalRUrl } from '../../config';
+import { useTtcDispatch, useTtcSelector } from './storeHooks';
+import { fetchPlayer, fetchPlayers } from '../../reducers/playersReducer';
+import { fetchConfig } from '../../reducers/configReducer';
+import { fetchClubs } from '../../reducers/clubsReducer';
+import { fetchTeam, fetchTeams } from '../../reducers/teamsReducer';
+import { fetchMatch, fetchMatches } from '../../reducers/matchesReducer';
+import { fetchReadOnlyMatch } from '../../reducers/readonlyMatchesReducer';
 
-enum Entities {  
+enum Entities {
   Player,
   Match,
   Team,
@@ -24,7 +24,7 @@ export const useSignalR = () => {
   const dispatch = useTtcDispatch();
 
   useEffect(() => {
-    if (initialLoad !== "done") {
+    if (initialLoad !== 'done') {
       return;
     }
 
@@ -44,12 +44,12 @@ export const useSignalR = () => {
       connection
         .start()
         .then(() => {
-          console.log("SignalR Connected!");
+          console.log('SignalR Connected!');
 
-          connection.on("BroadcastReload", (entityType: Entities, id: number) => {
+          connection.on('BroadcastReload', (entityType: Entities, id: number) => {
             switch (entityType) {
               case Entities.Player:
-                dispatch(fetchPlayer({id}));
+                dispatch(fetchPlayer({ id }));
                 break;
               case Entities.Club:
                 dispatch(fetchClubs());
@@ -58,13 +58,13 @@ export const useSignalR = () => {
                 dispatch(fetchConfig());
                 break;
               case Entities.Match:
-                dispatch(fetchMatch({id}));
+                dispatch(fetchMatch({ id }));
                 break;
               case Entities.ReadOnlyMatch:
-                dispatch(fetchReadOnlyMatch({id}));
+                dispatch(fetchReadOnlyMatch({ id }));
                 break;
               case Entities.Team:
-                dispatch(fetchTeam({id}));
+                dispatch(fetchTeam({ id }));
                 break;
               default:
                 console.warn(`BroadcastReload Unmapped!? ${entityType}: ${id}`);
@@ -72,7 +72,7 @@ export const useSignalR = () => {
           });
 
           connection.onreconnected(() => {
-            console.log("SignalR Reconnected! Syncing data...");
+            console.log('SignalR Reconnected! Syncing data...');
             dispatch(fetchMatches());
             dispatch(fetchTeams());
             dispatch(fetchPlayers());
@@ -87,7 +87,7 @@ export const useSignalR = () => {
           //   console.error("SignalR Connection closed", error);
           // });
         })
-        .catch(err => console.error("Connection failed: ", err));
+        .catch(err => console.error('Connection failed: ', err));
     }
 
     return () => {

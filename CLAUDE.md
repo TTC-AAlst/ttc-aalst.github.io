@@ -22,6 +22,10 @@ bun test
 bun run lint
 bun run lint-fix
 
+# Format with Prettier
+bun run format
+bun run format:check
+
 # Build production bundle
 bun run build
 
@@ -79,7 +83,7 @@ Models contain business logic and computed properties alongside data.
 
 Centralized HTTP client in `utils/httpClient.ts`:
 
-- Uses `superagent` for requests
+- Uses native `fetch` API
 - Automatically adds bearer token from localStorage
 - URL construction: `/api` prefix added automatically
 - Routes to localhost:5193 in dev, production backend otherwise
@@ -167,6 +171,18 @@ ESLint 9 flat config (`eslint.config.js`) with `typescript-eslint` and `eslint-p
 - `no-console`: off, `no-debugger`: warn
 - `no-undef` / `no-unused-vars`: off (TypeScript handles these)
 - `react-hooks/exhaustive-deps`: warn (keep dependency arrays correct)
+
+### Prettier
+
+Code formatting with Prettier (`.prettierrc`):
+- Single quotes, trailing commas, semicolons
+- Print width: 160 characters (matches ESLint)
+- Arrow function parens: avoid
+
+### Git Hooks (Husky)
+
+- **pre-commit**: Runs `lint-staged` (ESLint fix + Prettier) on staged files only
+- **pre-push**: Runs tests before pushing
 
 ## Key Integrations
 

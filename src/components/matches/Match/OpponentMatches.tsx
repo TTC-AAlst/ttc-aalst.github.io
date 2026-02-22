@@ -1,36 +1,42 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import cn from 'classnames';
 import Table from 'react-bootstrap/Table';
-import {OtherMatchPlayerResultsTableRow} from './OtherMatchPlayerResults';
-import {MatchPlayerRankings} from '../controls/MatchPlayerRankings';
-import {OtherMatchTeamTitle} from './OtherMatchTeamTitle';
-import {OpponentMatchScore} from './OpponentMatchScore';
-import {SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOrLast} from '../../teams/SwitchBetweenFirstAndLastRoundButton';
-import {Spinner} from '../../controls/controls/Spinner';
-import {TrophyIcon} from '../../controls/Icons/TrophyIcon';
+import { OtherMatchPlayerResultsTableRow } from './OtherMatchPlayerResults';
+import { MatchPlayerRankings } from '../controls/MatchPlayerRankings';
+import { OtherMatchTeamTitle } from './OtherMatchTeamTitle';
+import { OpponentMatchScore } from './OpponentMatchScore';
+import { SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOrLast } from '../../teams/SwitchBetweenFirstAndLastRoundButton';
+import { Spinner } from '../../controls/controls/Spinner';
+import { TrophyIcon } from '../../controls/Icons/TrophyIcon';
 import { IMatch, ITeam, ITeamOpponent } from '../../../models/model-interfaces';
 import { useViewport } from '../../../utils/hooks/useViewport';
 import { t } from '../../../locales';
 
 type OpponentMatchesProps = {
-  readonlyMatches: IMatch[],
-  team: ITeam,
-  roundSwitchButton?: boolean,
-  opponent?: ITeamOpponent,
-}
+  readonlyMatches: IMatch[];
+  team: ITeam;
+  roundSwitchButton?: boolean;
+  opponent?: ITeamOpponent;
+};
 
-export const OpponentMatches = ({team, opponent, readonlyMatches, roundSwitchButton}: OpponentMatchesProps) => {
+export const OpponentMatches = ({ team, opponent, readonlyMatches, roundSwitchButton }: OpponentMatchesProps) => {
   const viewport = useViewport();
   const [matchesFilter, setMatchesFilter] = useState<ReturnType<typeof getFirstOrLast>>(roundSwitchButton ? getFirstOrLast() : 'all');
-  const [showMatch, setShowMatch] = useState<{[matchId: number]: boolean}>({});
+  const [showMatch, setShowMatch] = useState<{ [matchId: number]: boolean }>({});
 
   const widthShortDate = viewport.width < 770;
   const widthWithDate = viewport.width > 500;
   const widthWithFormation = viewport.width > 770;
 
-  const {matches} = getFirstOrLastMatches(readonlyMatches, matchesFilter);
+  const { matches } = getFirstOrLastMatches(readonlyMatches, matchesFilter);
   if (matches.length === 0) {
-    return <div className="match-card-tab-content"><h3><Spinner /></h3></div>;
+    return (
+      <div className="match-card-tab-content">
+        <h3>
+          <Spinner />
+        </h3>
+      </div>
+    );
   }
 
   return (
@@ -52,34 +58,28 @@ export const OpponentMatches = ({team, opponent, readonlyMatches, roundSwitchBut
           return [
             <tr
               key={match.id}
-              className={cn({clickable: match.isSyncedWithFrenoy, 'accentuate success': match.isOurMatch})}
-              onClick={() => setShowMatch({...showMatch, [match.id]: !showMatch[match.id]})}
+              className={cn({ clickable: match.isSyncedWithFrenoy, 'accentuate success': match.isOurMatch })}
+              onClick={() => setShowMatch({ ...showMatch, [match.id]: !showMatch[match.id] })}
             >
-              {widthWithDate ? (
-                <td key="1">
-                  {match.getDisplayDate(widthShortDate ? 's' : 'd')}
-                </td>
-              ) : null}
+              {widthWithDate ? <td key="1">{match.getDisplayDate(widthShortDate ? 's' : 'd')}</td> : null}
 
               <td key="2">
                 <OpponentTeamTitle team={team} readonlyMatch={match} isHome isMarked={!!isTheirHomeMatch} />
               </td>
               {widthWithFormation ? (
-                <td key="3" style={{fontWeight: isTheirHomeMatch ? 'bold' : undefined}}>
+                <td key="3" style={{ fontWeight: isTheirHomeMatch ? 'bold' : undefined }}>
                   <MatchPlayerRankings match={match} homeTeam />
                 </td>
               ) : null}
-
 
               <td key="4">
                 <OpponentTeamTitle team={team} readonlyMatch={match} isHome={false} isMarked={!!isTheirOutMatch} />
               </td>
               {widthWithFormation ? (
-                <td key="5" style={{fontWeight: isTheirOutMatch ? 'bold' : undefined}}>
+                <td key="5" style={{ fontWeight: isTheirOutMatch ? 'bold' : undefined }}>
                   <MatchPlayerRankings match={match} homeTeam={false} />
                 </td>
               ) : null}
-
 
               <td key="6">
                 <OpponentMatchScore readonlyMatch={match} />
@@ -93,10 +93,7 @@ export const OpponentMatches = ({team, opponent, readonlyMatches, roundSwitchBut
         <tfoot>
           <tr>
             <td colSpan={6}>
-              <SwitchBetweenFirstAndLastRoundButton
-                setMatchesFilter={setMatchesFilter}
-                matchesFilter={matchesFilter}
-              />
+              <SwitchBetweenFirstAndLastRoundButton setMatchesFilter={setMatchesFilter} matchesFilter={matchesFilter} />
             </td>
           </tr>
         </tfoot>
@@ -105,26 +102,18 @@ export const OpponentMatches = ({team, opponent, readonlyMatches, roundSwitchBut
   );
 };
 
-
-
-
 type OpponentTeamTitleProps = {
-  team: ITeam,
-  readonlyMatch: IMatch,
+  team: ITeam;
+  readonlyMatch: IMatch;
   isHome: boolean;
-  isMarked: boolean,
+  isMarked: boolean;
 };
 
-const OpponentTeamTitle = ({team, readonlyMatch, isHome, isMarked}: OpponentTeamTitleProps) => {
+const OpponentTeamTitle = ({ team, readonlyMatch, isHome, isMarked }: OpponentTeamTitleProps) => {
   const viewport = useViewport();
   const otherMatchTeamTitle = (
-    <div style={{fontWeight: isMarked ? 'bold' : undefined, display: 'inline'}}>
-      <OtherMatchTeamTitle
-        team={team}
-        readonlyMatch={readonlyMatch}
-        isHome={isHome}
-        withPosition={viewport.width > 500 && !isMarked}
-      />
+    <div style={{ fontWeight: isMarked ? 'bold' : undefined, display: 'inline' }}>
+      <OtherMatchTeamTitle team={team} readonlyMatch={readonlyMatch} isHome={isHome} withPosition={viewport.width > 500 && !isMarked} />
     </div>
   );
 
@@ -134,8 +123,8 @@ const OpponentTeamTitle = ({team, readonlyMatch, isHome, isMarked}: OpponentTeam
   return (
     <div>
       {otherMatchTeamTitle}
-      {isHome && readonlyMatch.scoreType === 'Lost' ? <TrophyIcon style={{marginLeft: 10}} /> : null}
-      {!isHome && readonlyMatch.scoreType === 'Won' ? <TrophyIcon style={{marginLeft: 10}} /> : null}
+      {isHome && readonlyMatch.scoreType === 'Lost' ? <TrophyIcon style={{ marginLeft: 10 }} /> : null}
+      {!isHome && readonlyMatch.scoreType === 'Won' ? <TrophyIcon style={{ marginLeft: 10 }} /> : null}
     </div>
   );
 };

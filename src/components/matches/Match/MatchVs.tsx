@@ -1,12 +1,11 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import cn from 'classnames';
-import {Icon} from '../../controls/Icons/Icon';
-import {DivisionRankingLabel, OurDivisionRankingLabel} from '../controls/DivisionRankingLabel';
-import {IMatch, OwnTeamLink} from '../../../models/model-interfaces';
+import { Icon } from '../../controls/Icons/Icon';
+import { DivisionRankingLabel, OurDivisionRankingLabel } from '../controls/DivisionRankingLabel';
+import { IMatch, OwnTeamLink } from '../../../models/model-interfaces';
 import { browseTo } from '../../../routes';
 import { t } from '../../../locales';
-
 
 type MatchVsProps = {
   match: IMatch;
@@ -15,13 +14,13 @@ type MatchVsProps = {
   ownTeamLink?: OwnTeamLink;
   withLinks?: boolean;
   withPosition?: boolean;
-}
+};
 
 type MatchVsState = {
   themOnly: boolean;
   opponentOnly: boolean;
   withPosition: boolean;
-}
+};
 
 export default class MatchVs extends Component<MatchVsProps, MatchVsState> {
   static defaultProps = {
@@ -31,7 +30,7 @@ export default class MatchVs extends Component<MatchVsProps, MatchVsState> {
   };
 
   render() {
-    const {match, opponentOnly, themOnly} = this.props;
+    const { match, opponentOnly, themOnly } = this.props;
     const team = match.getTeam();
     const divisionRanking = team.getDivisionRanking(match.opponent);
     let them = (
@@ -56,20 +55,18 @@ export default class MatchVs extends Component<MatchVsProps, MatchVsState> {
       return <span>{them}</span>;
     }
 
-
-    const usClasses = cn('badge label-as-badge bg-info', {clickable: !!this.props.ownTeamLink});
+    const usClasses = cn('badge label-as-badge bg-info', { clickable: !!this.props.ownTeamLink });
     let us;
     if (this.props.ownTeamLink) {
       us = (
         <Link to={browseTo.getTeam(team, this.props.ownTeamLink)} className={usClasses}>
           <OurDivisionRankingLabel team={team} />
-          <span style={{fontSize: 14}}>{team.renderOwnTeamTitle()}</span>
+          <span style={{ fontSize: 14 }}>{team.renderOwnTeamTitle()}</span>
         </Link>
       );
-
     } else {
       us = (
-        <span className={usClasses} style={{fontSize: 14}}>
+        <span className={usClasses} style={{ fontSize: 14 }}>
           <OurDivisionRankingLabel team={team} />
           {team.renderOwnTeamTitle()}
         </span>
@@ -83,7 +80,7 @@ export default class MatchVs extends Component<MatchVsProps, MatchVsState> {
     if (opponentOnly) {
       return (
         <span>
-          {match.isHomeMatch ? <Icon fa="fa fa-home" style={{marginRight: 5}} tooltip={t('common.matchAtHome')} /> : null}
+          {match.isHomeMatch ? <Icon fa="fa fa-home" style={{ marginRight: 5 }} tooltip={t('common.matchAtHome')} /> : null}
           {them}
         </span>
       );
@@ -91,8 +88,16 @@ export default class MatchVs extends Component<MatchVsProps, MatchVsState> {
 
     const separator = <Icon fa="fa fa-arrows-h" />;
     if (match.isHomeMatch) {
-      return <span>{us} {separator} {them}</span>;
+      return (
+        <span>
+          {us} {separator} {them}
+        </span>
+      );
     }
-    return <span>{them} {separator} {us}</span>;
+    return (
+      <span>
+        {them} {separator} {us}
+      </span>
+    );
   }
 }

@@ -44,9 +44,7 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Icon fa="fa fa-calendar" />
             <span style={{ fontWeight: 600 }}>{match.date.format('dddd D MMMM')}</span>
-            {!match.isStandardStartTime() && (
-              <span style={{ color: '#666' }}>- {match.date.format('HH:mm')}</span>
-            )}
+            {!match.isStandardStartTime() && <span style={{ color: '#666' }}>- {match.date.format('HH:mm')}</span>}
           </div>
         )}
         <OurFormationPreStart match={match} />
@@ -66,7 +64,6 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
   );
 };
 
-
 const FormationsWithResults = ({ match }: { match: IMatch }) => {
   const [showEditOpponents, setShowEditOpponents] = useState(false);
   const [showEditOwn, setShowEditOwn] = useState(false);
@@ -79,26 +76,19 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => {
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
             <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
-            {canEditPlayers && user.playerId > 0 && (
-              <EditIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() => setShowEditOwn(!showEditOwn)}
-              />
-            )}
+            {canEditPlayers && user.playerId > 0 && <EditIcon style={{ cursor: 'pointer' }} onClick={() => setShowEditOwn(!showEditOwn)} />}
           </div>
-          {match.getOwnPlayers().filter(ply => ply.status === match.block).map(ply => (
-            <OwnPlayer key={ply.position} match={match} ply={ply} showRanking />
-          ))}
+          {match
+            .getOwnPlayers()
+            .filter(ply => ply.status === match.block)
+            .map(ply => (
+              <OwnPlayer key={ply.position} match={match} ply={ply} showRanking />
+            ))}
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
             <SectionTitle>{t('match.playersOpponentsTitle')}</SectionTitle>
-            {canEditPlayers && user.playerId > 0 && (
-              <EditIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() => setShowEditOpponents(!showEditOpponents)}
-              />
-            )}
+            {canEditPlayers && user.playerId > 0 && <EditIcon style={{ cursor: 'pointer' }} onClick={() => setShowEditOpponents(!showEditOpponents)} />}
           </div>
           {match.getTheirPlayers().map(ply => (
             <OpponentPlayer key={ply.position} ply={ply} t={t} competition={match.competition} fullName={false} />
@@ -188,10 +178,7 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
           )}
           {todayDivisionMatches.length > 0 && (
             <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.division')}</Tooltip>}>
-              <Button
-                variant={showDivision ? 'secondary' : 'outline-secondary'}
-                onClick={() => setShowDivision(!showDivision)}
-              >
+              <Button variant={showDivision ? 'secondary' : 'outline-secondary'} onClick={() => setShowDivision(!showDivision)}>
                 {t('match.tabs.division')}
               </Button>
             </OverlayTrigger>
@@ -216,54 +203,52 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
         </div>
       )}
 
-      <Modal show={showReportModal} onHide={() => setShowReportModal(false)} fullscreen style={{zIndex: 99999}}>
+      <Modal show={showReportModal} onHide={() => setShowReportModal(false)} fullscreen style={{ zIndex: 99999 }}>
         <Modal.Header closeButton>
           <Modal.Title>
             {match.getTeam().renderOwnTeamTitle()} vs {match.renderOpponentTitle()}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{padding: 6}}>
+        <Modal.Body style={{ padding: 6 }}>
           <MatchReport match={match} skipContainerClass />
         </Modal.Body>
       </Modal>
 
-      <Modal show={showOpponentModal} onHide={() => setShowOpponentModal(false)} fullscreen style={{zIndex: 99999}}>
+      <Modal show={showOpponentModal} onHide={() => setShowOpponentModal(false)} fullscreen style={{ zIndex: 99999 }}>
         <Modal.Header closeButton>
           <Modal.Title>
             {match.renderOpponentTitle()}
-            <div style={{marginLeft: -6, marginTop: -8}}>
+            <div style={{ marginLeft: -6, marginTop: -8 }}>
               <TeamRankingBadges team={match.getTeam()} opponent={match.opponent} small />
             </div>
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{padding: 6}}>
+        <Modal.Body style={{ padding: 6 }}>
           <h4>{t('match.tabs.opponentsFormationTitle')}</h4>
           <OpponentsTeamFormation matches={opponentMatchesList} opponent={match.opponent} limitRows />
 
-          <h4 style={{marginTop: 24}}>{t('teamCalendar.individual')}</h4>
+          <h4 style={{ marginTop: 24 }}>{t('teamCalendar.individual')}</h4>
           <OpponentsFormation match={match} opponent={match.opponent} />
 
-          <h4 style={{marginTop: 24}}>{t('teamCalendar.matches')}</h4>
+          <h4 style={{ marginTop: 24 }}>{t('teamCalendar.matches')}</h4>
           <OpponentMatches team={match.getTeam()} readonlyMatches={opponentMatchesList} opponent={match.opponent} roundSwitchButton />
         </Modal.Body>
       </Modal>
 
-      <Modal show={showEncountersModal} onHide={() => setShowEncountersModal(false)} fullscreen style={{zIndex: 99999}}>
+      <Modal show={showEncountersModal} onHide={() => setShowEncountersModal(false)} fullscreen style={{ zIndex: 99999 }}>
         <Modal.Header closeButton>
-          <Modal.Title>
-            {t('match.tabs.previousEncountersTitle')}
-          </Modal.Title>
+          <Modal.Title>{t('match.tabs.previousEncountersTitle')}</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{padding: 6}}>
+        <Modal.Body style={{ padding: 6 }}>
           <PreviousEncounters match={match} />
         </Modal.Body>
       </Modal>
 
-      <Modal show={showAdminModal} onHide={() => setShowAdminModal(false)} fullscreen style={{zIndex: 99999}}>
+      <Modal show={showAdminModal} onHide={() => setShowAdminModal(false)} fullscreen style={{ zIndex: 99999 }}>
         <Modal.Header closeButton>
           <Modal.Title>admin</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{padding: 6}}>
+        <Modal.Body style={{ padding: 6 }}>
           <MatchCardAdmin match={match} />
         </Modal.Body>
       </Modal>
@@ -297,27 +282,18 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
           <SectionTitle>{t('match.tabs.playersTitle')}</SectionTitle>
           {playingPlayers.length > 0 && user.playerId > 0 && match.games.length === 0 && (
-            <EditIcon
-              style={{ cursor: 'pointer' }}
-              onClick={() => setShowEditOwn(!showEditOwn)}
-            />
+            <EditIcon style={{ cursor: 'pointer' }} onClick={() => setShowEditOwn(!showEditOwn)} />
           )}
         </div>
         {playingPlayers.length > 0 && (
           <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.scoresheet')}</Tooltip>}>
-            <Button
-              size="sm"
-              variant={showScoresheet ? 'secondary' : 'outline-secondary'}
-              onClick={() => setShowScoresheet(!showScoresheet)}
-            >
+            <Button size="sm" variant={showScoresheet ? 'secondary' : 'outline-secondary'} onClick={() => setShowScoresheet(!showScoresheet)}>
               <Icon fa="fa fa-table" />
             </Button>
           </OverlayTrigger>
         )}
       </div>
-      {playingPlayers.length === 0 && user.playerId > 0 && (
-        <OwnPlayerSelector match={match} />
-      )}
+      {playingPlayers.length === 0 && user.playerId > 0 && <OwnPlayerSelector match={match} />}
       {playingPlayers.length === 0 && user.playerId <= 0 && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#666' }}>
           <Icon fa="fa fa-question-circle" />
@@ -329,9 +305,7 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
           <OwnPlayerSelector match={match} initialOpen onClose={() => setShowEditOwn(false)} />
         </div>
       )}
-      {playingPlayers.length > 0 && showScoresheet && (
-        <Scoresheet match={match} hideDownload />
-      )}
+      {playingPlayers.length > 0 && showScoresheet && <Scoresheet match={match} hideDownload />}
       {playingPlayers.length > 0 && !showScoresheet && !showEditOwn && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {playingPlayers.map(ply => (
@@ -375,10 +349,7 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
               <ButtonGroup size="sm">
                 {hasExtraInfo && (
                   <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.club.showInfo')}</Tooltip>}>
-                    <Button
-                      variant={showInfo ? 'secondary' : 'outline-secondary'}
-                      onClick={() => setShowInfo(!showInfo)}
-                    >
+                    <Button variant={showInfo ? 'secondary' : 'outline-secondary'} onClick={() => setShowInfo(!showInfo)}>
                       <Icon fa="fa fa-info-circle" />
                     </Button>
                   </OverlayTrigger>
@@ -408,9 +379,7 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
                 )}
                 {altLocations.length > 0 && (
                   <div>
-                    <div style={{ fontSize: '0.8em', color: '#666', textTransform: 'uppercase', marginBottom: 4 }}>
-                      {t('match.club.alternativeLocations')}
-                    </div>
+                    <div style={{ fontSize: '0.8em', color: '#666', textTransform: 'uppercase', marginBottom: 4 }}>{t('match.club.alternativeLocations')}</div>
                     {altLocations.map((altLoc, i) => (
                       <div key={i} style={{ marginBottom: 8 }}>
                         <div style={{ fontWeight: 600 }}>{altLoc.description}</div>
@@ -425,9 +394,7 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
             )}
           </div>
         ) : (
-          <div style={{ color: '#666', fontStyle: 'italic' }}>
-            {t('match.club.locationUnknown')}
-          </div>
+          <div style={{ color: '#666', fontStyle: 'italic' }}>{t('match.club.locationUnknown')}</div>
         )}
       </div>
     </div>
@@ -440,13 +407,7 @@ const OpponentPlayersPreStart = ({ match }: { match: IMatch }) => {
   return (
     <div>
       <SectionTitle>{t('match.theirFormation')}</SectionTitle>
-      {canEdit ? (
-        <OpponentPlayerSelector match={match} />
-      ) : (
-        <div style={{ color: '#666', fontStyle: 'italic' }}>
-          {t('match.opponentPlayersLocked')}
-        </div>
-      )}
+      {canEdit ? <OpponentPlayerSelector match={match} /> : <div style={{ color: '#666', fontStyle: 'italic' }}>{t('match.opponentPlayersLocked')}</div>}
     </div>
   );
 };

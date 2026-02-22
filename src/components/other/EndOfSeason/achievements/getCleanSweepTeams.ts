@@ -1,8 +1,8 @@
-import { IMatch, ITeam } from "../../../../models/model-interfaces";
-import { TeamAchievementInfo } from "./achievement-models";
+import { IMatch, ITeam } from '../../../../models/model-interfaces';
+import { TeamAchievementInfo } from './achievement-models';
 
 export function getCleanSweepTeams(matches: IMatch[]): TeamAchievementInfo {
-  const cleanSweepCounts: Record<number, { team: ITeam, count: number }> = {};
+  const cleanSweepCounts: Record<number, { team: ITeam; count: number }> = {};
 
   matches.forEach(match => {
     if (!match.shouldBePlayed || !match.isSyncedWithFrenoy || !match.isPlayed || match.scoreType !== 'Won') {

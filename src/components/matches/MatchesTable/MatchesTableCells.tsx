@@ -12,9 +12,9 @@ import { MatchBlock } from '../Match/MatchBlock';
 type MatchesTableHeaderProps = {
   editMode: boolean;
   matches: IMatch[];
-}
+};
 
-export const MatchesTableHeader = ({editMode, matches}: MatchesTableHeaderProps) => {
+export const MatchesTableHeader = ({ editMode, matches }: MatchesTableHeaderProps) => {
   const viewport = useViewport();
   const showDate = viewport.width > 350 || matches.some(match => !match.isSyncedWithFrenoy);
   return (
@@ -29,8 +29,7 @@ export const MatchesTableHeader = ({editMode, matches}: MatchesTableHeaderProps)
   );
 };
 
-
-export const MatchesTableDateCell = ({matches, match}: {matches: IMatch[], match: IMatch}) => {
+export const MatchesTableDateCell = ({ matches, match }: { matches: IMatch[]; match: IMatch }) => {
   const viewport = useViewport();
   const showDate = viewport.width > 350 || matches.some(m => !m.isSyncedWithFrenoy);
   if (!showDate) {
@@ -39,33 +38,26 @@ export const MatchesTableDateCell = ({matches, match}: {matches: IMatch[], match
   return <MatchesTablePlayerLineUpDateCell match={match} team={match.getTeam()} />;
 };
 
-
-export const MatchesTableFrenoyLinkCell = ({match}: {match: IMatch}) => (
-  <td className="d-none d-sm-table-cell"><FrenoyWeekLink match={match} /></td>
+export const MatchesTableFrenoyLinkCell = ({ match }: { match: IMatch }) => (
+  <td className="d-none d-sm-table-cell">
+    <FrenoyWeekLink match={match} />
+  </td>
 );
-
 
 type MatchesTableMatchVsCellProps = {
   match: IMatch;
   ownTeamLink?: 'main' | 'matches' | 'ranking' | 'players' | 'matchesTable' | 'week';
   allowOpponentOnly?: boolean;
-}
+};
 
-export const MatchesTableMatchVsCell = ({match, ownTeamLink, allowOpponentOnly}: MatchesTableMatchVsCellProps) => {
+export const MatchesTableMatchVsCell = ({ match, ownTeamLink, allowOpponentOnly }: MatchesTableMatchVsCellProps) => {
   const viewport = useViewport();
   return (
     <td>
-      <MatchVs
-        match={match}
-        opponentOnly={allowOpponentOnly && viewport.width < 450}
-        ownTeamLink={ownTeamLink}
-        withLinks
-        withPosition={viewport.width > 400}
-      />
+      <MatchVs match={match} opponentOnly={allowOpponentOnly && viewport.width < 450} ownTeamLink={ownTeamLink} withLinks withPosition={viewport.width > 400} />
     </td>
   );
 };
-
 
 const matchBlockStyle = {
   display: 'inline-block',
@@ -77,14 +69,14 @@ type ReadOnlyMatchPlayersProps = {
   match: IMatch;
   /** Display line up that is not yet blocked */
   displayNonBlocked: boolean;
-}
+};
 
-export const ReadOnlyMatchPlayers = ({match, displayNonBlocked}: ReadOnlyMatchPlayersProps) => {
+export const ReadOnlyMatchPlayers = ({ match, displayNonBlocked }: ReadOnlyMatchPlayersProps) => {
   if (match.isSyncedWithFrenoy) {
     return (
-      <div style={{marginBottom: 4}}>
+      <div style={{ marginBottom: 4 }}>
         {match.getOwnPlayers().map(ply => (
-          <div style={{display: 'inline-block', marginRight: 7}} key={`ply-${ply.playerId}`}>
+          <div style={{ display: 'inline-block', marginRight: 7 }} key={`ply-${ply.playerId}`}>
             <OwnPlayer match={match} ply={ply} />
           </div>
         ))}
@@ -97,7 +89,7 @@ export const ReadOnlyMatchPlayers = ({match, displayNonBlocked}: ReadOnlyMatchPl
     players = match.getPlayerFormation('Captain');
   }
   return (
-    <div style={{marginBottom: 4}}>
+    <div style={{ marginBottom: 4 }}>
       <span style={matchBlockStyle}>
         <MatchBlock block={match.block} displayNonBlocked={displayNonBlocked} />
       </span>
@@ -105,7 +97,7 @@ export const ReadOnlyMatchPlayers = ({match, displayNonBlocked}: ReadOnlyMatchPl
         <PlayerCompetitionBadge
           plyInfo={plyInfo}
           competition={match.competition}
-          style={{marginBottom: 4, marginRight: 5}}
+          style={{ marginBottom: 4, marginRight: 5 }}
           key={`ply-${plyInfo.player.id}`}
         />
       ))}

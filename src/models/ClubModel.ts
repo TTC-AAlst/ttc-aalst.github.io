@@ -1,4 +1,4 @@
-import {IClub, IClubManager, IClubLocation} from './model-interfaces';
+import { IClub, IClubManager, IClubLocation } from './model-interfaces';
 
 export const OwnClubId = 1;
 

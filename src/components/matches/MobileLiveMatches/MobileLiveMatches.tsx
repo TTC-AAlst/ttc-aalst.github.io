@@ -63,9 +63,7 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
       <div style={{ marginTop: 16, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 8 }}>
         {isCollapsible && (
           <Button variant="outline-secondary" size="sm" onClick={toggleAll}>
-            <Icon fa={allExpanded ? 'fa fa-compress' : 'fa fa-expand'} />
-            {' '}
-            {allExpanded ? t('match.collapseAll') : t('match.expandAll')}
+            <Icon fa={allExpanded ? 'fa fa-compress' : 'fa fa-expand'} /> {allExpanded ? t('match.collapseAll') : t('match.expandAll')}
           </Button>
         )}
         {user.playerId > 0 && (

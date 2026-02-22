@@ -31,9 +31,12 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
 
   // Auto-sync every 10 minutes
   useEffect(() => {
-    const interval = setInterval(() => {
-      todayDivisionMatches.forEach(m => dispatch(frenoyReadOnlyMatchSync(m)));
-    }, 10 * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        todayDivisionMatches.forEach(m => dispatch(frenoyReadOnlyMatchSync(m)));
+      },
+      10 * 60 * 1000,
+    );
     return () => clearInterval(interval);
   }, [todayDivisionMatches, dispatch]);
 
@@ -60,10 +63,7 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
             const awayWon = isPlayed && m.score.out > m.score.home;
             return (
               <React.Fragment key={m.id}>
-                <tr
-                  style={{ cursor: hasPlayers ? 'pointer' : 'default' }}
-                  onClick={() => hasPlayers && handleRowClick(m.id)}
-                >
+                <tr style={{ cursor: hasPlayers ? 'pointer' : 'default' }} onClick={() => hasPlayers && handleRowClick(m.id)}>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     <OpponentLink team={team} opponent={m.home} />
                     {homeWon && <Icon fa="fa fa-trophy" style={{ marginLeft: 4, color: '#ffc107' }} />}
@@ -95,9 +95,7 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
             {modalMatch?.getClub('home')?.name} {modalMatch?.home.teamCode} vs {modalMatch?.getClub('away')?.name} {modalMatch?.away.teamCode}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ padding: 6 }}>
-          {modalMatch && <ReadonlyIndividualMatches match={modalMatch} />}
-        </Modal.Body>
+        <Modal.Body style={{ padding: 6 }}>{modalMatch && <ReadonlyIndividualMatches match={modalMatch} />}</Modal.Body>
       </Modal>
     </div>
   );

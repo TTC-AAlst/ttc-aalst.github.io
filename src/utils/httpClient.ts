@@ -16,14 +16,12 @@ export function getUrl(path, appendApi = true) {
     path = `/api${path}`;
   }
 
-  return isDev()
-    ? `${devUrl}${path}`
-    : `${config.backend}${path}`;
+  return isDev() ? `${devUrl}${path}` : `${config.backend}${path}`;
 }
 
 function authHeaders(): Record<string, string> {
   const token = localStorage.getItem('token');
-  return token ? {Authorization: `Bearer ${token}`} : {};
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 const HttpClient = {
@@ -39,7 +37,7 @@ const HttpClient = {
       }
 
       const response = await fetch(url, {
-        headers: {Accept: 'application/json', ...authHeaders()},
+        headers: { Accept: 'application/json', ...authHeaders() },
       });
 
       if (LogRequestTimes) {
@@ -58,7 +56,7 @@ const HttpClient = {
 
       const response = await fetch(getUrl(url), {
         method: 'POST',
-        headers: {'Accept': 'application/json', 'Content-Type': 'application/json', ...authHeaders()},
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...authHeaders() },
         body: data !== undefined ? JSON.stringify(data) : undefined,
       });
 
@@ -69,7 +67,7 @@ const HttpClient = {
       return response.json();
     })();
   },
-  upload: async (file: File, type = 'temp', typeId = 0): Promise<{fileName?: string}> => {
+  upload: async (file: File, type = 'temp', typeId = 0): Promise<{ fileName?: string }> => {
     const formData = new FormData();
     formData.append('uploadType', type);
     formData.append('uploadTypeId', String(typeId));
@@ -77,7 +75,7 @@ const HttpClient = {
 
     const response = await fetch(getUrl('/upload'), {
       method: 'POST',
-      headers: {Accept: 'application/json', ...authHeaders()},
+      headers: { Accept: 'application/json', ...authHeaders() },
       body: formData,
     });
 
@@ -91,8 +89,8 @@ const HttpClient = {
   uploadImage: async (imageBase64: string, dataId: number, type: string): Promise<any> => {
     const response = await fetch(getUrl('/upload/image'), {
       method: 'POST',
-      headers: {'Accept': 'application/json', 'Content-Type': 'application/json', ...authHeaders()},
-      body: JSON.stringify({image: imageBase64, dataId, type}),
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ image: imageBase64, dataId, type }),
     });
 
     if (!response.ok) {
@@ -121,7 +119,7 @@ function b64ToBlob(b64Data: string, contentType = '', sliceSize = 512) {
     byteArrays.push(byteArray);
   }
 
-  const blob = new Blob(byteArrays as BlobPart[], {type: contentType});
+  const blob = new Blob(byteArrays as BlobPart[], { type: contentType });
   return blob;
 }
 
@@ -141,7 +139,7 @@ function downloadExcel(respBody: string, fileName: string, addTimestampToFileNam
 
 async function downloadJson(path: string): Promise<string> {
   const response = await fetch(getUrl(path), {
-    headers: {Accept: 'application/json', ...authHeaders()},
+    headers: { Accept: 'application/json', ...authHeaders() },
   });
   return response.json();
 }

@@ -27,24 +27,26 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   logErrorToBackend(error: Error, errorInfo: React.ErrorInfo) {
-    StackTrace.fromError(error).then(err => {
-      const errObj = {
-        message: `ErrorBoundary: ${error.message}.`,
-        stack: error.stack,
-        componentStack: errorInfo.componentStack,
-        url: document.location.pathname,
-        parsedStack: JSON.stringify(err, null, 2),
-      };
-      httpClient.post('/config/Log', errObj);
-    }).catch(err => {
-      const errObj = {
-        message: `ErrorBoundary: ${error.message}. Err from stacktrace-js: ${err}`,
-        stack: error.stack,
-        componentStack: errorInfo.componentStack,
-        url: document.location.pathname,
-      };
-      httpClient.post('/config/Log', errObj);
-    });
+    StackTrace.fromError(error)
+      .then(err => {
+        const errObj = {
+          message: `ErrorBoundary: ${error.message}.`,
+          stack: error.stack,
+          componentStack: errorInfo.componentStack,
+          url: document.location.pathname,
+          parsedStack: JSON.stringify(err, null, 2),
+        };
+        httpClient.post('/config/Log', errObj);
+      })
+      .catch(err => {
+        const errObj = {
+          message: `ErrorBoundary: ${error.message}. Err from stacktrace-js: ${err}`,
+          stack: error.stack,
+          componentStack: errorInfo.componentStack,
+          url: document.location.pathname,
+        };
+        httpClient.post('/config/Log', errObj);
+      });
   }
 
   resetError = () => {

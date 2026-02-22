@@ -1,15 +1,17 @@
- 
-import { IMatch, ITeam } from "../../../../models/model-interfaces";
-import { TeamAchievementInfo } from "./achievement-models";
+import { IMatch, ITeam } from '../../../../models/model-interfaces';
+import { TeamAchievementInfo } from './achievement-models';
 
 export function getTeamHighestWinPercentage(matches: IMatch[]): TeamAchievementInfo {
   const filtered = matches.filter(m => m.shouldBePlayed && m.isSyncedWithFrenoy && m.isPlayed);
 
-  const winStats: Record<number, {
-    team: ITeam;
-    total: number;
-    wins: number;
-  }> = {};
+  const winStats: Record<
+    number,
+    {
+      team: ITeam;
+      total: number;
+      wins: number;
+    }
+  > = {};
 
   for (const match of filtered) {
     if (!winStats[match.teamId]) {
@@ -27,7 +29,7 @@ export function getTeamHighestWinPercentage(matches: IMatch[]): TeamAchievementI
   }
 
   const ranked = Object.values(winStats)
-    .map(s => ({...s, percentage: s.wins / s.total}))
+    .map(s => ({ ...s, percentage: s.wins / s.total }))
     .sort((a, b) => b.percentage - a.percentage);
 
   const result: TeamAchievementInfo = {
@@ -38,10 +40,12 @@ export function getTeamHighestWinPercentage(matches: IMatch[]): TeamAchievementI
 
   const best = ranked[0];
   if (best) {
-    result.teams = [{
-      throphy: `${(best.percentage * 100).toFixed(1)}% gewonnen over ${best.total} matchen`,
-      team: best.team,
-    }];
+    result.teams = [
+      {
+        throphy: `${(best.percentage * 100).toFixed(1)}% gewonnen over ${best.total} matchen`,
+        team: best.team,
+      },
+    ];
   }
 
   return result;

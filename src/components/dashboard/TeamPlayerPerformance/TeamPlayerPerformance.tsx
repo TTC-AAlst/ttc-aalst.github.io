@@ -5,16 +5,22 @@ import { Icon } from '../../controls/Icons/Icon';
 import { PlayerPerformanceCard, PlayerCompetitionStats } from './PlayerPerformanceCard';
 import { selectMatches, selectPlayers, selectTeams, selectUser, selectUserTeams, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { IPlayer, IMatch, ITeam } from '../../../models/model-interfaces';
-import {GameResult,
+import {
+  GameResult,
   MatchGameResults,
   collectPlayerGameResultsByMatch,
   getRecentResults,
   calculatePerformanceBadge,
-  PerformanceBadgeType} from '../../players/controls/PlayerPerformanceUtils';
+  PerformanceBadgeType,
+} from '../../players/controls/PlayerPerformanceUtils';
 import { PlayerRanking } from '../../../models/utils/rankingSorter';
 import t from '../../../locales';
 
-const latinize = (str: string): string => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const latinize = (str: string): string =>
+  str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 
 type PlayerWithCompetitionStats = {
   player: IPlayer;
@@ -26,19 +32,17 @@ type PlayerWithCompetitionStats = {
   badgeType: PerformanceBadgeType | null;
 };
 
-const collectStatsForPlayers = (
-  playerIds: Set<number>,
-  allPlayers: IPlayer[],
-  teams: ITeam[],
-  allMatches: IMatch[],
-): PlayerWithCompetitionStats[] => {
-  const statsByPlayer = new Map<number, {
-    player: IPlayer;
-    vttlStats: { games: number; victories: number } | null;
-    sportaStats: { games: number; victories: number } | null;
-    vttlResultsByMatch: MatchGameResults[];
-    sportaResultsByMatch: MatchGameResults[];
-  }>();
+const collectStatsForPlayers = (playerIds: Set<number>, allPlayers: IPlayer[], teams: ITeam[], allMatches: IMatch[]): PlayerWithCompetitionStats[] => {
+  const statsByPlayer = new Map<
+    number,
+    {
+      player: IPlayer;
+      vttlStats: { games: number; victories: number } | null;
+      sportaStats: { games: number; victories: number } | null;
+      vttlResultsByMatch: MatchGameResults[];
+      sportaResultsByMatch: MatchGameResults[];
+    }
+  >();
 
   playerIds.forEach(playerId => {
     const playerInfo = allPlayers.find(p => p.id === playerId);
@@ -47,9 +51,7 @@ const collectStatsForPlayers = (
     teams.forEach(team => {
       const teamMatches = allMatches.filter(m => m.teamId === team.id && m.isSyncedWithFrenoy);
 
-      const ranking = team.competition === 'Sporta'
-        ? playerInfo.sporta?.ranking
-        : playerInfo.vttl?.ranking;
+      const ranking = team.competition === 'Sporta' ? playerInfo.sporta?.ranking : playerInfo.vttl?.ranking;
 
       const resultsByMatch = collectPlayerGameResultsByMatch(playerId, ranking as PlayerRanking, teamMatches);
       const results = resultsByMatch.flatMap(m => m.results);
@@ -179,9 +181,7 @@ export const TeamPlayerPerformance = () => {
   if (user.playerId) {
     const userTeamMatches = allMatches.filter(m => m.isSyncedWithFrenoy);
     userTeamMatches.forEach(match => {
-      const playersInMatch = match.players
-        .filter(p => p.playerId && p.playerId !== user.playerId)
-        .map(p => p.playerId);
+      const playersInMatch = match.players.filter(p => p.playerId && p.playerId !== user.playerId).map(p => p.playerId);
       const userInMatch = match.players.some(p => p.playerId === user.playerId);
       if (userInMatch) {
         playersInMatch.forEach(playerId => {
@@ -202,9 +202,7 @@ export const TeamPlayerPerformance = () => {
     return bMatches - aMatches;
   });
 
-  const otherPlayerStats = showOtherPlayers
-    ? collectStatsForPlayers(otherPlayerIds, allPlayers, teams, allMatches)
-    : [];
+  const otherPlayerStats = showOtherPlayers ? collectStatsForPlayers(otherPlayerIds, allPlayers, teams, allMatches) : [];
 
   const filterStats = (stats: PlayerWithCompetitionStats[]): PlayerWithCompetitionStats[] => {
     if (!hasActiveFilters) return stats;
@@ -246,30 +244,31 @@ export const TeamPlayerPerformance = () => {
   ];
 
   return (
-    <div style={{marginBottom: 20}}>
-      <div style={{display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6}}>
-        <Strike text={t('dashboard.teamPlayerPerformance')} style={{flex: 1, marginBottom: 0}} />
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+        <Strike text={t('dashboard.teamPlayerPerformance')} style={{ flex: 1, marginBottom: 0 }} />
         <Button
           variant={hasActiveFilters ? 'primary' : 'outline-secondary'}
           size="sm"
           onClick={() => setShowFilters(!showFilters)}
-          style={{padding: '2px 8px', fontSize: '0.75em'}}
+          style={{ padding: '2px 8px', fontSize: '0.75em' }}
         >
           <Icon fa="fa fa-filter" />
         </Button>
       </div>
 
       {showFilters && (
-        <div style={{
-          backgroundColor: '#f8f9fa',
-          padding: 10,
-          borderRadius: 6,
-          marginBottom: 12,
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: 10,
-        }}
+        <div
+          style={{
+            backgroundColor: '#f8f9fa',
+            padding: 10,
+            borderRadius: 6,
+            marginBottom: 12,
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: 10,
+          }}
         >
           <Form.Control
             type="text"
@@ -277,7 +276,7 @@ export const TeamPlayerPerformance = () => {
             value={nameFilter}
             onChange={e => setNameFilter(e.target.value)}
             size="sm"
-            style={{width: 180, flex: '0 0 auto'}}
+            style={{ width: 180, flex: '0 0 auto' }}
           />
           <ButtonGroup size="sm">
             {badgeFilterButtons.map(badge => (
@@ -298,7 +297,7 @@ export const TeamPlayerPerformance = () => {
         </div>
       )}
 
-      <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 15}}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 15 }}>
         {filteredPlayerStats.map(stat => (
           <PlayerPerformanceCard
             key={stat.player.id}
@@ -313,15 +312,15 @@ export const TeamPlayerPerformance = () => {
         ))}
       </div>
       {otherPlayerIds.size > 0 && !showOtherPlayers && (
-        <div style={{marginTop: 15, textAlign: 'center'}}>
+        <div style={{ marginTop: 15, textAlign: 'center' }}>
           <Button variant="outline-secondary" size="sm" onClick={() => setShowOtherPlayers(true)}>
             {t('dashboard.showOtherPlayers')}
           </Button>
         </div>
       )}
       {showOtherPlayers && filteredOtherPlayerStats.length > 0 && (
-        <div style={{marginTop: 15}}>
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 15}}>
+        <div style={{ marginTop: 15 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 15 }}>
             {filteredOtherPlayerStats.map(stat => (
               <PlayerPerformanceCard
                 key={stat.player.id}

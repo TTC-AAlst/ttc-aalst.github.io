@@ -18,15 +18,8 @@ export const AdminEvents = () => {
       <Grid2 container spacing={1}>
         <Grid2 size={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3>
-              Beheer Events
-            </h3>
-            <Button
-              variant="contained"
-              startIcon={<Add />}
-              onClick={() => setEvents([...events, ''])}
-              size="small"
-            >
+            <h3>Beheer Events</h3>
+            <Button variant="contained" startIcon={<Add />} onClick={() => setEvents([...events, ''])} size="small">
               Voeg Event Toe
             </Button>
           </Box>
@@ -39,19 +32,19 @@ export const AdminEvents = () => {
                 fullWidth
                 label="Event"
                 value={event}
-                onChange={e => setEvents(events.map((item, i) => {
-                  if (i === index) {
-                    return e.target.value;
-                  }
-                  return item;
-                }))}
+                onChange={e =>
+                  setEvents(
+                    events.map((item, i) => {
+                      if (i === index) {
+                        return e.target.value;
+                      }
+                      return item;
+                    }),
+                  )
+                }
               />
             </Grid2>
-            <IconButton
-              onClick={() => setEvents(events.filter((_, i) => i !== index))}
-              color="error"
-              size="small"
-            >
+            <IconButton onClick={() => setEvents(events.filter((_, i) => i !== index))} color="error" size="small">
               <Delete />
             </IconButton>
           </>
@@ -66,13 +59,13 @@ export const AdminEvents = () => {
         )}
       </Grid2>
 
-      <div style={{paddingTop: 10}}>
+      <div style={{ paddingTop: 10 }}>
         <MaterialButton
           variant="contained"
           label={t('common.save')}
           color="primary"
-          style={{marginTop: 5}}
-          onClick={() => dispatch(saveConfig({key: 'events', value: JSON.stringify(events)}))}
+          style={{ marginTop: 5 }}
+          onClick={() => dispatch(saveConfig({ key: 'events', value: JSON.stringify(events) }))}
         />
       </div>
     </Box>

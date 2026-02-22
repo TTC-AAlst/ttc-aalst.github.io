@@ -1,16 +1,16 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {TrophyIcon} from '../../controls/Icons/TrophyIcon';
-import {TeamRankingBadges} from '../../teams/controls/TeamRankingBadges';
-import {TeamPlayerAvatars} from '../../teams/controls/TeamPlayerAvatars';
-import {ITeam} from '../../../models/model-interfaces';
+import { Link } from 'react-router-dom';
+import { TrophyIcon } from '../../controls/Icons/TrophyIcon';
+import { TeamRankingBadges } from '../../teams/controls/TeamRankingBadges';
+import { TeamPlayerAvatars } from '../../teams/controls/TeamPlayerAvatars';
+import { ITeam } from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 
 type KampioenenProps = {
   topTeams: ITeam[];
-}
+};
 
-export const Kampioenen = ({topTeams}: KampioenenProps) => {
+export const Kampioenen = ({ topTeams }: KampioenenProps) => {
   if (!topTeams.length) {
     return null;
   }
@@ -18,9 +18,9 @@ export const Kampioenen = ({topTeams}: KampioenenProps) => {
   return (
     <div className="row kampioen">
       <h2>
-        <TrophyIcon style={{marginRight: 15}} />
+        <TrophyIcon style={{ marginRight: 15 }} />
         Onze Kampioenen
-        <TrophyIcon style={{marginLeft: 15}} />
+        <TrophyIcon style={{ marginLeft: 15 }} />
       </h2>
       {topTeams.map(team => (
         <div key={team.id} className="col-md-4 col-sm-6">
@@ -31,8 +31,8 @@ export const Kampioenen = ({topTeams}: KampioenenProps) => {
               </Link>
             </h3>
             <b>{team.getDivisionDescription()}</b>
-            <TeamRankingBadges team={team} style={{float: 'right'}} />
-            <TeamPlayerAvatars team={team} style={{marginTop: 20}} />
+            <TeamRankingBadges team={team} style={{ float: 'right' }} />
+            <TeamPlayerAvatars team={team} style={{ marginTop: 20 }} />
           </div>
         </div>
       ))}

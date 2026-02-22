@@ -9,10 +9,10 @@ import storeUtil from '../../../storeUtil';
 type TeamOverviewRankingProps = {
   team: ITeam;
   small: boolean;
-}
+};
 
-export const TeamOverviewRanking = ({team, small}: TeamOverviewRankingProps) => {
-  let {ranking} = team;
+export const TeamOverviewRanking = ({ team, small }: TeamOverviewRankingProps) => {
+  let { ranking } = team;
 
   if (ranking.length === 0) {
     return <div />;
@@ -31,11 +31,11 @@ export const TeamOverviewRanking = ({team, small}: TeamOverviewRankingProps) => 
         return (
           <div
             key={teamRanking.clubId + teamRanking.teamCode}
-            style={{marginRight: 15, display: 'inline-block', fontSize: isOwnClub ? 14 : undefined, fontWeight: isOwnClub ? 'bold' : undefined}}
-            className={cn({'badge label-as-badge bg-info': isOwnClub && !small})}
+            style={{ marginRight: 15, display: 'inline-block', fontSize: isOwnClub ? 14 : undefined, fontWeight: isOwnClub ? 'bold' : undefined }}
+            className={cn({ 'badge label-as-badge bg-info': isOwnClub && !small })}
           >
             {!isOwnClub ? (
-              <OpponentLink team={team} opponent={{clubId: teamRanking.clubId, teamCode: teamRanking.teamCode}} />
+              <OpponentLink team={team} opponent={{ clubId: teamRanking.clubId, teamCode: teamRanking.teamCode }} />
             ) : (
               <span>
                 {teamRanking.position}.&nbsp;
@@ -43,7 +43,7 @@ export const TeamOverviewRanking = ({team, small}: TeamOverviewRankingProps) => 
               </span>
             )}
             &nbsp;
-            <span style={{marginLeft: 7}}>{points}</span>
+            <span style={{ marginLeft: 7 }}>{points}</span>
           </div>
         );
       })}

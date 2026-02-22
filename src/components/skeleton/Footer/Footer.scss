@@ -1,6 +1,9 @@
 @import '../../variables.css';
 
-html, body, #app, #react {
+html,
+body,
+#app,
+#react {
   height: 100%;
 }
 
@@ -13,7 +16,6 @@ body {
   flex: 1;
   padding-bottom: 20px;
 }
-
 
 .Footer {
   background: #333233;

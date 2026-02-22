@@ -1,7 +1,7 @@
 import LocalesUtils from './utils/locales-nl';
-import {Translator} from './models/model-interfaces';
+import { Translator } from './models/model-interfaces';
 
-const {trans, routes} = LocalesUtils;
+const { trans, routes } = LocalesUtils;
 
 const translate: Translator = (key?: string, params: any = {}): string => {
   if (!key) {
@@ -21,8 +21,8 @@ const translate: Translator = (key?: string, params: any = {}): string => {
 
   if (str.indexOf('${}') !== -1) {
     return str.replace('${}', params);
-
-  } if (typeof params === 'object') {
+  }
+  if (typeof params === 'object') {
     Object.keys(params).forEach(paramKey => {
       str = str.replace(`\${${paramKey}}`, params[paramKey]);
     });

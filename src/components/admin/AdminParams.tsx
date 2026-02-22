@@ -37,16 +37,9 @@ export const AdminParams = () => {
   }
 
   return (
-    <div style={{padding: 15}}>
-      <ButtonStack
-        config={viewsConfig}
-        small={viewport.width < 550}
-        activeView={filter}
-        onClick={newFilter => setFilter(newFilter as Pages)}
-      />
-      <div style={{marginTop: 15}}>
-        {content}
-      </div>
+    <div style={{ padding: 15 }}>
+      <ButtonStack config={viewsConfig} small={viewport.width < 550} activeView={filter} onClick={newFilter => setFilter(newFilter as Pages)} />
+      <div style={{ marginTop: 15 }}>{content}</div>
     </div>
   );
 };
@@ -67,20 +60,23 @@ export const AdminParamsSimple = () => {
       <Table size="sm" hover width="100%">
         <thead>
           <tr>
-            <th style={{width: 200}}>Key</th>
-            <th style={{width: "99%"}}>Value</th>
+            <th style={{ width: 200 }}>Key</th>
+            <th style={{ width: '99%' }}>Value</th>
           </tr>
         </thead>
         <tbody>
-          {Object.keys(storeParams).filter(x => !nonDefaultParams.includes(x)).sort((a, b) => a.localeCompare(b)).map(key => (
-            <AdminParamRow
-              key={key}
-              propName={key}
-              value={params[key]}
-              onChange={value => setParams(prevState => ({...prevState, [key]: value}))}
-              onSave={() => dispatch(saveConfig({key, value: params[key]}))}
-            />
-          ))}
+          {Object.keys(storeParams)
+            .filter(x => !nonDefaultParams.includes(x))
+            .sort((a, b) => a.localeCompare(b))
+            .map(key => (
+              <AdminParamRow
+                key={key}
+                propName={key}
+                value={params[key]}
+                onChange={value => setParams(prevState => ({ ...prevState, [key]: value }))}
+                onSave={() => dispatch(saveConfig({ key, value: params[key] }))}
+              />
+            ))}
         </tbody>
       </Table>
     </>
@@ -92,13 +88,13 @@ type AdminParamRowProps = {
   value: string;
   onChange: (value: string) => void;
   onSave: () => void;
-}
+};
 
-const AdminParamRow = ({propName, value, onChange, onSave}: AdminParamRowProps) => (
+const AdminParamRow = ({ propName, value, onChange, onSave }: AdminParamRowProps) => (
   <tr>
     <td>{propName}:</td>
     <td>
-      <input type="text" value={value} onChange={e => onChange(e.target.value)} style={{width: '90%', marginRight: 6}} />
+      <input type="text" value={value} onChange={e => onChange(e.target.value)} style={{ width: '90%', marginRight: 6 }} />
       <button type="button" aria-label="Save" className="btn btn-outline-secondary btn-sm" onClick={onSave}>
         <i className="fa fa-floppy-o" />
       </button>

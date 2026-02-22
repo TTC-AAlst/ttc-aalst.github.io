@@ -4,7 +4,6 @@ import { selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { Dashboard } from '../dashboard/Dashboard';
 import { PublicDashboard } from '../dashboard/PublicDashboard';
 
-
 const Intro = () => {
   const config = useTtcSelector(state => state.config);
   const user = useTtcSelector(selectUser);

@@ -43,12 +43,7 @@ const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
         return (
           <span key={ply.uniqueIndex || i}>
             {i > 0 && ' · '}
-            {storePlayer ? (
-              <PlayerLink player={storePlayer} alias style={{ color: 'inherit' }}/>
-            ) : (
-              ply.alias
-            )}
-            {' '}{ply.ranking}
+            {storePlayer ? <PlayerLink player={storePlayer} alias style={{ color: 'inherit' }} /> : ply.alias} {ply.ranking}
             {hasGames && ` (${wins})`}
           </span>
         );

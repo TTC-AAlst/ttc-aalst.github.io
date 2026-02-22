@@ -8,7 +8,7 @@ export class WeekCalcer {
   currentWeek!: number;
   firstWeek!: number;
   lastWeek!: number;
-  weeks!: {start: Dayjs; end: Dayjs}[];
+  weeks!: { start: Dayjs; end: Dayjs }[];
 
   constructor(matches: IMatch[], currentWeek?: number, includeFreeMatches = false) {
     this.includeFreeMatches = includeFreeMatches;
@@ -30,16 +30,19 @@ export class WeekCalcer {
       this.firstWeek = 1;
       this.currentWeek = 1;
       this.lastWeek = 22;
-      this.weeks = [{start: dayjs().startOf('week'), end: dayjs().endOf('week')}];
+      this.weeks = [{ start: dayjs().startOf('week'), end: dayjs().endOf('week') }];
       return;
     }
-    this.weeks = this.matches.reduce((acc, next) => {
-      const date = next.date.startOf('week');
-      if (!acc.length || !acc[acc.length - 1].start.isSame(date, 'day')) {
-        acc.push({start: date, end: next.date.endOf('week')});
-      }
-      return acc;
-    }, [] as {start: Dayjs; end: Dayjs}[]);
+    this.weeks = this.matches.reduce(
+      (acc, next) => {
+        const date = next.date.startOf('week');
+        if (!acc.length || !acc[acc.length - 1].start.isSame(date, 'day')) {
+          acc.push({ start: date, end: next.date.endOf('week') });
+        }
+        return acc;
+      },
+      [] as { start: Dayjs; end: Dayjs }[],
+    );
 
     // console.log('weekz', this.weeks.map(x => x.start.toString() + " -> " + x.end.toString())); // eslint-disable-line
 

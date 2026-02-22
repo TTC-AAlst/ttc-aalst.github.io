@@ -23,7 +23,7 @@ export const Dashboard = () => {
   }, [dispatch]);
 
   return (
-    <div style={{marginTop: 25}}>
+    <div style={{ marginTop: 25 }}>
       <Row>
         <ClubEvents />
       </Row>

@@ -7,7 +7,11 @@ import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponen
 import { t } from '../../../locales';
 import { Icon } from '../../controls/Icons/Icon';
 
-const latinize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const latinize = (str: string) =>
+  str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 
 type OpponentPlayerSelectorProps = {
   match: IMatch;
@@ -43,16 +47,9 @@ const PlayerRow = ({ player, isSelected, isDisabled, onToggle }: PlayerRowProps)
       margin: 0,
     }}
   >
-    <Form.Check
-      type="checkbox"
-      checked={isSelected}
-      onChange={() => onToggle(player)}
-      disabled={isDisabled}
-    />
+    <Form.Check type="checkbox" checked={isSelected} onChange={() => onToggle(player)} disabled={isDisabled} />
     <span style={{ flex: 1 }}>{player.name}</span>
-    <span style={{ fontWeight: 600, fontSize: '0.85em', color: '#666' }}>
-      {player.ranking}
-    </span>
+    <span style={{ fontWeight: 600, fontSize: '0.85em', color: '#666' }}>{player.ranking}</span>
   </label>
 );
 
@@ -82,9 +79,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
 
   useEffect(() => {
     if (clubPlayers && existingOpponents.length > 0 && selectedPlayers.length === 0) {
-      const preSelected = existingOpponents
-        .map(op => clubPlayers.find(cp => cp.uniqueIndex === op.uniqueIndex))
-        .filter(Boolean) as ClubPlayer[];
+      const preSelected = existingOpponents.map(op => clubPlayers.find(cp => cp.uniqueIndex === op.uniqueIndex)).filter(Boolean) as ClubPlayer[];
       if (preSelected.length > 0) {
         setSelectedPlayers(preSelected);
       }
@@ -124,11 +119,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
   };
 
   if (!clubCode) {
-    return (
-      <div style={{ color: '#666', fontStyle: 'italic' }}>
-        {t('match.club.locationUnknown')}
-      </div>
-    );
+    return <div style={{ color: '#666', fontStyle: 'italic' }}>{t('match.club.locationUnknown')}</div>;
   }
 
   if (!isFormOpen) {
@@ -149,11 +140,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
   }
 
   if (!clubPlayers || clubPlayers.length === 0) {
-    return (
-      <div style={{ color: '#666', fontStyle: 'italic' }}>
-        {t('match.formationUnknown')}
-      </div>
-    );
+    return <div style={{ color: '#666', fontStyle: 'italic' }}>{t('match.formationUnknown')}</div>;
   }
 
   const handleClose = () => {
@@ -179,14 +166,7 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
   return (
     <div>
       <div style={{ marginBottom: 8 }}>
-        <Form.Control
-          ref={searchRef}
-          type="text"
-          size="sm"
-          placeholder={t('common.search')}
-          value={searchText}
-          onChange={e => setSearchText(e.target.value)}
-        />
+        <Form.Control ref={searchRef} type="text" size="sm" placeholder={t('common.search')} value={searchText} onChange={e => setSearchText(e.target.value)} />
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 300, overflowY: 'auto' }}>
@@ -205,19 +185,10 @@ export const OpponentPlayerSelector = ({ match, initialOpen = false, onClose }: 
       </div>
 
       <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center', gap: 8 }}>
-        <Button
-          variant="outline-secondary"
-          size="sm"
-          onClick={handleClose}
-        >
+        <Button variant="outline-secondary" size="sm" onClick={handleClose}>
           {t('common.cancel')}
         </Button>
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={() => handleSave()}
-          disabled={isSaving}
-        >
+        <Button variant="primary" size="sm" onClick={() => handleSave()} disabled={isSaving}>
           {isSaving ? (
             <>
               <Spinner animation="border" size="sm" style={{ marginRight: 6 }} />

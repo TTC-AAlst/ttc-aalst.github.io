@@ -15,7 +15,7 @@ import { ErrorBoundary } from './ErrorBoundary';
 
 import './App.scss';
 
-export const App = ({Component}: {Component: any}) => {
+export const App = ({ Component }: { Component: any }) => {
   const config = useTtcSelector(state => state.config);
   const dispatch = useTtcDispatch();
   const location = useLocation();
@@ -37,7 +37,7 @@ export const App = ({Component}: {Component: any}) => {
     return <FullScreenSpinner />;
   }
 
-  const containerStyle: React.CSSProperties = {width: undefined};
+  const containerStyle: React.CSSProperties = { width: undefined };
   const isBigTodayMatches = config.settings.container100PerWidth;
   if (isBigTodayMatches) {
     containerStyle.width = '100%';
@@ -49,7 +49,7 @@ export const App = ({Component}: {Component: any}) => {
   return (
     <div id="react">
       <ThemeProvider theme={createTheme()}>
-        <div style={{height: '100%'}}>
+        <div style={{ height: '100%' }}>
           <div className="wrapper">
             <Header navOpen={navOpen} setNavOpen={setNavOpen} />
             <Container style={containerStyle} ref={ref}>
@@ -67,16 +67,11 @@ export const App = ({Component}: {Component: any}) => {
             message={config.snackbar}
             autoHideDuration={3000}
             onClose={() => dispatch(clearSnackbar())}
-            action={(
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={() => dispatch(clearSnackbar())}
-              >
+            action={
+              <IconButton size="small" aria-label="close" color="inherit" onClick={() => dispatch(clearSnackbar())}>
                 <CloseIcon fontSize="small" />
               </IconButton>
-            )}
+            }
           />
         </div>
       </ThemeProvider>

@@ -1,6 +1,6 @@
-import {store} from './store';
-import {getRankingValue} from './models/utils/playerRankingValueMapper';
-import {ITeam, IClub, IPlayer, IMatch, IMatchPlayer, ITeamOpponent} from './models/model-interfaces';
+import { store } from './store';
+import { getRankingValue } from './models/utils/playerRankingValueMapper';
+import { ITeam, IClub, IPlayer, IMatch, IMatchPlayer, ITeamOpponent } from './models/model-interfaces';
 import PlayerModel from './models/PlayerModel';
 import TeamModel from './models/TeamModel';
 import MatchModel from './models/MatchModel';
@@ -21,31 +21,31 @@ export interface IOponnentFormation {
 const createKey = (form: IOpponentFormationRankingInfo[]): string => form.reduce((key, f) => key + f.amount + f.ranking, '');
 
 export function getOpponentFormations(matches: IMatch[], opponent?: ITeamOpponent): IOponnentFormation[] {
-  return matches.filter(match => match.isSyncedWithFrenoy && match.shouldBePlayed).reduce((acc: IOponnentFormation[], match) => {
-    let isHomeTeam: boolean;
-    if (!opponent) {
-      isHomeTeam = true;
-    } else {
-      isHomeTeam = match.home.clubId === opponent.clubId && match.home.teamCode === opponent.teamCode;
-    }
-    const formation = getMatchPlayerRankings(match, isHomeTeam);
+  return matches
+    .filter(match => match.isSyncedWithFrenoy && match.shouldBePlayed)
+    .reduce((acc: IOponnentFormation[], match) => {
+      let isHomeTeam: boolean;
+      if (!opponent) {
+        isHomeTeam = true;
+      } else {
+        isHomeTeam = match.home.clubId === opponent.clubId && match.home.teamCode === opponent.teamCode;
+      }
+      const formation = getMatchPlayerRankings(match, isHomeTeam);
 
-    const exists = acc.find(form => form.key === createKey(formation));
-    if (!exists) {
-      acc.push({
-        key: createKey(formation),
-        details: formation,
-        amount: 1,
-        value: formation.reduce((total, {ranking, amount}) => total + (amount * getRankingValue(match.competition, ranking)), 0),
-      });
-
-    } else {
-      exists.amount++;
-    }
-    return acc;
-  }, []);
+      const exists = acc.find(form => form.key === createKey(formation));
+      if (!exists) {
+        acc.push({
+          key: createKey(formation),
+          details: formation,
+          amount: 1,
+          value: formation.reduce((total, { ranking, amount }) => total + amount * getRankingValue(match.competition, ranking), 0),
+        });
+      } else {
+        exists.amount++;
+      }
+      return acc;
+    }, []);
 }
-
 
 const unique = (value: any, index: number, self: any[]): boolean => self.indexOf(value) === index;
 
@@ -78,33 +78,33 @@ export function getMatchPlayerRankings(match: IMatch, homeTeam: boolean): IOppon
 
 const util = {
   getTeam(teamId: number): ITeam {
-    const {teams, teamRankings} = store.getState();
+    const { teams, teamRankings } = store.getState();
     const singleTeam = teams.find(team => team.id === teamId)!;
     return new TeamModel(singleTeam, teamRankings[singleTeam?.id]);
   },
   getTeams(): ITeam[] {
-    const {teams, teamRankings} = store.getState();
+    const { teams, teamRankings } = store.getState();
     return teams.map(team => new TeamModel(team, teamRankings[team.id]));
   },
 
   getClub(clubId: number): IClub {
-    const {clubs} = store.getState();
+    const { clubs } = store.getState();
     return clubs.find(club => club.id === clubId)!;
   },
 
   getPlayer(playerId: number): IPlayer {
-    const {players} = store.getState();
+    const { players } = store.getState();
     const player = players.find(ply => ply.id === playerId)!;
     return new PlayerModel(player);
   },
 
   getMatch(matchId: number): IMatch {
-    const {matches} = store.getState();
+    const { matches } = store.getState();
     const match = matches.find(m => m.id === matchId)!;
     return new MatchModel(match);
   },
   getMatches(): IMatch[] {
-    const {matches} = store.getState();
+    const { matches } = store.getState();
     return matches.map(m => new MatchModel(m));
   },
 

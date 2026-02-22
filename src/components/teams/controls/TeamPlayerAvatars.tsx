@@ -6,7 +6,7 @@ import { t } from '../../../locales';
 type TeamPlayerAvatarsProps = {
   team: ITeam;
   style?: React.CSSProperties;
-}
+};
 
 const getSortKey = (player: IPlayer, team: ITeam) => player.getCompetition(team.competition).position;
 
@@ -18,12 +18,11 @@ const containerStyle: React.CSSProperties = {
   gap: 16,
 };
 
-export const TeamPlayerAvatars = ({team, style}: TeamPlayerAvatarsProps) => {
-  const teamPlayers = team.getPlayers('standard')
-    .sort((a, b) => getSortKey(a.player, team) - getSortKey(b.player, team));
+export const TeamPlayerAvatars = ({ team, style }: TeamPlayerAvatarsProps) => {
+  const teamPlayers = team.getPlayers('standard').sort((a, b) => getSortKey(a.player, team) - getSortKey(b.player, team));
 
   return (
-    <div style={{...containerStyle, ...style}}>
+    <div style={{ ...containerStyle, ...style }}>
       {teamPlayers.map(ply => {
         let tooltip = ply.player.name;
 
@@ -41,15 +40,7 @@ export const TeamPlayerAvatars = ({team, style}: TeamPlayerAvatarsProps) => {
           boxShadow: `3px 3px 3px ${isCaptain ? '#CD7F32' : '#888888'}`,
         };
 
-        return (
-          <PlayerAvatar
-            key={ply.player.id}
-            player={ply.player}
-            style={avatarStyle}
-            tooltip={tooltip}
-            tooltipPlacement="bottom"
-          />
-        );
+        return <PlayerAvatar key={ply.player.id} player={ply.player} style={avatarStyle} tooltip={tooltip} tooltipPlacement="bottom" />;
       })}
     </div>
   );

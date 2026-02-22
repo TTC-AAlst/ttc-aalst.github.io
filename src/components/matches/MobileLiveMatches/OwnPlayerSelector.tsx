@@ -6,7 +6,11 @@ import { editMatchPlayers } from '../../../reducers/matchesReducer';
 import { t } from '../../../locales';
 import { Icon } from '../../controls/Icons/Icon';
 
-const latinize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const latinize = (str: string) =>
+  str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 
 type OwnPlayerSelectorProps = {
   match: IMatch;
@@ -43,16 +47,9 @@ const PlayerRow = ({ player, competition, isSelected, isDisabled, onToggle }: Pl
       margin: 0,
     }}
   >
-    <Form.Check
-      type="checkbox"
-      checked={isSelected}
-      onChange={() => onToggle(player)}
-      disabled={isDisabled}
-    />
+    <Form.Check type="checkbox" checked={isSelected} onChange={() => onToggle(player)} disabled={isDisabled} />
     <span style={{ flex: 1 }}>{player.alias}</span>
-    <span style={{ fontWeight: 600, fontSize: '0.85em', color: '#666' }}>
-      {player.getCompetition(competition).ranking}
-    </span>
+    <span style={{ fontWeight: 600, fontSize: '0.85em', color: '#666' }}>{player.getCompetition(competition).ranking}</span>
   </label>
 );
 
@@ -72,9 +69,7 @@ export const OwnPlayerSelector = ({ match: matchProp, initialOpen = false, onClo
   const getPreSelectedPlayers = (): IPlayer[] => {
     if (!matchProp.block && !matchProp.isSyncedWithFrenoy) return [];
     const statusToMatch = matchProp.isSyncedWithFrenoy ? 'Major' : matchProp.block;
-    const confirmedIds = ownMatchPlayers
-      .filter(mp => mp.status === statusToMatch)
-      .map(mp => mp.playerId);
+    const confirmedIds = ownMatchPlayers.filter(mp => mp.status === statusToMatch).map(mp => mp.playerId);
     return eligiblePlayers.filter(p => confirmedIds.includes(p.id));
   };
 
@@ -108,13 +103,15 @@ export const OwnPlayerSelector = ({ match: matchProp, initialOpen = false, onClo
     const toSave = players || selectedPlayers;
     setIsSaving(true);
     try {
-      await dispatch(editMatchPlayers({
-        matchId: matchProp.id,
-        playerIds: toSave.map(p => p.id),
-        blockAlso: true,
-        newStatus: 'Major',
-        comment: '',
-      }));
+      await dispatch(
+        editMatchPlayers({
+          matchId: matchProp.id,
+          playerIds: toSave.map(p => p.id),
+          blockAlso: true,
+          newStatus: 'Major',
+          comment: '',
+        }),
+      );
       setIsFormOpen(false);
       onClose?.();
     } finally {
@@ -138,7 +135,10 @@ export const OwnPlayerSelector = ({ match: matchProp, initialOpen = false, onClo
   };
 
   // Frequency: count how often each player appeared in synced team matches
-  const teamMatches = matchProp.getTeam().getMatches().filter(m => m.isSyncedWithFrenoy);
+  const teamMatches = matchProp
+    .getTeam()
+    .getMatches()
+    .filter(m => m.isSyncedWithFrenoy);
   const playerFrequency: Record<number, number> = {};
   teamMatches.forEach(m => {
     m.getOwnPlayers().forEach(mp => {
@@ -158,14 +158,7 @@ export const OwnPlayerSelector = ({ match: matchProp, initialOpen = false, onClo
   return (
     <div>
       <div style={{ marginBottom: 8 }}>
-        <Form.Control
-          ref={searchRef}
-          type="text"
-          size="sm"
-          placeholder={t('common.search')}
-          value={searchText}
-          onChange={e => setSearchText(e.target.value)}
-        />
+        <Form.Control ref={searchRef} type="text" size="sm" placeholder={t('common.search')} value={searchText} onChange={e => setSearchText(e.target.value)} />
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 300, overflowY: 'auto' }}>
@@ -185,19 +178,10 @@ export const OwnPlayerSelector = ({ match: matchProp, initialOpen = false, onClo
       </div>
 
       <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center', gap: 8 }}>
-        <Button
-          variant="outline-secondary"
-          size="sm"
-          onClick={handleClose}
-        >
+        <Button variant="outline-secondary" size="sm" onClick={handleClose}>
           {t('common.cancel')}
         </Button>
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={() => handleSave()}
-          disabled={isSaving}
-        >
+        <Button variant="primary" size="sm" onClick={() => handleSave()} disabled={isSaving}>
           {isSaving ? (
             <>
               <Spinner animation="border" size="sm" style={{ marginRight: 6 }} />

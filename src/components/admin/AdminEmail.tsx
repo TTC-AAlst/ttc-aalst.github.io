@@ -6,7 +6,6 @@ import { fetchQuitters } from '../../reducers/playersReducer';
 
 type Pages = 'all' | 'inactive' | 'comp' | 'vttl' | 'sporta' | 'captains' | 'bestuur';
 
-
 export const AdminEmail = () => {
   const dispatch = useTtcDispatch();
   const activePlayers = useTtcSelector(selectPlayers);
@@ -51,57 +50,39 @@ export const AdminEmail = () => {
   ];
 
   const selectedPlayers = filterPlayers().sort((a, b) => a.alias.localeCompare(b.alias));
-  const emails = selectedPlayers
-    .filter(p => p.contact && p.contact.email)
-    .map(p => `"${p.firstName} ${p.lastName}" <${p.contact.email.trim()}>`);
-  const emailsWithoutName = selectedPlayers
-    .filter(p => p.contact && p.contact.email)
-    .map(p => p.contact.email.trim());
+  const emails = selectedPlayers.filter(p => p.contact && p.contact.email).map(p => `"${p.firstName} ${p.lastName}" <${p.contact.email.trim()}>`);
+  const emailsWithoutName = selectedPlayers.filter(p => p.contact && p.contact.email).map(p => p.contact.email.trim());
 
   return (
     <div style={{ paddingLeft: 15 }}>
       <h1>Email adressen</h1>
-      <ButtonStack
-        config={viewsConfig}
-        activeView={filter}
-        onClick={newFilter => setFilter(newFilter as Pages)}
-      />
+      <ButtonStack config={viewsConfig} activeView={filter} onClick={newFilter => setFilter(newFilter as Pages)} />
 
-      <span style={{ marginLeft: 6 }}>
-        # {selectedPlayers.length}
-      </span>
+      <span style={{ marginLeft: 6 }}># {selectedPlayers.length}</span>
 
       <div className="row" style={{ marginTop: 25 }}>
         <div className="col-md-6">
-          {selectedPlayers.map(p => <PlayerEmail player={p} key={p.id} />)}
+          {selectedPlayers.map(p => (
+            <PlayerEmail player={p} key={p.id} />
+          ))}
         </div>
 
         <div className="col-md-6">
-          <textarea
-            style={{ width: '100%', height: 300 }}
-            value={emails.join('\n')}
-            onChange={() => true}
-          />
+          <textarea style={{ width: '100%', height: 300 }} value={emails.join('\n')} onChange={() => true} />
         </div>
 
         <div className="col-md-6">
-          <textarea
-            style={{ width: '100%', height: 300 }}
-            value={emailsWithoutName.join(';\n')}
-            onChange={() => true}
-          />
+          <textarea style={{ width: '100%', height: 300 }} value={emailsWithoutName.join(';\n')} onChange={() => true} />
         </div>
       </div>
     </div>
   );
 };
 
-
-const PlayerEmail = ({player}: {player: IStorePlayer}) => (
-  <span style={{whiteSpace: 'normal', marginRight: 7, paddingTop: 15}}>
-    <span className="badge label-as-badge bg-success" key={player.id} style={{fontSize: 12, fontWeight: 'normal'}}>
+const PlayerEmail = ({ player }: { player: IStorePlayer }) => (
+  <span style={{ whiteSpace: 'normal', marginRight: 7, paddingTop: 15 }}>
+    <span className="badge label-as-badge bg-success" key={player.id} style={{ fontSize: 12, fontWeight: 'normal' }}>
       {player.firstName} {player.lastName}
-    </span>
-    {' '}
+    </span>{' '}
   </span>
 );

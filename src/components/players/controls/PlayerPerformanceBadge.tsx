@@ -15,12 +15,7 @@ const sizeMap = {
   lg: { fontSize: '0.9em', padding: '4px 10px' },
 };
 
-export const PlayerPerformanceBadge = ({
-  allResults,
-  recentResults,
-  size = 'md',
-  showLabel = true,
-}: PlayerPerformanceBadgeProps) => {
+export const PlayerPerformanceBadge = ({ allResults, recentResults, size = 'md', showLabel = true }: PlayerPerformanceBadgeProps) => {
   const badge = calculatePerformanceBadge(allResults, recentResults);
   const { fontSize, padding } = sizeMap[size];
 
@@ -44,11 +39,7 @@ export const PlayerPerformanceBadge = ({
   );
 };
 
-const getBadgeTooltip = (
-  badge: PerformanceBadgeInfo,
-  allResults: GameResult[],
-  recentResults: GameResult[],
-): string => {
+const getBadgeTooltip = (badge: PerformanceBadgeInfo, allResults: GameResult[], recentResults: GameResult[]): string => {
   const totalWins = allResults.filter(r => r.won).length;
   const totalGames = allResults.length;
   const recentWins = recentResults.filter(r => r.won).length;

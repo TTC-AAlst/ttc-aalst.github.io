@@ -8,7 +8,7 @@ import { shouldSync } from './matchesReducer';
 
 export const getOpponentMatches = createAsyncThunk(
   'matches/GetOpponentMatches',
-  async (data: {teamId: number, opponent?: ITeamOpponent}, { dispatch, getState }) => {
+  async (data: { teamId: number; opponent?: ITeamOpponent }, { dispatch, getState }) => {
     const key = `${data.teamId}-${data.opponent?.teamCode}-${data.opponent?.clubId}`;
     const store = getState() as RootState;
     const hasBeenFetched = store.config.opponentMatchesLoaded[key];
@@ -17,7 +17,7 @@ export const getOpponentMatches = createAsyncThunk(
     }
 
     try {
-      const otherMatches = await http.get<IMatch[]>('/matches/GetOpponentMatches', {teamId: data.teamId, ...data.opponent});
+      const otherMatches = await http.get<IMatch[]>('/matches/GetOpponentMatches', { teamId: data.teamId, ...data.opponent });
       if (!otherMatches || !otherMatches.length) {
         return;
       }
@@ -32,30 +32,23 @@ export const getOpponentMatches = createAsyncThunk(
   },
 );
 
-export const frenoyReadOnlyMatchSync = createAsyncThunk(
-  'matches/FrenoyOtherMatchSync',
-  async (match: IMatch, { dispatch }) => {
-    if (!shouldSync(match)) {
-      return;
-    }
+export const frenoyReadOnlyMatchSync = createAsyncThunk('matches/FrenoyOtherMatchSync', async (match: IMatch, { dispatch }) => {
+  if (!shouldSync(match)) {
+    return;
+  }
 
-    try {
-      const newMatch = await http.post<IMatch>('/matches/FrenoyOtherMatchSync', {id: match.id});
-      dispatch(simpleLoaded(newMatch));
-    } catch (err) {
-      console.error('frenoyReadOnlyMatchSync', match, err);
-    }
-  },
-);
+  try {
+    const newMatch = await http.post<IMatch>('/matches/FrenoyOtherMatchSync', { id: match.id });
+    dispatch(simpleLoaded(newMatch));
+  } catch (err) {
+    console.error('frenoyReadOnlyMatchSync', match, err);
+  }
+});
 
-export const fetchReadOnlyMatch = createAsyncThunk(
-  'matches/GetOpponentOne',
-  async ({id}: {id: number}) => {
-    const response = await http.get<IMatch>(`/matches/GetOpponentOne/${id}`);
-    return response;
-  },
-);
-
+export const fetchReadOnlyMatch = createAsyncThunk('matches/GetOpponentOne', async ({ id }: { id: number }) => {
+  const response = await http.get<IMatch>(`/matches/GetOpponentOne/${id}`);
+  return response;
+});
 
 export const readonlyMatchesSlice = createSlice({
   name: 'readonlyMatches',

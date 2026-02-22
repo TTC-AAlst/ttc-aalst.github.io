@@ -23,43 +23,37 @@ function getClubKey(competition: Competition, clubCode: string): string {
   return `${competition.toLowerCase()}-${clubCode.toLowerCase()}`;
 }
 
-export const fetchClubPlayers = createAsyncThunk(
-  'clubPlayers/fetch',
-  async (params: { competition: Competition; clubCode: string }, { getState }) => {
-    const { competition, clubCode } = params;
-    const key = getClubKey(competition, clubCode);
+export const fetchClubPlayers = createAsyncThunk('clubPlayers/fetch', async (params: { competition: Competition; clubCode: string }, { getState }) => {
+  const { competition, clubCode } = params;
+  const key = getClubKey(competition, clubCode);
 
-    const state = getState() as RootState;
-    if (state.clubPlayers.players[key]) {
-      // Already fetched, return cached data
-      return { key, players: state.clubPlayers.players[key], cached: true };
-    }
+  const state = getState() as RootState;
+  if (state.clubPlayers.players[key]) {
+    // Already fetched, return cached data
+    return { key, players: state.clubPlayers.players[key], cached: true };
+  }
 
-    const players = await http.get<ClubPlayer[]>(`/clubs/Players/${competition}/${clubCode}`);
-    return { key, players, cached: false };
-  },
-);
+  const players = await http.get<ClubPlayer[]>(`/clubs/Players/${competition}/${clubCode}`);
+  return { key, players, cached: false };
+});
 
 export type EditOpponentPlayersParams = {
   matchId: number;
   players: ClubPlayer[];
 };
 
-export const editOpponentPlayers = createAsyncThunk(
-  'clubPlayers/editOpponentPlayers',
-  async (params: EditOpponentPlayersParams, { dispatch }) => {
-    try {
-      const result = await http.post<IFullStoreMatchOwn>('/matches/EditOpponentPlayers', params);
-      dispatch(clearPreviousEncountersForMatch(params.matchId));
-      dispatch(simpleLoaded(result));
-      dispatch(showSnackbar(t('common.apiSuccess')));
-      return result;
-    } catch (err) {
-      dispatch(showSnackbar(t('common.apiFail')));
-      throw err;
-    }
-  },
-);
+export const editOpponentPlayers = createAsyncThunk('clubPlayers/editOpponentPlayers', async (params: EditOpponentPlayersParams, { dispatch }) => {
+  try {
+    const result = await http.post<IFullStoreMatchOwn>('/matches/EditOpponentPlayers', params);
+    dispatch(clearPreviousEncountersForMatch(params.matchId));
+    dispatch(simpleLoaded(result));
+    dispatch(showSnackbar(t('common.apiSuccess')));
+    return result;
+  } catch (err) {
+    dispatch(showSnackbar(t('common.apiFail')));
+    throw err;
+  }
+});
 
 function getInitialState(): ClubPlayersState {
   return {

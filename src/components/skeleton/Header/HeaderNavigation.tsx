@@ -1,5 +1,5 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
@@ -12,11 +12,11 @@ import { selectMatchesBeingPlayed, selectPlayers, selectUser, useTtcSelector } f
 import PlayerModel from '../../../models/PlayerModel';
 
 type NavigationProps = {
-  closeNav: () => void,
-  navOpen: boolean,
-}
+  closeNav: () => void;
+  navOpen: boolean;
+};
 
-export const Navigation = ({navOpen, closeNav}: NavigationProps) => {
+export const Navigation = ({ navOpen, closeNav }: NavigationProps) => {
   const matchesToday = useTtcSelector(selectMatchesBeingPlayed);
   const navigate = useNavigate();
   const user = useTtcSelector(selectUser);
@@ -38,13 +38,13 @@ export const Navigation = ({navOpen, closeNav}: NavigationProps) => {
     <Drawer open={navOpen} onClose={closeNav}>
       <AppBar>
         <Toolbar variant="dense">
-          <Typography className="clickable" variant="subtitle1" color="inherit" style={{flexGrow: 1, fontSize: '1.7rem'}} onClick={closeNav}>
+          <Typography className="clickable" variant="subtitle1" color="inherit" style={{ flexGrow: 1, fontSize: '1.7rem' }} onClick={closeNav}>
             {t('clubName')}
           </Typography>
         </Toolbar>
       </AppBar>
 
-      <div style={{marginTop: 60, width: 250}}>
+      <div style={{ marginTop: 60, width: 250 }}>
         <MenuItem onClick={() => goto('/')}>{t('nav.home')}</MenuItem>
         <MenuItem onClick={() => goto(t.route('matches'))}>{t('nav.matches')}</MenuItem>
         {matchesToday.length ? (
@@ -55,9 +55,9 @@ export const Navigation = ({navOpen, closeNav}: NavigationProps) => {
           </MenuItem>
         ) : null}
         <MenuItem onClick={() => goto(t.route('matchesWeek'))}>{t('nav.matchesWeek')}</MenuItem>
-        <MenuItem onClick={() => goto(t.route('teams', {competition: 'Vttl'}))}>{t('nav.teamsVttl')}</MenuItem>
-        <MenuItem onClick={() => goto(t.route('teams', {competition: 'Sporta'}))}>{t('nav.teamsSporta')}</MenuItem>
-        {hasYouthTeam && <MenuItem onClick={() => goto(t.route('teams', {competition: 'Jeugd'}))}>{t('nav.teamsJeugd')}</MenuItem>}
+        <MenuItem onClick={() => goto(t.route('teams', { competition: 'Vttl' }))}>{t('nav.teamsVttl')}</MenuItem>
+        <MenuItem onClick={() => goto(t.route('teams', { competition: 'Sporta' }))}>{t('nav.teamsSporta')}</MenuItem>
+        {hasYouthTeam && <MenuItem onClick={() => goto(t.route('teams', { competition: 'Jeugd' }))}>{t('nav.teamsJeugd')}</MenuItem>}
         {currentPlayer && <MenuItem onClick={() => goto(playerUrl)}>{t('nav.myPlayerPage')}</MenuItem>}
         <MenuItem onClick={() => goto(t.route('players'))}>{t('nav.players')}</MenuItem>
         {user.isAdmin() ? <MenuItem onClick={() => goto(t.route('admin'))}>{t('nav.admin')}</MenuItem> : null}

@@ -1,20 +1,20 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import TextField from '@mui/material/TextField';
 import { connect } from 'react-redux';
-import {PlayerAutoComplete} from '../players/PlayerAutoComplete';
-import {MaterialButton} from '../controls/Buttons/MaterialButton';
+import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
+import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
 import { adminSetNewPassword } from '../../reducers/userActions';
 
 type AdminChangePasswordProps = {
   adminSetNewPassword: typeof adminSetNewPassword;
   onEnd: () => void;
-}
+};
 
 type AdminChangePasswordState = {
   playerId: number | string;
   newPassword: string;
-}
+};
 
 class AdminChangePassword extends Component<AdminChangePasswordProps, AdminChangePasswordState> {
   constructor(props) {
@@ -35,18 +35,11 @@ class AdminChangePassword extends Component<AdminChangePasswordProps, AdminChang
       <div style={paperStyle}>
         <h3>{t('password.changeTitle')}</h3>
 
-        <PlayerAutoComplete
-          selectPlayer={playerId => this.setState({playerId})}
-          label={t('login.loginName')}
-        />
+        <PlayerAutoComplete selectPlayer={playerId => this.setState({ playerId })} label={t('login.loginName')} />
 
         <br />
 
-        <TextField
-          label={t('password.newPassword')}
-          type="password"
-          onChange={e => this.setState({newPassword: e.target.value})}
-        />
+        <TextField label={t('password.newPassword')} type="password" onChange={e => this.setState({ newPassword: e.target.value })} />
 
         <br />
 
@@ -54,7 +47,7 @@ class AdminChangePassword extends Component<AdminChangePasswordProps, AdminChang
           variant="contained"
           label={t('profile.editPassword')}
           color="primary"
-          style={{marginTop: 15}}
+          style={{ marginTop: 15 }}
           onClick={() => {
             this.props.adminSetNewPassword(this.state);
             this.props.onEnd();

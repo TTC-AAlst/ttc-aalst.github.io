@@ -1,7 +1,8 @@
 .endofseason-container {
   margin-top: 10px;
 
-  h2, h3 {
+  h2,
+  h3 {
     text-align: center;
   }
 
@@ -43,7 +44,6 @@
     }
   }
 }
-
 
 .kampioen {
   margin-bottom: 25px;

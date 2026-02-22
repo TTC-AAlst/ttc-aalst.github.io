@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {Icon} from '../Icons/Icon';
-import {displayMobile} from '../../../models/PlayerModel';
-import {IStorePlayer} from '../../../models/model-interfaces';
+import React, { Component } from 'react';
+import { Icon } from '../Icons/Icon';
+import { displayMobile } from '../../../models/PlayerModel';
+import { IStorePlayer } from '../../../models/model-interfaces';
 
 function callFormat(n: string) {
   return n;
@@ -9,12 +9,12 @@ function callFormat(n: string) {
 }
 
 type TelephoneProps = {
-  number?: string,
-  player?: IStorePlayer,
-  hideIcon?: boolean,
-  noLink?: boolean,
-  style?: React.CSSProperties,
-}
+  number?: string;
+  player?: IStorePlayer;
+  hideIcon?: boolean;
+  noLink?: boolean;
+  style?: React.CSSProperties;
+};
 
 export class Telephone extends Component<TelephoneProps> {
   static defaultProps = {
@@ -26,13 +26,17 @@ export class Telephone extends Component<TelephoneProps> {
       return null;
     }
 
-    const {number, hideIcon, player, noLink, ...props} = this.props;
+    const { number, hideIcon, player, noLink, ...props } = this.props;
     const nr = player ? player.contact.mobile : number;
     if (!nr) {
       return null;
     }
     if (hideIcon) {
-      return <a href={`tel:${callFormat(nr)}`} {...props}>{displayMobile(nr)}</a>;
+      return (
+        <a href={`tel:${callFormat(nr)}`} {...props}>
+          {displayMobile(nr)}
+        </a>
+      );
     }
 
     return (
@@ -41,7 +45,9 @@ export class Telephone extends Component<TelephoneProps> {
         {noLink ? (
           <div>{displayMobile(nr)}</div>
         ) : (
-          <a style={{marginLeft: 7}} href={`tel:${callFormat(nr)}`}>{displayMobile(nr)}</a>
+          <a style={{ marginLeft: 7 }} href={`tel:${callFormat(nr)}`}>
+            {displayMobile(nr)}
+          </a>
         )}
       </div>
     );

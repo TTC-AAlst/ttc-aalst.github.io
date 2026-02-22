@@ -24,11 +24,7 @@ export type PlayerGameResultsSummary = {
 /**
  * Collect game results for a player from a list of matches, grouped by match
  */
-export const collectPlayerGameResultsByMatch = (
-  playerId: number,
-  playerRanking: PlayerRanking | undefined,
-  matches: IMatch[],
-): MatchGameResults[] => {
+export const collectPlayerGameResultsByMatch = (playerId: number, playerRanking: PlayerRanking | undefined, matches: IMatch[]): MatchGameResults[] => {
   const resultsByMatch: MatchGameResults[] = [];
 
   matches.forEach(match => {
@@ -69,10 +65,7 @@ export const collectPlayerGameResultsByMatch = (
 /**
  * Get recent results from the last 2 matches per competition
  */
-export const getRecentResults = (
-  vttlResultsByMatch: MatchGameResults[],
-  sportaResultsByMatch: MatchGameResults[],
-): GameResult[] => {
+export const getRecentResults = (vttlResultsByMatch: MatchGameResults[], sportaResultsByMatch: MatchGameResults[]): GameResult[] => {
   // Get results from last 2 Vttl matches (4 games each = 8 games max)
   const recentVttl = vttlResultsByMatch.slice(0, 2).flatMap(m => m.results);
   // Get results from last 2 Sporta matches (3 games each = 6 games max)
@@ -103,10 +96,7 @@ export const collectPlayerPerformanceData = (
   const vttlResultsByMatch = collectPlayerGameResultsByMatch(playerId, vttlRanking, vttlMatches);
   const sportaResultsByMatch = collectPlayerGameResultsByMatch(playerId, sportaRanking, sportaMatches);
 
-  const allResults = [
-    ...vttlResultsByMatch.flatMap(m => m.results),
-    ...sportaResultsByMatch.flatMap(m => m.results),
-  ];
+  const allResults = [...vttlResultsByMatch.flatMap(m => m.results), ...sportaResultsByMatch.flatMap(m => m.results)];
   const recentResults = getRecentResults(vttlResultsByMatch, sportaResultsByMatch);
 
   return { allResults, recentResults };
@@ -140,11 +130,11 @@ export const getRankingDifference = (playerRanking: PlayerRanking, opponentRanki
  */
 const getExpectedWinProbability = (diff: number): number => {
   // diff > 0 means opponent is better (higher ranked)
-  if (diff >= 4) return 0.10;
+  if (diff >= 4) return 0.1;
   if (diff === 3) return 0.15;
   if (diff === 2) return 0.25;
   if (diff === 1) return 0.35;
-  if (diff === 0) return 0.50;
+  if (diff === 0) return 0.5;
   if (diff === -1) return 0.65;
   if (diff === -2) return 0.75;
   return 0.85; // diff <= -3
@@ -201,10 +191,7 @@ export type PerformanceBadgeInfo = {
  * 1. Performance vs expected (based on opponent rankings)
  * 2. Recent trend (last 2 matches per competition)
  */
-export const calculatePerformanceBadge = (
-  allResults: GameResult[],
-  recentResults: GameResult[],
-): PerformanceBadgeInfo => {
+export const calculatePerformanceBadge = (allResults: GameResult[], recentResults: GameResult[]): PerformanceBadgeInfo => {
   if (allResults.length < 3) {
     return { type: 'neutral', label: 'Nieuw', color: '#9E9E9E', icon: 'fa-question' };
   }

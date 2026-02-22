@@ -1,8 +1,19 @@
 import storeUtil from '../storeUtil';
-import {TeamFrenoyModel} from './TeamFrenoyModel';
-import {ITeam, Competition, ITeamOpponent, ITeamPlayer, ITeamRanking, ITeamFrenoy, teamPlayerType,
-  IPlayer, IMatch, ITeamPlayerInfo, ITeamPlayerStats,
-  IStoreTeam} from './model-interfaces';
+import { TeamFrenoyModel } from './TeamFrenoyModel';
+import {
+  ITeam,
+  Competition,
+  ITeamOpponent,
+  ITeamPlayer,
+  ITeamRanking,
+  ITeamFrenoy,
+  teamPlayerType,
+  IPlayer,
+  IMatch,
+  ITeamPlayerInfo,
+  ITeamPlayerStats,
+  IStoreTeam,
+} from './model-interfaces';
 
 export default class TeamModel implements ITeam {
   competition: Competition;
@@ -61,15 +72,15 @@ export default class TeamModel implements ITeam {
     return `Prov ${this.divisionName}`;
   }
 
-  getDivisionRanking(opponent: 'our-ranking' | ITeamOpponent | undefined = 'our-ranking'): ITeamRanking & {empty: false} | {empty: true} {
+  getDivisionRanking(opponent: 'our-ranking' | ITeamOpponent | undefined = 'our-ranking'): (ITeamRanking & { empty: false }) | { empty: true } {
     if (opponent === 'our-ranking') {
-      return this.getDivisionRanking({clubId: this.clubId, teamCode: this.teamCode});
+      return this.getDivisionRanking({ clubId: this.clubId, teamCode: this.teamCode });
     }
     const result = this.ranking.find(x => x.clubId === opponent.clubId && (!opponent.teamCode || x.teamCode === opponent.teamCode));
     if (!result) {
-      return {empty: true};
+      return { empty: true };
     }
-    return {...result, empty: false};
+    return { ...result, empty: false };
   }
 
   getThriller(match: IMatch): undefined | 'topMatch' | 'degradationMatch' {
@@ -87,7 +98,8 @@ export default class TeamModel implements ITeam {
 
     if (ourRanking.position <= 3 && theirRanking.position <= 3) {
       return 'topMatch';
-    } if (ourRanking.position >= teamsInDivision - 2 && theirRanking.position >= teamsInDivision - 2) {
+    }
+    if (ourRanking.position >= teamsInDivision - 2 && theirRanking.position >= teamsInDivision - 2) {
       return 'degradationMatch';
     }
     return undefined;
@@ -102,7 +114,7 @@ export default class TeamModel implements ITeam {
   }
 
   getPlayers(type?: 'reserve' | 'standard'): ITeamPlayerInfo[] {
-    let {players} = this;
+    let { players } = this;
     if (type === 'reserve') {
       players = players.filter(ply => ply.type === teamPlayerType.reserve);
     } else if (type === 'standard') {
@@ -122,8 +134,7 @@ export default class TeamModel implements ITeam {
   }
 
   getMatches(): IMatch[] {
-    return storeUtil.matches.getAllMatches()
-      .filter(match => match.teamId === this.id);
+    return storeUtil.matches.getAllMatches().filter(match => match.teamId === this.id);
   }
 
   getPlayerStats(): ITeamPlayerStats[] {
@@ -138,13 +149,13 @@ export default class TeamModel implements ITeam {
 
   isInDegradationZone(opponent?: ITeamOpponent): boolean {
     const ranking = this.getDivisionRanking(opponent);
-    return ranking.empty ? false : ranking.position >= (this.ranking.length - 2);
+    return ranking.empty ? false : ranking.position >= this.ranking.length - 2;
   }
 }
 
 export function getPlayerStats(matches: IMatch[], withBelles = false): ITeamPlayerStats[] {
   // ATTN: There are tests for this one...
-  const result: {[playerId: number]: ITeamPlayerStats} = {};
+  const result: { [playerId: number]: ITeamPlayerStats } = {};
   matches.forEach(match => {
     const gameResults = match.getGameMatches();
     // const homeOrOut = match.isHomeMatch ? 'home' : 'out';
@@ -188,7 +199,6 @@ export function getPlayerStats(matches: IMatch[], withBelles = false): ITeamPlay
             playerResult.won[otherPlayer.ranking] = 0;
           }
           playerResult.won[otherPlayer.ranking]++;
-
         } else {
           // Singles LOST
           if (!playerResult.lost[otherPlayer.ranking]) {
@@ -201,7 +211,7 @@ export function getPlayerStats(matches: IMatch[], withBelles = false): ITeamPlay
         if (withBelles && (game.homeSets === 2 || game.outSets === 2)) {
           playerResult.belleGames++;
           if (!playerResult.belles[otherPlayer.ranking]) {
-            playerResult.belles[otherPlayer.ranking] = {won: 0, lost: 0};
+            playerResult.belles[otherPlayer.ranking] = { won: 0, lost: 0 };
           }
           if (game.outcome === 'Won') {
             playerResult.belles[otherPlayer.ranking].won++;
@@ -216,7 +226,6 @@ export function getPlayerStats(matches: IMatch[], withBelles = false): ITeamPlay
 
   return Object.keys(result).map(key => result[key]);
 }
-
 
 export function sortMappedPlayers(competition: Competition): (plyA: ITeamPlayerInfo, plyB: ITeamPlayerInfo) => number {
   return (plyA, plyB) => {

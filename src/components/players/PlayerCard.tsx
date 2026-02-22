@@ -20,9 +20,9 @@ import { PlayerRanking as PlayerRankingType } from '../../models/utils/rankingSo
 type PlayerCardProps = {
   player: IPlayer;
   showSideBySide?: boolean;
-}
+};
 
-export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) => {
+export const PlayerCard = ({ player, showSideBySide = false }: PlayerCardProps) => {
   const user = useTtcSelector(selectUser);
   const allMatches = useTtcSelector(selectMatches);
   const teams = useTtcSelector(selectTeams);
@@ -42,7 +42,7 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
   const bestStroke = player.style.bestStroke ? (
     <>
       <span>
-        <span style={{marginRight: 7}}>🔥</span>
+        <span style={{ marginRight: 7 }}>🔥</span>
         {player.style.bestStroke}
       </span>
       <br />
@@ -50,13 +50,15 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
   ) : null;
 
   return (
-    <Card style={{height: user.playerId && showAddressBelow ? 425 : 330, marginBottom: 20}}>
+    <Card style={{ height: user.playerId && showAddressBelow ? 425 : 330, marginBottom: 20 }}>
       <Card.Header>
-        <div style={{height: 40}}>
-          <div style={{float: 'left'}}>
-            <strong><PlayerLink player={player} /></strong>
+        <div style={{ height: 40 }}>
+          <div style={{ float: 'left' }}>
+            <strong>
+              <PlayerLink player={player} />
+            </strong>
             <br />
-            <span style={{display: 'inline-flex', alignItems: 'center', gap: 6}}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
               {badge && badge.type !== 'neutral' && (
                 <PlayerPerformanceBadge allResults={allResults} recentResults={recentResults} size="lg" showLabel={false} />
               )}
@@ -64,20 +66,16 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
             </span>
           </div>
 
-          <div style={{textAlign: 'right', float: 'right'}}>
+          <div style={{ textAlign: 'right', float: 'right' }}>
             <PlayerAllCompetitions player={player} />
           </div>
-          <div style={{clear: 'both'}} />
+          <div style={{ clear: 'both' }} />
         </div>
       </Card.Header>
 
-      <PlayerPlayingStyleForm
-        player={player}
-        iconStyle="edit-icon"
-        style={{color: '#d3d3d3', position: 'absolute', top: 75, right: 27}}
-      />
+      <PlayerPlayingStyleForm player={player} iconStyle="edit-icon" style={{ color: '#d3d3d3', position: 'absolute', top: 75, right: 27 }} />
 
-      <Card.Body style={{position: 'relative', overflow: 'hidden'}}>
+      <Card.Body style={{ position: 'relative', overflow: 'hidden' }}>
         {showRibbon && badge && <PerformanceRibbon badge={badge} />}
         {!user.playerId || showAddressBelow ? (
           <div>
@@ -87,9 +85,9 @@ export const PlayerCard = ({player, showSideBySide = false}: PlayerCardProps) =>
             <PlayerContact player={player} />
           </div>
         ) : (
-          <div className="media" style={{marginTop: 0}}>
+          <div className="media" style={{ marginTop: 0 }}>
             <div className="media-left">
-              <PlayerImage playerId={player.id} shape="thumbnail" className="pull-left" style={{width: 200, marginRight: 12}} />
+              <PlayerImage playerId={player.id} shape="thumbnail" className="pull-left" style={{ width: 200, marginRight: 12 }} />
             </div>
             <div className="media-body">
               {bestStroke}
@@ -141,25 +139,23 @@ const PerformanceRibbon = ({ badge }: PerformanceRibbonProps) => {
   );
 };
 
-
 type PlayerCardCompetitionProps = {
   player: IPlayer;
-}
+};
 
-export const PlayerCardCompetition = ({player}: PlayerCardCompetitionProps) => (
-  <div style={{marginTop: 5}}>
+export const PlayerCardCompetition = ({ player }: PlayerCardCompetitionProps) => (
+  <div style={{ marginTop: 5 }}>
     <strong>{t('common.competition')}</strong>
     <br />
     <PlayerAllCompetitions player={player} />
   </div>
 );
 
-
 type PlayerAllCompetitionsProps = {
   player: IPlayer;
 };
 
-export const PlayerAllCompetitions = ({player}: PlayerAllCompetitionsProps) => (
+export const PlayerAllCompetitions = ({ player }: PlayerAllCompetitionsProps) => (
   <div>
     <PlayerCompetitionLabel comp="Vttl" player={player} />
     {player.vttl && player.sporta ? <br /> : null}
@@ -167,13 +163,7 @@ export const PlayerAllCompetitions = ({player}: PlayerAllCompetitionsProps) => (
   </div>
 );
 
-
-
-export const TeamCaptainIcon = () => (
-  <Icon fa="fa fa-star" color="#FFB00F" style={{marginRight: 5}} tooltip={t('player.teamCaptain')} />
-);
-
-
+export const TeamCaptainIcon = () => <Icon fa="fa fa-star" color="#FFB00F" style={{ marginRight: 5 }} tooltip={t('player.teamCaptain')} />;
 
 type PlayerCompetitionLabelProps = {
   comp: Competition;
@@ -181,8 +171,7 @@ type PlayerCompetitionLabelProps = {
   withName?: boolean | 'alias';
 };
 
-
-export const PlayerCompetitionLabel = ({comp, player, withName = false}: PlayerCompetitionLabelProps) => {
+export const PlayerCompetitionLabel = ({ comp, player, withName = false }: PlayerCompetitionLabelProps) => {
   // withName = Jorn C2 (frenoylink)
   // !withName = Sporta (ploeg) C2 (frenoylink)
   const compDetails = player.getCompetition(comp);
@@ -196,19 +185,21 @@ export const PlayerCompetitionLabel = ({comp, player, withName = false}: PlayerC
     <span>
       {isCaptain ? <TeamCaptainIcon /> : null}
       {withName ? (
-        <strong><PlayerLink player={player} alias={withName === 'alias'} /></strong>
+        <strong>
+          <PlayerLink player={player} alias={withName === 'alias'} />
+        </strong>
       ) : (
-        <Link to={browseTo.getTeam(team || {competition: comp})} className="link-hover-underline">
-          {comp}{team ? ` ${team.teamCode}` : null}
+        <Link to={browseTo.getTeam(team || { competition: comp })} className="link-hover-underline">
+          {comp}
+          {team ? ` ${team.teamCode}` : null}
         </Link>
       )}
-      <PlayerFrenoyLink comp={compDetails} style={{marginLeft: 10}}>
+      <PlayerFrenoyLink comp={compDetails} style={{ marginLeft: 10 }}>
         <PlayerRanking player={compDetails} />
       </PlayerFrenoyLink>
     </span>
   );
 };
-
 
 type PlayerFrenoyLinkProps = {
   comp: IPlayerCompetition;
@@ -216,7 +207,7 @@ type PlayerFrenoyLinkProps = {
   children?: any;
 };
 
-export const PlayerFrenoyLink = ({comp, style, children}: PlayerFrenoyLinkProps) => (
+export const PlayerFrenoyLink = ({ comp, style, children }: PlayerFrenoyLinkProps) => (
   <a href={createFrenoyLink(comp)} target="_blank" className="link-hover-underline" style={style} rel="noopener noreferrer">
     {children} <FrenoyPlayerDetailsIcon />
   </a>

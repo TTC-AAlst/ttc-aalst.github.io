@@ -11,15 +11,11 @@ type MaterialButtonProps = {
 
   style?: React.CSSProperties;
   variant?: 'text' | 'outlined' | 'contained';
-}
+};
 
 export class MaterialButton extends React.Component<MaterialButtonProps> {
   render() {
-    const {label, ...props} = this.props;
-    return (
-      <Button {...props}>
-        {label}
-      </Button>
-    );
+    const { label, ...props } = this.props;
+    return <Button {...props}>{label}</Button>;
   }
 }

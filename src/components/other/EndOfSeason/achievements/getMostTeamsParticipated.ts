@@ -1,13 +1,16 @@
-import { Competition, ITeamPlayerStats, IMatch, IPlayer } from "../../../../models/model-interfaces";
-import { AchievementInfo } from "./otherAchievements";
+import { Competition, ITeamPlayerStats, IMatch, IPlayer } from '../../../../models/model-interfaces';
+import { AchievementInfo } from './otherAchievements';
 
 export function getMostTeamsParticipated(competition: Competition, playerStats: ITeamPlayerStats[], matches: IMatch[]): AchievementInfo {
   const relevantMatches = matches.filter(match => match.competition === competition && match.shouldBePlayed && match.isSyncedWithFrenoy);
 
-  const playerTeams: Record<number, {
-    teams: Set<string>,
-    player: IPlayer
-  }> = {};
+  const playerTeams: Record<
+    number,
+    {
+      teams: Set<string>;
+      player: IPlayer;
+    }
+  > = {};
 
   playerStats.forEach(stat => {
     playerTeams[stat.ply.getCompetition(competition).uniqueIndex] = {
@@ -35,7 +38,6 @@ export function getMostTeamsParticipated(competition: Competition, playerStats: 
 
     return `${arr.slice(0, -1).join(', ')} én ${arr[arr.length - 1]}`;
   };
-
 
   const teamsArray = Object.values(playerTeams)
     .map(item => ({

@@ -61,9 +61,7 @@ export const MobileLiveMatchHeader = ({ match, hideDetailsLink }: MobileLiveMatc
             {homeRanking && <small className="match-opponent-team">{homeRanking.position}. </small>}
             {match.isHomeMatch ? renderOwnTeam() : renderOpponentTeam()}
           </div>
-          <div style={{ color: '#888', fontSize: '0.85em', margin: '4px 0' }}>
-            {t('match.vs')}
-          </div>
+          <div style={{ color: '#888', fontSize: '0.85em', margin: '4px 0' }}>{t('match.vs')}</div>
           <div style={{ fontWeight: !match.isHomeMatch ? 'bold' : 'normal', fontSize: '1.1em' }}>
             {awayRanking && <small className="match-opponent-team">{awayRanking.position}. </small>}
             {match.isHomeMatch ? renderOpponentTeam() : renderOwnTeam()}

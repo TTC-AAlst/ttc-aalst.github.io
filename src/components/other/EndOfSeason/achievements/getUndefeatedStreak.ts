@@ -1,19 +1,22 @@
-import { Dayjs } from "dayjs";
-import { Competition, IMatch, IPlayer, ITeamPlayerStats } from "../../../../models/model-interfaces";
-import { AchievementInfo } from "./otherAchievements";
+import { Dayjs } from 'dayjs';
+import { Competition, IMatch, IPlayer, ITeamPlayerStats } from '../../../../models/model-interfaces';
+import { AchievementInfo } from './otherAchievements';
 
 export function getUndefeatedStreak(competition: Competition, playerStats: ITeamPlayerStats[], matches: IMatch[]): AchievementInfo {
   const sortedMatches = matches
     .filter(match => match.competition === competition && match.shouldBePlayed && match.isSyncedWithFrenoy)
     .sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
-  const playerStreaks: Record<number, {
-    currentStreak: number,
-    currentFrom: Dayjs | null,
-    longestStreak: number,
-    longestFrom: Dayjs | null,
-    player: IPlayer,
-  }> = {};
+  const playerStreaks: Record<
+    number,
+    {
+      currentStreak: number;
+      currentFrom: Dayjs | null;
+      longestStreak: number;
+      longestFrom: Dayjs | null;
+      player: IPlayer;
+    }
+  > = {};
 
   playerStats.forEach(stat => {
     playerStreaks[stat.ply.getCompetition(competition).uniqueIndex] = {
@@ -28,29 +31,30 @@ export function getUndefeatedStreak(competition: Competition, playerStats: ITeam
   sortedMatches.forEach(match => {
     const ourPlayers = match.getOwnPlayers().map(player => player.uniqueIndex);
 
-    [...match.games].sort((a, b) => a.matchNumber - b.matchNumber).forEach(game => {
-      const playerUniqueIndex = ourPlayers.includes(game.homePlayerUniqueIndex)
-        ? game.homePlayerUniqueIndex : game.outPlayerUniqueIndex;
+    [...match.games]
+      .sort((a, b) => a.matchNumber - b.matchNumber)
+      .forEach(game => {
+        const playerUniqueIndex = ourPlayers.includes(game.homePlayerUniqueIndex) ? game.homePlayerUniqueIndex : game.outPlayerUniqueIndex;
 
-      const playerStat = playerStreaks[playerUniqueIndex];
-      if (playerStat) {
-        if (game.outcome === 'Lost') {
-          playerStat.currentStreak = 0;
-          playerStat.currentFrom = null;
-        } else if (game.outcome === 'Won') {
-          if (playerStat.currentStreak === 0) {
-            playerStat.currentFrom = match.date;
-          }
+        const playerStat = playerStreaks[playerUniqueIndex];
+        if (playerStat) {
+          if (game.outcome === 'Lost') {
+            playerStat.currentStreak = 0;
+            playerStat.currentFrom = null;
+          } else if (game.outcome === 'Won') {
+            if (playerStat.currentStreak === 0) {
+              playerStat.currentFrom = match.date;
+            }
 
-          playerStat.currentStreak++;
+            playerStat.currentStreak++;
 
-          if (playerStat.currentStreak > playerStat.longestStreak) {
-            playerStat.longestStreak = playerStat.currentStreak;
-            playerStat.longestFrom = playerStat.currentFrom;
+            if (playerStat.currentStreak > playerStat.longestStreak) {
+              playerStat.longestStreak = playerStat.currentStreak;
+              playerStat.longestFrom = playerStat.currentFrom;
+            }
           }
         }
-      }
-    });
+      });
   });
 
   const result: AchievementInfo = {

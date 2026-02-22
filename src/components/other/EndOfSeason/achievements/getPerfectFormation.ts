@@ -1,12 +1,10 @@
- 
-import { IMatch, ITeam } from "../../../../models/model-interfaces";
-import { TeamAchievementInfo } from "./achievement-models";
+import { IMatch, ITeam } from '../../../../models/model-interfaces';
+import { TeamAchievementInfo } from './achievement-models';
 
 export function getPerfectFormation(matches: IMatch[]): TeamAchievementInfo {
   const formationWins: Record<string, { team: ITeam; count: number; players: string[] }> = {};
 
-  const matchesWon = matches
-    .filter(match => match.shouldBePlayed && match.isSyncedWithFrenoy && match.isPlayed && match.scoreType === 'Won');
+  const matchesWon = matches.filter(match => match.shouldBePlayed && match.isSyncedWithFrenoy && match.isPlayed && match.scoreType === 'Won');
 
   for (const match of matchesWon) {
     const players = match.getOwnPlayers();
@@ -31,7 +29,7 @@ export function getPerfectFormation(matches: IMatch[]): TeamAchievementInfo {
     title: '🏹 Perfect Formation',
     desc: 'Meeste zeges met opstelling',
     teams: topFormations.map(f => ({
-      throphy: `${f.count} overwinningen met ${f.players.join(", ")}`,
+      throphy: `${f.count} overwinningen met ${f.players.join(', ')}`,
       team: f.team,
     })),
   };

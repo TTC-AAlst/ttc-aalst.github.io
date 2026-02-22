@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import IconButton from '@mui/material/IconButton';
-import {OtherMatchPlayerResultsTableRow} from './OtherMatchPlayerResults';
-import {MatchPlayerRankings} from '../controls/MatchPlayerRankings';
-import {Spinner} from '../../controls/controls/Spinner';
+import { OtherMatchPlayerResultsTableRow } from './OtherMatchPlayerResults';
+import { MatchPlayerRankings } from '../controls/MatchPlayerRankings';
+import { Spinner } from '../../controls/controls/Spinner';
 import { IMatch, ITeamOpponent } from '../../../models/model-interfaces';
 import { t } from '../../../locales';
 import { useViewport } from '../../../utils/hooks/useViewport';
@@ -14,11 +14,11 @@ const AmountOfOpponentMatchesToShow = 5;
 
 type OpponentsLastMatchesProps = {
   match: IMatch;
-}
+};
 
-export const OpponentsLastMatches = ({match}: OpponentsLastMatchesProps) => {
+export const OpponentsLastMatches = ({ match }: OpponentsLastMatchesProps) => {
   const [showAll, setShowAll] = useState(false);
-  const [showDetails, setShowDetails] = useState<{[matchId: number]: boolean}>({});
+  const [showDetails, setShowDetails] = useState<{ [matchId: number]: boolean }>({});
   const viewport = useViewport();
   const allReadOnlyMatches = useTtcSelector(selectReadOnlyMatches);
 
@@ -38,19 +38,28 @@ export const OpponentsLastMatches = ({match}: OpponentsLastMatchesProps) => {
   }
   if (readonlyMatches.length === 0) {
     // If they haven't played any games yet, the spinner will never go away
-    return <div className="match-card-tab-content"><h3><Spinner /></h3></div>;
+    return (
+      <div className="match-card-tab-content">
+        <h3>
+          <Spinner />
+        </h3>
+      </div>
+    );
   }
 
   return (
     <Table size="sm" className="match-card-tab-table">
       <thead>
         <tr>
-          <th key="1" className="d-none d-sm-table-cell">{t('common.date')}</th>
-          <th key="7" className="d-none d-md-table-cell">{t('common.frenoy')}</th>
-          {viewport.width > widthRemoveColumn ? [
-            <th key="2">{t('match.opponents.homeTeam')}</th>,
-            <th key="3">{t('match.opponents.awayTeam')}</th>,
-          ] : (
+          <th key="1" className="d-none d-sm-table-cell">
+            {t('common.date')}
+          </th>
+          <th key="7" className="d-none d-md-table-cell">
+            {t('common.frenoy')}
+          </th>
+          {viewport.width > widthRemoveColumn ? (
+            [<th key="2">{t('match.opponents.homeTeam')}</th>, <th key="3">{t('match.opponents.awayTeam')}</th>]
+          ) : (
             <th key="4">{t('match.opponents.vsTeam')}</th>
           )}
           <th key="5">{t('common.teamFormation')}</th>
@@ -64,26 +73,33 @@ export const OpponentsLastMatches = ({match}: OpponentsLastMatchesProps) => {
             <tr
               key={m.id}
               className={`clickable ${m.won(match.opponent) ? 'accentuate success' : ''}`}
-              onClick={() => setShowDetails({...showDetails, [m.id]: !showDetails[m.id]})}
+              onClick={() => setShowDetails({ ...showDetails, [m.id]: !showDetails[m.id] })}
             >
-
-              <td key="1" className="d-none d-sm-table-cell">{m.getDisplayDate(viewport.width > widthRemoveColumn ? 'd' : 's')}</td>
-              <td key="7" className="d-none d-md-table-cell">{m.frenoyMatchId}</td>
-              {viewport.width > widthRemoveColumn ? [
-                <td key="2">{m.getClub('home')?.name} {m.home.teamCode}</td>,
-                <td key="3">{m.getClub('away')?.name} {m.away.teamCode}</td>,
-              ] : (
+              <td key="1" className="d-none d-sm-table-cell">
+                {m.getDisplayDate(viewport.width > widthRemoveColumn ? 'd' : 's')}
+              </td>
+              <td key="7" className="d-none d-md-table-cell">
+                {m.frenoyMatchId}
+              </td>
+              {viewport.width > widthRemoveColumn ? (
+                [
+                  <td key="2">
+                    {m.getClub('home')?.name} {m.home.teamCode}
+                  </td>,
+                  <td key="3">
+                    {m.getClub('away')?.name} {m.away.teamCode}
+                  </td>,
+                ]
+              ) : (
                 <td key="4">
                   {isHomeMatch && <Icon fa="fa fa-home" style={{ marginRight: 4, color: '#666' }} />}
-                  {isHomeMatch ? (
-                    `${m.getClub('away')?.name} ${m.away.teamCode}`
-                  ) : (
-                    `${m.getClub('home')?.name} ${m.home.teamCode}`
-                  )}
+                  {isHomeMatch ? `${m.getClub('away')?.name} ${m.away.teamCode}` : `${m.getClub('home')?.name} ${m.home.teamCode}`}
                 </td>
               )}
 
-              <td key="5"><MatchPlayerRankings match={m} homeTeam={isHomeMatch} /></td>
+              <td key="5">
+                <MatchPlayerRankings match={m} homeTeam={isHomeMatch} />
+              </td>
 
               <td key="6">
                 {m.won(match.opponent) && <Icon fa="fa fa-trophy" style={{ marginRight: 4, color: '#f1c40f' }} />}
@@ -95,7 +111,7 @@ export const OpponentsLastMatches = ({match}: OpponentsLastMatchesProps) => {
         })}
         {!showAll && totalMatches > AmountOfOpponentMatchesToShow ? (
           <tr key="showAll">
-            <td colSpan={5} style={{textAlign: 'center'}}>
+            <td colSpan={5} style={{ textAlign: 'center' }}>
               <IconButton onClick={() => setShowAll(true)}>
                 <i className="fa fa-chevron-circle-down" />
               </IconButton>

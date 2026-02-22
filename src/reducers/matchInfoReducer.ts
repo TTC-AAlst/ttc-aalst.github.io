@@ -4,50 +4,45 @@ import { IMatch, PlayerEncounter } from '../models/model-interfaces';
 import { RootState } from '../store';
 import storeUtil from '../storeUtil';
 
-export const getPreviousEncounters = createAsyncThunk(
-  'matches/getPreviousEncounters',
-  async (match: IMatch, { getState }) => {
-    const store = getState() as RootState;
-    const hasBeenFetched = store.matchInfo.previousEncounters.some(encounter => encounter.requestMatchId === match.id);
-    if (hasBeenFetched) {
-      return [] as PlayerEncounter[];
+export const getPreviousEncounters = createAsyncThunk('matches/getPreviousEncounters', async (match: IMatch, { getState }) => {
+  const store = getState() as RootState;
+  const hasBeenFetched = store.matchInfo.previousEncounters.some(encounter => encounter.requestMatchId === match.id);
+  if (hasBeenFetched) {
+    return [] as PlayerEncounter[];
+  }
+
+  // Build ownPlayerIds from match players
+  const ownPlayerIds: Record<number, number> = Object.fromEntries(match.getOwnPlayers().map(x => [x.playerId, x.uniqueIndex]));
+
+  // Also include current logged-in user if they're not already in the formation
+  const currentUserId = store.user.playerId;
+  if (currentUserId && !ownPlayerIds[currentUserId]) {
+    const currentPlayer = storeUtil.getPlayer(currentUserId);
+    const playerCompetition = currentPlayer?.getCompetition(match.competition);
+    if (playerCompetition?.uniqueIndex) {
+      ownPlayerIds[currentUserId] = playerCompetition.uniqueIndex;
     }
+  }
 
-    // Build ownPlayerIds from match players
-    const ownPlayerIds: Record<number, number> = Object.fromEntries(
-      match.getOwnPlayers().map(x => [x.playerId, x.uniqueIndex]),
-    );
+  const data = {
+    matchId: match.id,
+    opponentPlayerNames: Object.fromEntries(match.getTheirPlayers().map(player => [player.name, player.uniqueIndex])),
+    ownPlayerIds,
+    competition: match.competition,
+  };
 
-    // Also include current logged-in user if they're not already in the formation
-    const currentUserId = store.user.playerId;
-    if (currentUserId && !ownPlayerIds[currentUserId]) {
-      const currentPlayer = storeUtil.getPlayer(currentUserId);
-      const playerCompetition = currentPlayer?.getCompetition(match.competition);
-      if (playerCompetition?.uniqueIndex) {
-        ownPlayerIds[currentUserId] = playerCompetition.uniqueIndex;
-      }
-    }
-
-    const data = {
-      matchId: match.id,
-      opponentPlayerNames: Object.fromEntries(match.getTheirPlayers().map(player => [player.name, player.uniqueIndex])),
-      ownPlayerIds,
-      competition: match.competition,
-    };
-
-    try {
-      const encounters = await http.post<PlayerEncounter[]>('/matches/GetPreviousEncounters', data);
-      return encounters;
-    } catch (err) {
-      console.error('GetPreviousEncounters', err);
-      return [] as PlayerEncounter[];
-    }
-  },
-);
+  try {
+    const encounters = await http.post<PlayerEncounter[]>('/matches/GetPreviousEncounters', data);
+    return encounters;
+  } catch (err) {
+    console.error('GetPreviousEncounters', err);
+    return [] as PlayerEncounter[];
+  }
+});
 
 export const getOpponentTeamEncounters = createAsyncThunk(
   'matches/getOpponentTeamEncounters',
-  async (params: {match: IMatch, ourPlayerId: number, opponentPlayers: {name: string, uniqueIndex: number}[]}, { getState }) => {
+  async (params: { match: IMatch; ourPlayerId: number; opponentPlayers: { name: string; uniqueIndex: number }[] }, { getState }) => {
     const { match, ourPlayerId, opponentPlayers } = params;
     const opponentKey = getOpponentKey(match);
 
@@ -87,11 +82,10 @@ export const getOpponentTeamEncounters = createAsyncThunk(
   },
 );
 
-
 type MatchInfoState = {
   previousEncounters: PlayerEncounter[];
-  opponentTeamEncounters: {[opponentKey: string]: PlayerEncounter[]};
-}
+  opponentTeamEncounters: { [opponentKey: string]: PlayerEncounter[] };
+};
 
 function getInitialState(): MatchInfoState {
   return {
@@ -104,23 +98,18 @@ function getOpponentKey(match: IMatch): string {
   return `${match.competition.toLowerCase()}-${match.opponent.clubId}-${match.opponent.teamCode}`;
 }
 
-
 export const matchInfoSlice = createSlice({
   name: 'matchInfo',
   initialState: getInitialState(),
   reducers: {
     clearPreviousEncountersForMatch: (state, action: { payload: number }) => {
-      state.previousEncounters = state.previousEncounters.filter(
-        encounter => encounter.requestMatchId !== action.payload,
-      );
+      state.previousEncounters = state.previousEncounters.filter(encounter => encounter.requestMatchId !== action.payload);
     },
   },
   extraReducers: builder => {
     builder.addCase(getPreviousEncounters.fulfilled, (state, action) => {
       if (action.payload?.length) {
-        const newEncounters = action.payload.filter(
-          encounter => !state.previousEncounters.some(existing => existing.matchGameId === encounter.matchGameId),
-        );
+        const newEncounters = action.payload.filter(encounter => !state.previousEncounters.some(existing => existing.matchGameId === encounter.matchGameId));
         state.previousEncounters.push(...newEncounters);
       }
     });

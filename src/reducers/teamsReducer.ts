@@ -6,26 +6,20 @@ import { showSnackbar } from './configReducer';
 import { t } from '../locales';
 import { RootState } from '../store';
 
-export const fetchTeams = createAsyncThunk(
-  'teams/Get',
-  async (_, { getState }) => {
-    const lastChecked = (getState() as RootState).config.caches.teams;
-    const response = await http.get<ICacheResponse<IStoreTeam>>('/teams', {lastChecked});
-    return response;
-  },
-);
+export const fetchTeams = createAsyncThunk('teams/Get', async (_, { getState }) => {
+  const lastChecked = (getState() as RootState).config.caches.teams;
+  const response = await http.get<ICacheResponse<IStoreTeam>>('/teams', { lastChecked });
+  return response;
+});
 
-export const fetchTeam = createAsyncThunk(
-  'teams/GetOne',
-  async ({id}: {id: number}) => {
-    const response = await http.get<IStoreTeam>(`/teams/${id}`);
-    return response;
-  },
-);
+export const fetchTeam = createAsyncThunk('teams/GetOne', async ({ id }: { id: number }) => {
+  const response = await http.get<IStoreTeam>(`/teams/${id}`);
+  return response;
+});
 
 export const toggleTeamPlayer = createAsyncThunk(
   'teams/ToggleTeamPlayer',
-  async (data: {playerId: number, teamId: number, role: TeamPlayerType}, { dispatch }) => {
+  async (data: { playerId: number; teamId: number; role: TeamPlayerType }, { dispatch }) => {
     try {
       const response = await http.post<IStoreTeam>('/teams/ToggleTeamPlayer', data);
       dispatch(simpleLoaded(response));
@@ -38,18 +32,15 @@ export const toggleTeamPlayer = createAsyncThunk(
   },
 );
 
-export const loadTeamRanking = createAsyncThunk(
-  'teams/Ranking',
-  async ({team}: {team: IStoreTeam}, { dispatch }) => {
-    const url = `/teams/Ranking/${team.competition}/${team.frenoy.divisionId}`;
-    try {
-      const response = await http.get<ITeamRanking[]>(url);
-      dispatch(teamRankingsSlice.actions.rankingLoaded({teamId: team.id, rankings: response}));
-    } catch (err) {
-      console.error(url, err);
-    }
-  },
-);
+export const loadTeamRanking = createAsyncThunk('teams/Ranking', async ({ team }: { team: IStoreTeam }, { dispatch }) => {
+  const url = `/teams/Ranking/${team.competition}/${team.frenoy.divisionId}`;
+  try {
+    const response = await http.get<ITeamRanking[]>(url);
+    dispatch(teamRankingsSlice.actions.rankingLoaded({ teamId: team.id, rankings: response }));
+  } catch (err) {
+    console.error(url, err);
+  }
+});
 
 function getInitialState(): IStoreTeam[] {
   return [];
@@ -65,7 +56,6 @@ function getInitialState(): IStoreTeam[] {
   //   return [];
   // }
 }
-
 
 export const teamsSlice = createSlice({
   name: 'teams',
@@ -84,15 +74,13 @@ export const teamsSlice = createSlice({
   },
 });
 
-
-type TeamRankingStore = {[teamId: number]: ITeamRanking[]};
-
+type TeamRankingStore = { [teamId: number]: ITeamRanking[] };
 
 export const teamRankingsSlice = createSlice({
   name: 'teamRankings',
   initialState: {} as TeamRankingStore,
   reducers: {
-    rankingLoaded: (state, action: PayloadAction<{teamId: number, rankings: ITeamRanking[]}>) => {
+    rankingLoaded: (state, action: PayloadAction<{ teamId: number; rankings: ITeamRanking[] }>) => {
       state[action.payload.teamId] = action.payload.rankings;
     },
   },

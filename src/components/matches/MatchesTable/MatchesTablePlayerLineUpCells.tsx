@@ -9,33 +9,34 @@ import { FrenoyWeekLink } from '../../controls/Buttons/FrenoyButton';
 import { MatchBlock } from '../Match/MatchBlock';
 import { Icon } from '../../controls/Icons/Icon';
 
-
 type MatchesTablePlayerLineUpProps = {
   team: ITeam;
   match: IMatch;
   bigDisplayMinWidth?: number;
-}
+};
 
-export const MatchesTablePlayerLineUpDateCell = ({team, match, bigDisplayMinWidth}: MatchesTablePlayerLineUpProps) => (
+export const MatchesTablePlayerLineUpDateCell = ({ team, match, bigDisplayMinWidth }: MatchesTablePlayerLineUpProps) => (
   <td>
-    {match.shouldBePlayed && !!team.getThriller(match) && (
-      <ThrillerIcon color="red" />
-    )}
+    {match.shouldBePlayed && !!team.getThriller(match) && <ThrillerIcon color="red" />}
     {match.shouldBePlayed ? <MatchDate match={match} bigDisplayMinWidth={bigDisplayMinWidth} /> : null}
   </td>
 );
 
-export const MatchesTablePlayerLineUpFrenoyMatchIdCell = ({match}: {match: IMatch}) => {
+export const MatchesTablePlayerLineUpFrenoyMatchIdCell = ({ match }: { match: IMatch }) => {
   const viewport = useViewport();
 
   if (viewport.width > tableMatchViewportWidths.frenoyMatchId) {
-    return <td><FrenoyWeekLink match={match} /></td>;
+    return (
+      <td>
+        <FrenoyWeekLink match={match} />
+      </td>
+    );
   }
 
   return null;
 };
 
-export const MatchesTablePlayerLineUpMatchVsCell = ({match, playerCount}: {match: IMatch, playerCount: number}) => {
+export const MatchesTablePlayerLineUpMatchVsCell = ({ match, playerCount }: { match: IMatch; playerCount: number }) => {
   const viewport = useViewport();
 
   return (
@@ -50,7 +51,7 @@ export const MatchesTablePlayerLineUpMatchVsCell = ({match, playerCount}: {match
       {!!playerCount && playerCount < match.getTeamPlayerCount() && (
         <Icon
           fa="fa fa-exclamation-circle"
-          style={{color: 'red', float: 'right', fontSize: '1.5em', marginTop: 3}}
+          style={{ color: 'red', float: 'right', fontSize: '1.5em', marginTop: 3 }}
           translate
           tooltip="match.block.incompleteTooltip"
         />
@@ -59,27 +60,25 @@ export const MatchesTablePlayerLineUpMatchVsCell = ({match, playerCount}: {match
   );
 };
 
-
-export const MatchesTablePlayerLineUpMatchBlockCell = ({match, displayNonBlocked}: {match: IMatch, displayNonBlocked: boolean}) => (
-  <td><MatchBlock block={match.block} displayNonBlocked={displayNonBlocked} /></td>
+export const MatchesTablePlayerLineUpMatchBlockCell = ({ match, displayNonBlocked }: { match: IMatch; displayNonBlocked: boolean }) => (
+  <td>
+    <MatchBlock block={match.block} displayNonBlocked={displayNonBlocked} />
+  </td>
 );
-
 
 type MatchesTablePlayerLineUpPlayerPlayingCellProps = {
   display: boolean;
   match: IMatch;
   player: IPlayer;
   team: ITeam;
-}
+};
 
-export const MatchesTablePlayerLineUpPlayerPlayingCell = ({display, player, team, match}: MatchesTablePlayerLineUpPlayerPlayingCellProps) => (
+export const MatchesTablePlayerLineUpPlayerPlayingCell = ({ display, player, team, match }: MatchesTablePlayerLineUpPlayerPlayingCellProps) => (
   <td>
     {display && (
-      <span className={`badge label-as-badge ${match.block ? 'bg-success' : 'bg-warning'}`} style={{fontWeight: 'normal'}}>
+      <span className={`badge label-as-badge ${match.block ? 'bg-success' : 'bg-warning'}`} style={{ fontWeight: 'normal' }}>
         {player.alias}
-        <span style={{marginLeft: 5, marginRight: 5, fontSize: 10}}>
-          {player.getCompetition(team.competition)?.ranking}
-        </span>
+        <span style={{ marginLeft: 5, marginRight: 5, fontSize: 10 }}>{player.getCompetition(team.competition)?.ranking}</span>
         <i className="fa fa-thumbs-o-up" />
       </span>
     )}
