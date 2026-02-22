@@ -21,7 +21,7 @@ export interface IOponnentFormation {
 const createKey = (form: IOpponentFormationRankingInfo[]): string => form.reduce((key, f) => key + f.amount + f.ranking, '');
 
 export function getOpponentFormations(matches: IMatch[], opponent?: ITeamOpponent): IOponnentFormation[] {
-  return matches.filter(match => match.isSyncedWithFrenoy).reduce((acc: IOponnentFormation[], match) => {
+  return matches.filter(match => match.isSyncedWithFrenoy && match.shouldBePlayed).reduce((acc: IOponnentFormation[], match) => {
     let isHomeTeam: boolean;
     if (!opponent) {
       isHomeTeam = true;
