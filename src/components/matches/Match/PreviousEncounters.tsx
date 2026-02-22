@@ -144,8 +144,8 @@ export const PreviousEncountersButtonModal = ({encounters, ourPlayerUniqueIndex}
           <Icon fa="fa fa-history" />
         ) : (
           <>
-            {!!wins && <><ThumbsUpIcon color="black" />{wins}</>}
-            {!!losses && <><ThumbsDownIcon color="black" style={{marginLeft: wins ? 8 : 0}} />{losses}</>}
+            {!!wins && <><ThumbsUpIcon />{wins}</>}
+            {!!losses && <><ThumbsDownIcon style={{marginLeft: wins ? 8 : 0}} />{losses}</>}
           </>
         )}
       </Button>

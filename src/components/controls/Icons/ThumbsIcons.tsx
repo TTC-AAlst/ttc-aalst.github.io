@@ -6,7 +6,7 @@ import {t} from '../../../locales';
 export const ThumbsUpIcon = ({style, ...props}: Omit<IconProps, 'fa'>) => (
   <Icon
     fa="fa fa-thumbs-o-up"
-    color="#D3D3D3"
+    color="#9ACA66"
     translate
     tooltip="teamCalendar.matchesWonBadge"
     style={({marginRight: 5, ...style})}
@@ -17,7 +17,7 @@ export const ThumbsUpIcon = ({style, ...props}: Omit<IconProps, 'fa'>) => (
 export const ThumbsDownIcon = ({style, ...props}: Omit<IconProps, 'fa'>) => (
   <Icon
     fa="fa fa-thumbs-o-down"
-    color="#D3D3D3"
+    color="#FF5144"
     translate
     tooltip="teamCalendar.matchesLostBadge"
     style={({marginRight: 5, ...style})}
