@@ -421,12 +421,6 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
                         <div style={{ fontSize: '0.9em', color: '#666', textTransform: 'capitalize' }}>
                           {altLoc.address}, {altLoc.postalCode} {altLoc.city}
                         </div>
-                        {altLoc.comment && (
-                          <div style={{ fontSize: '0.85em', color: '#856404', backgroundColor: '#fff3cd', padding: '4px 8px', borderRadius: 4, marginTop: 4 }}>
-                            <Icon fa="fa fa-info-circle" style={{ marginRight: 4 }} />
-                            {altLoc.comment}
-                          </div>
-                        )}
                       </div>
                     ))}
                   </div>
