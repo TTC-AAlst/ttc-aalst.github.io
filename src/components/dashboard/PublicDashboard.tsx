@@ -7,11 +7,18 @@ import { IntroClub } from '../App/IntroClub';
 import { IntroSponsors } from '../App/IntroSponsors';
 import { PublicTeamStats } from './PublicTeamStats';
 import { DashboardRankingPredictions } from './DashboardRankingPredictions';
+import { SeasonStats } from './SeasonStats';
 import { useTtcSelector } from '../../utils/hooks/storeHooks';
+import { parseEetfestijn } from '../../utils/paramParser';
 
 export const PublicDashboard = () => {
   const config = useTtcSelector(state => state.config);
   const isLoading = config.initialLoad !== 'done';
+
+  // Check if Eetfestijn is active
+  const eetfestijnString = config.params.eetfestijn;
+  const eetfestijn = eetfestijnString ? parseEetfestijn(eetfestijnString) : null;
+  const hasEetfestijn = eetfestijn?.show;
 
   if (isLoading) {
     return (
@@ -45,7 +52,7 @@ export const PublicDashboard = () => {
           <IntroClub />
         </Col>
         <Col md={6}>
-          <Eetfestijn />
+          {hasEetfestijn ? <Eetfestijn /> : <SeasonStats />}
         </Col>
       </Row>
 
