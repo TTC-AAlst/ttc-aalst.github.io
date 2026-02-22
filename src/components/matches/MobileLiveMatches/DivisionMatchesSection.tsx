@@ -23,7 +23,8 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
   const todayDivisionMatches = readonlyMatches
     .filter(m => m.competition === competition)
     .filter(m => m.frenoyDivisionId === team.frenoy.divisionId)
-    .filter(m => m.shouldBePlayed && m.isBeingPlayed())
+    .filter(m => m.week === match.week)
+    .filter(m => m.shouldBePlayed)
     .filter(m => !m.isOurMatch);
 
   // Auto-sync every 10 minutes
@@ -60,7 +61,7 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
                   {m.getClub('home')?.name} {m.home.teamCode}
                 </td>
                 <td style={{ textAlign: 'center', fontWeight: 600 }}>
-                  <OpponentMatchScore match={m} />
+                  <OpponentMatchScore readonlyMatch={m} />
                 </td>
                 <td style={{ whiteSpace: 'nowrap', textAlign: 'right' }}>
                   {m.getClub('away')?.name} {m.away.teamCode}

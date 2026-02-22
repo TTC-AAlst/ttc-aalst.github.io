@@ -128,17 +128,20 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const hasReportOrComments = !!match.description || match.comments.length > 0;
   const hasTheirPlayers = match.getTheirPlayers().length > 0;
 
-  // Calculate today's division matches
+  // Calculate today's division matches (same week as our match)
   const team = match.getTeam();
   const competition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
   const todayDivisionMatches = readonlyMatches
     .filter(m => m.competition === competition)
     .filter(m => m.frenoyDivisionId === team.frenoy.divisionId)
-    .filter(m => m.shouldBePlayed && m.isBeingPlayed())
+    .filter(m => m.week === match.week)
+    .filter(m => m.shouldBePlayed)
     .filter(m => !m.isOurMatch);
 
   useEffect(() => {
     dispatch(getOpponentMatches({ teamId: match.teamId, opponent: match.opponent }));
+    // Fetch ALL division matches (for Afdeling button)
+    dispatch(getOpponentMatches({ teamId: match.teamId }));
   }, [dispatch, match.teamId, match.opponent]);
 
   useEffect(() => {
