@@ -9,21 +9,24 @@ This is a React-Redux TypeScript application for managing table tennis club data
 ## Development Commands
 
 ```bash
-# Start development server (connects to localhost:5193 backend by default)
-npm start
+# Install dependencies
+bun install
 
-# Run tests (Jest with jsdom environment)
-npm test
+# Start development server (connects to localhost:5193 backend by default)
+bun start
+
+# Run tests (Vitest with happy-dom environment)
+bun test
 
 # Lint TypeScript/TSX files
-npm run lint
-npm run lint-fix
+bun run lint
+bun run lint-fix
 
 # Build production bundle
-npm build
+bun run build
 
 # Deploy to GitHub Pages
-npm run deploy
+bun run deploy
 ```
 
 ## Backend Configuration
@@ -149,16 +152,16 @@ Configured globally in `index.tsx`.
 
 ### Testing
 
-Tests use Jest with jsdom environment and React Testing Library for component tests:
+Tests use Vitest with happy-dom environment and React Testing Library for component tests:
 - Test files: `**/spec/**/*Spec.ts` (models) or `**/spec/**/*Spec.tsx` (components)
-- Config: `jest.config.js` (uses `test-tsconfig.json`)
-- Run individual test: `npm test -- <path/to/spec>`
+- Config: `vitest.config.ts`
+- Run individual test: `bun test <path/to/spec>`
 - Shared test utility: `src/utils/test-utils.tsx` (`renderWithProviders` with Redux store)
 - **Boy scout rule:** when touching a component, add or update tests for it
 
 ### ESLint
 
-ESLint 9 flat config (`eslint.config.js`) with `typescript-eslint` and `eslint-plugin-react`:
+ESLint 10 flat config (`eslint.config.js`) with `typescript-eslint` and `eslint-plugin-react`:
 - Arrow functions preferred for components
 - Max line length: 160 characters
 - `no-console`: off, `no-debugger`: warn
@@ -193,7 +196,8 @@ Google Analytics 4 integration:
 
 - **Development**: Localhost frontend → `localhost:5193` backend
 - **Production**: Deployed to GitHub Pages (`https://ttc-aalst.be`)
-- **Deploy command**: `npm run deploy` (builds and pushes to gh-pages branch with CNAME)
+- **Deploy command**: `bun run deploy` (builds and pushes to gh-pages branch with CNAME)
+- **Package manager**: Bun (uses `bun.lock`)
 
 ## Important Files
 
