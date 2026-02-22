@@ -12,6 +12,8 @@
     "preview": "vite preview",
     "lint": "eslint src",
     "lint-fix": "eslint --fix src",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --cname ttc-aalst.be",
     "prepare": "husky"
@@ -43,8 +45,16 @@
   },
   "overrides": {
     "@restart/hooks": "^0.6.2",
-    "react-avatar-editor>react": "$react",
-    "react-avatar-editor>react-dom": "$react-dom"
+    "react-avatar-editor": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
@@ -64,6 +74,8 @@
     "gh-pages": "^6.3.0",
     "happy-dom": "^20.6.3",
     "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
     "sass": "^1.97.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0",

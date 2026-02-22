@@ -20,6 +20,9 @@ jobs:
 
     - run: bun install --frozen-lockfile
 
+    - name: Format check
+      run: bun run format:check
+
     - name: Lint
       run: bun run lint
 
@@ -28,3 +31,8 @@ jobs:
 
     - name: Test with coverage
       run: bun run test:coverage
+
+    - name: Secret detection
+      uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

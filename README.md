@@ -7,13 +7,19 @@ Port `5193` for the development backend is hardcoded in:
 ## Commands
 
 ```sh
-bun start        # dev server (connects to localhost:5193 backend)
-bun run build    # tsc + vite build
-bun test         # vitest
-bun run lint     # eslint
-bun run lint-fix # eslint --fix
-bun run deploy   # build + gh-pages
+bun start          # dev server (connects to localhost:5193 backend)
+bun run build      # tsc + vite build
+bun run test       # vitest
+bun run lint       # eslint
+bun run lint-fix   # eslint --fix
+bun run format     # prettier --write
+bun run deploy     # build + gh-pages
 ```
+
+## Git Hooks (Husky)
+
+- **pre-commit**: Runs lint-staged (eslint --fix + prettier) on staged files
+- **pre-push**: Runs tests
 
 
 ## Bootstrap Breakpoints
