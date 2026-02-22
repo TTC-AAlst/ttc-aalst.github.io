@@ -2,7 +2,7 @@
 title: 'Header Score Carousel for Live Matches'
 slug: 'header-score-carousel'
 created: '2026-02-21'
-status: 'ready-for-dev'
+status: 'done'
 stepsCompleted: [1, 2, 3, 4]
 tech_stack:
   - React 19
