@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { IMatch } from '../../../models/model-interfaces';
-import { Icon } from '../../controls/Icons/Icon';
+import { MatchScore } from '../../matches/MatchScore';
 import { t } from '../../../locales';
 
 type HeaderScoreCarouselProps = {
@@ -23,55 +23,63 @@ export const HeaderScoreCarousel = ({ matches }: HeaderScoreCarouselProps) => {
 
   if (matches.length === 0) return null;
 
-  const itemHeight = 24;
+  const itemHeight = 28;
 
   return (
-    <Link
-      to={t.route('matchesToday')}
-      className="Header-carousel"
+    <div
       style={{
-        height: itemHeight,
-        overflow: 'hidden',
-        cursor: 'pointer',
-        display: 'block',
-        textDecoration: 'none',
+        display: 'inline-flex',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.08)',
+        borderRadius: 4,
+        padding: '4px 10px',
       }}
     >
-      <div
-        className="Header-carousel-inner"
+      <Link
+        to={t.route('matchesToday')}
+        className="Header-carousel"
         style={{
-          transform: `translateY(-${currentIndex * itemHeight}px)`,
-          transition: 'transform 0.4s ease-in-out',
+          height: itemHeight,
+          overflow: 'hidden',
+          cursor: 'pointer',
+          display: 'block',
+          textDecoration: 'none',
         }}
       >
-        {matches.map(match => {
-          const team = match.getTeam();
-          const teamLabel = `${match.competition} ${team.teamCode}`;
-          const score = `${match.score.home}-${match.score.out}`;
+        <div
+          className="Header-carousel-inner"
+          style={{
+            transform: `translateY(-${currentIndex * itemHeight}px)`,
+            transition: 'transform 0.4s ease-in-out',
+          }}
+        >
+          {matches.map(match => {
+            const team = match.getTeam();
+            const teamLabel = `${match.competition} ${team.teamCode}`;
+            const locationEmoji = match.isHomeMatch ? '🏠' : '✈️';
 
-          return (
-            <div
-              key={match.id}
-              className="Header-carousel-item"
-              style={{
-                height: itemHeight,
-                display: 'flex',
-                alignItems: 'center',
-                color: 'var(--brand-color)',
-                fontSize: '1em',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {match.isHomeMatch && (
-                <Icon fa="fa fa-home" style={{ marginRight: 6, fontSize: '0.85em' }} />
-              )}
-              <span>
-                {teamLabel}: {score}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    </Link>
+            return (
+              <div
+                key={match.id}
+                className="Header-carousel-item"
+                style={{
+                  height: itemHeight,
+                  display: 'flex',
+                  alignItems: 'center',
+                  fontSize: '0.8em',
+                  whiteSpace: 'nowrap',
+                  gap: 16,
+                }}
+              >
+                <span style={{ color: '#fff' }}>
+                  {locationEmoji} {teamLabel}
+                </span>
+                <MatchScore match={match} noLink forceDisplay showThrophy={false} />
+              </div>
+            );
+          })}
+        </div>
+      </Link>
+    </div>
   );
 };

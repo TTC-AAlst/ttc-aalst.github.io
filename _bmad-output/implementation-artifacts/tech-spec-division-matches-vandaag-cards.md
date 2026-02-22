@@ -2,7 +2,7 @@
 title: 'Division matches on vandaag cards'
 slug: 'division-matches-vandaag-cards'
 created: '2026-02-21'
-status: 'ready-for-dev'
+status: 'done'
 stepsCompleted: [1, 2, 3, 4]
 tech_stack: ['React 18', 'TypeScript', 'Redux Toolkit', 'react-bootstrap', 'dayjs', 'vitest', 'react-testing-library']
 files_to_modify:

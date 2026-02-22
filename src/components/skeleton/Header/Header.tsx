@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
@@ -32,11 +32,9 @@ type HeaderProps = {
 export const Header = ({navOpen, setNavOpen}: HeaderProps) => {
   const user = useTtcSelector(state => state.user);
   const matchesToday = useTtcSelector(selectMatchesBeingPlayed);
-  const location = useLocation();
   const viewport = useViewport();
   const showExtraNavigationButtons = viewport.width > 700;
-  const isOnVandaag = location.pathname === t.route('matchesToday');
-  const showCarousel = matchesToday.length > 0 && !isOnVandaag;
+  const showCarousel = matchesToday.length > 0;
 
   return (
     <div style={{flexGrow: 1}}>

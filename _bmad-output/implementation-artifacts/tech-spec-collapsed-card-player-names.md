@@ -2,7 +2,7 @@
 title: 'Collapsed vandaag card mini body with player names'
 slug: 'collapsed-card-player-names'
 created: '2026-02-21'
-status: 'ready-for-dev'
+status: 'done'
 stepsCompleted: [1, 2, 3, 4]
 tech_stack: ['React 18', 'TypeScript', 'Redux Toolkit', 'react-bootstrap', 'vitest', 'react-testing-library']
 files_to_modify:
