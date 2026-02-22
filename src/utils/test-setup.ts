@@ -18,9 +18,15 @@ Object.defineProperty(globalThis, 'localStorage', {
 });
 
 // Mock fetch to prevent actual HTTP requests during tests
-globalThis.fetch = vi.fn(() =>
-  Promise.resolve({
+globalThis.fetch = vi.fn(() => Promise.resolve({
     ok: true,
     json: () => Promise.resolve([]),
   } as Response),
 );
+
+// Wrap setTimeout to prevent NaN warnings from react-bootstrap animations
+const originalSetTimeout = globalThis.setTimeout;
+globalThis.setTimeout = ((fn: TimerHandler, delay?: number, ...args: unknown[]) => {
+  const safeDelay = Number.isNaN(delay) ? 0 : delay;
+  return originalSetTimeout(fn, safeDelay, ...args);
+}) as typeof setTimeout;
