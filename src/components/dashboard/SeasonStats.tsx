@@ -136,19 +136,8 @@ export const SeasonStats = () => {
           <div style={{display: 'flex', flexDirection: 'column', gap: 4}}>
             {topPerformers.map((p, i) => (
               <div key={p.player.id} style={{display: 'flex', alignItems: 'center', gap: 8}}>
-                <span style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: '50%',
-                  backgroundColor: i === 0 ? '#FFD700' : i === 1 ? '#C0C0C0' : '#CD7F32',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.75em',
-                  fontWeight: 'bold',
-                  color: i === 0 ? '#333' : 'white',
-                }}>
-                  {i + 1}
+                <span style={{fontSize: '1.2em'}}>
+                  {i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}
                 </span>
                 <PlayerLink player={p.player} />
                 <span style={{color: '#666', fontSize: '0.9em'}}>
