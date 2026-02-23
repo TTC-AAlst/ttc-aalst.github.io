@@ -35,6 +35,12 @@ jobs:
     - name: Test with coverage
       run: bun run test:coverage
 
+    - name: Install Playwright browsers
+      run: bunx playwright install --with-deps chromium
+
+    - name: E2E smoke tests
+      run: bun run test:e2e
+
     - name: Dependency audit
       run: bun audit --audit-level=high
 

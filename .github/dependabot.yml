@@ -6,21 +6,28 @@ updates:
       interval: weekly
       day: monday
     groups:
+      # Dev dependencies - safe to batch together
       dev-dependencies:
         dependency-type: development
+      # Production patches - low risk
+      production-patch:
+        dependency-type: production
         update-types:
-          - minor
           - patch
-      production-minor-patch:
+      # Production minor/major - review together
+      production-updates:
         dependency-type: production
         update-types:
           - minor
-          - patch
-    open-pull-requests-limit: 10
-    # Security updates always create separate PRs
+          - major
+    open-pull-requests-limit: 5
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 3
