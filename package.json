@@ -50,8 +50,7 @@
       "react": "$react",
       "react-dom": "$react-dom"
     },
-    "minimatch": "^10.2.1",
-    "ajv": "^8.17.1"
+    "minimatch": "^10.2.1"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
