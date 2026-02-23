@@ -23,7 +23,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@microsoft/signalr": "^8.0.17",
+    "@microsoft/signalr": "^10.0.0",
     "@mui/icons-material": "^6.5.0",
     "@mui/material": "^6.5.0",
     "@reduxjs/toolkit": "^2.11.2",
