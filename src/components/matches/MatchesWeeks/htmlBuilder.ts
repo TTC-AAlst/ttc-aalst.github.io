@@ -459,7 +459,7 @@ function getTeamLink(match: IMatch) {
   return `<small>#${divisionRanking.position}</small> ${getLink(url, `${match.competition} ${match.getTeam().teamCode}`)}`;
 }
 
-function getRandom(arr: any[]) {
+function getRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 

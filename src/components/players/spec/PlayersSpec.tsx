@@ -34,7 +34,7 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
     uniqueIndex: 100 + id,
     rankingIndex: id,
     rankingValue: 50,
-  } as any,
+  } as unknown,
   sporta: {
     clubId: 1,
     competition: 'Sporta',
@@ -46,11 +46,11 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
     uniqueIndex: 200 + id,
     rankingIndex: id,
     rankingValue: 40,
-  } as any,
+  } as unknown,
   contact: { playerId: id, email: '', mobile: '', address: '', city: '' },
-  style: {} as any,
+  style: {} as unknown,
   quitYear: null,
-  security: 'Player' as any,
+  security: 'Player' as unknown,
   hasKey: false,
   imageVersion: 0,
 });
@@ -69,7 +69,7 @@ describe('Players', () => {
           user: { playerId: 42, teams: [], security: [], token: 'test', alias: 'Wouter' },
           players: [testPlayer, otherPlayer],
           teams: [],
-        } as any,
+        } as unknown,
       },
     );
 
@@ -88,7 +88,7 @@ describe('Players', () => {
           user: { playerId: 0, teams: [], security: [], token: '', alias: '' },
           players: [testPlayer, otherPlayer],
           teams: [],
-        } as any,
+        } as unknown,
       },
     );
 

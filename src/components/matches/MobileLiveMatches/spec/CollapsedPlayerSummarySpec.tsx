@@ -27,7 +27,7 @@ const createMockPlayer = (alias: string, ranking: string, uniqueIndex: number, s
     home: true,
     position: 1,
     won: 0,
-  }) as any;
+  }) as unknown;
 
 const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
   ({
@@ -42,7 +42,7 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
     description: '',
     isSyncedWithFrenoy: false,
     opponent: { clubId: 10, teamCode: 'A' },
-    date: { format: () => '19:45', isBefore: () => true, subtract: () => ({ isBefore: () => true }), isSame: () => true } as any,
+    date: { format: () => '19:45', isBefore: () => true, subtract: () => ({ isBefore: () => true }), isSame: () => true } as unknown,
     score: { home: 0, out: 0 },
     isHomeMatch: true,
     getOwnPlayers: () => [],
@@ -55,21 +55,21 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
         getDivisionRanking: () => ({ empty: true }),
         getThriller: () => null,
         renderOwnTeamTitle: () => 'TTC Aalst A',
-      }) as any,
+      }) as unknown,
     getPlayerFormation: () => [],
     getGameMatches: () => [],
     renderScore: () => '0-0',
     renderOpponentTitle: () => 'Opponent A',
     getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '' }),
     ...overrides,
-  }) as any;
+  }) as unknown;
 
 const renderCard = (match: IMatch, expanded = false) =>
   renderWithProviders(
     <TestRouter>
       <MobileLiveMatchCard match={match} expanded={expanded} onToggle={() => {}} isCollapsible />
     </TestRouter>,
-    { preloadedState: { players: [], user: { playerId: 0, teams: [], security: [] } } as any },
+    { preloadedState: { players: [], user: { playerId: 0, teams: [], security: [] } } as unknown },
   );
 
 describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
@@ -84,7 +84,7 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
     const match = createMockMatch({
       getPlayerFormation: () =>
         players.map(p => ({
-          player: { id: p.playerId, name: p.alias } as any,
+          player: { id: p.playerId, name: p.alias } as unknown,
           matchPlayer: p,
         })) as IMatchPlayerInfo[],
     });
@@ -99,7 +99,7 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
     const players: IMatchPlayer[] = [createMockPlayer('Wouter', 'B2', 1), createMockPlayer('Jan', 'B6', 2)];
 
     const match = createMockMatch({
-      games: [{ id: 1 }] as any,
+      games: [{ id: 1 }] as unknown,
       getOwnPlayers: () => players,
       getTheirPlayers: () => [createMockPlayer('Opponent', 'C0', 10)],
       getGameMatches: () => [],
@@ -130,7 +130,7 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
       getPlayerFormation: () =>
         players.map(p => ({
           id: p.playerId,
-          player: { id: p.playerId, name: p.alias, getCompetition: () => ({ ranking: p.ranking, position: 1 }) } as any,
+          player: { id: p.playerId, name: p.alias, getCompetition: () => ({ ranking: p.ranking, position: 1 }) } as unknown,
           matchPlayer: p,
         })) as IMatchPlayerInfo[],
     });
@@ -148,7 +148,7 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
     const match = createMockMatch({
       getPlayerFormation: () =>
         players.map(p => ({
-          player: { id: p.playerId, name: p.alias } as any,
+          player: { id: p.playerId, name: p.alias } as unknown,
           matchPlayer: p,
         })) as IMatchPlayerInfo[],
     });

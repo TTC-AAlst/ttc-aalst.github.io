@@ -87,21 +87,21 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
     } = {};
 
     gameResults.forEach(game => {
-      const ownPlayer = game.ownPlayer as any;
+      const ownPlayer = game.ownPlayer;
       const { playerId } = ownPlayer;
       if (!playerId) return; // Skip doubles
 
       if (!playerSummary[playerId]) {
         playerSummary[playerId] = {
           playerId,
-          name: ownPlayer.name || ownPlayer.alias || 'Unknown',
-          ranking: ownPlayer.ranking || 'NG',
+          name: ('name' in ownPlayer ? ownPlayer.name : '') || ('alias' in ownPlayer ? ownPlayer.alias : '') || 'Unknown',
+          ranking: ('ranking' in ownPlayer ? ownPlayer.ranking : 'NG') as PlayerRanking,
           won: [],
           lost: [],
         };
       }
 
-      const opponentPlayer = game[!match.isHomeMatch ? 'home' : 'out'] as any;
+      const opponentPlayer = game[!match.isHomeMatch ? 'home' : 'out'];
       const opponentInfo = {
         name: opponentPlayer.name || opponentPlayer.alias || 'Unknown',
         ranking: opponentPlayer.ranking || '?',

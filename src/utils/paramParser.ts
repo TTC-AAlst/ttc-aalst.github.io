@@ -8,9 +8,9 @@ export function parseEvents(json: string): string[] {
 
   try {
     return JSON.parse(json);
-  } catch (err: any) {
+  } catch (err: unknown) {
     const errObj = {
-      message: `parseEvents: ${err.message}`,
+      message: `parseEvents: ${err instanceof Error ? err.message : String(err)}`,
       stack: JSON.stringify(err),
       componentStack: json,
       url: document.location.pathname,
@@ -27,9 +27,9 @@ export function parseEetfestijn(json: string): EetfestijnModel {
 
   try {
     return JSON.parse(json);
-  } catch (err: any) {
+  } catch (err: unknown) {
     const errObj = {
-      message: `parseEetfestijn: ${err.message}`,
+      message: `parseEetfestijn: ${err instanceof Error ? err.message : String(err)}`,
       stack: JSON.stringify(err),
       componentStack: json,
       url: document.location.pathname,

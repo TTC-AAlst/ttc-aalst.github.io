@@ -6,7 +6,7 @@ export type IconProps = {
   fa: string;
   color?: string | undefined;
   style?: React.CSSProperties;
-  onClick?: MouseEventHandler<any> | undefined;
+  onClick?: MouseEventHandler<HTMLElement> | undefined;
   className?: string;
 };
 

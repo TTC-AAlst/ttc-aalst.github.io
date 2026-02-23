@@ -2,7 +2,18 @@ import dayjs from 'dayjs';
 import { collectPlayerGameResultsByMatch, getRecentResults, MatchGameResults } from '../PlayerPerformanceUtils';
 import { IMatch } from '../../../../models/model-interfaces';
 
-const createSyncedMatch = (id: number, dateStr: string, playerId: number, games: any[]): IMatch =>
+type GameInput = {
+  homePlayerId: number;
+  outPlayerId: number;
+  outcome: 'Won' | 'Lost';
+  homeRanking?: string;
+  outRanking?: string;
+  isDoubles?: boolean;
+  homeSets?: number;
+  outSets?: number;
+};
+
+const createSyncedMatch = (id: number, dateStr: string, playerId: number, games: GameInput[]): IMatch =>
   ({
     id,
     date: dayjs(dateStr),
@@ -20,7 +31,7 @@ const createSyncedMatch = (id: number, dateStr: string, playerId: number, games:
         isDoubles: g.isDoubles || false,
         ownPlayer: { playerId: g.homePlayerId, ranking: g.homeRanking || 'D6' },
       })),
-  }) as any;
+  }) as unknown as IMatch;
 
 describe('collectPlayerGameResultsByMatch', () => {
   it('collects results for a player from synced matches', () => {
@@ -40,7 +51,7 @@ describe('collectPlayerGameResultsByMatch', () => {
 
   it('skips unsynced matches', () => {
     const match = createSyncedMatch(1, '2025-03-10T20:00:00', 1, [{ homePlayerId: 1, outPlayerId: 2, outcome: 'Won' }]);
-    (match as any).isSyncedWithFrenoy = false;
+    (match as unknown as { isSyncedWithFrenoy: boolean }).isSyncedWithFrenoy = false;
 
     const results = collectPlayerGameResultsByMatch(1, 'D6', [match]);
     expect(results.length).toBe(0);
@@ -79,8 +90,8 @@ describe('getRecentResults', () => {
     matchDate: dayjs('2025-03-10'),
     results: Array.from({ length: count }, (_, i) => ({
       won: i % 2 === 0,
-      playerRanking: 'D6' as any,
-      opponentRanking: 'E6' as any,
+      playerRanking: 'D6',
+      opponentRanking: 'E6',
     })),
   });
 

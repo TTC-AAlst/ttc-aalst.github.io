@@ -6,7 +6,7 @@ import AdminClubForm from './AdminClubForm';
 import { EditButton } from '../controls/Buttons/EditButton';
 import { IClub, IClubLocation } from '../../models/model-interfaces';
 import { frenoyClubSync, updateClub } from '../../reducers/clubsReducer';
-import { RootState } from '../../store';
+import { RootState, AppDispatch } from '../../store';
 
 type AdminClubsProps = {
   clubs: IClub[];
@@ -86,7 +86,7 @@ const ClubsTable = ({ clubs, onEditClub }: { clubs: IClub[]; onEditClub: (club: 
   </Table>
 );
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   updateClub: (club: IClub) => dispatch(updateClub(club)),
   frenoyClubSync: () => dispatch(frenoyClubSync()),
 });

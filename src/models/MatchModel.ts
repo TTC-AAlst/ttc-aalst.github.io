@@ -18,6 +18,7 @@ import {
   MatchPlayerStatus,
   IStoreMatchCommon,
   IFullStoreMatchOwn,
+  IMatchComment,
 } from './model-interfaces';
 import httpClient from '../utils/httpClient';
 
@@ -58,7 +59,7 @@ export default class MatchModel implements IMatch {
   description = '';
   reportPlayerId = 0;
   block = '' as MatchPlayerStatus | '';
-  comments: any[] = [];
+  comments: IMatchComment[] = [];
   opponent: ITeamOpponent = { teamCode: '', clubId: 0 };
   isDerby = false;
 

@@ -23,11 +23,11 @@ export interface ITeamPlayerStats {
  *                       UTILITY
  **************************************************** */
 
-export type TranslatorFn = (key?: string, params?: any) => string;
+export type TranslatorFn = (key?: string, params?: Record<string, string | number>) => string;
 
 export type Translator = TranslatorFn & {
   reverseRoute: (baseRoute: string, translatedRoute: string) => string;
-  route: (routeName: string, params?: any) => string;
+  route: (routeName: string, params?: Record<string, string | number>) => string;
 };
 
 export type OwnTeamLink = 'main' | 'matches' | 'ranking' | 'players' | 'matchesTable' | 'week';
@@ -199,7 +199,7 @@ export interface IMatchComment {
   text: string;
   /** Hidden is only visible for TTC Aalst players */
   hidden: boolean;
-  postedOn: any;
+  postedOn: string | Date | null;
   imageUrl: string;
 }
 

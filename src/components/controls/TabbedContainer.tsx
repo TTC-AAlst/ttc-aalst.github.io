@@ -11,7 +11,7 @@ export type TabKey = {
   title: string;
   label?: string;
   show?: boolean;
-  headerChildren?: any;
+  headerChildren?: React.ReactNode;
 };
 
 type TabbedContainerComponentProps = {

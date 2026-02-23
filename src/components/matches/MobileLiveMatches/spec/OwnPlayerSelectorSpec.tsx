@@ -69,18 +69,18 @@ const vttl = (pos: number, ranking: string, idx: number, val: number) => ({
   rankingValue: val,
 });
 
-const ply = (id: number, alias: string, first: string, last: string, active: boolean, v?: any): IStorePlayer => ({
+const ply = (id: number, alias: string, first: string, last: string, active: boolean, v?: ReturnType<typeof vttl>): IStorePlayer => ({
   id,
   alias,
   firstName: first,
   lastName: last,
   active,
   vttl: v,
-  sporta: undefined as any,
+  sporta: undefined as unknown,
   contact: { playerId: id, email: '', mobile: '', address: '', city: '' },
-  style: {} as any,
+  style: {} as unknown,
   quitYear: null,
-  security: 'Player' as any,
+  security: 'Player' as unknown,
   hasKey: false,
   imageVersion: 0,
 });
@@ -95,7 +95,7 @@ const testPlayers: IStorePlayer[] = [
   ply(7, 'NoRanking', 'NoRanking', 'Player', true),
 ];
 
-const mockTeamMatches: any[] = [];
+const mockTeamMatches: IMatch[] = [];
 
 const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
   ({
@@ -108,14 +108,14 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
     block: '',
     isSyncedWithFrenoy: false,
     opponent: { clubId: 10, teamCode: 'A' },
-    date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) } as any,
+    date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) } as unknown,
     getOwnPlayers: () => [],
     getTheirPlayers: () => [],
     getTeamPlayerCount: () => 4,
-    getTeam: () => ({ getMatches: () => mockTeamMatches }) as any,
+    getTeam: () => ({ getMatches: () => mockTeamMatches }) as unknown,
     getPlayerFormation: () => [],
     ...overrides,
-  }) as any;
+  }) as unknown;
 
 const defaultStoreState = {
   players: testPlayers,
@@ -166,7 +166,7 @@ describe('OwnPlayerSelector', () => {
   });
 
   it('disables excess players when max reached', async () => {
-    const match = createMockMatch({ getTeamPlayerCount: () => 2 as any });
+    const match = createMockMatch({ getTeamPlayerCount: () => 2 as unknown });
     const user = userEvent.setup();
     renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
@@ -179,11 +179,11 @@ describe('OwnPlayerSelector', () => {
 
   it('pre-selects players matching match.block status', () => {
     const match = createMockMatch({
-      block: 'Captain' as any,
+      block: 'Captain' as unknown,
       getOwnPlayers: () => [
-        { playerId: 1, status: 'Captain', home: true, position: 1 } as any,
-        { playerId: 3, status: 'Captain', home: true, position: 2 } as any,
-        { playerId: 5, status: 'Play', home: true, position: 3 } as any,
+        { playerId: 1, status: 'Captain', home: true, position: 1 } as unknown,
+        { playerId: 3, status: 'Captain', home: true, position: 2 } as unknown,
+        { playerId: 5, status: 'Play', home: true, position: 3 } as unknown,
       ],
     });
 
@@ -196,8 +196,8 @@ describe('OwnPlayerSelector', () => {
 
   it('sorts selected players to top of list', () => {
     const match = createMockMatch({
-      block: 'Captain' as any,
-      getOwnPlayers: () => [{ playerId: 5, status: 'Captain', home: true, position: 1 } as any],
+      block: 'Captain' as unknown,
+      getOwnPlayers: () => [{ playerId: 5, status: 'Captain', home: true, position: 1 } as unknown],
     });
 
     renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
@@ -207,7 +207,7 @@ describe('OwnPlayerSelector', () => {
   });
 
   it('auto-saves when reaching required player count', async () => {
-    const match = createMockMatch({ getTeamPlayerCount: () => 2 as any });
+    const match = createMockMatch({ getTeamPlayerCount: () => 2 as unknown });
     const user = userEvent.setup();
     renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 

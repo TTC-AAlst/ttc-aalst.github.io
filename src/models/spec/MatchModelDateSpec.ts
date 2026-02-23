@@ -12,7 +12,7 @@ const createMatch = (dateStr: string) =>
     opponent: {},
     isHomeMatch: true,
     score: { home: 0, out: 0 },
-  } as any);
+  } as unknown as ConstructorParameters<typeof MatchModel>[0]);
 
 describe('MatchModel date methods', () => {
   describe('getDisplayDate', () => {
@@ -131,7 +131,7 @@ describe('MatchModel date methods', () => {
         opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
         score: { home: 10, out: 6 },
-      } as any);
+      } as unknown as ConstructorParameters<typeof MatchModel>[0]);
       expect(dayjs.isDayjs(match.comments[0].postedOn)).toBe(true);
       expect(match.comments[0].postedOn.hour()).toBe(22);
       expect(match.comments[0].postedOn.minute()).toBe(30);
@@ -148,7 +148,7 @@ describe('MatchModel date methods', () => {
         opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
         score: { home: 10, out: 6 },
-      } as any);
+      } as unknown as ConstructorParameters<typeof MatchModel>[0]);
       expect(match.comments[0].id).toBe(42);
       expect(match.comments[0].text).toBe('Nice one');
       expect(match.comments[0].playerId).toBe(7);
@@ -157,13 +157,13 @@ describe('MatchModel date methods', () => {
 
   describe('invalid date handling', () => {
     it('null date creates an invalid dayjs', () => {
-      const match = createMatch(null as any);
+      const match = createMatch(null as unknown as ConstructorParameters<typeof MatchModel>[0]);
       expect(match.date.isValid()).toBe(false);
       expect(match.date.format('YYYY-MM-DD')).toBe('Invalid Date');
     });
 
     it('undefined date silently becomes current time', () => {
-      const match = createMatch(undefined as any);
+      const match = createMatch(undefined as unknown as ConstructorParameters<typeof MatchModel>[0]);
       expect(match.date.isValid()).toBe(true);
       expect(match.date.diff(dayjs(), 'seconds')).toBeLessThan(2);
     });
@@ -174,12 +174,12 @@ describe('MatchModel date methods', () => {
     });
 
     it('isBeingPlayed returns false for invalid date', () => {
-      const match = createMatch(null as any);
+      const match = createMatch(null as unknown as ConstructorParameters<typeof MatchModel>[0]);
       expect(match.isBeingPlayed()).toBe(false);
     });
 
     it('getDisplayDate returns "Invalid Date" for null date', () => {
-      const match = createMatch(null as any);
+      const match = createMatch(null as unknown as ConstructorParameters<typeof MatchModel>[0]);
       expect(match.getDisplayDate()).toContain('Invalid Date');
     });
 
@@ -194,7 +194,7 @@ describe('MatchModel date methods', () => {
         opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
         score: { home: 0, out: 0 },
-      } as any);
+      } as unknown as ConstructorParameters<typeof MatchModel>[0]);
       expect(match.comments[0].postedOn.isValid()).toBe(false);
     });
 
@@ -209,7 +209,7 @@ describe('MatchModel date methods', () => {
         opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
         score: { home: 0, out: 0 },
-      } as any);
+      } as unknown as ConstructorParameters<typeof MatchModel>[0]);
       expect(match.comments[0].postedOn.isValid()).toBe(true);
     });
   });

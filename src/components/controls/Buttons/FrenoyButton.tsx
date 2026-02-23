@@ -10,7 +10,7 @@ export const FrenoyPlayerDetailsIcon = () => <Icon fa="fa fa-search" translate t
 type FrenoyLinkProps = {
   competition: Competition;
   uniqueIndex: number;
-  children: any;
+  children: React.ReactNode;
 };
 
 export const FrenoyLink = ({ competition, uniqueIndex, children }: FrenoyLinkProps) => {

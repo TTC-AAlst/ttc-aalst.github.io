@@ -204,7 +204,7 @@ export const PlayerCompetitionLabel = ({ comp, player, withName = false }: Playe
 type PlayerFrenoyLinkProps = {
   comp: IPlayerCompetition;
   style?: React.CSSProperties;
-  children?: any;
+  children?: React.ReactNode;
 };
 
 export const PlayerFrenoyLink = ({ comp, style, children }: PlayerFrenoyLinkProps) => (

@@ -74,7 +74,7 @@ export const MatchReport = ({ match, skipContainerClass }: MatchReportProps) => 
     />
   ) : null;
 
-  let reportText: any;
+  let reportText: React.ReactNode;
   const canComment = !!user.playerId;
   const showComments = canComment || match.comments.length;
   const canPostReport = user.canPostReport(match.teamId) && match.isScoreComplete();
@@ -119,7 +119,7 @@ export const MatchReport = ({ match, skipContainerClass }: MatchReportProps) => 
     reportText = t('match.report.noReport');
   }
 
-  let comments: any;
+  let comments: React.ReactNode;
   if (showComments) {
     comments = (
       <div>

@@ -39,22 +39,22 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
     description: '',
     opponent: { clubId: 10, teamCode: 'A' },
     teamId: 1,
-    date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true } as any,
+    date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true } as unknown,
     getTeam: () =>
       ({
         renderOwnTeamTitle: () => 'TTC Aalst A',
         getDivisionRanking: () => ({ empty: true }),
         getThriller: () => null,
-      }) as any,
+      }) as unknown,
     renderOpponentTitle: () => 'Opponent A',
     getOwnPlayers: () => [],
     getTheirPlayers: () => [{ position: 1, name: 'Player 1', ranking: 'C6', uniqueIndex: 100, won: 0, home: false, status: 'Major', alias: 'P1' }],
-    getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }) as any,
+    getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }) as unknown,
     isSyncedWithFrenoy: false,
     isStandardStartTime: () => true,
     getTeamPlayerCount: () => 4,
     ...overrides,
-  }) as any;
+  }) as unknown;
 
 const renderInProgress = (match: IMatch, userState = {}) =>
   renderWithProviders(

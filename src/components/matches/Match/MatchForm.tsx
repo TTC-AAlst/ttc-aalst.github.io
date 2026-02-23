@@ -6,6 +6,7 @@ import { IUser } from '../../../models/UserModel';
 import { IMatch, IMatchScore } from '../../../models/model-interfaces';
 import { updateScore } from '../../../reducers/matchesReducer';
 import { debounce } from '../../../utils/debounce';
+import { AppDispatch } from '../../../store';
 
 const scoreOrDefault = (match: IMatch): IMatchScore => match.score || { home: 0, out: 0 };
 
@@ -132,7 +133,7 @@ const MatchManipulation = ({ plusClick, minClick, isHome }: MatchManipulationPro
   </div>
 );
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   updateScore: (data: Parameters<typeof updateScore>[0]) => dispatch(updateScore(data)),
 });
 

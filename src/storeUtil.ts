@@ -47,7 +47,7 @@ export function getOpponentFormations(matches: IMatch[], opponent?: ITeamOpponen
     }, []);
 }
 
-const unique = (value: any, index: number, self: any[]): boolean => self.indexOf(value) === index;
+const unique = <T>(value: T, index: number, self: T[]): boolean => self.indexOf(value) === index;
 
 export function getMatchPlayerRankings(match: IMatch, homeTeam: boolean): IOpponentFormationRankingInfo[] {
   let opponentFormation: IMatchPlayer[];

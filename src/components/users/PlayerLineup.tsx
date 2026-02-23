@@ -15,6 +15,7 @@ import { SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOr
 import { t } from '../../locales';
 import { selectPlayer } from '../../reducers/matchesReducer';
 import { IMatch, ITeam, MatchPlayerStatus } from '../../models/model-interfaces';
+import { AppDispatch } from '../../store';
 
 type PlayerLineupProps = {
   selectPlayer: (data: Parameters<typeof selectPlayer>[0]) => void;
@@ -193,7 +194,7 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
   }
 }
 
-const Comment = ({ matchPlayer }: { matchPlayer: any }) => (
+const Comment = ({ matchPlayer }: { matchPlayer: { statusNote: string } }) => (
   <div>
     <strong>{t('profile.play.extraComment')}</strong>
     <br />
@@ -202,7 +203,7 @@ const Comment = ({ matchPlayer }: { matchPlayer: any }) => (
 );
 
 type CommentEditFormProps = {
-  onChange: any;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
 };
 
@@ -213,7 +214,7 @@ const CommentEditForm = ({ onChange, value }: CommentEditFormProps) => (
   </div>
 );
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   selectPlayer: (data: Parameters<typeof selectPlayer>[0]) => dispatch(selectPlayer(data)),
 });
 

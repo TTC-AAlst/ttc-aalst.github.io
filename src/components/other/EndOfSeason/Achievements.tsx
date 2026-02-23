@@ -76,7 +76,7 @@ const TeamAchievement = ({ achievement }: { achievement: TeamAchievementInfo }) 
 );
 
 const Achievement = ({ achievement }: { achievement: AchievementInfo }) => {
-  const nodes: any[] = achievement.players.map((player, index) => (
+  const nodes: React.ReactNode[] = achievement.players.map((player, index) => (
     <dd key={index}>
       <PlayerLink player={player.player} />
       {player.throphy}

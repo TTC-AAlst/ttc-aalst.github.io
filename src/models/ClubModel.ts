@@ -4,7 +4,7 @@ export const OwnClubId = 1;
 
 class ClubModel implements IClub {
   active: boolean;
-  alternativeLocations: any[];
+  alternativeLocations: IClubLocation[];
   codeSporta: string;
   codeVttl: string;
   id: number;

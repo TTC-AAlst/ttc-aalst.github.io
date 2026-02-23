@@ -10,7 +10,7 @@ type QuillEditorProps = {
 };
 
 const QuillEditor = (props: QuillEditorProps) => {
-  const quillRef = useRef<any>(null);
+  const quillRef = useRef<EditorRef>(null);
   return <Editor ref={quillRef} {...props} />;
 };
 
@@ -18,7 +18,7 @@ type EditorRef = Quill | null;
 
 const Editor = forwardRef<EditorRef, QuillEditorProps>(({ readOnly, text, onChange, style }, ref) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const textRef = useRef<any>(text);
+  const textRef = useRef<string>(text);
   const onTextChangeRef = useRef(onChange);
   // const onSelectionChangeRef = useRef(onSelectionChange);
 

@@ -35,7 +35,7 @@ const rootReducer = combineReducers({
 function createTestStore(preloadedState?: DeepPartial<RootState>) {
   return configureStore({
     reducer: rootReducer,
-    preloadedState: preloadedState as any,
+    preloadedState: preloadedState as DeepPartial<RootState>,
   });
 }
 

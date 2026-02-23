@@ -14,7 +14,7 @@ type OpponentLinkProps = {
 
 export const OpponentLink = ({ withPosition = true, team, opponent }: OpponentLinkProps) => {
   const club = storeUtil.getClub(opponent.clubId);
-  let teamTitle: any = `${club?.name || 'Unknown'} ${opponent.teamCode || ''}`;
+  let teamTitle: React.ReactNode = `${club?.name || 'Unknown'} ${opponent.teamCode || ''}`;
   if (opponent.clubId !== OwnClubId && browseTo.getOpponent(team.competition, opponent) !== document.location.pathname) {
     teamTitle = (
       <Link className="link-hover-underline" to={browseTo.getOpponent(team.competition, opponent)}>

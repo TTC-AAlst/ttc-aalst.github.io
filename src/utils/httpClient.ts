@@ -25,7 +25,7 @@ function authHeaders(): Record<string, string> {
 }
 
 const HttpClient = {
-  get: <T>(path: string, qs?: any): Promise<T> => {
+  get: <T>(path: string, qs?: Record<string, string | number | boolean>): Promise<T> => {
     let url = getUrl(path);
     if (qs) {
       url += `?${new URLSearchParams(qs).toString()}`;
@@ -47,7 +47,7 @@ const HttpClient = {
       return response.json();
     })();
   },
-  post: <T>(url: string, data?: any): Promise<T> => {
+  post: <T>(url: string, data?: unknown): Promise<T> => {
     const fullUrl = `POST ${url}`;
     return (async () => {
       if (LogRequestTimes) {
@@ -86,7 +86,7 @@ const HttpClient = {
 
     return response.json();
   },
-  uploadImage: async (imageBase64: string, dataId: number, type: string): Promise<any> => {
+  uploadImage: async (imageBase64: string, dataId: number, type: string): Promise<{ imageVersion: number }> => {
     const response = await fetch(getUrl('/upload/image'), {
       method: 'POST',
       headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...authHeaders() },

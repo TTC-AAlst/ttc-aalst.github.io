@@ -15,11 +15,11 @@ export const PlayerAutoComplete = ({ competition, label, style, selectPlayer, ..
   const [searchText, setSearchText] = useState('');
   const players = useTtcSelector(selectPlayers);
 
-  const onPlayerSelected = (option: any) => {
-    if (!option.length) {
-      setSearchText(option);
+  const onPlayerSelected = (option: { value: string; label: string } | null) => {
+    if (option) {
+      setSearchText(option.value);
       if (option.value === 'system') {
-        selectPlayer(option.value);
+        selectPlayer('system');
       } else {
         selectPlayer(parseInt(option.value, 10));
       }
@@ -45,7 +45,7 @@ export const PlayerAutoComplete = ({ competition, label, style, selectPlayer, ..
         {...props}
         classNamePrefix="react-select-fix"
         onChange={onPlayerSelected}
-        options={playerMenuItems.concat([systemPlayerItem]).sort((a, b) => a.label.localeCompare(b.label)) as any}
+        options={playerMenuItems.concat([systemPlayerItem]).sort((a, b) => a.label.localeCompare(b.label))}
         isClearable={false}
         maxMenuHeight={200}
         noOptionsMessage={() => t('players.noFound')}

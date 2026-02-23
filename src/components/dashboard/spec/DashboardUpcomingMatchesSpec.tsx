@@ -48,12 +48,12 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
     uniqueIndex: 100,
     rankingIndex: 1,
     rankingValue: 50,
-  } as any,
-  sporta: undefined as any,
+  } as unknown,
+  sporta: undefined as unknown,
   contact: { playerId: id, email: '', mobile: '', address: '', city: '' },
-  style: {} as any,
+  style: {} as unknown,
   quitYear: null,
-  security: 'Player' as any,
+  security: 'Player' as unknown,
   hasKey: false,
   imageVersion: 0,
 });
@@ -73,12 +73,12 @@ const mockMatch: IMatch = {
   players: [],
   games: [],
   isBeingPlayed: () => false,
-  getTeam: () => ({ id: 1, getDivisionRanking: () => ({ empty: true }), renderOwnTeamTitle: () => 'TTC Aalst A' }) as any,
+  getTeam: () => ({ id: 1, getDivisionRanking: () => ({ empty: true }), renderOwnTeamTitle: () => 'TTC Aalst A' }) as unknown,
   getPlayerFormation: () => [],
   getOwnPlayers: () => [],
   getTheirPlayers: () => [],
   renderOpponentTitle: () => 'Opponent A',
-} as any;
+} as unknown;
 
 describe('DashboardUpcomingMatches', () => {
   it('renders player link when logged in', () => {
@@ -92,7 +92,7 @@ describe('DashboardUpcomingMatches', () => {
           players: [testPlayer],
           matches: [mockMatch],
           teams: [{ id: 1, teamCode: 'A', competition: 'Vttl' }],
-        } as any,
+        } as unknown,
       },
     );
 
@@ -112,7 +112,7 @@ describe('DashboardUpcomingMatches', () => {
           players: [testPlayer],
           matches: [mockMatch],
           teams: [{ id: 1, teamCode: 'A', competition: 'Vttl' }],
-        } as any,
+        } as unknown,
       },
     );
 

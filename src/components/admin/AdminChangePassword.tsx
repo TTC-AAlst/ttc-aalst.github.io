@@ -5,6 +5,7 @@ import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
 import { adminSetNewPassword } from '../../reducers/userActions';
+import { AppDispatch } from '../../store';
 
 type AdminChangePasswordProps = {
   adminSetNewPassword: (data: Parameters<typeof adminSetNewPassword>[0]) => void;
@@ -59,7 +60,7 @@ class AdminChangePassword extends Component<AdminChangePasswordProps, AdminChang
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   adminSetNewPassword: (data: Parameters<typeof adminSetNewPassword>[0]) => dispatch(adminSetNewPassword(data)),
 });
 

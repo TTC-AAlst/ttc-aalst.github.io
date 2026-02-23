@@ -90,13 +90,13 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
     frenoyDivisionId: 1,
     games: [],
     opponent: { clubId: 10, teamCode: 'A' },
-    date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) } as any,
-    getOpponentClub: () => ({ codeVttl: 'OB001', codeSporta: '', id: 10, name: 'Test Club' }) as any,
+    date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) } as unknown,
+    getOpponentClub: () => ({ codeVttl: 'OB001', codeSporta: '', id: 10, name: 'Test Club' }) as unknown,
     getTheirPlayers: () => [],
     getTeamPlayerCount: () => 4,
     getOwnPlayers: () => [],
     ...overrides,
-  }) as any;
+  }) as unknown;
 
 const defaultStoreState = {
   clubPlayers: {
@@ -115,7 +115,7 @@ describe('OpponentPlayerSelector', () => {
 
   it('shows location unknown when no club code', () => {
     const match = createMockMatch({
-      getOpponentClub: () => ({ codeVttl: '', codeSporta: '' }) as any,
+      getOpponentClub: () => ({ codeVttl: '', codeSporta: '' }) as unknown,
     });
 
     renderWithProviders(<OpponentPlayerSelector match={match} />, { preloadedState: defaultStoreState });
@@ -186,7 +186,7 @@ describe('OpponentPlayerSelector', () => {
   });
 
   it('disables excess players when max reached', async () => {
-    const match = createMockMatch({ getTeamPlayerCount: () => 2 as any });
+    const match = createMockMatch({ getTeamPlayerCount: () => 2 as unknown });
     const user = userEvent.setup();
     renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
@@ -204,7 +204,7 @@ describe('OpponentPlayerSelector', () => {
       { uniqueIndex: 103, name: 'André Van Damme', position: 2, ranking: 'C6' },
     ];
     const match = createMockMatch({
-      getTheirPlayers: () => existingPlayers as any,
+      getTheirPlayers: () => existingPlayers as unknown,
     });
 
     renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
@@ -220,7 +220,7 @@ describe('OpponentPlayerSelector', () => {
   it('sorts selected players to top of list', async () => {
     const existingPlayers = [{ uniqueIndex: 105, name: 'Pieter De Smet', position: 1, ranking: 'D2' }];
     const match = createMockMatch({
-      getTheirPlayers: () => existingPlayers as any,
+      getTheirPlayers: () => existingPlayers as unknown,
     });
 
     renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
@@ -291,7 +291,7 @@ describe('OpponentPlayerSelector', () => {
   });
 
   it('auto-saves when reaching required player count', async () => {
-    const match = createMockMatch({ getTeamPlayerCount: () => 2 as any });
+    const match = createMockMatch({ getTeamPlayerCount: () => 2 as unknown });
     const user = userEvent.setup();
     renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 

@@ -7,7 +7,7 @@ const createUser = (playerId: number, securityRoles: string[] = []) => new UserM
 const createMatchStub = (dateStr: string): IMatch =>
   ({
     date: dayjs(dateStr),
-  }) as any;
+  }) as unknown as IMatch;
 
 describe('UserModel.canEditPlayersOnMatchDay', () => {
   it('returns true for admin regardless of date', () => {

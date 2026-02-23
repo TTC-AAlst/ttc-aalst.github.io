@@ -9,6 +9,7 @@ import { PlayersImageGallery } from '../players/PlayersImageGallery';
 import { teamPlayerType, ITeam, Competition, TeamPlayerType } from '../../models/model-interfaces';
 import { frenoyTeamSync } from '../../reducers/matchesReducer';
 import { toggleTeamPlayer } from '../../reducers/teamsReducer';
+import { AppDispatch } from '../../store';
 
 type AdminTeamsProps = {
   teams: ITeam[];
@@ -137,7 +138,7 @@ const AdminTeamsToolbar = ({ onFilterChange }: { onFilterChange: (comp: Competit
   </div>
 );
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   toggleTeamPlayer: (data: Parameters<typeof toggleTeamPlayer>[0]) => dispatch(toggleTeamPlayer(data)),
   frenoyTeamSync: (data: { teamId: number }) => dispatch(frenoyTeamSync(data)),
 });

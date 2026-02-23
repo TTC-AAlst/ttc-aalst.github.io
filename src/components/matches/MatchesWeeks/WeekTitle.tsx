@@ -18,7 +18,7 @@ export const WeekTitle = ({ weekCalcer, style, weekChange }: WeekTitleProps) => 
     return null;
   }
 
-  let extraTitle: any = null;
+  let extraTitle: React.ReactNode = null;
   if (viewport.width > 450) {
     extraTitle = (
       <span>

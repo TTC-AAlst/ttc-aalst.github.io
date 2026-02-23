@@ -12,7 +12,7 @@ export const ThrillerIcon = ({ color = undefined }: { color?: string }) => (
 type BadgyProps = {
   type: string;
   style?: React.CSSProperties;
-  children?: any;
+  children?: React.ReactNode;
   tooltip?: string;
 };
 

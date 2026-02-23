@@ -46,12 +46,12 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
     uniqueIndex: 100,
     rankingIndex: 1,
     rankingValue: 50,
-  } as any,
-  sporta: undefined as any,
+  } as unknown,
+  sporta: undefined as unknown,
   contact: { playerId: id, email: 'test@test.com', mobile: '0471234567', address: 'Test Street 1', city: 'Aalst' },
-  style: {} as any,
+  style: {} as unknown,
   quitYear: null,
-  security: 'Player' as any,
+  security: 'Player' as unknown,
   hasKey: false,
   imageVersion: 0,
 });
@@ -76,7 +76,7 @@ describe('Profile', () => {
           user: mockUser,
           players: [testPlayer],
           teams: [],
-        } as any,
+        } as unknown,
       },
     );
 
@@ -94,7 +94,7 @@ describe('Profile', () => {
           user: mockUser,
           players: [testPlayer],
           teams: [],
-        } as any,
+        } as unknown,
       },
     );
 

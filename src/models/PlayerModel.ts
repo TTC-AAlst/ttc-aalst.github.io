@@ -18,7 +18,7 @@ export default class PlayerModel implements IPlayer {
   hasKey: boolean;
   imageVersion: number;
 
-  constructor(json: any = { security: 'Player' }) {
+  constructor(json: Partial<IPlayer> = { security: 'Player' }) {
     this.alias = json.alias || json.name || '';
     this.contact = new PlayerContactModel(json.contact || {}); // playerId, email, mobile, address, city
     this.id = json.id;

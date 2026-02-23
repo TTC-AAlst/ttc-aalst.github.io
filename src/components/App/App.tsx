@@ -15,7 +15,7 @@ import { ErrorBoundary } from './ErrorBoundary';
 
 import './App.scss';
 
-export const App = ({ Component }: { Component: any }) => {
+export const App = ({ Component }: { Component: React.ComponentType }) => {
   const config = useTtcSelector(state => state.config);
   const dispatch = useTtcDispatch();
   const location = useLocation();

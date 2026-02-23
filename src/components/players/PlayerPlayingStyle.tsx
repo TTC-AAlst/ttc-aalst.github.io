@@ -64,7 +64,7 @@ export const PlayerPlayingStyleForm = ({ player, ...props }: PlayerPlayingStyleF
   };
 
   const canChangeStyle = user.playerId && user.playerId !== player.id;
-  let openFormIcon: any = null;
+  let openFormIcon: React.ReactNode = null;
   if (props.iconStyle === 'avatar') {
     // MatchCard (small):
     // Displays the Avatar but not to edit the style, instead goes to the player page

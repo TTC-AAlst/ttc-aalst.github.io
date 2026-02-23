@@ -23,7 +23,7 @@ export const AdminParams = () => {
   const [filter, setFilter] = useState<Pages>('params');
   const viewport = useViewport();
 
-  let content: any;
+  let content: React.ReactNode;
   switch (filter) {
     case 'eetfestijn':
       content = <AdminEetfestijn />;

@@ -8,6 +8,7 @@ import { selectMatches, selectMatchesBeingPlayed, selectPlayers, selectUser, sel
 import { useViewport } from '../../utils/hooks/useViewport';
 import t from '../../locales';
 import PlayerModel from '../../models/PlayerModel';
+import { IMatch } from '../../models/model-interfaces';
 
 export const DashboardUpcomingMatches = () => {
   const matches = useTtcSelector(selectMatches);
@@ -45,10 +46,10 @@ export const DashboardUpcomingMatches = () => {
   const matchesBeingPlayed = useTtcSelector(selectMatchesBeingPlayed);
 
   // Check if user is in the formation of a match
-  const isUserInFormation = (match: any): boolean => {
+  const isUserInFormation = (match: IMatch): boolean => {
     if (!user.playerId) return false;
     const formation = match.getPlayerFormation(undefined);
-    return formation.some((p: any) => p.id === user.playerId);
+    return formation.some(p => p.id === user.playerId);
   };
 
   // User matches: user's team OR user is in formation

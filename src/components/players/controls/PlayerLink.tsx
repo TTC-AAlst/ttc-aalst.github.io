@@ -8,7 +8,7 @@ type PlayerLinkProps = {
   player: IStorePlayer;
   /** Allow to show alias */
   alias?: boolean;
-  children?: any;
+  children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 };

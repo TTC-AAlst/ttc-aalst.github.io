@@ -13,7 +13,7 @@ const createMatch = (dateStr: string, id = 1): IMatch =>
     opponent: {},
     isHomeMatch: true,
     score: { home: 0, out: 0 },
-  } as any) as IMatch;
+  } as unknown as ConstructorParameters<typeof MatchModel>[0]) as IMatch;
 
 describe('WeekCalcer', () => {
   describe('empty matches', () => {

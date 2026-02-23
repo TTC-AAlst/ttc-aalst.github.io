@@ -3,7 +3,7 @@ import { getMatchPlayerRankings } from '../../../storeUtil';
 import { IMatch } from '../../../models/model-interfaces';
 
 type PlayerRankingsProps = {
-  formation: any[];
+  formation: { ranking: string; amount: number }[];
 };
 
 export class PlayerRankings extends Component<PlayerRankingsProps> {

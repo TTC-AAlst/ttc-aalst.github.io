@@ -13,6 +13,7 @@ import storeUtil from '../../storeUtil';
 import { uploadPlayer } from '../../reducers/userActions';
 import { selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { getStaticFileUrl } from '../../config';
+import { AppDispatch } from '../../store';
 
 export const ProfilePhotoAvatarForm = () => {
   const user = useTtcSelector(selectUser);
@@ -131,7 +132,7 @@ class ProfilePhotoForm extends Component<ProfilePhotoFormProps, ProfilePhotoForm
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   uploadPlayer: (data: Parameters<typeof uploadPlayer>[0]) => dispatch(uploadPlayer(data)),
 });
 

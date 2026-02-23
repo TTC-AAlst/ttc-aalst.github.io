@@ -28,12 +28,12 @@ const AdminDev = () => {
   );
 };
 
-const AdminStateDisplayer = ({ data }: { data: any }) => {
+const AdminStateDisplayer = ({ data }: { data: unknown }) => {
   const [filter, setFilter] = useState('');
 
   let filteredData = data;
   if (filter) {
-    if (filteredData.length) {
+    if (Array.isArray(filteredData)) {
       filteredData = filteredData.filter((entry: unknown) => JSON.stringify(entry).toLowerCase().includes(filter));
     }
   }
@@ -44,7 +44,7 @@ const AdminStateDisplayer = ({ data }: { data: any }) => {
         <Icon fa="fa fa-search" />
         &nbsp;
         <input type="text" width={150} onChange={e => setFilter(e.target.value.toLowerCase())} />
-        {filteredData.length ? <span style={{ marginLeft: 10 }}>Records: {data.length}</span> : null}
+        {Array.isArray(filteredData) ? <span style={{ marginLeft: 10 }}>Records: {filteredData.length}</span> : null}
       </div>
       <pre style={{ marginTop: 20 }}>{JSON.stringify(filteredData, null, 4)}</pre>
     </div>

@@ -75,7 +75,7 @@ describe('TeamModel', () => {
               outPlayerSets: 2, // belle
             },
           ],
-        } as any),
+        } as unknown as ConstructorParameters<typeof MatchModel>[0]),
       ];
     });
 
