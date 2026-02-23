@@ -31,7 +31,7 @@ const Routes = () => {
   useSignalR();
 
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Switch>
         <Route path={`${t.route('matchesWeek')}/:week?/:comp?`} element={<App Component={MatchesWeek} />} />
         <Route path={`${t.route('teams')}/:tabKey?/:view?`} element={<App Component={Teams} />} />

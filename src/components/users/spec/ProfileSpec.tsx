@@ -1,8 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../utils/test-utils';
+import { renderWithProviders, TestRouter } from '../../../utils/test-utils';
 import { Profile } from '../Profile';
 import { IStorePlayer } from '../../../models/model-interfaces';
 
@@ -69,9 +68,9 @@ const mockUser = {
 describe('Profile', () => {
   it('renders "Mijn spelerspagina" button on profile page', () => {
     renderWithProviders(
-      <MemoryRouter>
+      <TestRouter>
         <Profile />
-      </MemoryRouter>,
+      </TestRouter>,
       {
         preloadedState: {
           user: mockUser,
@@ -87,9 +86,9 @@ describe('Profile', () => {
 
   it('renders logout button on profile page', () => {
     renderWithProviders(
-      <MemoryRouter>
+      <TestRouter>
         <Profile />
-      </MemoryRouter>,
+      </TestRouter>,
       {
         preloadedState: {
           user: mockUser,

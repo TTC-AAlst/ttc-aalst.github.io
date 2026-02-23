@@ -1,8 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../../utils/test-utils';
+import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { MobileLiveMatchCard } from '../MobileLiveMatchCard';
 import { IMatch, IMatchPlayer, IMatchPlayerInfo } from '../../../../models/model-interfaces';
 
@@ -67,9 +66,9 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
 
 const renderCard = (match: IMatch, expanded = false) =>
   renderWithProviders(
-    <MemoryRouter>
+    <TestRouter>
       <MobileLiveMatchCard match={match} expanded={expanded} onToggle={() => {}} isCollapsible />
-    </MemoryRouter>,
+    </TestRouter>,
     { preloadedState: { players: [], user: { playerId: 0, teams: [], security: [] } } as any },
   );
 

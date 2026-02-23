@@ -1,8 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../utils/test-utils';
+import { renderWithProviders, TestRouter } from '../../../utils/test-utils';
 import { Players } from '../Players';
 import { IStorePlayer } from '../../../models/model-interfaces';
 
@@ -62,9 +61,9 @@ const otherPlayer = createPlayer(43, 'Jan', 'Janssens');
 describe('Players', () => {
   it('renders "Mijn spelerspagina" link when logged in', () => {
     renderWithProviders(
-      <MemoryRouter>
+      <TestRouter>
         <Players />
-      </MemoryRouter>,
+      </TestRouter>,
       {
         preloadedState: {
           user: { playerId: 42, teams: [], security: [], token: 'test', alias: 'Wouter' },
@@ -81,9 +80,9 @@ describe('Players', () => {
 
   it('does not render "Mijn spelerspagina" link when not logged in', () => {
     renderWithProviders(
-      <MemoryRouter>
+      <TestRouter>
         <Players />
-      </MemoryRouter>,
+      </TestRouter>,
       {
         preloadedState: {
           user: { playerId: 0, teams: [], security: [], token: '', alias: '' },

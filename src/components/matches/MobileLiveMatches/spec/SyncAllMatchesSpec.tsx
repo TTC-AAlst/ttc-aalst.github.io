@@ -1,9 +1,8 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../../utils/test-utils';
+import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { MobileLiveMatches } from '../MobileLiveMatches';
 import { IMatch } from '../../../../models/model-interfaces';
 
@@ -58,9 +57,9 @@ const createMockMatch = (id: number): IMatch =>
 
 const renderMatches = (matches: IMatch[], userState = {}) =>
   renderWithProviders(
-    <MemoryRouter>
+    <TestRouter>
       <MobileLiveMatches matches={matches} />
-    </MemoryRouter>,
+    </TestRouter>,
     { preloadedState: { user: { playerId: 1, teams: [1], security: [], ...userState }, readonlyMatches: [] } },
   );
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../../utils/test-utils';
+import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { Navigation } from '../HeaderNavigation';
 import { IStorePlayer } from '../../../../models/model-interfaces';
 
@@ -50,9 +49,9 @@ const testPlayer = createPlayer(42, 'Wouter', 'Test');
 describe('HeaderNavigation', () => {
   it('renders "Mijn spelerspagina" menu item when logged in', () => {
     renderWithProviders(
-      <MemoryRouter>
+      <TestRouter>
         <Navigation navOpen closeNav={() => {}} />
-      </MemoryRouter>,
+      </TestRouter>,
       {
         preloadedState: {
           user: { playerId: 42, teams: [], security: [], token: 'test', alias: 'Wouter' },
@@ -68,9 +67,9 @@ describe('HeaderNavigation', () => {
 
   it('does not render "Mijn spelerspagina" when not logged in', () => {
     renderWithProviders(
-      <MemoryRouter>
+      <TestRouter>
         <Navigation navOpen closeNav={() => {}} />
-      </MemoryRouter>,
+      </TestRouter>,
       {
         preloadedState: {
           user: { playerId: 0, teams: [], security: [], token: '', alias: '' },

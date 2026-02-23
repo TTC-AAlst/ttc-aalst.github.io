@@ -1,9 +1,8 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import dayjs from 'dayjs';
-import { renderWithProviders } from '../../../utils/test-utils';
+import { renderWithProviders, TestRouter } from '../../../utils/test-utils';
 import { DashboardUpcomingMatches } from '../DashboardUpcomingMatches';
 import { IStorePlayer, IMatch } from '../../../models/model-interfaces';
 
@@ -84,9 +83,9 @@ const mockMatch: IMatch = {
 describe('DashboardUpcomingMatches', () => {
   it('renders player link when logged in', () => {
     renderWithProviders(
-      <MemoryRouter>
+      <TestRouter>
         <DashboardUpcomingMatches />
-      </MemoryRouter>,
+      </TestRouter>,
       {
         preloadedState: {
           user: { playerId: 42, teams: [1], security: [], token: 'test', alias: 'Wouter' },
@@ -104,9 +103,9 @@ describe('DashboardUpcomingMatches', () => {
 
   it('does not render player link when not logged in', () => {
     renderWithProviders(
-      <MemoryRouter>
+      <TestRouter>
         <DashboardUpcomingMatches />
-      </MemoryRouter>,
+      </TestRouter>,
       {
         preloadedState: {
           user: { playerId: 0, teams: [], security: [], token: '', alias: '' },

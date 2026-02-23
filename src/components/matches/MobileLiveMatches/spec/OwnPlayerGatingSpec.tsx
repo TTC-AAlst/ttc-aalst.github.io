@@ -1,8 +1,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../../utils/test-utils';
+import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { MobileLiveMatchInProgress } from '../MobileLiveMatchInProgress';
 import { IMatch, IStorePlayer, IPlayerCompetition } from '../../../../models/model-interfaces';
 import { PlayerRanking } from '../../../../models/utils/rankingSorter';
@@ -97,9 +96,9 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
 
 const renderMatch = (match: IMatch, playerId: number) =>
   renderWithProviders(
-    <MemoryRouter>
+    <TestRouter>
       <MobileLiveMatchInProgress match={match} />
-    </MemoryRouter>,
+    </TestRouter>,
     { preloadedState: { user: { playerId, teams: [1], security: [] }, readonlyMatches: [], players: testPlayers } },
   );
 
