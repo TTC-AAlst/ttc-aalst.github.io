@@ -38,7 +38,8 @@ jobs:
     - name: Dependency audit
       run: bun audit --audit-level=high
 
-    - name: Secret detection
-      uses: gitleaks/gitleaks-action@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # TODO: Wait until we have a gitleaks secret
+    # - name: Secret detection
+    #   uses: gitleaks/gitleaks-action@v2
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
