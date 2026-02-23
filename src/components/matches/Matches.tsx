@@ -42,7 +42,7 @@ const groupMatchesByDate = (matches: IMatch[]): GroupedMatches[] => {
 
   return Object.entries(groups).map(([date, matchList]) => ({
     date,
-    dateDisplay: matchList[0].date.format('dd D MMM'),
+    dateDisplay: matchList[0]?.date.format('dd D MMM') ?? date,
     matches: matchList.sort((a, b) => a.date.valueOf() - b.date.valueOf()),
   }));
 };
@@ -60,7 +60,7 @@ export const Matches = () => {
   const matchesPlayed = ownMatches.filter(cal => cal.date.isBefore(today, 'day')).sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
   const pastGroups = groupMatchesByDate(matchesPlayed);
-  const todayGroup = matchesToday.length > 0 ? groupMatchesByDate(matchesToday)[0] : null;
+  const todayGroup = matchesToday.length > 0 ? groupMatchesByDate(matchesToday)[0] ?? null : null;
   const futureGroups = groupMatchesByDate(matchesNext);
 
   // Scroll to center today marker on mount

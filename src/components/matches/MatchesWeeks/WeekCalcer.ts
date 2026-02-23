@@ -18,11 +18,12 @@ export class WeekCalcer {
 
   getMatches() {
     const week = this.getWeek();
+    if (!week) return [];
     return this.matches.filter(match => match.date.isBetween(week.start, week.end, undefined, '[]'));
   }
 
   getWeek() {
-    return this.weeks[this.currentWeek - 1];
+    return this.weeks[this.currentWeek - 1]!;
   }
 
   setCurrentWeeks(currentWeek?: number) {
@@ -36,7 +37,8 @@ export class WeekCalcer {
     this.weeks = this.matches.reduce(
       (acc, next) => {
         const date = next.date.startOf('week');
-        if (!acc.length || !acc[acc.length - 1].start.isSame(date, 'day')) {
+        const lastWeek = acc[acc.length - 1];
+        if (!acc.length || !lastWeek?.start.isSame(date, 'day')) {
           acc.push({ start: date, end: next.date.endOf('week') });
         }
         return acc;
@@ -55,7 +57,7 @@ export class WeekCalcer {
       while (!this.currentWeek) {
         this.currentWeek = this.weeks.findIndex(findWeek) + 1;
         testWeek = testWeek.add(1, 'week');
-        if (testWeek.isAfter(this.weeks[this.weeks.length - 1].end)) {
+        if (testWeek.isAfter(this.weeks[this.weeks.length - 1]?.end)) {
           this.currentWeek = this.lastWeek;
           break;
         }

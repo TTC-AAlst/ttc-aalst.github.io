@@ -42,9 +42,10 @@ function getFormation(match: IMatch, matches: ReturnType<typeof selectOpponentMa
   // could be calculated more correctly by looking at the individual match results
   const result: { [key: number]: IMatchFormation } = {};
   opponentPlayers.forEach(ply => {
-    if (result[ply.uniqueIndex]) {
-      result[ply.uniqueIndex].count++;
-      result[ply.uniqueIndex].won += +ply.won || 0;
+    const existing = result[ply.uniqueIndex];
+    if (existing) {
+      existing.count++;
+      existing.won += +ply.won || 0;
     } else {
       result[ply.uniqueIndex] = {
         player: ply,

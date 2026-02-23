@@ -8,7 +8,7 @@ import { createFrenoyLink } from '../../models/PlayerModel';
 import { PlayerLink } from './controls/PlayerLink';
 import { Icon } from '../controls/Icons/Icon';
 import { FrenoyPlayerDetailsIcon } from '../controls/Buttons/FrenoyButton';
-import { IPlayer, IPlayerCompetition, Competition } from '../../models/model-interfaces';
+import { IPlayer, IPlayerCompetition, ITeam, Competition } from '../../models/model-interfaces';
 import { browseTo } from '../../routes';
 import { t } from '../../locales';
 import { selectMatches, selectTeams, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
@@ -189,7 +189,7 @@ export const PlayerCompetitionLabel = ({ comp, player, withName = false }: Playe
           <PlayerLink player={player} alias={withName === 'alias'} />
         </strong>
       ) : (
-        <Link to={browseTo.getTeam(team || { competition: comp })} className="link-hover-underline">
+        <Link to={browseTo.getTeam(team ?? ({ competition: comp } as ITeam))} className="link-hover-underline">
           {comp}
           {team ? ` ${team.teamCode}` : null}
         </Link>

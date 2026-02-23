@@ -70,7 +70,7 @@ export const OpponentOverview = () => {
 
       <div className="col-md-8">
         <h3>{t('teamCalendar.individual')}</h3>
-        <OpponentsFormation match={otherMatches[0]} opponent={opponent} />
+        {otherMatches[0] && <OpponentsFormation match={otherMatches[0]} opponent={opponent} />}
       </div>
 
       <div className="col-md-12" style={{ marginTop: 20 }}>

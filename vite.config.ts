@@ -14,6 +14,7 @@ export default defineConfig({
     globals: true,
     environment: 'happy-dom',
     include: ['**/spec/**/*Spec.ts', '**/spec/**/*Spec.tsx'],
+    exclude: ['e2e/**', 'node_modules/**'],
     setupFiles: ['./src/utils/test-setup.ts'],
     coverage: {
       provider: 'v8',

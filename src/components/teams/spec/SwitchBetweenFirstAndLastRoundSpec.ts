@@ -48,12 +48,12 @@ describe('getFirstOrLastMatches', () => {
 
   it('sorts first round matches by date ascending', () => {
     const result = getFirstOrLastMatches(allMatches, 'first');
-    expect(result.matches[0].date.valueOf()).toBeLessThan(result.matches[1].date.valueOf());
+    expect(result.matches[0]!.date.valueOf()).toBeLessThan(result.matches[1]!.date.valueOf());
   });
 
   it('sorts last round matches by date ascending', () => {
     const result = getFirstOrLastMatches(allMatches, 'last');
-    expect(result.matches[0].date.valueOf()).toBeLessThan(result.matches[1].date.valueOf());
+    expect(result.matches[0]!.date.valueOf()).toBeLessThan(result.matches[1]!.date.valueOf());
   });
 
   it('falls back to last round when first round is empty', () => {

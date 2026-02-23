@@ -47,7 +47,7 @@ export function getMostTeamsParticipated(competition: Competition, playerStats: 
     }))
     .sort((a, b) => b.teamCount - a.teamCount);
 
-  const highestTeamCount = teamsArray[0].teamCount;
+  const highestTeamCount = teamsArray[0]?.teamCount ?? 0;
   const highestTeamPlayers = teamsArray.filter(player => player.teamCount === highestTeamCount);
   const result: AchievementInfo = {
     title: '🦎 De Kameleon',

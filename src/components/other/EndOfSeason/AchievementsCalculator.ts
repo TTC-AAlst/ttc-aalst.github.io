@@ -59,8 +59,9 @@ export class AchievementsCalculator {
 
   getAchievements(type: Competition | 'belles') {
     const { playerStats, matches } = this.getPlayerStats(type);
-    if (playerStats.length !== 0) {
-      return PlayerAchievements[type].reduce((acc, achievementGetter) => {
+    const achievements = PlayerAchievements[type];
+    if (playerStats.length !== 0 && achievements) {
+      return achievements.reduce((acc, achievementGetter) => {
         const achievement = achievementGetter(playerStats, matches);
         if (achievement.players.length > 0) {
           acc = acc.concat(achievement);

@@ -48,7 +48,7 @@ export const MatchesWeekEmail = ({ compFilter, weekCalcer, matches, prevMatches 
 
   const emailFormationWrapper = (justMe: boolean) => {
     const week = weekCalcer.getWeek();
-    const title = `${compFilter} Week ${weekCalcer.currentWeek}: ${week.start.format('D/M')} - ${week.end.format('D/M')}`;
+    const title = `${compFilter} Week ${weekCalcer.currentWeek}: ${week?.start.format('D/M')} - ${week?.end.format('D/M')}`;
     dispatch(emailFormation({ title, email, justMe, players: playersPlaying }));
     setMailFormOpen(false);
   };

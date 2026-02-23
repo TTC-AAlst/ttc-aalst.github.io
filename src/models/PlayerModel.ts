@@ -47,7 +47,7 @@ export default class PlayerModel implements IPlayer {
     return comp || {};
   }
 
-  getTeam(competition: Competition): ITeam {
+  getTeam(competition: Competition): ITeam | undefined {
     const teams = this.getTeams().filter(team => team.competition === competition);
     return teams[0];
   }

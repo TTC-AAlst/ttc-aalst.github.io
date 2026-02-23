@@ -176,13 +176,13 @@ describe('OpponentPlayerSelector', () => {
     renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[0]!).not.toBeChecked();
 
-    await user.click(checkboxes[0]);
-    expect(checkboxes[0]).toBeChecked();
+    await user.click(checkboxes[0]!);
+    expect(checkboxes[0]!).toBeChecked();
 
-    await user.click(checkboxes[0]);
-    expect(checkboxes[0]).not.toBeChecked();
+    await user.click(checkboxes[0]!);
+    expect(checkboxes[0]!).not.toBeChecked();
   });
 
   it('disables excess players when max reached', async () => {
@@ -191,11 +191,11 @@ describe('OpponentPlayerSelector', () => {
     renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
-    await user.click(checkboxes[1]);
+    await user.click(checkboxes[0]!);
+    await user.click(checkboxes[1]!);
 
     // Third checkbox should be disabled
-    expect(checkboxes[2]).toBeDisabled();
+    expect(checkboxes[2]!).toBeDisabled();
   });
 
   it('pre-selects existing opponent players on open', async () => {
@@ -268,7 +268,7 @@ describe('OpponentPlayerSelector', () => {
     const checkboxes = screen.getAllByRole('checkbox');
 
     // Click a player without any search text
-    await user.click(checkboxes[0]);
+    await user.click(checkboxes[0]!);
 
     // Search input should NOT be focused
     expect(searchInput).not.toHaveFocus();
@@ -280,7 +280,7 @@ describe('OpponentPlayerSelector', () => {
 
     // Select a player first
     const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
+    await user.click(checkboxes[0]!);
 
     // Click cancel
     const cancelButton = screen.getByRole('button', { name: /annuleren/i });
@@ -296,8 +296,8 @@ describe('OpponentPlayerSelector', () => {
     renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
-    await user.click(checkboxes[1]);
+    await user.click(checkboxes[0]!);
+    await user.click(checkboxes[1]!);
 
     // Should auto-save and close the form
     await waitFor(() => {

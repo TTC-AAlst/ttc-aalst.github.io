@@ -33,9 +33,9 @@ describe('collectPlayerGameResultsByMatch', () => {
 
     const results = collectPlayerGameResultsByMatch(1, 'D6', matches);
     expect(results.length).toBe(1);
-    expect(results[0].results.length).toBe(2);
-    expect(results[0].results[0].won).toBe(true);
-    expect(results[0].results[1].won).toBe(false);
+    expect(results[0]!.results.length).toBe(2);
+    expect(results[0]!.results[0]!.won).toBe(true);
+    expect(results[0]!.results[1]!.won).toBe(false);
   });
 
   it('skips unsynced matches', () => {
@@ -68,8 +68,8 @@ describe('collectPlayerGameResultsByMatch', () => {
 
     const results = collectPlayerGameResultsByMatch(1, 'D6', matches);
     expect(results.length).toBe(2);
-    expect(results[0].matchId).toBe(2); // most recent first
-    expect(results[1].matchId).toBe(1);
+    expect(results[0]!.matchId).toBe(2); // most recent first
+    expect(results[1]!.matchId).toBe(1);
   });
 });
 

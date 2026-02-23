@@ -60,10 +60,10 @@ export const Teams = () => {
         return 'A';
       }
       if (yourTeams.length === 1) {
-        return yourTeams[0].teamCode;
+        return yourTeams[0]?.teamCode ?? 'A';
       }
       const notReserve = yourTeams.find(x => x.getPlayers('standard').some(p => p.player.id === user.playerId));
-      return notReserve ? notReserve.teamCode : yourTeams[0].teamCode;
+      return notReserve ? notReserve.teamCode : yourTeams[0]?.teamCode ?? 'A';
     }
     return 'A';
   };
@@ -155,9 +155,7 @@ export const Teams = () => {
     );
 
     tablePlayers.forEach(ply => {
-      if (perMatch[ply.matchId]) {
-        perMatch[ply.matchId].push(ply);
-      }
+      perMatch[ply.matchId]?.push(ply);
     });
 
     Object.entries(perMatch).forEach(([matchId, plyInfos]) => {

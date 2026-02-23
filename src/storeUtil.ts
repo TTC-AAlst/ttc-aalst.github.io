@@ -80,11 +80,11 @@ const util = {
   getTeam(teamId: number): ITeam {
     const { teams, teamRankings } = store.getState();
     const singleTeam = teams.find(team => team.id === teamId)!;
-    return new TeamModel(singleTeam, teamRankings[singleTeam?.id]);
+    return new TeamModel(singleTeam, teamRankings[singleTeam?.id] ?? []);
   },
   getTeams(): ITeam[] {
     const { teams, teamRankings } = store.getState();
-    return teams.map(team => new TeamModel(team, teamRankings[team.id]));
+    return teams.map(team => new TeamModel(team, teamRankings[team.id] ?? []));
   },
 
   getClub(clubId: number): IClub {

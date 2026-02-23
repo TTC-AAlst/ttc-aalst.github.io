@@ -18,17 +18,18 @@ export function getTeamUndefeatedStreak(matches: IMatch[]): TeamAchievementInfo 
   const streaksByTeam: Record<number, TeamStreak> = {};
 
   for (const match of sortedMatches) {
-    if (!streaksByTeam[match.teamId]) {
-      streaksByTeam[match.teamId] = {
+    let streak = streaksByTeam[match.teamId];
+    if (!streak) {
+      streak = {
         team: match.getTeam(),
         currentStreak: 0,
         currentFrom: null,
         longestStreak: 0,
         longestFrom: null,
       };
+      streaksByTeam[match.teamId] = streak;
     }
 
-    const streak = streaksByTeam[match.teamId];
     if (match.scoreType === 'Won') {
       if (streak.currentStreak === 0) {
         streak.currentFrom = match.date;

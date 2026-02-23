@@ -119,7 +119,7 @@ export const MatchMiniView = ({ match }: MatchMiniViewProps) => {
       opponents.sort((a, b) => {
         const rankingDiff = rankingSorter(a.ranking as PlayerRanking, b.ranking as PlayerRanking);
         if (rankingDiff !== 0) return rankingDiff;
-        return a.name.split(' ')[0].localeCompare(b.name.split(' ')[0]);
+        return (a.name.split(' ')[0] ?? '').localeCompare(b.name.split(' ')[0] ?? '');
       });
 
     // Sort players by most wins (descending), then by ranking

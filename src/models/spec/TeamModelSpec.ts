@@ -81,46 +81,46 @@ describe('TeamModel', () => {
 
     it('should calculate wins/losses against opponent rankings', () => {
       const result = getPlayerStats(matches);
-      expect(result[0].won.E6).toBe(1);
-      expect(result[0].lost.E6).toBe(2);
+      expect(result[0]!.won.E6).toBe(1);
+      expect(result[0]!.lost.E6).toBe(2);
 
-      expect(result[1].lost.E6).toBe(1);
-      expect(result[1].won.E2).toBe(1);
+      expect(result[1]!.lost.E6).toBe(1);
+      expect(result[1]!.won.E2).toBe(1);
     });
 
     it('should count player total games played', () => {
       const result = getPlayerStats(matches);
-      expect(result[0].games).toBe(3);
-      expect(result[1].games).toBe(2);
+      expect(result[0]!.games).toBe(3);
+      expect(result[1]!.games).toBe(2);
     });
 
     it('should count player victories', () => {
       const result = getPlayerStats(matches);
-      expect(result[0].victories).toBe(1);
-      expect(result[1].victories).toBe(1);
+      expect(result[0]!.victories).toBe(1);
+      expect(result[1]!.victories).toBe(1);
     });
 
     describe('belles', () => {
       it('should not calculate them by default', () => {
         const result = getPlayerStats(matches);
-        expect(result[0].belles).toEqual({});
+        expect(result[0]!.belles).toEqual({});
       });
 
       it('should count belles if told so', () => {
         const result = getPlayerStats(matches, true);
-        expect(Object.keys(result[1].belles).length).toBe(2);
+        expect(Object.keys(result[1]!.belles).length).toBe(2);
       });
 
       it('should count belles per player ranking', () => {
         const result = getPlayerStats(matches, true);
-        expect(result[1].belles.E2).toEqual({ won: 1, lost: 0 });
-        expect(result[1].belles.E6).toEqual({ won: 0, lost: 1 });
+        expect(result[1]!.belles.E2).toEqual({ won: 1, lost: 0 });
+        expect(result[1]!.belles.E6).toEqual({ won: 0, lost: 1 });
       });
 
       it('should count calc belle totals', () => {
         const result = getPlayerStats(matches, true);
-        expect(result[1].belleGames).toBe(2);
-        expect(result[1].belleVictories).toBe(1);
+        expect(result[1]!.belleGames).toBe(2);
+        expect(result[1]!.belleVictories).toBe(1);
       });
     });
   });

@@ -52,8 +52,7 @@ function renderWinsNode(result: RankingResult, teamPlayerCount: 2 | 3 | 4) {
   let winNode: React.ReactNode = '';
   if (result.win.length > 0) {
     const wins: Record<string, number> = {};
-    for (let i = 0; i < result.win.length; i++) {
-      const curWin = result.win[i];
+    for (const curWin of result.win) {
       if (!wins[curWin]) {
         wins[curWin] = 1;
       } else {
@@ -62,11 +61,11 @@ function renderWinsNode(result: RankingResult, teamPlayerCount: 2 | 3 | 4) {
     }
 
     let winText = '';
-    Object.keys(wins).forEach(key => {
-      if (wins[key] === 1) {
+    Object.entries(wins).forEach(([key, count]) => {
+      if (count === 1) {
         winText += `, ${key}`;
       } else {
-        winText += `, ${wins[key]}x${key}`;
+        winText += `, ${count}x${key}`;
       }
     });
     winNode = result.win.length === teamPlayerCount ? <ThumbsGreatIcon /> : <small>{winText.substring(2)}</small>;

@@ -12,8 +12,10 @@ type ImageDropzoneProps = {
 export default class ImageDropzone extends Component<ImageDropzoneProps> {
   _onDrop(files: File[]) {
     const self = this;
+    const file = files[0];
+    if (!file) return;
     console.log('uploading', files);
-    http.upload(files[0], this.props.type, this.props.typeId).then(
+    http.upload(file, this.props.type, this.props.typeId).then(
       data => {
         console.log('uploaded', data);
         if (data && data.fileName) {

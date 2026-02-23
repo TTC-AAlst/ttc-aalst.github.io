@@ -36,6 +36,7 @@ const translate: Translator = (key?: string, params: Record<string, unknown> = {
 translate.reverseRoute = (baseRoute: string, translatedRoute: string): string => {
   let result: string | undefined;
   const routeObj = (routes as unknown as Record<string, Record<string, string>>)[baseRoute];
+  if (!routeObj) return '';
   Object.keys(routeObj).forEach(key => {
     const value = routeObj[key];
     if (value === translatedRoute) {
@@ -48,7 +49,7 @@ translate.reverseRoute = (baseRoute: string, translatedRoute: string): string =>
 translate.route = (routeName: string, params?: Record<string, string>): string => {
   let route: string;
   if (routeName.indexOf('.') === -1) {
-    route = (routes as unknown as Record<string, string>)[routeName];
+    route = (routes as unknown as Record<string, string>)[routeName] ?? '';
   } else {
     route = routeName
       .split('.')
@@ -59,8 +60,8 @@ translate.route = (routeName: string, params?: Record<string, string>): string =
     return route;
   }
 
-  Object.keys(params).forEach(paramKey => {
-    route = route.replace(`:${paramKey}`, params[paramKey]);
+  Object.entries(params).forEach(([paramKey, paramValue]) => {
+    route = route.replace(`:${paramKey}`, paramValue);
   });
   return route;
 };

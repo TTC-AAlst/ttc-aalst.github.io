@@ -156,13 +156,13 @@ describe('OwnPlayerSelector', () => {
     renderWithProviders(<OwnPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[0]!).not.toBeChecked();
 
-    await user.click(checkboxes[0]);
-    expect(checkboxes[0]).toBeChecked();
+    await user.click(checkboxes[0]!);
+    expect(checkboxes[0]!).toBeChecked();
 
-    await user.click(checkboxes[0]);
-    expect(checkboxes[0]).not.toBeChecked();
+    await user.click(checkboxes[0]!);
+    expect(checkboxes[0]!).not.toBeChecked();
   });
 
   it('disables excess players when max reached', async () => {
@@ -171,10 +171,10 @@ describe('OwnPlayerSelector', () => {
     renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
-    await user.click(checkboxes[1]);
+    await user.click(checkboxes[0]!);
+    await user.click(checkboxes[1]!);
 
-    expect(checkboxes[2]).toBeDisabled();
+    expect(checkboxes[2]!).toBeDisabled();
   });
 
   it('pre-selects players matching match.block status', () => {
@@ -212,8 +212,8 @@ describe('OwnPlayerSelector', () => {
     renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
-    await user.click(checkboxes[1]);
+    await user.click(checkboxes[0]!);
+    await user.click(checkboxes[1]!);
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /selecteer spelers/i })).toBeInTheDocument();
@@ -233,7 +233,7 @@ describe('OwnPlayerSelector', () => {
     renderWithProviders(<OwnPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
+    await user.click(checkboxes[0]!);
 
     const cancelButton = screen.getByRole('button', { name: /annuleren/i });
     await user.click(cancelButton);

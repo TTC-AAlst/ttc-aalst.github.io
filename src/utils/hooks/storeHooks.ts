@@ -14,7 +14,7 @@ export const useTtcSelector = useSelector.withTypes<RootState>();
 export const selectUser = createSelector([(state: RootState) => state.user], user => new UserModel(user));
 
 export const selectTeams = createSelector([(state: RootState) => state.teams, (state: RootState) => state.teamRankings], (teams, rankings) =>
-  teams.map(t => new TeamModel(t, rankings[t.id])),
+  teams.map(t => new TeamModel(t, rankings[t.id] ?? [])),
 );
 
 export const selectMatches = createSelector([(state: RootState) => state.matches], matches => matches.map(m => new MatchModel(m) as IMatch));
@@ -85,7 +85,7 @@ export const selectUserTeams = createSelector([selectUser, selectTeams, selectMa
 
     if (compTeams.length === 1) {
       // Only one team in this competition, include it
-      return [compTeams[0]];
+      return compTeams[0] ? [compTeams[0]] : [];
     }
 
     // Multiple teams in this competition
@@ -95,7 +95,7 @@ export const selectUserTeams = createSelector([selectUser, selectTeams, selectMa
     if (totalCompMatches === 0) {
       // No matches played yet, pick the first team (by teamCode)
       const sorted = [...compTeams].sort((a, b) => a.teamCode.localeCompare(b.teamCode));
-      return [sorted[0]];
+      return sorted[0] ? [sorted[0]] : [];
     }
 
     // Sort by match count descending
@@ -108,11 +108,14 @@ export const selectUserTeams = createSelector([selectUser, selectTeams, selectMa
       .sort((a, b) => b.count - a.count);
 
     // Always include the team with most matches
-    const result = [teamsWithCounts[0].team];
+    const first = teamsWithCounts[0];
+    if (!first) return [];
+    const result = [first.team];
 
     // Include second team if they played 40%+ of matches
-    if (teamsWithCounts.length > 1 && teamsWithCounts[1].percentage >= 0.4) {
-      result.push(teamsWithCounts[1].team);
+    const second = teamsWithCounts[1];
+    if (second && second.percentage >= 0.4) {
+      result.push(second.team);
     }
 
     return result;

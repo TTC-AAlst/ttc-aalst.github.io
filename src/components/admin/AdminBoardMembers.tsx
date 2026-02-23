@@ -107,7 +107,7 @@ export const AdminBoardMembers = () => {
         label={t('admin.board.save')}
         style={{ marginTop: 15, marginRight: 8 }}
         onClick={() => {
-          const boardfn = boardFunctionCustom || clubManagerTypes[boardFunction].text;
+          const boardfn = boardFunctionCustom || clubManagerTypes[boardFunction]?.text || 'Default';
           dispatch(saveBoardMember({ playerId, boardFunction: boardfn, sort }));
         }}
         disabled={!playerId}

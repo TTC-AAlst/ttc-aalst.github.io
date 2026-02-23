@@ -195,36 +195,34 @@ export function getPlayerStats(matches: IMatch[], withBelles = false): ITeamPlay
         // Singles WIN
         const otherPlayer = game[!match.isHomeMatch ? 'home' : 'out'];
         if (game.outcome === 'Won') {
-          if (!playerResult.won[otherPlayer.ranking]) {
-            playerResult.won[otherPlayer.ranking] = 0;
-          }
-          playerResult.won[otherPlayer.ranking]++;
+          const wonRanking = playerResult.won[otherPlayer.ranking] ?? 0;
+          playerResult.won[otherPlayer.ranking] = wonRanking + 1;
         } else {
           // Singles LOST
-          if (!playerResult.lost[otherPlayer.ranking]) {
-            playerResult.lost[otherPlayer.ranking] = 0;
-          }
-          playerResult.lost[otherPlayer.ranking]++;
+          const lostRanking = playerResult.lost[otherPlayer.ranking] ?? 0;
+          playerResult.lost[otherPlayer.ranking] = lostRanking + 1;
         }
 
         // Belles?
         if (withBelles && (game.homeSets === 2 || game.outSets === 2)) {
           playerResult.belleGames++;
-          if (!playerResult.belles[otherPlayer.ranking]) {
-            playerResult.belles[otherPlayer.ranking] = { won: 0, lost: 0 };
+          let belleRanking = playerResult.belles[otherPlayer.ranking];
+          if (!belleRanking) {
+            belleRanking = { won: 0, lost: 0 };
+            playerResult.belles[otherPlayer.ranking] = belleRanking;
           }
           if (game.outcome === 'Won') {
-            playerResult.belles[otherPlayer.ranking].won++;
+            belleRanking.won++;
             playerResult.belleVictories++;
           } else {
-            playerResult.belles[otherPlayer.ranking].lost++;
+            belleRanking.lost++;
           }
         }
       }
     });
   });
 
-  return Object.keys(result).map(key => result[Number(key)]);
+  return Object.keys(result).map(key => result[Number(key)]!).filter(Boolean);
 }
 
 function sortMappedPlayers(competition: Competition): (plyA: ITeamPlayerInfo, plyB: ITeamPlayerInfo) => number {

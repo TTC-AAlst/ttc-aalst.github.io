@@ -85,7 +85,7 @@ export const OpponentMatches = ({ team, opponent, readonlyMatches, roundSwitchBu
                 <OpponentMatchScore readonlyMatch={match} />
               </td>
             </tr>,
-            <OtherMatchPlayerResultsTableRow key="7" show={match.isSyncedWithFrenoy && showMatch[match.id]} match={match} colSpan={6} />,
+            <OtherMatchPlayerResultsTableRow key="7" show={match.isSyncedWithFrenoy && !!showMatch[match.id]} match={match} colSpan={6} />,
           ];
         })}
       </tbody>

@@ -88,7 +88,8 @@ class MatchForm extends Component<MatchFormProps, MatchFormState> {
     e.stopPropagation();
     const newScores = this.state.inputScore.split('-');
     if (newScores.length === 2) {
-      const [home, out] = newScores.map(n => parseInt(n.trim(), 10));
+      const home = parseInt(newScores[0]?.trim() ?? '0', 10);
+      const out = parseInt(newScores[1]?.trim() ?? '0', 10);
       this.props.updateScore({ matchId: this.props.match.id, home, out });
     }
     this.setState({ useInput: false });

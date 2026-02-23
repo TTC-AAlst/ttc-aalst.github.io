@@ -339,7 +339,7 @@ function getPrevMatches(matches: IMatch[], players: IStorePlayer[]) {
         const reportPlayer = players.find(x => x.id === match.reportPlayerId)?.alias;
         html += ` <a href="${matchUrl}">💬 Lees verslag van ${reportPlayer}</a>`;
       } else if (match.comments?.length) {
-        const commentPlayer = players.find(x => x.id === match.comments[0].playerId)?.alias;
+        const commentPlayer = players.find(x => x.id === match.comments[0]?.playerId)?.alias;
         html += ` <a href="${matchUrl}">💭 Lees commentaar van ${commentPlayer}</a>`;
       }
     }
@@ -356,14 +356,16 @@ function getPrevMatches(matches: IMatch[], players: IStorePlayer[]) {
   // console.log('stats', stats);
 
   // Players that won all matches
-  const gamesToBePlayed = matches[0].getTeam().getTeamPlayerCount();
+  const firstMatch = matches[0];
+  if (!firstMatch) return html;
+  const gamesToBePlayed = firstMatch.getTeam().getTeamPlayerCount();
   const allWon = stats.filter(s => s.victories === gamesToBePlayed).map(s => s.ply.alias);
   if (allWon.length) {
     html += `👍 ${allWon.join(', ')}`;
   }
 
   // Players that beat a higher ranked player
-  const { competition } = matches[0];
+  const { competition } = firstMatch;
   const beaten = getRankingDestroyer(competition, stats);
   if (beaten.players.length) {
     html += '<br>';

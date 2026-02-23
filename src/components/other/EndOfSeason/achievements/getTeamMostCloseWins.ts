@@ -18,14 +18,16 @@ export function getTeamMostCloseWins(matches: IMatch[]): TeamAchievementInfo {
     const sportaWin = match.competition === 'Sporta' && ((home === 6 && out === 4) || (home === 4 && out === 6));
 
     if (match.scoreType === 'Won' && (vttlWin || sportaWin)) {
-      if (!closeWinStats[match.teamId]) {
-        closeWinStats[match.teamId] = {
+      let entry = closeWinStats[match.teamId];
+      if (!entry) {
+        entry = {
           team: match.getTeam(),
           count: 0,
         };
+        closeWinStats[match.teamId] = entry;
       }
 
-      closeWinStats[match.teamId].count++;
+      entry.count++;
     }
   }
 

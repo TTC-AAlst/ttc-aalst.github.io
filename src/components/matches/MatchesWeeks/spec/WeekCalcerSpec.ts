@@ -47,7 +47,7 @@ describe('WeekCalcer', () => {
     it('sorts matches by date before grouping', () => {
       const matches = [createMatch('2025-03-17T20:00:00', 2), createMatch('2025-03-10T20:00:00', 1)];
       const wc = new WeekCalcer(matches, 1);
-      expect(wc.weeks[0].start.isBefore(wc.weeks[1].start)).toBe(true);
+      expect(wc.weeks[0]!.start.isBefore(wc.weeks[1]!.start)).toBe(true);
     });
   });
 
@@ -87,7 +87,7 @@ describe('WeekCalcer', () => {
       const wc = new WeekCalcer(matches, 2);
       const weekMatches = wc.getMatches();
       expect(weekMatches.length).toBe(1);
-      expect(weekMatches[0].id).toBe(2);
+      expect(weekMatches[0]!.id).toBe(2);
     });
   });
 
@@ -139,15 +139,15 @@ describe('WeekCalcer', () => {
       const matches = [createMatch('2025-03-12T20:00:00', 1)]; // Wednesday
       const wc = new WeekCalcer(matches, 1);
       const week = wc.getWeek();
-      expect(week.start.day()).toBe(1); // Monday
+      expect(week!.start.day()).toBe(1); // Monday
     });
 
     it('week end is end of the week', () => {
       const matches = [createMatch('2025-03-12T20:00:00', 1)];
       const wc = new WeekCalcer(matches, 1);
       const week = wc.getWeek();
-      expect(week.end.hour()).toBe(23);
-      expect(week.end.minute()).toBe(59);
+      expect(week!.end.hour()).toBe(23);
+      expect(week!.end.minute()).toBe(59);
     });
   });
 });

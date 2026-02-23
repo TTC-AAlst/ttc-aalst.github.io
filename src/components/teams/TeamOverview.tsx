@@ -43,7 +43,7 @@ export const TeamOverview = ({ team, small }: TeamOverviewProps) => {
   );
 };
 
-const ucFirst = (input: string) => input[0].toUpperCase() + input.substr(1);
+const ucFirst = (input: string) => (input[0]?.toUpperCase() ?? '') + input.substring(1);
 
 type TeamOverviewMatchesProps = {
   matches: IMatch[];

@@ -227,7 +227,7 @@ export interface IPlayer extends IStorePlayer {
   name: string;
   slug: string;
   getCompetition: (competition: Competition) => IPlayerCompetition;
-  getTeam(comp: Competition): ITeam;
+  getTeam(comp: Competition): ITeam | undefined;
   getTeams(): ITeam[];
 }
 

@@ -14,17 +14,19 @@ export function getTeamHighestWinPercentage(matches: IMatch[]): TeamAchievementI
   > = {};
 
   for (const match of filtered) {
-    if (!winStats[match.teamId]) {
-      winStats[match.teamId] = {
+    let entry = winStats[match.teamId];
+    if (!entry) {
+      entry = {
         team: match.getTeam(),
         total: 0,
         wins: 0,
       };
+      winStats[match.teamId] = entry;
     }
 
-    winStats[match.teamId].total++;
+    entry.total++;
     if (match.scoreType === 'Won') {
-      winStats[match.teamId].wins++;
+      entry.wins++;
     }
   }
 

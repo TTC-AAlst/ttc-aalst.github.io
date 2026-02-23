@@ -45,7 +45,8 @@ const NextSeasonRankingChanges = ({ rankings }: { rankings: NewPlayerRanking[] }
     return null;
   }
 
-  const highest = rankings.reduce((acc, cur) => (acc.oldValue - acc.newValue > cur.oldValue - cur.newValue ? cur : acc), rankings[0]);
+  const first = rankings[0]!;
+  const highest = rankings.reduce((acc, cur) => (acc.oldValue - acc.newValue > cur.oldValue - cur.newValue ? cur : acc), first);
   return (
     <div className="row">
       {rankings.map(ranking => {
