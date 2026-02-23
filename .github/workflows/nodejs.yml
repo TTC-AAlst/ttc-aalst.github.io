@@ -35,8 +35,24 @@ jobs:
     - name: Test with coverage
       run: bun run test:coverage
 
+    - name: Get Playwright version
+      id: playwright-version
+      run: echo "version=$(bunx playwright --version | awk '{print $2}')" >> $GITHUB_OUTPUT
+
+    - name: Cache Playwright browsers
+      id: playwright-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ steps.playwright-version.outputs.version }}-chromium
+
     - name: Install Playwright browsers
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
       run: bunx playwright install --with-deps chromium
+
+    - name: Install Playwright deps (cached)
+      if: steps.playwright-cache.outputs.cache-hit == 'true'
+      run: bunx playwright install-deps chromium
 
     - name: E2E smoke tests
       run: bun run test:e2e
