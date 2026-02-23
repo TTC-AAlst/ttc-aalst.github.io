@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DOMPurify from 'dompurify';
 import { Link } from 'react-router-dom';
 import { IPlayerEvent, IStorePlayer, PlayerEventType } from '../../../models/model-interfaces';
 import { TimeAgo } from '../../controls/controls/TimeAgo';
@@ -205,7 +206,7 @@ export const PlayerEventItem = ({ event }: PlayerEventItemProps) => {
           {matchContent && (
             <div style={{ fontSize: '0.8em', color: '#555', marginTop: 4 }}>
               <div
-                dangerouslySetInnerHTML={{ __html: matchContent.html }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(matchContent.html) }}
                 style={{
                   maxHeight: expanded ? 'none' : '4.5em',
                   overflow: 'hidden',

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DOMPurify from 'dompurify';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { PlayerAutoComplete } from '../../players/PlayerAutoComplete';
@@ -67,7 +68,10 @@ export const MatchReport = ({ match, skipContainerClass }: MatchReportProps) => 
   }
 
   const readonlyReport = text ? (
-    <pre dangerouslySetInnerHTML={{ __html: text }} style={{ marginRight: 15, whiteSpace: 'pre-wrap', wordWrap: 'break-word', overflow: 'visible' }} />
+    <pre
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}
+      style={{ marginRight: 15, whiteSpace: 'pre-wrap', wordWrap: 'break-word', overflow: 'visible' }}
+    />
   ) : null;
 
   let reportText: any;
@@ -236,7 +240,7 @@ const Comment = ({ comment }: CommentProps) => {
           <img src={getStaticFileUrl(comment.imageUrl)} style={{ maxWidth: '95%' }} alt="Door de speler opgeladen" />
         </div>
       ) : (
-        <div dangerouslySetInnerHTML={{ __html: comment.text }} />
+        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.text) }} />
       )}
     </div>
   );
