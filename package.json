@@ -25,7 +25,7 @@
     "@emotion/styled": "^11.14.1",
     "@microsoft/signalr": "^8.0.17",
     "@mui/icons-material": "^6.5.0",
-    "@mui/material": "^6.5.0",
+    "@mui/material": "^7.3.8",
     "@reduxjs/toolkit": "^2.11.2",
     "classnames": "2.5.1",
     "dayjs": "^1.11.19",
