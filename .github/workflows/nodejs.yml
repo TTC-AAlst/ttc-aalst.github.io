@@ -36,9 +36,7 @@ jobs:
       run: bun run test:coverage
 
     - name: Dependency audit
-      run: |
-        npm i --package-lock-only --ignore-scripts
-        npm audit --audit-level=high
+      run: bun audit --audit-level=high
 
     - name: Secret detection
       uses: gitleaks/gitleaks-action@v2

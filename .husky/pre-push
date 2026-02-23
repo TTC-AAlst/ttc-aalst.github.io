@@ -2,5 +2,5 @@ bun run format:check
 bun run lint
 bun run knip
 bun run build
-npm i --package-lock-only --ignore-scripts --silent && npm audit --audit-level=high
+bun audit --audit-level=high
 bun run test
