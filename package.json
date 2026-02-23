@@ -73,7 +73,7 @@
     "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.3",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "gh-pages": "^6.3.0",
     "happy-dom": "^20.7.0",
     "husky": "^9.1.7",
