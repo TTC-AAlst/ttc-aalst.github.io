@@ -4,13 +4,23 @@ updates:
     directory: /
     schedule:
       interval: weekly
+      day: monday
     groups:
       dev-dependencies:
         dependency-type: development
-      production-dependencies:
+        update-types:
+          - minor
+          - patch
+      production-minor-patch:
         dependency-type: production
+        update-types:
+          - minor
+          - patch
     open-pull-requests-limit: 10
+    # Security updates always create separate PRs
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 5

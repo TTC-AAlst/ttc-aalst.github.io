@@ -1,2 +1,3 @@
 bun run knip
+npm audit --audit-level=high
 bun run test
