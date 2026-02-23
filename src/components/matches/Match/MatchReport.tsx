@@ -144,7 +144,7 @@ export const MatchReport = ({ match, skipContainerClass }: MatchReportProps) => 
           </div>
         ) : commentImageFormOpen ? (
           <div style={{ marginBottom: 12 }}>
-            <ImageDropzone fileUploaded={fileName => onCommentImageUploaded(fileName)} type="match" typeId={match.id} />
+            <ImageDropzone fileUploaded={(fileName: string) => onCommentImageUploaded(fileName)} type="match" typeId={match.id} />
           </div>
         ) : null}
 

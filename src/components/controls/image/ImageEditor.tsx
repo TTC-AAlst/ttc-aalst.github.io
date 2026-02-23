@@ -22,7 +22,7 @@ type ImageEditorState = {
 export default class ImageEditor extends React.Component<ImageEditorProps, ImageEditorState> {
   editor?: AvatarEditor | null;
 
-  constructor(props) {
+  constructor(props: ImageEditorProps) {
     super(props);
     this.state = {
       scale: 1,

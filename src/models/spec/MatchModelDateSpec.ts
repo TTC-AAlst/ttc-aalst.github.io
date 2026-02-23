@@ -12,7 +12,7 @@ const createMatch = (dateStr: string) =>
     opponent: {},
     isHomeMatch: true,
     score: { home: 0, out: 0 },
-  });
+  } as any);
 
 describe('MatchModel date methods', () => {
   describe('getDisplayDate', () => {
@@ -131,7 +131,7 @@ describe('MatchModel date methods', () => {
         opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
         score: { home: 10, out: 6 },
-      });
+      } as any);
       expect(dayjs.isDayjs(match.comments[0].postedOn)).toBe(true);
       expect(match.comments[0].postedOn.hour()).toBe(22);
       expect(match.comments[0].postedOn.minute()).toBe(30);
@@ -148,7 +148,7 @@ describe('MatchModel date methods', () => {
         opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
         score: { home: 10, out: 6 },
-      });
+      } as any);
       expect(match.comments[0].id).toBe(42);
       expect(match.comments[0].text).toBe('Nice one');
       expect(match.comments[0].playerId).toBe(7);
@@ -194,7 +194,7 @@ describe('MatchModel date methods', () => {
         opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
         score: { home: 0, out: 0 },
-      });
+      } as any);
       expect(match.comments[0].postedOn.isValid()).toBe(false);
     });
 
@@ -209,7 +209,7 @@ describe('MatchModel date methods', () => {
         opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
         score: { home: 0, out: 0 },
-      });
+      } as any);
       expect(match.comments[0].postedOn.isValid()).toBe(true);
     });
   });

@@ -16,6 +16,8 @@ import {
   IPlayer,
   IGetGameMatches,
   MatchPlayerStatus,
+  IStoreMatchCommon,
+  IFullStoreMatchOwn,
 } from './model-interfaces';
 import httpClient from '../utils/httpClient';
 
@@ -70,7 +72,7 @@ export default class MatchModel implements IMatch {
     return storeUtil.getMatch(this.id);
   }
 
-  constructor(json) {
+  constructor(json: IStoreMatchCommon & Partial<IFullStoreMatchOwn> & { home?: ITeamOpponent; away?: ITeamOpponent }) {
     this.id = json.id;
     this.frenoyMatchId = json.frenoyMatchId;
     this.shouldBePlayed = json.shouldBePlayed;
@@ -91,13 +93,13 @@ export default class MatchModel implements IMatch {
     // this.opponent = null;
     if (json.opponent) {
       // TTC Aalst Match
-      this.isHomeMatch = json.isHomeMatch;
-      this.teamId = json.teamId;
-      this.description = json.description;
-      this.reportPlayerId = json.reportPlayerId;
-      this.block = json.block;
+      this.isHomeMatch = json.isHomeMatch!;
+      this.teamId = json.teamId!;
+      this.description = json.description!;
+      this.reportPlayerId = json.reportPlayerId!;
+      this.block = json.block!;
 
-      const comments = json.comments.map(c => ({
+      const comments = json.comments!.map((c: { postedOn: string | Date }) => ({
         ...c,
         postedOn: dayjs(c.postedOn),
       }));
@@ -107,8 +109,8 @@ export default class MatchModel implements IMatch {
       this.isDerby = json.opponent.clubId === OwnClubId;
     } else {
       // OtherMatch
-      this.home = json.home;
-      this.away = json.away;
+      this.home = json.home!;
+      this.away = json.away!;
 
       this.isOurMatch = this.home.clubId === OwnClubId || this.away.clubId === OwnClubId;
     }

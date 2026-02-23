@@ -16,7 +16,7 @@ type PlayerAvatarState = {
 };
 
 class PlayerAvatar extends Component<PlayerAvatarProps, PlayerAvatarState> {
-  constructor(props) {
+  constructor(props: PlayerAvatarProps) {
     super(props);
 
     const img = new Image();

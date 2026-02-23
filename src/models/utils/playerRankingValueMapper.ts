@@ -1,6 +1,6 @@
 import { Competition } from '../model-interfaces';
 
-const vttlRankingValues = {
+const vttlRankingValues: Record<string, number> = {
   A: 18,
   B0: 17,
   B2: 16,
@@ -21,7 +21,7 @@ const vttlRankingValues = {
   NG: 1,
 };
 
-const sportaRankingValues = {
+const sportaRankingValues: Record<string, number> = {
   A: 19,
   B0: 18,
   B2: 17,

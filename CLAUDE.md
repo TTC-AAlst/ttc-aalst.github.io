@@ -152,8 +152,8 @@ Configured globally in `index.tsx`.
 
 ### TypeScript Configuration
 
-- `noImplicitAny: false` - allows implicit any types
-- `strict: true` - other strict checks enabled
+- `noImplicitAny: true` - requires explicit types, no implicit any
+- `strict: true` - all strict checks enabled
 - React JSX mode
 - Max line length: 160 characters
 

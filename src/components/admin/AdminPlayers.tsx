@@ -117,7 +117,7 @@ function concatCompetitions(vttl: boolean, sporta: boolean): string {
 
 type ActivesTableProps = {
   players: IPlayer[];
-  onEditPlayer: Function;
+  onEditPlayer: (player: IPlayer) => void;
 };
 
 const ActivesTable = ({ players, onEditPlayer }: ActivesTableProps) => {

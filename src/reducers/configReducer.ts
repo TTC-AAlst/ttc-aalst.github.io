@@ -143,7 +143,7 @@ const configSlice = createSlice({
     });
 
     builder.addCase(saveConfig.fulfilled, (state, action) => {
-      state.params[action.payload.key] = action.payload.value;
+      (state.params as unknown as Record<string, string>)[action.payload.key] = action.payload.value;
     });
 
     builder.addCase(validateToken.fulfilled, (state, action) => {

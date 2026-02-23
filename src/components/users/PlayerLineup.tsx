@@ -17,7 +17,7 @@ import { selectPlayer } from '../../reducers/matchesReducer';
 import { IMatch, ITeam, MatchPlayerStatus } from '../../models/model-interfaces';
 
 type PlayerLineupProps = {
-  selectPlayer: typeof selectPlayer;
+  selectPlayer: (data: Parameters<typeof selectPlayer>[0]) => void;
   playerId: number;
   teams: ITeam[];
   disableBlockedMatches?: boolean;
@@ -31,7 +31,7 @@ type PlayerLineupState = {
 };
 
 class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
-  constructor(props) {
+  constructor(props: PlayerLineupProps) {
     super(props);
     this.state = {
       filter: null,
@@ -151,7 +151,10 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
                       <div className="d-block d-md-none" style={{ marginTop: 12 }}>
                         <br />
                         <br />
-                        <CommentEditForm onChange={e => this.setState({ comment: e.target.value })} value={this.state.comment || ''} />
+                        <CommentEditForm
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.setState({ comment: e.target.value })}
+                          value={this.state.comment || ''}
+                        />
                       </div>
                     ) : matchPlayer && matchPlayer.statusNote ? (
                       <div className="d-block d-md-none">
@@ -165,7 +168,10 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
                   <td className="d-none d-md-table-cell">
                     {buttons}
                     {this.state.showCommentId === match.id ? (
-                      <CommentEditForm onChange={e => this.setState({ comment: e.target.value })} value={this.state.comment || ''} />
+                      <CommentEditForm
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.setState({ comment: e.target.value })}
+                        value={this.state.comment || ''}
+                      />
                     ) : matchPlayer && matchPlayer.statusNote ? (
                       <Comment matchPlayer={matchPlayer} />
                     ) : null}

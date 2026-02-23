@@ -1,6 +1,6 @@
-export function debounce(cb: Function, duration: number) {
-  let timer;
-  return (...args) => {
+export function debounce<T extends (...args: any[]) => void>(cb: T, duration: number): (...args: Parameters<T>) => void {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  return (...args: Parameters<T>) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
       cb(...args);

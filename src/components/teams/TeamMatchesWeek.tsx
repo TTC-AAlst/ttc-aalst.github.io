@@ -33,7 +33,7 @@ export const TeamMatchesWeek = ({ team }: { team: ITeam }) => {
   return (
     <div style={{ paddingTop: 10, paddingRight: 2 }}>
       <FrenoyWeekButton team={team} week={weekCalcer.currentWeek} className="pull-right" style={{ marginRight: 10 }} />
-      <WeekTitle weekCalcer={weekCalcer} weekChange={weekDiff => setCurrentWeek(weekCalcer.currentWeek + weekDiff)} />
+      <WeekTitle weekCalcer={weekCalcer} weekChange={(weekDiff: number) => setCurrentWeek(weekCalcer.currentWeek + weekDiff)} />
       <OpponentMatches team={team} readonlyMatches={weekCalcer.getMatches()} />
 
       {prevWeekMatches.length ? (

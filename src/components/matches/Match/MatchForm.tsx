@@ -12,7 +12,7 @@ const scoreOrDefault = (match: IMatch): IMatchScore => match.score || { home: 0,
 type MatchFormProps = {
   user: IUser;
   match: IMatch;
-  updateScore: typeof updateScore;
+  updateScore: (data: Parameters<typeof updateScore>[0]) => void;
   big?: boolean;
 };
 
@@ -23,7 +23,7 @@ type MatchFormState = {
 };
 
 class MatchForm extends Component<MatchFormProps, MatchFormState> {
-  constructor(props) {
+  constructor(props: MatchFormProps) {
     super(props);
     this.state = {
       useInput: false,
@@ -33,7 +33,7 @@ class MatchForm extends Component<MatchFormProps, MatchFormState> {
     this._onUpdateScoreDebounced = this._onUpdateScoreDebounced.bind(this);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: MatchFormProps) {
     this.setState({ currentScore: scoreOrDefault(nextProps.match) });
   }
 
@@ -79,12 +79,12 @@ class MatchForm extends Component<MatchFormProps, MatchFormState> {
     );
   }
 
-  _onOpenInputScore(e) {
+  _onOpenInputScore(e: React.MouseEvent) {
     e.stopPropagation();
     this.setState(prevState => ({ useInput: !prevState.useInput }));
   }
 
-  _onInputScoreUpdate(e) {
+  _onInputScoreUpdate(e: React.MouseEvent) {
     e.stopPropagation();
     const newScores = this.state.inputScore.split('-');
     if (newScores.length === 2) {
@@ -94,14 +94,14 @@ class MatchForm extends Component<MatchFormProps, MatchFormState> {
     this.setState({ useInput: false });
   }
 
-  _onUpdateScore(matchScore, e) {
+  _onUpdateScore(matchScore: IMatchScore & { matchId: number }, e: React.MouseEvent) {
     e.stopPropagation();
     e.preventDefault();
     this.setState({ currentScore: matchScore });
     this._onUpdateScoreDebounced(matchScore);
   }
 
-  _onUpdateScoreDebounced = debounce(matchScore => {
+  _onUpdateScoreDebounced = debounce((matchScore: IMatchScore & { matchId: number }) => {
     this.props.updateScore(matchScore);
   }, 1000);
 }

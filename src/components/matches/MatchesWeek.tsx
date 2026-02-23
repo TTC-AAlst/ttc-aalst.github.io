@@ -25,7 +25,7 @@ export const MatchesWeek = () => {
     setCurrentWeek(curWeek + weekDiff);
   };
 
-  const onChangeCompetition = (curWeek: number, competition) => {
+  const onChangeCompetition = (curWeek: number, competition: string) => {
     navigate(`${t.route('matchesWeek')}/${curWeek}${competition && competition !== 'all' ? `/${competition}` : ''}`);
   };
 
@@ -72,7 +72,7 @@ export const MatchesWeek = () => {
 
   return (
     <div style={{ paddingTop: 25 }}>
-      <WeekTitle weekCalcer={weekCalcer} weekChange={diff => onChangeWeek(weekCalcer.currentWeek, diff)} />
+      <WeekTitle weekCalcer={weekCalcer} weekChange={(diff: number) => onChangeWeek(weekCalcer.currentWeek, diff)} />
 
       <span className="button-bar-right">
         <ButtonStack

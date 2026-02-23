@@ -224,7 +224,7 @@ export function getPlayerStats(matches: IMatch[], withBelles = false): ITeamPlay
     });
   });
 
-  return Object.keys(result).map(key => result[key]);
+  return Object.keys(result).map(key => result[Number(key)]);
 }
 
 function sortMappedPlayers(competition: Competition): (plyA: ITeamPlayerInfo, plyB: ITeamPlayerInfo) => number {

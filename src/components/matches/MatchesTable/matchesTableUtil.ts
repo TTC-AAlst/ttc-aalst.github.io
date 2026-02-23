@@ -1,4 +1,5 @@
 import { IMatch, IMatchPlayerInfo, ITeam, ITeamPlayerInfo } from '../../../models/model-interfaces';
+import { PlayerRanking } from '../../../models/utils/rankingSorter';
 
 export const tableMatchViewportWidths = {
   frenoyMatchId: 2000,
@@ -42,7 +43,7 @@ export const toDontKnowPlayer = (match: IMatch, teamPlayer: ITeamPlayerInfo): IM
     statusNote: '',
     position: 0,
     name: teamPlayer.player.name,
-    ranking: teamPlayer.player[match.competition.toLowerCase()]?.ranking || '',
+    ranking: (teamPlayer.player[match.competition.toLowerCase() as 'vttl' | 'sporta']?.ranking || 'NG') as PlayerRanking,
     uniqueIndex: 0,
     won: 0,
     home: true,

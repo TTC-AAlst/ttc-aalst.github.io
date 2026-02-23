@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mergeInStore2 } from './immutableHelpers';
-import { ICacheResponse, IPlayerStyle, IStorePlayer, PredictionResult, IPlayerEvent } from '../models/model-interfaces';
+import { ICacheResponse, IPlayerCompetition, IPlayerStyle, IStorePlayer, PredictionResult, IPlayerEvent } from '../models/model-interfaces';
 import http from '../utils/httpClient';
 import { t } from '../locales';
 import { showSnackbar } from './configReducer';
@@ -179,9 +179,11 @@ const playersSlice = createSlice({
     });
     builder.addCase(fetchRankingPredictions.fulfilled, (state, action) => {
       action.payload.forEach(prediction => {
-        const player = state.find(x => x[prediction.competition.toLowerCase()]?.uniqueIndex === +prediction.uniqueIndex);
-        if (player) {
-          player[prediction.competition.toLowerCase()].prediction = prediction.newRanking;
+        const compKey = prediction.competition.toLowerCase() as 'vttl' | 'sporta';
+        const player = state.find(x => x[compKey]?.uniqueIndex === +prediction.uniqueIndex);
+        const playerComp = player?.[compKey];
+        if (playerComp) {
+          playerComp.prediction = prediction.newRanking as IPlayerCompetition['prediction'];
         }
       });
     });

@@ -80,10 +80,10 @@ export const Players = () => {
       <div>
         <PlayersToolbar
           marginLeft={15}
-          onFilterChange={text => setFilter(text)}
+          onFilterChange={(text: string) => setFilter(text)}
           canSort={tabKey !== 'vttl' && tabKey !== 'sporta'}
-          onSortChange={key => setSort(key)}
-          onSortDirectionChange={key => setSortDir(key)}
+          onSortChange={(key: string) => setSort(key as Competition)}
+          onSortDirectionChange={(key: string) => setSortDir(key as SortDirection)}
           activeSort={sort}
           activeSortDirection={sortDir}
           myPlayerPageUrl={playerUrl || undefined}

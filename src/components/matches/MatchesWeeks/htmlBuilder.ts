@@ -312,7 +312,8 @@ function getPrevMatches(matches: IMatch[], players: IStorePlayer[]) {
         html += '💯 ';
       }
 
-      const beatings = opponentBeatings.find(b => ourScore >= b[`from${match.competition}`])!;
+      const compKey = match.competition === 'Sporta' ? 'fromSporta' : 'fromVttl';
+      const beatings = opponentBeatings.find(b => ourScore >= b[compKey])!;
       let beating = getRandom(beatings.words);
       if (beatings.firstWordChance && Math.random() * 100 <= beatings.firstWordChance) {
         beating = beatings.words[0];

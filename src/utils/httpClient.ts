@@ -5,7 +5,7 @@ import { config, devUrl, isDev } from '../config';
 
 const LogRequestTimes = false;
 
-function getUrl(path, appendApi = true) {
+function getUrl(path: string, appendApi = true): string {
   if (path[0] !== '/') {
     console.error('HttpClient: path passed should start with a /');
   }

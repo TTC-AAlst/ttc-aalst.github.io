@@ -3,7 +3,7 @@ import { getRankingValue } from '../../../../models/utils/playerRankingValueMapp
 import rankingSorter, { PlayerRanking } from '../../../../models/utils/rankingSorter';
 import storeUtil from '../../../../storeUtil';
 
-const getPerGames = cur => Math.floor((cur.victories / cur.games) * 1000) / 10;
+const getPerGames = (cur: ITeamPlayerStats) => Math.floor((cur.victories / cur.games) * 1000) / 10;
 
 export type AchievementInfo = {
   title: string;
@@ -99,7 +99,7 @@ export function getMostMatchesPercentageWon(comp: Competition, playerStats: ITea
 }
 
 export function getRankingDestroyer(competition: Competition, playerStats: ITeamPlayerStats[]): AchievementInfo {
-  const getValue = r => getRankingValue(competition, r);
+  const getValue = (r: string) => getRankingValue(competition, r);
 
   const result = playerStats.map(ps => {
     const ownRanking = ps.ply.getCompetition(competition).ranking;
@@ -167,7 +167,7 @@ export function getMostBellesWon(playerStats: ITeamPlayerStats[]): AchievementIn
 }
 
 export function getMostBellesPercentageWon(playerStats: ITeamPlayerStats[]): AchievementInfo {
-  const getPer = cur => Math.floor((cur.belleVictories / cur.belleGames) * 1000) / 10;
+  const getPer = (cur: ITeamPlayerStats) => Math.floor((cur.belleVictories / cur.belleGames) * 1000) / 10;
 
   const highest = playerStats.reduce((acc, cur) => {
     if (!acc.belleGames) {
@@ -191,7 +191,7 @@ export function getMostBellesPercentageWon(playerStats: ITeamPlayerStats[]): Ach
 }
 
 export function getMostBellesPercentageLost(playerStats: ITeamPlayerStats[]): AchievementInfo {
-  const getPer = cur => Math.floor((cur.belleVictories / cur.belleGames) * 1000) / 10;
+  const getPer = (cur: ITeamPlayerStats) => Math.floor((cur.belleVictories / cur.belleGames) * 1000) / 10;
 
   const highest = playerStats.reduce((acc, cur) => {
     if (!acc.belleGames) {

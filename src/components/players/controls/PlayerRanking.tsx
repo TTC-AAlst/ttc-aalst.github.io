@@ -9,7 +9,8 @@ type PlayerRankingProps = {
 
 export const PlayerRanking = ({ player }: PlayerRankingProps) => {
   const endOfSeason = useTtcSelector(state => state.config.params.endOfSeason);
-  const hasNextRankings = useTtcSelector(state => state.players.some(p => p[player?.competition?.toLowerCase() || 'vttl']?.nextRanking));
+  const compKey = (player?.competition?.toLowerCase() || 'vttl') as 'vttl' | 'sporta';
+  const hasNextRankings = useTtcSelector(state => state.players.some(p => p[compKey]?.nextRanking));
 
   if (!player) {
     return null;

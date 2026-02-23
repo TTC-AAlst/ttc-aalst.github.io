@@ -23,7 +23,7 @@ export class SortIconDropDown extends Component<SortIconDropDownProps> {
     activeSortDirection: 'asc',
   };
 
-  _onButtonSelect(configKey) {
+  _onButtonSelect(configKey: string) {
     if (configKey === this.props.activeSort) {
       this.props.onSortDirectionChange(this.props.activeSortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -37,7 +37,7 @@ export class SortIconDropDown extends Component<SortIconDropDownProps> {
       <DropdownButton
         title={<SortIcon direction={this.props.activeSortDirection || 'asc'} />}
         id="sort-dropdown"
-        onSelect={key => this._onButtonSelect(key)}
+        onSelect={key => key && this._onButtonSelect(key)}
         style={{ display: 'inline' }}
       >
         {config.map(button => (

@@ -12,8 +12,8 @@ import { toggleTeamPlayer } from '../../reducers/teamsReducer';
 
 type AdminTeamsProps = {
   teams: ITeam[];
-  toggleTeamPlayer: typeof toggleTeamPlayer;
-  frenoyTeamSync: typeof frenoyTeamSync;
+  toggleTeamPlayer: (data: Parameters<typeof toggleTeamPlayer>[0]) => void;
+  frenoyTeamSync: (data: { teamId: number }) => void;
 };
 
 type AdminTeamsState = {
@@ -21,7 +21,7 @@ type AdminTeamsState = {
 };
 
 class AdminTeams extends React.Component<AdminTeamsProps, AdminTeamsState> {
-  constructor(props) {
+  constructor(props: AdminTeamsProps) {
     super(props);
     this.state = { filter: 'Vttl' };
   }
@@ -53,7 +53,7 @@ class AdminTeams extends React.Component<AdminTeamsProps, AdminTeamsState> {
 type AdminTeamPlayersProps = {
   team: ITeam;
   toggleTeamPlayer: (playerId: number, role: TeamPlayerType) => void;
-  onFrenoySync: typeof frenoyTeamSync;
+  onFrenoySync: (data: { teamId: number }) => void;
 };
 
 type AdminTeamPlayersState = {
@@ -61,21 +61,21 @@ type AdminTeamPlayersState = {
 };
 
 class AdminTeamPlayers extends Component<AdminTeamPlayersProps, AdminTeamPlayersState> {
-  constructor(props) {
+  constructor(props: AdminTeamPlayersProps) {
     super(props);
     this.state = { role: 'Standard' };
   }
 
-  _onRoleChange(event) {
-    this.setState({ role: event.target.value });
+  _onRoleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    this.setState({ role: event.target.value as TeamPlayerType });
   }
 
-  _onToggleTeamPlayer(playerId) {
+  _onToggleTeamPlayer(playerId: number) {
     this.props.toggleTeamPlayer(playerId, this.state.role);
     this.setState({ role: 'Standard' });
   }
 
-  _renderPlayerSubtitle(team, ply) {
+  _renderPlayerSubtitle(team: ITeam, ply: { id: number }) {
     const player = team.getPlayers().find(p => p.player.id === ply.id);
     return <span>{player ? player.type : null}</span>;
   }
@@ -111,7 +111,11 @@ class AdminTeamPlayers extends Component<AdminTeamPlayersProps, AdminTeamPlayers
           </TextField>
 
           <div style={{ width: 250 }}>
-            <PlayerAutoComplete selectPlayer={playerId => this._onToggleTeamPlayer(playerId)} label="Selecteer speler" competition={teamCompetition} />
+            <PlayerAutoComplete
+              selectPlayer={playerId => playerId !== 'system' && this._onToggleTeamPlayer(playerId)}
+              label="Selecteer speler"
+              competition={teamCompetition}
+            />
           </div>
         </Paper>
       </div>

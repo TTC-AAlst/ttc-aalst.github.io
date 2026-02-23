@@ -51,7 +51,7 @@ export class WeekCalcer {
 
     if (!currentWeek) {
       let testWeek = dayjs().startOf('week');
-      const findWeek = w => w.start.isSame(testWeek, 'day');
+      const findWeek = (w: { start: Dayjs; end: Dayjs }) => w.start.isSame(testWeek, 'day');
       while (!this.currentWeek) {
         this.currentWeek = this.weeks.findIndex(findWeek) + 1;
         testWeek = testWeek.add(1, 'week');

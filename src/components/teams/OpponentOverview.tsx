@@ -28,7 +28,7 @@ export const OpponentOverview = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    const escIsBack = evn => {
+    const escIsBack = (evn: KeyboardEvent) => {
       if (evn.keyCode === 27) {
         navigate(-1);
       }

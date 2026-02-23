@@ -40,7 +40,7 @@ export default class UserModel implements IUser {
   teams: number[];
   security: string[];
 
-  constructor(json) {
+  constructor(json: IStoreUser) {
     this.playerId = json.playerId;
     this.teams = json.teams;
     this.security = json.security;

@@ -9,7 +9,7 @@ const AdminDev = () => {
   const [filter, setFilter] = useState('matches');
 
   const viewsConfig = Object.keys(storeState).map(key => ({ key, text: key }));
-  const data = storeState[filter];
+  const data = (storeState as Record<string, unknown>)[filter];
   return (
     <div style={{ padding: 5 }}>
       <div className="pull-right">
@@ -34,7 +34,7 @@ const AdminStateDisplayer = ({ data }: { data: any }) => {
   let filteredData = data;
   if (filter) {
     if (filteredData.length) {
-      filteredData = filteredData.filter(entry => JSON.stringify(entry).toLowerCase().includes(filter));
+      filteredData = filteredData.filter((entry: unknown) => JSON.stringify(entry).toLowerCase().includes(filter));
     }
   }
 

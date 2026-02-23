@@ -8,7 +8,7 @@ type PlayerStyleAutocompleteProps = {
 };
 
 export default class PlayerStyleAutocomplete extends Component<PlayerStyleAutocompleteProps> {
-  _onChange(option) {
+  _onChange(option: { value: string }) {
     this.props.onChange(option.value);
   }
 
@@ -18,7 +18,7 @@ export default class PlayerStyleAutocomplete extends Component<PlayerStyleAutoco
     return (
       <Select
         isSearchable
-        onChange={option => this._onChange(option)}
+        onChange={option => option?.value && this._onChange({ value: option.value })}
         value={{ value: this.props.value, label: this.props.value }}
         placeholder={t('player.editStyle.style')}
         options={playingStyles.map(style => ({ label: style, value: style }))}

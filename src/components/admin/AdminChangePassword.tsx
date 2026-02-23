@@ -7,7 +7,7 @@ import { t } from '../../locales';
 import { adminSetNewPassword } from '../../reducers/userActions';
 
 type AdminChangePasswordProps = {
-  adminSetNewPassword: typeof adminSetNewPassword;
+  adminSetNewPassword: (data: Parameters<typeof adminSetNewPassword>[0]) => void;
   onEnd: () => void;
 };
 
@@ -17,7 +17,7 @@ type AdminChangePasswordState = {
 };
 
 class AdminChangePassword extends Component<AdminChangePasswordProps, AdminChangePasswordState> {
-  constructor(props) {
+  constructor(props: AdminChangePasswordProps) {
     super(props);
     this.state = {
       playerId: '',

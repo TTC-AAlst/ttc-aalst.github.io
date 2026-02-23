@@ -47,7 +47,7 @@ export class PlayersToolbar extends Component<PlayersToolbarProps> {
               config={sortConfig}
               activeSort={this.props.activeSort}
               activeSortDirection={this.props.activeSortDirection}
-              onSortChange={newSort => this.props.onSortChange(newSort)}
+              onSortChange={(newSort: string) => this.props.onSortChange(newSort)}
               onSortDirectionChange={newDir => this.props.onSortDirectionChange(newDir)}
             />
           ) : null}

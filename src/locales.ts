@@ -3,28 +3,30 @@ import { Translator } from './models/model-interfaces';
 
 const { trans, routes } = LocalesUtils;
 
-const translate: Translator = (key?: string, params: any = {}): string => {
+const translate: Translator = (key?: string, params: Record<string, unknown> = {}): string => {
   if (!key) {
     return '';
   }
 
-  let str;
+  let str: string | undefined;
   if (key.indexOf('.') === -1) {
-    str = trans[key];
+    str = (trans as unknown as Record<string, string>)[key];
   } else {
-    str = key.split('.').reduce((o, i) => o[i], trans);
+    str = key
+      .split('.')
+      .reduce((o: Record<string, unknown>, i: string) => (o?.[i] as Record<string, unknown>) ?? {}, trans as Record<string, unknown>) as unknown as string;
   }
 
-  if (str === undefined) {
+  if (str === undefined || typeof str !== 'string') {
     return key;
   }
 
   if (str.indexOf('${}') !== -1) {
-    return str.replace('${}', params);
+    return str.replace('${}', String(params));
   }
   if (typeof params === 'object') {
     Object.keys(params).forEach(paramKey => {
-      str = str.replace(`\${${paramKey}}`, params[paramKey]);
+      str = (str as string).replace(`\${${paramKey}}`, String(params[paramKey]));
     });
   }
 
@@ -32,22 +34,25 @@ const translate: Translator = (key?: string, params: any = {}): string => {
 };
 
 translate.reverseRoute = (baseRoute: string, translatedRoute: string): string => {
-  let result;
-  Object.keys(routes[baseRoute]).forEach(key => {
-    const value = routes[baseRoute][key];
+  let result: string | undefined;
+  const routeObj = (routes as unknown as Record<string, Record<string, string>>)[baseRoute];
+  Object.keys(routeObj).forEach(key => {
+    const value = routeObj[key];
     if (value === translatedRoute) {
       result = key;
     }
   });
-  return result;
+  return result ?? '';
 };
 
-translate.route = (routeName: string, params: any): string => {
+translate.route = (routeName: string, params?: Record<string, string>): string => {
   let route: string;
   if (routeName.indexOf('.') === -1) {
-    route = routes[routeName];
+    route = (routes as unknown as Record<string, string>)[routeName];
   } else {
-    route = routeName.split('.').reduce((o, i) => o[i], routes) as unknown as string;
+    route = routeName
+      .split('.')
+      .reduce((o: Record<string, unknown>, i: string) => (o?.[i] as Record<string, unknown>) ?? {}, routes as Record<string, unknown>) as unknown as string;
   }
 
   if (!params) {

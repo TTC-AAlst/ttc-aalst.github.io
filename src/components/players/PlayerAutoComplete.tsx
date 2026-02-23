@@ -27,12 +27,13 @@ export const PlayerAutoComplete = ({ competition, label, style, selectPlayer, ..
   };
 
   let filteredPlayers = players;
-  if (competition) {
-    filteredPlayers = players.filter(x => x[competition.toLowerCase()]);
+  const compKey = competition?.toLowerCase() as 'vttl' | 'sporta' | undefined;
+  if (compKey) {
+    filteredPlayers = players.filter(x => x[compKey]);
   }
   const playerMenuItems = filteredPlayers.map(ply => ({
     value: ply.id.toString(),
-    label: ply.name + (competition ? ` (${ply[competition.toLowerCase()].ranking})` : ''),
+    label: ply.name + (compKey ? ` (${ply[compKey]?.ranking})` : ''),
   }));
   const systemPlayerItem = { value: 'system', label: 'Systeem' };
 

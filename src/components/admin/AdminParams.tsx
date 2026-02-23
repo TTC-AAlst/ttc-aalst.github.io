@@ -72,9 +72,9 @@ const AdminParamsSimple = () => {
               <AdminParamRow
                 key={key}
                 propName={key}
-                value={params[key]}
+                value={(params as unknown as Record<string, string>)[key]}
                 onChange={value => setParams(prevState => ({ ...prevState, [key]: value }))}
-                onSave={() => dispatch(saveConfig({ key, value: params[key] }))}
+                onSave={() => dispatch(saveConfig({ key, value: (params as unknown as Record<string, string>)[key] }))}
               />
             ))}
         </tbody>

@@ -23,7 +23,7 @@ type ProfilePhotoFormProps = {
   size?: { width: number; height: number };
   type?: 'player-photo' | 'player-avatar';
   user: IUser;
-  uploadPlayer: typeof uploadPlayer;
+  uploadPlayer: (data: Parameters<typeof uploadPlayer>[0]) => void;
   borderRadius?: number;
 };
 
@@ -40,7 +40,7 @@ class ProfilePhotoForm extends Component<ProfilePhotoFormProps, ProfilePhotoForm
     borderRadius: 0,
   };
 
-  constructor(props) {
+  constructor(props: ProfilePhotoFormProps) {
     super(props);
     this.state = {
       fileName: '',
@@ -80,7 +80,7 @@ class ProfilePhotoForm extends Component<ProfilePhotoFormProps, ProfilePhotoForm
             ) : null}
 
             <div style={{ marginTop: 16 }}>
-              <ImageDropzone fileUploaded={fileName => this.setState({ fileName })} />
+              <ImageDropzone fileUploaded={(fileName: string) => this.setState({ fileName })} />
             </div>
           </div>
         </div>

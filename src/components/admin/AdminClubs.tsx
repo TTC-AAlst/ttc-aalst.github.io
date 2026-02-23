@@ -20,7 +20,7 @@ type AdminClubsState = {
 };
 
 class AdminClubs extends Component<AdminClubsProps, AdminClubsState> {
-  constructor(props) {
+  constructor(props: AdminClubsProps) {
     super(props);
     this.state = { clubFilter: '', editClub: null };
   }

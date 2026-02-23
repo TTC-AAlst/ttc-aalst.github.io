@@ -49,9 +49,9 @@ const OwnPlayer = ({ match, ply, playerAsBadge = false, showRanking = false }: O
 };
 
 function renderWinsNode(result: RankingResult, teamPlayerCount: 2 | 3 | 4) {
-  let winNode: any = '';
+  let winNode: React.ReactNode = '';
   if (result.win.length > 0) {
-    const wins = {};
+    const wins: Record<string, number> = {};
     for (let i = 0; i < result.win.length; i++) {
       const curWin = result.win[i];
       if (!wins[curWin]) {
@@ -61,14 +61,15 @@ function renderWinsNode(result: RankingResult, teamPlayerCount: 2 | 3 | 4) {
       }
     }
 
+    let winText = '';
     Object.keys(wins).forEach(key => {
       if (wins[key] === 1) {
-        winNode += `, ${key}`;
+        winText += `, ${key}`;
       } else {
-        winNode += `, ${wins[key]}x${key}`;
+        winText += `, ${wins[key]}x${key}`;
       }
     });
-    winNode = result.win.length === teamPlayerCount ? <ThumbsGreatIcon /> : <small>{winNode.substr(2)}</small>;
+    winNode = result.win.length === teamPlayerCount ? <ThumbsGreatIcon /> : <small>{winText.substring(2)}</small>;
   }
   return winNode;
 }
