@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { MobileLiveMatchCard } from '../MobileLiveMatchCard';
-import { IMatch, IMatchPlayer, IMatchPlayerInfo } from '../../../../models/model-interfaces';
+import { IMatch, IMatchPlayer, IMatchPlayerInfo, IMatchGame } from '../../../../models/model-interfaces';
 
 vi.mock('../../../../storeUtil', () => ({
   default: {
@@ -27,7 +27,7 @@ const createMockPlayer = (alias: string, ranking: string, uniqueIndex: number, s
     home: true,
     position: 1,
     won: 0,
-  }) as unknown;
+  }) as unknown as IMatchPlayer;
 
 const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
   ({
@@ -35,41 +35,40 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
     competition: 'Vttl',
     frenoyDivisionId: 1,
     teamId: 1,
-    games: [],
-    players: [],
+    games: [] as IMatchGame[],
+    players: [] as IMatchPlayer[],
     comments: [],
     block: 'Captain',
     description: '',
     isSyncedWithFrenoy: false,
     opponent: { clubId: 10, teamCode: 'A' },
-    date: { format: () => '19:45', isBefore: () => true, subtract: () => ({ isBefore: () => true }), isSame: () => true } as unknown,
+    date: { format: () => '19:45', isBefore: () => true, subtract: () => ({ isBefore: () => true }), isSame: () => true },
     score: { home: 0, out: 0 },
     isHomeMatch: true,
-    getOwnPlayers: () => [],
-    getTheirPlayers: () => [],
-    getTeamPlayerCount: () => 4,
-    getTeam: () =>
-      ({
-        teamCode: 'A',
-        competition: 'Vttl',
-        getDivisionRanking: () => ({ empty: true }),
-        getThriller: () => null,
-        renderOwnTeamTitle: () => 'TTC Aalst A',
-      }) as unknown,
-    getPlayerFormation: () => [],
+    getOwnPlayers: () => [] as IMatchPlayer[],
+    getTheirPlayers: () => [] as IMatchPlayer[],
+    getTeamPlayerCount: () => 4 as 3 | 4,
+    getTeam: () => ({
+      teamCode: 'A',
+      competition: 'Vttl',
+      getDivisionRanking: () => ({ empty: true }),
+      getThriller: () => null,
+      renderOwnTeamTitle: () => 'TTC Aalst A',
+    }),
+    getPlayerFormation: () => [] as IMatchPlayerInfo[],
     getGameMatches: () => [],
     renderScore: () => '0-0',
     renderOpponentTitle: () => 'Opponent A',
     getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '' }),
     ...overrides,
-  }) as unknown;
+  }) as unknown as IMatch;
 
 const renderCard = (match: IMatch, expanded = false) =>
   renderWithProviders(
     <TestRouter>
       <MobileLiveMatchCard match={match} expanded={expanded} onToggle={() => {}} isCollapsible />
     </TestRouter>,
-    { preloadedState: { players: [], user: { playerId: 0, teams: [], security: [] } } as unknown },
+    { preloadedState: { players: [], user: { playerId: 0, teams: [], security: [] } } },
   );
 
 describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
@@ -99,7 +98,7 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
     const players: IMatchPlayer[] = [createMockPlayer('Wouter', 'B2', 1), createMockPlayer('Jan', 'B6', 2)];
 
     const match = createMockMatch({
-      games: [{ id: 1 }] as unknown,
+      games: [{ id: 1 }] as unknown as IMatchGame[],
       getOwnPlayers: () => players,
       getTheirPlayers: () => [createMockPlayer('Opponent', 'C0', 10)],
       getGameMatches: () => [],

@@ -3,7 +3,8 @@ import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { Navigation } from '../HeaderNavigation';
-import { IStorePlayer } from '../../../../models/model-interfaces';
+import { IStorePlayer, IPlayerCompetition, IPlayerStyle } from '../../../../models/model-interfaces';
+import { UserRoles } from '../../../../models/UserModel';
 
 vi.mock('../../../../storeUtil', () => ({
   default: {
@@ -34,12 +35,12 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
     uniqueIndex: 100,
     rankingIndex: 1,
     rankingValue: 50,
-  } as unknown,
-  sporta: undefined as unknown,
+  } as IPlayerCompetition,
+  sporta: undefined,
   contact: { playerId: id, email: '', mobile: '', address: '', city: '' },
-  style: {} as unknown,
+  style: { playerId: id, name: '', bestStroke: '' } as IPlayerStyle,
   quitYear: null,
-  security: 'Player' as unknown,
+  security: 'Player' as UserRoles,
   hasKey: false,
   imageVersion: 0,
 });
@@ -54,11 +55,11 @@ describe('HeaderNavigation', () => {
       </TestRouter>,
       {
         preloadedState: {
-          user: { playerId: 42, teams: [], security: [], token: 'test', alias: 'Wouter' },
+          user: { playerId: 42, teams: [], security: [] },
           players: [testPlayer],
           matches: [],
           teams: [],
-        } as unknown,
+        },
       },
     );
 
@@ -72,11 +73,11 @@ describe('HeaderNavigation', () => {
       </TestRouter>,
       {
         preloadedState: {
-          user: { playerId: 0, teams: [], security: [], token: '', alias: '' },
+          user: { playerId: 0, teams: [], security: [] },
           players: [testPlayer],
           matches: [],
           teams: [],
-        } as unknown,
+        },
       },
     );
 

@@ -232,7 +232,7 @@ const Comment = ({ comment }: CommentProps) => {
         ) : null}
         {comment.hidden ? <Icon fa="fa fa-user-secret" translate tooltip="match.report.commentHidden" /> : null}
         <strong style={{ marginRight: 6 }}>{poster.alias}</strong>
-        <TimeAgo date={comment.postedOn} />
+        {comment.postedOn && <TimeAgo date={comment.postedOn} />}
       </div>
 
       {comment.imageUrl ? (

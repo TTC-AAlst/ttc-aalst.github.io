@@ -10,28 +10,28 @@ export default class PlayerModel implements IPlayer {
   active: boolean;
   firstName: string;
   lastName: string;
-  sporta: IPlayerCompetition;
-  vttl: IPlayerCompetition;
+  sporta?: IPlayerCompetition;
+  vttl?: IPlayerCompetition;
   style: IPlayerStyle;
-  quitYear: number;
+  quitYear: number | null;
   security: UserRoles;
-  hasKey: boolean;
+  hasKey: boolean | null;
   imageVersion: number;
 
   constructor(json: Partial<IPlayer> = { security: 'Player' }) {
     this.alias = json.alias || json.name || '';
-    this.contact = new PlayerContactModel(json.contact || {}); // playerId, email, mobile, address, city
-    this.id = json.id;
-    this.active = json.active;
-    this.firstName = json.firstName;
-    this.lastName = json.lastName;
+    this.contact = new PlayerContactModel(json.contact ?? ({} as IPlayerContact)); // playerId, email, mobile, address, city
+    this.id = json.id ?? 0;
+    this.active = json.active ?? false;
+    this.firstName = json.firstName ?? '';
+    this.lastName = json.lastName ?? '';
     this.sporta = json.sporta; // clubId, competition, frenoyLink, position (=index), ranking, rankingIndex, rankingValue
     this.vttl = json.vttl;
-    this.style = json.style || {}; // playerId, name, bestStroke
-    this.quitYear = json.quitYear;
-    this.security = json.security;
-    this.hasKey = json.hasKey;
-    this.imageVersion = json.imageVersion;
+    this.style = json.style ?? ({ playerId: 0, name: '', bestStroke: '' } as IPlayerStyle); // playerId, name, bestStroke
+    this.quitYear = json.quitYear ?? null;
+    this.security = json.security ?? 'Player';
+    this.hasKey = json.hasKey ?? null;
+    this.imageVersion = json.imageVersion ?? 0;
   }
 
   get name(): string {
@@ -44,7 +44,7 @@ export default class PlayerModel implements IPlayer {
 
   getCompetition(competition: Competition): IPlayerCompetition {
     const comp = competition === 'Vttl' || competition === 'Jeugd' ? this.vttl : this.sporta;
-    return comp || {};
+    return comp ?? ({} as IPlayerCompetition);
   }
 
   getTeam(competition: Competition): ITeam | undefined {

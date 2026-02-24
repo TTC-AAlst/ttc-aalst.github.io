@@ -53,7 +53,7 @@ const createMockMatch = (id: number): IMatch =>
     isSyncedWithFrenoy: false,
     isStandardStartTime: () => true,
     getTeamPlayerCount: () => 4,
-  }) as unknown;
+  }) as unknown as IMatch;
 
 const renderMatches = (matches: IMatch[], userState = {}) =>
   renderWithProviders(

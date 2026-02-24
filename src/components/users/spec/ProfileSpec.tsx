@@ -3,7 +3,8 @@ import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { renderWithProviders, TestRouter } from '../../../utils/test-utils';
 import { Profile } from '../Profile';
-import { IStorePlayer } from '../../../models/model-interfaces';
+import { IStorePlayer, IPlayerCompetition, IPlayerStyle } from '../../../models/model-interfaces';
+import { UserRoles } from '../../../models/UserModel';
 
 vi.mock('../../../storeUtil', () => ({
   default: {
@@ -46,12 +47,12 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
     uniqueIndex: 100,
     rankingIndex: 1,
     rankingValue: 50,
-  } as unknown,
-  sporta: undefined as unknown,
+  } as IPlayerCompetition,
+  sporta: undefined,
   contact: { playerId: id, email: 'test@test.com', mobile: '0471234567', address: 'Test Street 1', city: 'Aalst' },
-  style: {} as unknown,
+  style: { playerId: id, name: '', bestStroke: '' } as IPlayerStyle,
   quitYear: null,
-  security: 'Player' as unknown,
+  security: 'Player' as UserRoles,
   hasKey: false,
   imageVersion: 0,
 });
@@ -76,7 +77,7 @@ describe('Profile', () => {
           user: mockUser,
           players: [testPlayer],
           teams: [],
-        } as unknown,
+        },
       },
     );
 
@@ -94,7 +95,7 @@ describe('Profile', () => {
           user: mockUser,
           players: [testPlayer],
           teams: [],
-        } as unknown,
+        },
       },
     );
 

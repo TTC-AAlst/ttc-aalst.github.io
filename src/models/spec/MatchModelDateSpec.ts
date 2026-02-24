@@ -1,7 +1,7 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import MatchModel from '../MatchModel';
 
-const createMatch = (dateStr: string) =>
+const createMatch = (dateStr: string | null | undefined) =>
   new MatchModel({
     id: 1,
     date: dateStr,
@@ -132,9 +132,11 @@ describe('MatchModel date methods', () => {
         isHomeMatch: true,
         score: { home: 10, out: 6 },
       } as unknown as ConstructorParameters<typeof MatchModel>[0]);
-      expect(dayjs.isDayjs(match.comments[0].postedOn)).toBe(true);
-      expect(match.comments[0].postedOn.hour()).toBe(22);
-      expect(match.comments[0].postedOn.minute()).toBe(30);
+      const comment = match.comments[0]!;
+      const postedOn = comment.postedOn as unknown as Dayjs;
+      expect(dayjs.isDayjs(postedOn)).toBe(true);
+      expect(postedOn.hour()).toBe(22);
+      expect(postedOn.minute()).toBe(30);
     });
 
     it('preserves other comment properties alongside postedOn', () => {
@@ -149,21 +151,22 @@ describe('MatchModel date methods', () => {
         isHomeMatch: true,
         score: { home: 10, out: 6 },
       } as unknown as ConstructorParameters<typeof MatchModel>[0]);
-      expect(match.comments[0].id).toBe(42);
-      expect(match.comments[0].text).toBe('Nice one');
-      expect(match.comments[0].playerId).toBe(7);
+      const comment = match.comments[0]!;
+      expect(comment.id).toBe(42);
+      expect(comment.text).toBe('Nice one');
+      expect(comment.playerId).toBe(7);
     });
   });
 
   describe('invalid date handling', () => {
     it('null date creates an invalid dayjs', () => {
-      const match = createMatch(null as unknown as ConstructorParameters<typeof MatchModel>[0]);
+      const match = createMatch(null);
       expect(match.date.isValid()).toBe(false);
       expect(match.date.format('YYYY-MM-DD')).toBe('Invalid Date');
     });
 
     it('undefined date silently becomes current time', () => {
-      const match = createMatch(undefined as unknown as ConstructorParameters<typeof MatchModel>[0]);
+      const match = createMatch(undefined);
       expect(match.date.isValid()).toBe(true);
       expect(match.date.diff(dayjs(), 'seconds')).toBeLessThan(2);
     });
@@ -174,12 +177,12 @@ describe('MatchModel date methods', () => {
     });
 
     it('isBeingPlayed returns false for invalid date', () => {
-      const match = createMatch(null as unknown as ConstructorParameters<typeof MatchModel>[0]);
+      const match = createMatch(null);
       expect(match.isBeingPlayed()).toBe(false);
     });
 
     it('getDisplayDate returns "Invalid Date" for null date', () => {
-      const match = createMatch(null as unknown as ConstructorParameters<typeof MatchModel>[0]);
+      const match = createMatch(null);
       expect(match.getDisplayDate()).toContain('Invalid Date');
     });
 
@@ -195,7 +198,8 @@ describe('MatchModel date methods', () => {
         isHomeMatch: true,
         score: { home: 0, out: 0 },
       } as unknown as ConstructorParameters<typeof MatchModel>[0]);
-      expect(match.comments[0].postedOn.isValid()).toBe(false);
+      const postedOn = match.comments[0]!.postedOn as unknown as Dayjs;
+      expect(postedOn.isValid()).toBe(false);
     });
 
     it('undefined comment postedOn becomes current time', () => {
@@ -210,7 +214,8 @@ describe('MatchModel date methods', () => {
         isHomeMatch: true,
         score: { home: 0, out: 0 },
       } as unknown as ConstructorParameters<typeof MatchModel>[0]);
-      expect(match.comments[0].postedOn.isValid()).toBe(true);
+      const postedOn = match.comments[0]!.postedOn as unknown as Dayjs;
+      expect(postedOn.isValid()).toBe(true);
     });
   });
 

@@ -3,8 +3,9 @@ import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { MobileLiveMatchInProgress } from '../MobileLiveMatchInProgress';
-import { IMatch, IStorePlayer, IPlayerCompetition } from '../../../../models/model-interfaces';
+import { IMatch, IStorePlayer, IPlayerCompetition, IPlayerStyle, IMatchGame, IMatchPlayerInfo, IMatchPlayer } from '../../../../models/model-interfaces';
 import { PlayerRanking } from '../../../../models/utils/rankingSorter';
+import { UserRoles } from '../../../../models/UserModel';
 
 vi.mock('../../../../storeUtil', () => ({
   default: {
@@ -46,11 +47,11 @@ const testPlayers: IStorePlayer[] = [
     lastName: 'Dupont',
     active: true,
     vttl: vttl(1, 'B6', 101, 50),
-    sporta: undefined as unknown,
+    sporta: undefined,
     contact: { playerId: 1, email: '', mobile: '', address: '', city: '' },
-    style: {} as unknown,
+    style: { playerId: 1, name: '', bestStroke: '' } as IPlayerStyle,
     quitYear: null,
-    security: 'Player' as unknown,
+    security: 'Player' as UserRoles,
     hasKey: false,
     imageVersion: 0,
   },
@@ -63,36 +64,36 @@ const mockTeam = {
   getMatches: () => [],
 };
 
-const baseMockMatch: IMatch = {
+const baseMockMatch = {
   id: 1,
   competition: 'Vttl',
   frenoyDivisionId: 1,
   frenoyMatchId: 'OVLH01/001',
-  games: [],
-  players: [],
+  games: [] as IMatchGame[],
+  players: [] as IMatchPlayer[],
   comments: [],
   block: '',
   isHomeMatch: true,
   description: '',
   opponent: { clubId: 10, teamCode: 'A' },
   teamId: 1,
-  date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true } as unknown,
-  getTeam: () => mockTeam as unknown,
+  date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true },
+  getTeam: () => mockTeam,
   renderOpponentTitle: () => 'Opponent A',
-  getOwnPlayers: () => [],
-  getTheirPlayers: () => [],
-  getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }) as unknown,
+  getOwnPlayers: () => [] as IMatchPlayer[],
+  getTheirPlayers: () => [] as IMatchPlayer[],
+  getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }),
   isSyncedWithFrenoy: false,
   isStandardStartTime: () => true,
-  getTeamPlayerCount: () => 4,
-  getPlayerFormation: () => [],
-} as unknown;
+  getTeamPlayerCount: () => 4 as 3 | 4,
+  getPlayerFormation: () => [] as IMatchPlayerInfo[],
+} as unknown as IMatch;
 
 const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
   ({
     ...baseMockMatch,
     ...overrides,
-  }) as unknown;
+  }) as unknown as IMatch;
 
 const renderMatch = (match: IMatch, playerId: number) =>
   renderWithProviders(
@@ -124,7 +125,9 @@ describe('OwnPlayerSelector gating (AC9: login, AC10: games played)', () => {
     const matchWithFormation = () =>
       createMockMatch({
         getPlayerFormation: () =>
-          [{ id: 1, player: { id: 1, alias: 'Jean', getCompetition: () => ({ ranking: 'B6', position: 1 }) }, matchPlayer: { status: 'Major' } }] as unknown,
+          [
+            { id: 1, player: { id: 1, alias: 'Jean', getCompetition: () => ({ ranking: 'B6', position: 1 }) }, matchPlayer: { status: 'Major' } },
+          ] as unknown as IMatchPlayerInfo[],
       });
 
     it('shows edit icon for own formation when user is logged in', () => {
@@ -143,7 +146,8 @@ describe('OwnPlayerSelector gating (AC9: login, AC10: games played)', () => {
   describe('in-progress mode (has their players, no games)', () => {
     const inProgressMatch = () =>
       createMockMatch({
-        getTheirPlayers: () => [{ position: 1, name: 'Opp', ranking: 'C6', uniqueIndex: 200, won: 0, home: false, status: 'Major', alias: 'Opp' }] as unknown,
+        getTheirPlayers: () =>
+          [{ position: 1, name: 'Opp', ranking: 'C6', uniqueIndex: 200, won: 0, home: false, status: 'Major', alias: 'Opp' }] as unknown as IMatchPlayer[],
       });
 
     it('shows 2 edit icons when user is logged in (own + opponents)', () => {
@@ -162,8 +166,9 @@ describe('OwnPlayerSelector gating (AC9: login, AC10: games played)', () => {
   describe('in-progress mode with games played (AC10)', () => {
     const inProgressWithGames = () =>
       createMockMatch({
-        getTheirPlayers: () => [{ position: 1, name: 'Opp', ranking: 'C6', uniqueIndex: 200, won: 0, home: false, status: 'Major', alias: 'Opp' }] as unknown,
-        games: [{ id: 1 }] as unknown,
+        getTheirPlayers: () =>
+          [{ position: 1, name: 'Opp', ranking: 'C6', uniqueIndex: 200, won: 0, home: false, status: 'Major', alias: 'Opp' }] as unknown as IMatchPlayer[],
+        games: [{ id: 1 }] as unknown as IMatchGame[],
       });
 
     it('shows no edit icons when games have been played', () => {

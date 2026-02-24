@@ -23,7 +23,9 @@ export interface ITeamPlayerStats {
  *                       UTILITY
  **************************************************** */
 
-export type TranslatorFn = (key?: string, params?: Record<string, string | number>) => string;
+export type TranslatorParams = Record<string, string | number> | string | number;
+
+export type TranslatorFn = (key?: string, params?: TranslatorParams) => string;
 
 export type Translator = TranslatorFn & {
   reverseRoute: (baseRoute: string, translatedRoute: string) => string;

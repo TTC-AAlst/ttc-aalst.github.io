@@ -4,7 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../utils/test-utils';
 import { OwnPlayerSelector } from '../OwnPlayerSelector';
-import { IMatch, IStorePlayer } from '../../../../models/model-interfaces';
+import { IMatch, IStorePlayer, IPlayerCompetition, IPlayerStyle, IMatchPlayer, MatchPlayerStatus } from '../../../../models/model-interfaces';
+import { UserRoles } from '../../../../models/UserModel';
 
 vi.mock('../../../../storeUtil', () => ({
   default: {
@@ -56,12 +57,12 @@ vi.mock('../../../../utils/httpClient', () => ({
   },
 }));
 
-const vttl = (pos: number, ranking: string, idx: number, val: number) => ({
+const vttl = (pos: number, ranking: string, idx: number, val: number): IPlayerCompetition => ({
   clubId: 1,
   competition: 'Vttl' as const,
   frenoyLink: '',
   position: pos,
-  ranking,
+  ranking: ranking as IPlayerCompetition['ranking'],
   nextRanking: null,
   prediction: null,
   uniqueIndex: 100 + pos,
@@ -69,18 +70,18 @@ const vttl = (pos: number, ranking: string, idx: number, val: number) => ({
   rankingValue: val,
 });
 
-const ply = (id: number, alias: string, first: string, last: string, active: boolean, v?: ReturnType<typeof vttl>): IStorePlayer => ({
+const ply = (id: number, alias: string, first: string, last: string, active: boolean, v?: IPlayerCompetition): IStorePlayer => ({
   id,
   alias,
   firstName: first,
   lastName: last,
   active,
   vttl: v,
-  sporta: undefined as unknown,
+  sporta: undefined,
   contact: { playerId: id, email: '', mobile: '', address: '', city: '' },
-  style: {} as unknown,
+  style: { playerId: id, name: '', bestStroke: '' } as IPlayerStyle,
   quitYear: null,
-  security: 'Player' as unknown,
+  security: 'Player' as UserRoles,
   hasKey: false,
   imageVersion: 0,
 });
@@ -105,17 +106,17 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
     teamId: 1,
     games: [],
     players: [],
-    block: '',
+    block: '' as MatchPlayerStatus | '',
     isSyncedWithFrenoy: false,
     opponent: { clubId: 10, teamCode: 'A' },
-    date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) } as unknown,
-    getOwnPlayers: () => [],
-    getTheirPlayers: () => [],
-    getTeamPlayerCount: () => 4,
-    getTeam: () => ({ getMatches: () => mockTeamMatches }) as unknown,
+    date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) },
+    getOwnPlayers: () => [] as IMatchPlayer[],
+    getTheirPlayers: () => [] as IMatchPlayer[],
+    getTeamPlayerCount: () => 4 as 3 | 4,
+    getTeam: () => ({ getMatches: () => mockTeamMatches }),
     getPlayerFormation: () => [],
     ...overrides,
-  }) as unknown;
+  }) as unknown as IMatch;
 
 const defaultStoreState = {
   players: testPlayers,
@@ -166,7 +167,7 @@ describe('OwnPlayerSelector', () => {
   });
 
   it('disables excess players when max reached', async () => {
-    const match = createMockMatch({ getTeamPlayerCount: () => 2 as unknown });
+    const match = createMockMatch({ getTeamPlayerCount: () => 2 as 3 | 4 });
     const user = userEvent.setup();
     renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
@@ -179,12 +180,13 @@ describe('OwnPlayerSelector', () => {
 
   it('pre-selects players matching match.block status', () => {
     const match = createMockMatch({
-      block: 'Captain' as unknown,
-      getOwnPlayers: () => [
-        { playerId: 1, status: 'Captain', home: true, position: 1 } as unknown,
-        { playerId: 3, status: 'Captain', home: true, position: 2 } as unknown,
-        { playerId: 5, status: 'Play', home: true, position: 3 } as unknown,
-      ],
+      block: 'Captain' as MatchPlayerStatus,
+      getOwnPlayers: () =>
+        [
+          { playerId: 1, status: 'Captain', home: true, position: 1 },
+          { playerId: 3, status: 'Captain', home: true, position: 2 },
+          { playerId: 5, status: 'Play', home: true, position: 3 },
+        ] as unknown as IMatchPlayer[],
     });
 
     renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
@@ -196,8 +198,8 @@ describe('OwnPlayerSelector', () => {
 
   it('sorts selected players to top of list', () => {
     const match = createMockMatch({
-      block: 'Captain' as unknown,
-      getOwnPlayers: () => [{ playerId: 5, status: 'Captain', home: true, position: 1 } as unknown],
+      block: 'Captain' as MatchPlayerStatus,
+      getOwnPlayers: () => [{ playerId: 5, status: 'Captain', home: true, position: 1 }] as unknown as IMatchPlayer[],
     });
 
     renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
@@ -207,7 +209,7 @@ describe('OwnPlayerSelector', () => {
   });
 
   it('auto-saves when reaching required player count', async () => {
-    const match = createMockMatch({ getTeamPlayerCount: () => 2 as unknown });
+    const match = createMockMatch({ getTeamPlayerCount: () => 2 as 3 | 4 });
     const user = userEvent.setup();
     renderWithProviders(<OwnPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 

@@ -54,7 +54,7 @@ const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
     isStandardStartTime: () => true,
     getTeamPlayerCount: () => 4,
     ...overrides,
-  }) as unknown;
+  }) as unknown as IMatch;
 
 const renderInProgress = (match: IMatch, userState = {}) =>
   renderWithProviders(

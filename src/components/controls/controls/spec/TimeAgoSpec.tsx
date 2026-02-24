@@ -24,12 +24,12 @@ describe('TimeAgo', () => {
   });
 
   it('returns null for falsy date (undefined-like)', () => {
-    const { container } = render(<TimeAgo date={undefined as unknown} />);
+    const { container } = render(<TimeAgo date={undefined as unknown as string} />);
     expect(container.innerHTML).toBe('');
   });
 
   it('returns null for empty string', () => {
-    const { container } = render(<TimeAgo date={'' as unknown} />);
+    const { container } = render(<TimeAgo date={'' as unknown as string} />);
     expect(container.innerHTML).toBe('');
   });
 

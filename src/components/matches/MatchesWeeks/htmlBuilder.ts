@@ -316,7 +316,7 @@ function getPrevMatches(matches: IMatch[], players: IStorePlayer[]) {
       const beatings = opponentBeatings.find(b => ourScore >= b[compKey])!;
       let beating = getRandom(beatings.words);
       if (beatings.firstWordChance && Math.random() * 100 <= beatings.firstWordChance) {
-        beating = beatings.words[0];
+        beating = beatings.words[0]!;
       }
 
       if (!beating.includes('{ere}')) {
@@ -460,7 +460,7 @@ function getTeamLink(match: IMatch) {
 }
 
 function getRandom<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+  return arr[Math.floor(Math.random() * arr.length)]!;
 }
 
 const endearments = [

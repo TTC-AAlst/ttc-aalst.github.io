@@ -1,9 +1,9 @@
 import LocalesUtils from './utils/locales-nl';
-import { Translator } from './models/model-interfaces';
+import { Translator, TranslatorParams } from './models/model-interfaces';
 
 const { trans, routes } = LocalesUtils;
 
-const translate: Translator = (key?: string, params: Record<string, unknown> = {}): string => {
+const translate: Translator = (key?: string, params: TranslatorParams = {}): string => {
   if (!key) {
     return '';
   }
@@ -46,7 +46,7 @@ translate.reverseRoute = (baseRoute: string, translatedRoute: string): string =>
   return result ?? '';
 };
 
-translate.route = (routeName: string, params?: Record<string, string>): string => {
+translate.route = (routeName: string, params?: Record<string, string | number>): string => {
   let route: string;
   if (routeName.indexOf('.') === -1) {
     route = (routes as unknown as Record<string, string>)[routeName] ?? '';
@@ -61,7 +61,7 @@ translate.route = (routeName: string, params?: Record<string, string>): string =
   }
 
   Object.entries(params).forEach(([paramKey, paramValue]) => {
-    route = route.replace(`:${paramKey}`, paramValue);
+    route = route.replace(`:${paramKey}`, String(paramValue));
   });
   return route;
 };

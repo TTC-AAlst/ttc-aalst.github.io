@@ -71,7 +71,7 @@ export const Teams = () => {
   const isSmall = viewport.width < 700;
 
   const getUrl = (view: string) => {
-    let url = t.route('teams', { competition: params.competition });
+    let url = t.route('teams', { competition: params.competition ?? 'Vttl' });
     url += `/${params.tabKey || getDefaultTeam()}`;
     if (view !== 'main') {
       url += `/${view}`;
@@ -232,7 +232,7 @@ export const Teams = () => {
         selectedTab={params.tabKey || getDefaultTeam()}
         tabKeys={tabConfig}
         tabRenderer={eventKey => renderTabContent(eventKey)}
-        route={{ base: t.route('teams', { competition: params.competition }), suffix: params.view }}
+        route={{ base: t.route('teams', { competition: params.competition ?? 'Vttl' }), suffix: params.view }}
         widthTreshold={900}
       />
     </div>

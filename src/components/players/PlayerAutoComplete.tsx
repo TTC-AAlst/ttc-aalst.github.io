@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import Select from 'react-select';
+import Select, { SingleValue } from 'react-select';
 import { Competition } from '../../models/model-interfaces';
 import { t } from '../../locales';
 import { selectPlayers, useTtcSelector } from '../../utils/hooks/storeHooks';
+
+type OptionType = { value: string; label: string };
 
 type PlayerAutoCompleteProps = {
   competition?: Competition;
@@ -12,12 +14,12 @@ type PlayerAutoCompleteProps = {
 };
 
 export const PlayerAutoComplete = ({ competition, label, style, selectPlayer, ...props }: PlayerAutoCompleteProps) => {
-  const [searchText, setSearchText] = useState('');
+  const [selectedOption, setSelectedOption] = useState<OptionType | null>(null);
   const players = useTtcSelector(selectPlayers);
 
-  const onPlayerSelected = (option: { value: string; label: string } | null) => {
+  const onPlayerSelected = (option: SingleValue<OptionType>) => {
     if (option) {
-      setSearchText(option.value);
+      setSelectedOption(option);
       if (option.value === 'system') {
         selectPlayer('system');
       } else {
@@ -39,8 +41,8 @@ export const PlayerAutoComplete = ({ competition, label, style, selectPlayer, ..
 
   return (
     <div style={{ ...style, overflow: 'visible' }}>
-      <Select
-        value={searchText}
+      <Select<OptionType>
+        value={selectedOption}
         placeholder={label}
         {...props}
         classNamePrefix="react-select-fix"

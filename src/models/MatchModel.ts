@@ -100,11 +100,10 @@ export default class MatchModel implements IMatch {
       this.reportPlayerId = json.reportPlayerId!;
       this.block = json.block!;
 
-      const comments = json.comments!.map((c: { postedOn: string | Date }) => ({
+      this.comments = json.comments!.map(c => ({
         ...c,
-        postedOn: dayjs(c.postedOn),
-      }));
-      this.comments = comments;
+        postedOn: dayjs(c.postedOn as string | Date | undefined),
+      })) as unknown as IMatchComment[];
 
       this.opponent = json.opponent;
       this.isDerby = json.opponent.clubId === OwnClubId;

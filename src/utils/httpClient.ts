@@ -27,10 +27,11 @@ function authHeaders(): Record<string, string> {
 const HttpClient = {
   get: <T>(path: string, qs?: Record<string, string | number | boolean>): Promise<T> => {
     let url = getUrl(path);
-    if (qs) {
-      url += `?${new URLSearchParams(qs).toString()}`;
+    const qsStringified = qs ? Object.fromEntries(Object.entries(qs).map(([k, v]) => [k, String(v)])) : undefined;
+    if (qsStringified) {
+      url += `?${new URLSearchParams(qsStringified).toString()}`;
     }
-    const fullUrl = `GET ${qs ? `${path}?${new URLSearchParams(qs).toString()}` : path}`;
+    const fullUrl = `GET ${qsStringified ? `${path}?${new URLSearchParams(qsStringified).toString()}` : path}`;
     return (async () => {
       if (LogRequestTimes) {
         console.time(fullUrl);

@@ -297,13 +297,13 @@ describe('dayjs API patterns used in codebase', () => {
 
   describe('invalid input handling (MatchModel constructor, TimeAgo)', () => {
     it('dayjs(null) creates an invalid dayjs', () => {
-      const m = dayjs(null as unknown);
+      const m = dayjs(null);
       expect(m.isValid()).toBe(false);
       expect(m.format('YYYY-MM-DD')).toBe('Invalid Date');
     });
 
     it('dayjs(undefined) is treated as dayjs() - valid current time', () => {
-      const m = dayjs(undefined as unknown);
+      const m = dayjs(undefined);
       expect(m.isValid()).toBe(true);
     });
 

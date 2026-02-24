@@ -4,7 +4,8 @@ import { vi } from 'vitest';
 import dayjs from 'dayjs';
 import { renderWithProviders, TestRouter } from '../../../utils/test-utils';
 import { DashboardUpcomingMatches } from '../DashboardUpcomingMatches';
-import { IStorePlayer, IMatch } from '../../../models/model-interfaces';
+import { IStorePlayer, IMatch, IPlayerCompetition, IPlayerStyle } from '../../../models/model-interfaces';
+import { UserRoles } from '../../../models/UserModel';
 
 vi.mock('../../../storeUtil', () => ({
   default: {
@@ -48,12 +49,12 @@ const createPlayer = (id: number, firstName: string, lastName: string): IStorePl
     uniqueIndex: 100,
     rankingIndex: 1,
     rankingValue: 50,
-  } as unknown,
-  sporta: undefined as unknown,
+  } as IPlayerCompetition,
+  sporta: undefined,
   contact: { playerId: id, email: '', mobile: '', address: '', city: '' },
-  style: {} as unknown,
+  style: { playerId: id, name: '', bestStroke: '' } as IPlayerStyle,
   quitYear: null,
-  security: 'Player' as unknown,
+  security: 'Player' as UserRoles,
   hasKey: false,
   imageVersion: 0,
 });
@@ -62,7 +63,7 @@ const testPlayer = createPlayer(42, 'Wouter', 'Test');
 
 // Mock match for tomorrow so it shows up in upcoming matches
 const tomorrow = dayjs().add(1, 'day');
-const mockMatch: IMatch = {
+const mockMatch = {
   id: 1,
   teamId: 1,
   date: tomorrow,
@@ -73,12 +74,12 @@ const mockMatch: IMatch = {
   players: [],
   games: [],
   isBeingPlayed: () => false,
-  getTeam: () => ({ id: 1, getDivisionRanking: () => ({ empty: true }), renderOwnTeamTitle: () => 'TTC Aalst A' }) as unknown,
+  getTeam: () => ({ id: 1, getDivisionRanking: () => ({ empty: true }), renderOwnTeamTitle: () => 'TTC Aalst A' }),
   getPlayerFormation: () => [],
   getOwnPlayers: () => [],
   getTheirPlayers: () => [],
   renderOpponentTitle: () => 'Opponent A',
-} as unknown;
+} as unknown as IMatch;
 
 describe('DashboardUpcomingMatches', () => {
   it('renders player link when logged in', () => {
@@ -88,11 +89,11 @@ describe('DashboardUpcomingMatches', () => {
       </TestRouter>,
       {
         preloadedState: {
-          user: { playerId: 42, teams: [1], security: [], token: 'test', alias: 'Wouter' },
+          user: { playerId: 42, teams: [1], security: [] },
           players: [testPlayer],
           matches: [mockMatch],
           teams: [{ id: 1, teamCode: 'A', competition: 'Vttl' }],
-        } as unknown,
+        },
       },
     );
 
@@ -108,11 +109,11 @@ describe('DashboardUpcomingMatches', () => {
       </TestRouter>,
       {
         preloadedState: {
-          user: { playerId: 0, teams: [], security: [], token: '', alias: '' },
+          user: { playerId: 0, teams: [], security: [] },
           players: [testPlayer],
           matches: [mockMatch],
           teams: [{ id: 1, teamCode: 'A', competition: 'Vttl' }],
-        } as unknown,
+        },
       },
     );
 
