@@ -222,7 +222,9 @@ export function getPlayerStats(matches: IMatch[], withBelles = false): ITeamPlay
     });
   });
 
-  return Object.keys(result).map(key => result[Number(key)]!).filter(Boolean);
+  return Object.keys(result)
+    .map(key => result[Number(key)]!)
+    .filter(Boolean);
 }
 
 function sortMappedPlayers(competition: Competition): (plyA: ITeamPlayerInfo, plyB: ITeamPlayerInfo) => number {

@@ -63,7 +63,7 @@ export const Teams = () => {
         return yourTeams[0]?.teamCode ?? 'A';
       }
       const notReserve = yourTeams.find(x => x.getPlayers('standard').some(p => p.player.id === user.playerId));
-      return notReserve ? notReserve.teamCode : yourTeams[0]?.teamCode ?? 'A';
+      return notReserve ? notReserve.teamCode : (yourTeams[0]?.teamCode ?? 'A');
     }
     return 'A';
   };

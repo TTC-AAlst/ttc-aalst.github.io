@@ -60,7 +60,7 @@ export const Matches = () => {
   const matchesPlayed = ownMatches.filter(cal => cal.date.isBefore(today, 'day')).sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
   const pastGroups = groupMatchesByDate(matchesPlayed);
-  const todayGroup = matchesToday.length > 0 ? groupMatchesByDate(matchesToday)[0] ?? null : null;
+  const todayGroup = matchesToday.length > 0 ? (groupMatchesByDate(matchesToday)[0] ?? null) : null;
   const futureGroups = groupMatchesByDate(matchesNext);
 
   // Scroll to center today marker on mount
