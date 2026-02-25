@@ -66,10 +66,7 @@ export const MatchOtherRoundButton = ({ match, shortLabel, small }: MatchOtherRo
   }
 
   const linkElement = (
-    <Link
-      to={t.route('match', { matchId: otherRoundMatch.id })}
-      className={cn('btn btn-outline-secondary', { 'btn-sm': small })}
-    >
+    <Link to={t.route('match', { matchId: otherRoundMatch.id })} className={cn('btn btn-outline-secondary', { 'btn-sm': small })}>
       {label} <MatchScore match={otherRoundMatch} forceDisplay noLink />
     </Link>
   );
