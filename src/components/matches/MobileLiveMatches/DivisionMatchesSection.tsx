@@ -52,26 +52,38 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
     setModalMatch(m);
   };
 
+  const teamCellStyle: React.CSSProperties = {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: 120,
+  };
+
   return (
-    <div>
-      <Table size="sm" striped hover style={{ marginBottom: 0 }}>
+    <div style={{ maxWidth: 600, margin: '0 auto' }}>
+      <Table size="sm" striped hover style={{ marginBottom: 0, tableLayout: 'fixed' }}>
         <tbody>
           {todayDivisionMatches.map(m => {
             const hasPlayers = m.players.length > 0;
             const isPlayed = m.isSyncedWithFrenoy && m.score;
             const homeWon = isPlayed && m.score.home > m.score.out;
             const awayWon = isPlayed && m.score.out > m.score.home;
+            const isDifferentDay = !m.date.isSame(match.date, 'day');
             return (
               <React.Fragment key={m.id}>
                 <tr style={{ cursor: hasPlayers ? 'pointer' : 'default' }} onClick={() => hasPlayers && handleRowClick(m.id)}>
-                  <td style={{ whiteSpace: 'nowrap' }}>
+                  <td style={teamCellStyle}>
                     <OpponentLink team={team} opponent={m.home} />
                     {homeWon && <Icon fa="fa fa-trophy" style={{ marginLeft: 4, color: '#ffc107' }} />}
                   </td>
-                  <td style={{ textAlign: 'center', fontWeight: 600 }}>
-                    <OpponentMatchScore readonlyMatch={m} />
+                  <td style={{ textAlign: 'center', fontWeight: 600, width: 70 }}>
+                    {isDifferentDay && m.scoreType !== 'WalkOver' ? (
+                      <span style={{ color: '#666', fontWeight: 400 }}>{m.date.format('ddd')}</span>
+                    ) : (
+                      <OpponentMatchScore readonlyMatch={m} />
+                    )}
                   </td>
-                  <td style={{ whiteSpace: 'nowrap', textAlign: 'right' }}>
+                  <td style={{ ...teamCellStyle, textAlign: 'right' }}>
                     {awayWon && <Icon fa="fa fa-trophy" style={{ marginRight: 4, color: '#ffc107' }} />}
                     <OpponentLink team={team} opponent={m.away} />
                   </td>
