@@ -77,8 +77,10 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
                     {homeWon && <Icon fa="fa fa-trophy" style={{ marginLeft: 4, color: '#ffc107' }} />}
                   </td>
                   <td style={{ textAlign: 'center', fontWeight: 600, width: 70 }}>
-                    {isDifferentDay && m.scoreType !== 'WalkOver' ? (
+                    {isDifferentDay && m.scoreType !== 'WalkOver' && !m.isSyncedWithFrenoy ? (
                       <span style={{ color: '#666', fontWeight: 400 }}>{m.date.format('ddd')}</span>
+                    ) : !m.isSyncedWithFrenoy && m.scoreType !== 'WalkOver' ? (
+                      <span style={{ color: '#666', fontWeight: 400 }}>{m.date.format('HH:mm')}</span>
                     ) : (
                       <OpponentMatchScore readonlyMatch={m} />
                     )}
