@@ -17,7 +17,7 @@
     "format": "prettier --write src",
     "format:check": "prettier --check src",
     "knip": "knip",
-    "predeploy": "npm run build",
+    "predeploy": "bun run build",
     "deploy": "gh-pages -d dist --cname ttc-aalst.be",
     "prepare": "husky"
   },
