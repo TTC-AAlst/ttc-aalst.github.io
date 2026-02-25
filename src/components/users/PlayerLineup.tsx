@@ -10,7 +10,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import { getPlayingStatusClass } from '../../models/PlayerModel';
 import { CommentButton } from '../controls/Buttons/CommentButton';
 import MatchVs from '../matches/Match/MatchVs';
-import { CannotEditMatchIcon } from '../matches/controls/CannotEditMatchIcon';
+import { Icon } from '../controls/Icons/Icon';
 import { SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOrLast } from '../teams/SwitchBetweenFirstAndLastRoundButton';
 import { t } from '../../locales';
 import { selectPlayer } from '../../reducers/matchesReducer';
@@ -104,11 +104,32 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
               const matchPlayer = formation.find(x => x.id === this.props.playerId)?.matchPlayer;
               const statusNote = matchPlayer ? matchPlayer.statusNote : '';
 
+              // Check if user is in blocked formation using undefined filter (includes all statuses)
+              const allFormation = match.getPlayerFormation(undefined);
+              const playerInAllFormation = allFormation.find(x => x.id === this.props.playerId)?.matchPlayer;
+              const isInBlockedFormation = match.block && playerInAllFormation?.status === match.block;
+
               const getOnChangePlaying = (status: MatchPlayerStatus) => this._onChangePlaying.bind(this, match, status, statusNote);
+
               let buttons: React.ReactNode;
-              if (match.block && this.props.disableBlockedMatches) {
-                buttons = <CannotEditMatchIcon />;
+              if (match.isSyncedWithFrenoy) {
+                // Match already played - no changes allowed
+                buttons = (
+                  <div className="text-muted">
+                    <Icon fa="fa fa-check" style={{ marginRight: 4 }} />
+                    {t('profile.play.matchPlayed')}
+                  </div>
+                );
+              } else if (isInBlockedFormation) {
+                // User is in the blocked formation - contact captain
+                buttons = (
+                  <div className="text-muted">
+                    <Icon fa="fa fa-lock" style={{ marginRight: 4 }} />
+                    {t('profile.play.contactCaptain')}
+                  </div>
+                );
               } else {
+                // Normal case or blocked but user not in formation - allow preference changes
                 buttons = (
                   <ButtonToolbar>
                     <Button style={{ marginBottom: 5, width: 90 }} variant="success" onClick={getOnChangePlaying('Play')}>

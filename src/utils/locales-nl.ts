@@ -128,6 +128,8 @@ export default {
         canDontKnow: 'Weet niet',
         extraComment: 'Info voor de kapitein',
         extraCommentHelp: 'Klik op een van de knoppen om te bewaren',
+        contactCaptain: 'Neem contact op met de kapitein om je opstelling te wijzigen',
+        matchPlayed: 'Wedstrijd gespeeld',
       },
     },
     intro: {
