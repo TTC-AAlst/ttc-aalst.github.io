@@ -3,25 +3,27 @@ import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { IMatch, ITeam } from '../../models/model-interfaces';
 import t from '../../locales';
+import { Icon } from '../controls/Icons/Icon';
 
 type MatchStatus = 'beingPlayed' | 'notStarted' | 'played';
 
 const getTeamMatchInfo = (team: ITeam): { match: IMatch | undefined; status: MatchStatus } => {
   const matches = team.getMatches();
-  const today = dayjs().startOf('day');
-
-  // First check if there's a match being played
-  const beingPlayed = matches.find(m => m.isBeingPlayed());
-  if (beingPlayed) {
-    return { match: beingPlayed, status: 'beingPlayed' };
-  }
+  const now = dayjs();
+  const today = now.startOf('day');
 
   // Check for match scheduled today (not yet played)
   const todayMatch = matches.find(m => {
     const matchDate = dayjs(m.date).startOf('day');
     return matchDate.isSame(today) && !m.isSyncedWithFrenoy && m.scoreType !== 'WalkOver';
   });
+
   if (todayMatch) {
+    // If match time has passed, it's being played; otherwise not started yet
+    const matchHasStarted = now.isAfter(todayMatch.date);
+    if (matchHasStarted) {
+      return { match: todayMatch, status: 'beingPlayed' };
+    }
     return { match: todayMatch, status: 'notStarted' };
   }
 
@@ -65,7 +67,7 @@ export const TeamMatchButton = ({ team }: { team: ITeam }) => {
     );
   }
 
-  // Not yet started: show starting time
+  // Not yet started: show starting time with clock icon
   if (status === 'notStarted') {
     return (
       <Link
@@ -81,7 +83,8 @@ export const TeamMatchButton = ({ team }: { team: ITeam }) => {
           textDecoration: 'none',
         }}
       >
-        {match.getDisplayTime()}
+        <Icon fa="fa fa-clock-o" style={{ marginRight: 4 }} />
+        {match.date.format('HH:mm')}
       </Link>
     );
   }
