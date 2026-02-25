@@ -10,6 +10,7 @@ import { OpponentMatches } from '../Match/OpponentMatches';
 import { OpponentsFormation } from '../Match/OpponentsFormation';
 import { OpponentsTeamFormation } from '../Match/OpponentsTeamFormation';
 import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponentMatches';
+import { useViewport } from '../../../utils/hooks/useViewport';
 import { PreviousEncounters } from '../Match/PreviousEncounters';
 import { Scoresheet } from '../Match/Scoresheet';
 import { PlayerCompetitionBadge } from '../../players/PlayerBadges';
@@ -28,9 +29,11 @@ import { MatchCardAdmin } from '../Match/MatchCardAdmin';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
+  /** When true, buttons show icons only (for multi-card layouts like /vandaag) */
+  compact?: boolean;
 };
 
-export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressProps) => {
+export const MobileLiveMatchInProgress = ({ match, compact = false }: MobileLiveMatchInProgressProps) => {
   const hasPlayersOrGames = match.games.length || match.getTheirPlayers().length;
   const hasStarted = match.date.isBefore(dayjs());
   const canEnterOpponents = match.date.subtract(1, 'hour').isBefore(dayjs());
@@ -50,7 +53,7 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
         <OurFormationPreStart match={match} />
         {!match.isHomeMatch && !hasStarted && <AwayMatchDetails match={match} />}
         {canEnterOpponents && <OpponentPlayersPreStart match={match} />}
-        <MatchActionButtons match={match} />
+        <MatchActionButtons match={match} compact={compact} />
       </div>
     );
   }
@@ -59,7 +62,7 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <FormationsWithResults match={match} />
-      <MatchActionButtons match={match} />
+      <MatchActionButtons match={match} compact={compact} />
     </div>
   );
 };
@@ -109,7 +112,7 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => {
   );
 };
 
-const MatchActionButtons = ({ match }: { match: IMatch }) => {
+const MatchActionButtons = ({ match, compact = false }: { match: IMatch; compact?: boolean }) => {
   const [showGames, setShowGames] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showOpponentModal, setShowOpponentModal] = useState(false);
@@ -121,6 +124,10 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match));
   const opponentMatchesList = [...opponentMatches.home, ...opponentMatches.away].filter(m => m.shouldBePlayed);
   const readonlyMatches = useTtcSelector(selectReadOnlyMatches);
+  const viewport = useViewport();
+  // In compact mode (multi-card layout), always show icons only
+  // In non-compact mode (single card), use viewport to determine
+  const isMobile = compact || viewport.width < 768;
 
   const hasReportOrComments = !!match.description || match.comments.length > 0;
   const hasTheirPlayers = match.getTheirPlayers().length > 0;
@@ -150,36 +157,41 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   return (
     <div>
       <div style={{ textAlign: 'center', marginBottom: 12 }}>
-        <ButtonGroup size="sm">
+        <ButtonGroup size={isMobile ? undefined : 'sm'}>
           <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.report')}</Tooltip>}>
             <Button variant="outline-secondary" onClick={() => setShowReportModal(true)}>
               <Icon fa={hasReportOrComments ? 'fa fa-commenting-o' : 'fa fa-comment-o'} />
+              {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.tabs.report')}</span>}
             </Button>
           </OverlayTrigger>
           {match.games.length > 0 && (
             <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.matchesTitle')}</Tooltip>}>
               <Button variant={showGames ? 'secondary' : 'outline-secondary'} onClick={() => setShowGames(!showGames)}>
-                {t('match.tabs.matches')}
+                <Icon fa="fa fa-list-ol" />
+                {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.tabs.matches')}</span>}
               </Button>
             </OverlayTrigger>
           )}
           <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.opponentsFormationTitle')}</Tooltip>}>
             <Button variant="outline-secondary" onClick={() => setShowOpponentModal(true)}>
-              {t('match.individual.opponentPlayer')}
+              <Icon fa="fa fa-users" />
+              {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.individual.opponentPlayer')}</span>}
             </Button>
           </OverlayTrigger>
-          <MatchOtherRoundButton match={match} shortLabel small />
+          <MatchOtherRoundButton match={match} shortLabel={isMobile} small={!isMobile} />
           {hasTheirPlayers && (
             <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.previousEncountersTitle')}</Tooltip>}>
               <Button variant="outline-secondary" onClick={() => setShowEncountersModal(true)}>
-                {t('match.tabs.previousEncounters')}
+                <Icon fa="fa fa-history" />
+                {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.tabs.previousEncounters')}</span>}
               </Button>
             </OverlayTrigger>
           )}
           {todayDivisionMatches.length > 0 && (
             <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.division')}</Tooltip>}>
               <Button variant={showDivision ? 'secondary' : 'outline-secondary'} onClick={() => setShowDivision(!showDivision)}>
-                {t('match.tabs.division')}
+                <Icon fa="fa fa-table" />
+                {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.tabs.division')}</span>}
               </Button>
             </OverlayTrigger>
           )}

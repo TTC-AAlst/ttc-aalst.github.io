@@ -15,6 +15,8 @@ type MobileLiveMatchCardProps = {
   isCollapsible: boolean;
   /** When true, hides the "Details" link (use when already on match detail page) */
   hideDetailsLink?: boolean;
+  /** When true, action buttons show icons only (for multi-card layouts) */
+  compactButtons?: boolean;
 };
 
 const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
@@ -52,7 +54,7 @@ const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
   );
 };
 
-export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible, hideDetailsLink }: MobileLiveMatchCardProps) => {
+export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible, hideDetailsLink, compactButtons }: MobileLiveMatchCardProps) => {
   const showContent = !isCollapsible || expanded;
 
   return (
@@ -92,7 +94,7 @@ export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible, 
         )}
       </div>
       {isCollapsible && !expanded && <CollapsedPlayerSummary match={match} />}
-      {showContent && <MobileLiveMatchInProgress match={match} />}
+      {showContent && <MobileLiveMatchInProgress match={match} compact={compactButtons} />}
     </div>
   );
 };

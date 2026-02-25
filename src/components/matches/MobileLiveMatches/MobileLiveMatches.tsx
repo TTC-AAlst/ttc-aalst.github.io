@@ -26,6 +26,8 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
 
   // Only collapsible on mobile with multiple matches
   const isCollapsible = isMobile && matches.length > 1;
+  // Compact buttons when multi-card layout (side-by-side on desktop, or multiple on mobile)
+  const useCompactButtons = matches.length > 1;
 
   const allExpanded = matches.every(m => !!expandedMatchCards[m.id]);
   const toggleAll = () => {
@@ -46,7 +48,7 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+          gridTemplateColumns: isMobile || matches.length === 1 ? '1fr' : 'repeat(2, 1fr)',
           gap: 16,
         }}
       >
@@ -57,6 +59,7 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
             expanded={!isCollapsible || !!expandedMatchCards[match.id]}
             onToggle={() => toggleMatch(match.id)}
             isCollapsible={isCollapsible}
+            compactButtons={useCompactButtons}
           />
         ))}
       </div>
