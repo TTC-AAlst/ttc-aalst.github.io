@@ -1,58 +1,40 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
-import { connect } from 'react-redux';
 import AdminClubForm from './AdminClubForm';
 import { EditButton } from '../controls/Buttons/EditButton';
 import { IClub, IClubLocation } from '../../models/model-interfaces';
 import { frenoyClubSync, updateClub } from '../../reducers/clubsReducer';
-import { RootState, AppDispatch } from '../../store';
+import { useTtcSelector, useTtcDispatch } from '../../utils/hooks/storeHooks';
 
-type AdminClubsProps = {
-  clubs: IClub[];
-  updateClub: Function;
-  frenoyClubSync: Function;
-};
+const AdminClubs = () => {
+  const dispatch = useTtcDispatch();
+  const allClubs = useTtcSelector(state => state.clubs);
+  const [clubFilter, setClubFilter] = useState('');
+  const [editClub, setEditClub] = useState<null | IClub>(null);
 
-type AdminClubsState = {
-  clubFilter: string;
-  editClub: null | IClub;
-};
-
-class AdminClubs extends Component<AdminClubsProps, AdminClubsState> {
-  constructor(props: AdminClubsProps) {
-    super(props);
-    this.state = { clubFilter: '', editClub: null };
+  if (editClub) {
+    return <AdminClubForm club={editClub} updateClub={(club: IClub) => dispatch(updateClub(club))} onEnd={() => setEditClub(null)} />;
   }
 
-  render() {
-    if (this.state.editClub) {
-      return <AdminClubForm club={this.state.editClub} updateClub={this.props.updateClub} onEnd={() => this.setState({ editClub: null })} />;
-    }
+  let clubs = allClubs;
+  if (clubFilter) {
+    clubs = clubs.filter(x => x.name.toLowerCase().includes(clubFilter));
+  }
 
-    let { clubs } = this.props;
-    if (this.state.clubFilter) {
-      clubs = clubs.filter(x => x.name.toLowerCase().includes(this.state.clubFilter));
-    }
-
-    return (
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-          <Form.Control
-            placeholder="Zoek club"
-            onChange={e => this.setState({ clubFilter: e.target.value.toLowerCase() })}
-            style={{ width: 150, marginLeft: 10 }}
-          />
-          <button type="button" className="btn btn-outline-secondary" style={{ marginRight: 15 }} onClick={() => this.props.frenoyClubSync()}>
-            Frenoy Sync
-          </button>
-        </div>
-
-        <ClubsTable clubs={clubs} onEditClub={club => this.setState({ editClub: club })} />
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <Form.Control placeholder="Zoek club" onChange={e => setClubFilter(e.target.value.toLowerCase())} style={{ width: 150, marginLeft: 10 }} />
+        <button type="button" className="btn btn-outline-secondary" style={{ marginRight: 15 }} onClick={() => dispatch(frenoyClubSync())}>
+          Frenoy Sync
+        </button>
       </div>
-    );
-  }
-}
+
+      <ClubsTable clubs={clubs} onEditClub={club => setEditClub(club)} />
+    </div>
+  );
+};
 
 const ClubsTable = ({ clubs, onEditClub }: { clubs: IClub[]; onEditClub: (club: IClub) => void }) => (
   <Table size="sm" hover>
@@ -86,12 +68,7 @@ const ClubsTable = ({ clubs, onEditClub }: { clubs: IClub[]; onEditClub: (club: 
   </Table>
 );
 
-const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  updateClub: (club: IClub) => dispatch(updateClub(club)),
-  frenoyClubSync: () => dispatch(frenoyClubSync()),
-});
-
-export default connect((state: RootState) => ({ clubs: state.clubs }), mapDispatchToProps)(AdminClubs);
+export default AdminClubs;
 
 const ClubLocation = ({ location }: { location: IClubLocation }) => (
   <small>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import cn from 'classnames';
 import { Icon } from '../Icons/Icon';
 import { withTooltip } from '../../../utils/decorators/withTooltip';
@@ -10,15 +10,12 @@ export type ButtonComponentProps = {
   style?: React.CSSProperties;
 };
 
-class ButtonComponent extends Component<ButtonComponentProps> {
-  render() {
-    return (
-      <a onClick={this.props.onClick} className={cn(this.props.className, 'btn btn-outline-secondary')} style={this.props.style} role="button" tabIndex={0}>
-        {this.props.label}
-      </a>
-    );
-  }
-}
+const ButtonComponent = React.forwardRef<HTMLAnchorElement, ButtonComponentProps>(({ onClick, label, className, style }, ref) => (
+  <a ref={ref} onClick={onClick} className={cn(className, 'btn btn-outline-secondary')} style={style} role="button" tabIndex={0}>
+    {label}
+  </a>
+));
+ButtonComponent.displayName = 'ButtonComponent';
 
 const Button = withTooltip(ButtonComponent);
 
@@ -29,14 +26,11 @@ export type IconButtonComponentProps = {
   style?: React.CSSProperties;
 };
 
-class IconButtonComponent extends Component<IconButtonComponentProps> {
-  render() {
-    return (
-      <a onClick={this.props.onClick} className={cn(this.props.className, 'btn btn-outline-secondary')} style={this.props.style} role="button" tabIndex={0}>
-        <Icon fa={this.props.fa} />
-      </a>
-    );
-  }
-}
+const IconButtonComponent = React.forwardRef<HTMLAnchorElement, IconButtonComponentProps>(({ onClick, fa, className, style }, ref) => (
+  <a ref={ref} onClick={onClick} className={cn(className, 'btn btn-outline-secondary')} style={style} role="button" tabIndex={0}>
+    <Icon fa={fa} />
+  </a>
+));
+IconButtonComponent.displayName = 'IconButtonComponent';
 
 const IconButton = withTooltip(IconButtonComponent);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Icon, IconProps } from './Icon';
 import { t } from '../../../locales';
 
@@ -10,8 +10,4 @@ export const ThumbsDownIcon = ({ style, ...props }: Omit<IconProps, 'fa'>) => (
   <Icon fa="fa fa-thumbs-o-down" color="#FF5144" translate tooltip="teamCalendar.matchesLostBadge" style={{ marginRight: 5, ...style }} {...props} />
 );
 
-export class ThumbsGreatIcon extends Component<Omit<IconProps, 'fa'>> {
-  render() {
-    return <Icon fa="fa fa-thumbs-up" tooltip={t('teamCalendar.matchesWonAllBadge')} {...this.props} />;
-  }
-}
+export const ThumbsGreatIcon = (props: Omit<IconProps, 'fa'>) => <Icon fa="fa fa-thumbs-up" tooltip={t('teamCalendar.matchesWonAllBadge')} {...props} />;

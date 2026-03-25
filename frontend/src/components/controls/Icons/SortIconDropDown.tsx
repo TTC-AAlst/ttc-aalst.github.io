@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Icon } from './Icon';
@@ -18,36 +18,29 @@ type SortIconDropDownProps = {
   onSortDirectionChange: (dir: SortDirection) => void;
 };
 
-export class SortIconDropDown extends Component<SortIconDropDownProps> {
-  static defaultProps = {
-    activeSortDirection: 'asc',
+export const SortIconDropDown = ({ config, activeSort, activeSortDirection = 'asc', onSortChange, onSortDirectionChange }: SortIconDropDownProps) => {
+  const onButtonSelect = (configKey: string) => {
+    if (configKey === activeSort) {
+      onSortDirectionChange(activeSortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      onSortChange(configKey);
+    }
   };
 
-  _onButtonSelect(configKey: string) {
-    if (configKey === this.props.activeSort) {
-      this.props.onSortDirectionChange(this.props.activeSortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      this.props.onSortChange(configKey);
-    }
-  }
+  return (
+    <DropdownButton
+      title={<SortIcon direction={activeSortDirection} />}
+      id="sort-dropdown"
+      onSelect={key => key && onButtonSelect(key)}
+      style={{ display: 'inline' }}
+    >
+      {config.map(button => (
+        <Dropdown.Item eventKey={button.key} key={button.key}>
+          <Icon fa={`fa fa-sort-${activeSortDirection}`} style={{ visibility: activeSort !== button.key ? 'hidden' : undefined }} />
 
-  render() {
-    const { config } = this.props;
-    return (
-      <DropdownButton
-        title={<SortIcon direction={this.props.activeSortDirection || 'asc'} />}
-        id="sort-dropdown"
-        onSelect={key => key && this._onButtonSelect(key)}
-        style={{ display: 'inline' }}
-      >
-        {config.map(button => (
-          <Dropdown.Item eventKey={button.key} key={button.key}>
-            <Icon fa={`fa fa-sort-${this.props.activeSortDirection}`} style={{ visibility: this.props.activeSort !== button.key ? 'hidden' : undefined }} />
-
-            <span style={{ marginLeft: 12 }}>{button.text}</span>
-          </Dropdown.Item>
-        ))}
-      </DropdownButton>
-    );
-  }
-}
+          <span style={{ marginLeft: 12 }}>{button.text}</span>
+        </Dropdown.Item>
+      ))}
+    </DropdownButton>
+  );
+};

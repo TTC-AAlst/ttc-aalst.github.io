@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Select from 'react-select';
 import { t } from '../../locales';
 
@@ -7,23 +7,19 @@ type PlayerStyleAutocompleteProps = {
   value?: string;
 };
 
-export default class PlayerStyleAutocomplete extends Component<PlayerStyleAutocompleteProps> {
-  _onChange(option: { value: string }) {
-    this.props.onChange(option.value);
-  }
+const PlayerStyleAutocomplete = ({ onChange, value }: PlayerStyleAutocompleteProps) => {
+  const playingStyles = [t('player.styles.attacker'), t('player.styles.defender'), t('player.styles.allRounder')];
 
-  render() {
-    const playingStyles = [t('player.styles.attacker'), t('player.styles.defender'), t('player.styles.allRounder')];
+  return (
+    <Select
+      isSearchable
+      onChange={option => option?.value && onChange(option.value)}
+      value={{ value, label: value }}
+      placeholder={t('player.editStyle.style')}
+      options={playingStyles.map(style => ({ label: style, value: style }))}
+      classNamePrefix="react-select-fix"
+    />
+  );
+};
 
-    return (
-      <Select
-        isSearchable
-        onChange={option => option?.value && this._onChange({ value: option.value })}
-        value={{ value: this.props.value, label: this.props.value }}
-        placeholder={t('player.editStyle.style')}
-        options={playingStyles.map(style => ({ label: style, value: style }))}
-        classNamePrefix="react-select-fix"
-      />
-    );
-  }
-}
+export default PlayerStyleAutocomplete;

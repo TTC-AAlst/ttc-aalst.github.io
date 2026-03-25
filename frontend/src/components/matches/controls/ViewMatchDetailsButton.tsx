@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
@@ -15,22 +15,18 @@ type ViewMatchDetailsButtonProps = {
   size: 'sm' | null;
 };
 
-export class ViewMatchDetailsButton extends Component<ViewMatchDetailsButtonProps> {
-  render() {
-    const { match } = this.props;
-    if (!match.shouldBePlayed) {
-      return null;
-    }
-
-    const { size } = this.props;
-    const score = match.renderScore();
-    return (
-      <Link className={cn({ 'btn btn-outline-secondary': !score, clickable: !!score, [`btn-${size}`]: !!size })} to={t.route('match', { matchId: match.id })}>
-        {score ? <MatchScore match={match} style={{ fontSize: size === 'sm' ? 12 : 16 }} showComments noLink /> : t('match.details')}
-      </Link>
-    );
+export const ViewMatchDetailsButton = ({ match, size }: ViewMatchDetailsButtonProps) => {
+  if (!match.shouldBePlayed) {
+    return null;
   }
-}
+
+  const score = match.renderScore();
+  return (
+    <Link className={cn({ 'btn btn-outline-secondary': !score, clickable: !!score, [`btn-${size}`]: !!size })} to={t.route('match', { matchId: match.id })}>
+      {score ? <MatchScore match={match} style={{ fontSize: size === 'sm' ? 12 : 16 }} showComments noLink /> : t('match.details')}
+    </Link>
+  );
+};
 
 type MatchOtherRoundButtonProps = {
   match: IMatch;

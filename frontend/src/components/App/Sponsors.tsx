@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Card from 'react-bootstrap/Card';
 
 type SponsorWrapperProps = Omit<ImageSponsorProps, 'img'> & Partial<Pick<ImageSponsorProps, 'img'>>;
@@ -34,27 +34,20 @@ const imgStyle = {
   maxWidth: '100%',
 };
 
-class ImageSponsor extends Component<ImageSponsorProps> {
-  static defaultProps = {
-    style: {},
-    url: undefined,
-  };
-
-  render() {
-    const style = this.props.big ? bottomSponsorsStyleBig : bottomSponsorsStyleSmall;
-    const img = <img src={`/img/sponsors/${this.props.img}`} alt="Sponsor logo" style={imgStyle} />;
-    return (
-      <Card style={{ ...style, ...this.props.style }}>
-        <Card.Body style={{ padding: 0 }}>
-          {this.props.url ? (
-            <a href={this.props.url} target="_blank" rel="noopener noreferrer">
-              {img}
-            </a>
-          ) : (
-            img
-          )}
-        </Card.Body>
-      </Card>
-    );
-  }
-}
+const ImageSponsor = ({ big, url, img, style = {} }: ImageSponsorProps) => {
+  const containerStyle = big ? bottomSponsorsStyleBig : bottomSponsorsStyleSmall;
+  const imgEl = <img src={`/img/sponsors/${img}`} alt="Sponsor logo" style={imgStyle} />;
+  return (
+    <Card style={{ ...containerStyle, ...style }}>
+      <Card.Body style={{ padding: 0 }}>
+        {url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            {imgEl}
+          </a>
+        ) : (
+          imgEl
+        )}
+      </Card.Body>
+    </Card>
+  );
+};

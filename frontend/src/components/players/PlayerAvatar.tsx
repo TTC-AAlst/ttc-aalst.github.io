@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { playerUtils } from '../../models/PlayerModel';
 import { PlayerLink } from './controls/PlayerLink';
 import { withTooltip } from '../../utils/decorators/withTooltip';
@@ -9,58 +9,48 @@ type PlayerAvatarProps = {
   style?: React.CSSProperties;
 };
 
-type PlayerAvatarState = {
-  isLoaded: boolean;
-  img: string;
-};
+const PlayerAvatar = React.forwardRef<HTMLElement, PlayerAvatarProps>(({ player, style, ...props }, ref) => {
+  const imgSrc = playerUtils.getAvatarImageUrl(player.id, player.imageVersion);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-class PlayerAvatar extends Component<PlayerAvatarProps, PlayerAvatarState> {
-  constructor(props: PlayerAvatarProps) {
-    super(props);
-
+  useEffect(() => {
     const img = new Image();
-    img.onload = () => this.setState({ isLoaded: true });
-    img.src = playerUtils.getAvatarImageUrl(this.props.player.id, this.props.player.imageVersion);
+    img.onload = () => setIsLoaded(true);
+    img.src = imgSrc;
+  }, [imgSrc]);
 
-    this.state = {
-      isLoaded: false,
-      img: img.src,
-    };
-  }
+  const baseStyle: React.CSSProperties = {
+    width: 40,
+    height: 40,
+    backgroundColor: '#bdbdbd',
+    color: '#fff',
+    fontSize: '1.25rem',
+    ...style,
+  };
 
-  render() {
-    const { player, style, ...props } = this.props;
-    const baseStyle: React.CSSProperties = {
-      width: 40,
-      height: 40,
-      backgroundColor: '#bdbdbd',
-      color: '#fff',
-      fontSize: '1.25rem',
-      ...style,
-    };
-
-    if (!this.state.isLoaded) {
-      return (
-        <PlayerLink player={player} className="">
-          <div className="rounded-circle d-flex align-items-center justify-content-center" style={baseStyle} {...props}>
-            {player.alias[0]}
-          </div>
-        </PlayerLink>
-      );
-    }
-
+  if (!isLoaded) {
     return (
       <PlayerLink player={player} className="">
-        <img
-          className="rounded-circle"
-          src={this.state.img}
-          alt={player.alias}
-          style={{ width: baseStyle.width, height: baseStyle.height, objectFit: 'cover', ...style }}
-          {...props}
-        />
+        <div ref={ref as React.Ref<HTMLDivElement>} className="rounded-circle d-flex align-items-center justify-content-center" style={baseStyle} {...props}>
+          {player.alias[0]}
+        </div>
       </PlayerLink>
     );
   }
-}
+
+  return (
+    <PlayerLink player={player} className="">
+      <img
+        ref={ref as React.Ref<HTMLImageElement>}
+        className="rounded-circle"
+        src={imgSrc}
+        alt={player.alias}
+        style={{ width: baseStyle.width, height: baseStyle.height, objectFit: 'cover', ...style }}
+        {...props}
+      />
+    </PlayerLink>
+  );
+});
+PlayerAvatar.displayName = 'PlayerAvatar';
 
 export default withTooltip(PlayerAvatar);

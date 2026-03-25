@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import cn from 'classnames';
 import { Icon } from '../Icons/Icon';
 import { createFrenoyLinkByUniqueId } from '../../../models/PlayerModel';
@@ -32,24 +32,13 @@ type FrenoyButtonProps = {
   className?: string;
 };
 
-export class FrenoyButton extends Component<FrenoyButtonProps> {
-  render() {
-    const { linkTo } = this.props;
-    return (
-      <a
-        href={this.props.team.frenoy.getUrl(linkTo)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={this.props.className}
-        style={{ display: 'inline-block' }}
-      >
-        <button type="button" className={`btn btn-${this.props.team.competition}`}>
-          <Icon fa={cn('fa fa-2x', { 'fa-list-ol': linkTo === 'ranking', 'fa-dashboard': linkTo === 'results' })} tooltip={t(`teamCalendar.frenoy${linkTo}`)} />
-        </button>
-      </a>
-    );
-  }
-}
+export const FrenoyButton = ({ team, linkTo, className }: FrenoyButtonProps) => (
+  <a href={team.frenoy.getUrl(linkTo)} target="_blank" rel="noopener noreferrer" className={className} style={{ display: 'inline-block' }}>
+    <button type="button" className={`btn btn-${team.competition}`}>
+      <Icon fa={cn('fa fa-2x', { 'fa-list-ol': linkTo === 'ranking', 'fa-dashboard': linkTo === 'results' })} tooltip={t(`teamCalendar.frenoy${linkTo}`)} />
+    </button>
+  </a>
+);
 
 type FrenoyWeekButtonProps = {
   team: ITeam;
@@ -58,32 +47,19 @@ type FrenoyWeekButtonProps = {
   style?: React.CSSProperties;
 };
 
-export class FrenoyWeekButton extends Component<FrenoyWeekButtonProps> {
-  render() {
-    return (
-      <a
-        href={this.props.team.frenoy.getWeekUrl(this.props.week)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={this.props.className}
-        style={{ display: 'inline-block', ...this.props.style }}
-      >
-        <button type="button" className={`btn btn-${this.props.team.competition}`}>
-          <Icon fa="fa fa-2x fa-calendar" tooltip={t('teamCalendar.frenoyweek')} />
-        </button>
-      </a>
-    );
-  }
-}
+export const FrenoyWeekButton = ({ team, week, className, style }: FrenoyWeekButtonProps) => (
+  <a href={team.frenoy.getWeekUrl(week)} target="_blank" rel="noopener noreferrer" className={className} style={{ display: 'inline-block', ...style }}>
+    <button type="button" className={`btn btn-${team.competition}`}>
+      <Icon fa="fa fa-2x fa-calendar" tooltip={t('teamCalendar.frenoyweek')} />
+    </button>
+  </a>
+);
 
-export class FrenoyWeekLink extends Component<{ match: IMatch }> {
-  render() {
-    const { match } = this.props;
-    const team = match.getTeam();
-    return (
-      <a href={team.frenoy.getWeekUrl(match.week)} target="_blank" rel="noopener noreferrer" className="link-hover-underline">
-        {match.frenoyMatchId}
-      </a>
-    );
-  }
-}
+export const FrenoyWeekLink = ({ match }: { match: IMatch }) => {
+  const team = match.getTeam();
+  return (
+    <a href={team.frenoy.getWeekUrl(match.week)} target="_blank" rel="noopener noreferrer" className="link-hover-underline">
+      {match.frenoyMatchId}
+    </a>
+  );
+};

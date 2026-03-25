@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { Icon } from './Icon';
@@ -17,19 +17,13 @@ type BadgyProps = {
 };
 
 // Badgy because material-ui also defines a Badge
-export class Badgy extends Component<BadgyProps> {
-  render() {
-    const { type, style, children, tooltip } = this.props;
-
-    return (
-      <OverlayTrigger placement="top" overlay={<Tooltip id={tooltip}>{t(tooltip)}</Tooltip>}>
-        <span className={`badge label-as-badge ${type}`} style={style}>
-          {children}
-        </span>
-      </OverlayTrigger>
-    );
-  }
-}
+export const Badgy = ({ type, style, children, tooltip }: BadgyProps) => (
+  <OverlayTrigger placement="top" overlay={<Tooltip id={tooltip}>{t(tooltip)}</Tooltip>}>
+    <span className={`badge label-as-badge ${type}`} style={style}>
+      {children}
+    </span>
+  </OverlayTrigger>
+);
 
 const ThrillerBadge = ({ match }: { match: IMatch }) => {
   const team = match.getTeam();

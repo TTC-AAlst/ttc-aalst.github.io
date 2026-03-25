@@ -1,70 +1,54 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import { connect } from 'react-redux';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
 import { adminSetNewPassword } from '../../reducers/userActions';
-import { AppDispatch } from '../../store';
+import { useTtcDispatch } from '../../utils/hooks/storeHooks';
 
 type AdminChangePasswordProps = {
-  adminSetNewPassword: (data: Parameters<typeof adminSetNewPassword>[0]) => void;
   onEnd: () => void;
 };
 
-type AdminChangePasswordState = {
-  playerId: number | string;
-  newPassword: string;
+const AdminChangePassword = ({ onEnd }: AdminChangePasswordProps) => {
+  const dispatch = useTtcDispatch();
+  const [playerId, setPlayerId] = useState<number | string>('');
+  const [newPassword, setNewPassword] = useState('');
+
+  const paperStyle: React.CSSProperties = {
+    marginLeft: 20,
+    textAlign: 'center',
+    display: 'inline-block',
+  };
+
+  return (
+    <div style={paperStyle}>
+      <h3>{t('password.changeTitle')}</h3>
+
+      <PlayerAutoComplete selectPlayer={id => setPlayerId(id)} label={t('login.loginName')} />
+
+      <br />
+
+      <Form.Group>
+        <Form.Label>{t('password.newPassword')}</Form.Label>
+        <Form.Control type="password" onChange={e => setNewPassword(e.target.value)} />
+      </Form.Group>
+
+      <br />
+
+      <MaterialButton
+        variant="contained"
+        label={t('profile.editPassword')}
+        color="primary"
+        style={{ marginTop: 15 }}
+        onClick={() => {
+          dispatch(adminSetNewPassword({ playerId, newPassword }));
+          onEnd();
+        }}
+        disabled={!playerId && !newPassword}
+      />
+    </div>
+  );
 };
 
-class AdminChangePassword extends Component<AdminChangePasswordProps, AdminChangePasswordState> {
-  constructor(props: AdminChangePasswordProps) {
-    super(props);
-    this.state = {
-      playerId: '',
-      newPassword: '',
-    };
-  }
-
-  render() {
-    const paperStyle: React.CSSProperties = {
-      marginLeft: 20,
-      textAlign: 'center',
-      display: 'inline-block',
-    };
-    return (
-      <div style={paperStyle}>
-        <h3>{t('password.changeTitle')}</h3>
-
-        <PlayerAutoComplete selectPlayer={playerId => this.setState({ playerId })} label={t('login.loginName')} />
-
-        <br />
-
-        <Form.Group>
-          <Form.Label>{t('password.newPassword')}</Form.Label>
-          <Form.Control type="password" onChange={e => this.setState({ newPassword: e.target.value })} />
-        </Form.Group>
-
-        <br />
-
-        <MaterialButton
-          variant="contained"
-          label={t('profile.editPassword')}
-          color="primary"
-          style={{ marginTop: 15 }}
-          onClick={() => {
-            this.props.adminSetNewPassword(this.state);
-            this.props.onEnd();
-          }}
-          disabled={!this.state.playerId && !this.state.newPassword}
-        />
-      </div>
-    );
-  }
-}
-
-const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  adminSetNewPassword: (data: Parameters<typeof adminSetNewPassword>[0]) => dispatch(adminSetNewPassword(data)),
-});
-
-export default connect(null, mapDispatchToProps)(AdminChangePassword);
+export default AdminChangePassword;

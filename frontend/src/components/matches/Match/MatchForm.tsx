@@ -1,116 +1,106 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { MatchScore } from '../MatchScore';
 import { Icon } from '../../controls/Icons/Icon';
 import { IUser } from '../../../models/UserModel';
 import { IMatch, IMatchScore } from '../../../models/model-interfaces';
 import { updateScore } from '../../../reducers/matchesReducer';
 import { debounce } from '../../../utils/debounce';
-import { AppDispatch } from '../../../store';
+import { useTtcDispatch } from '../../../utils/hooks/storeHooks';
 
 const scoreOrDefault = (match: IMatch): IMatchScore => match.score || { home: 0, out: 0 };
 
 type MatchFormProps = {
   user: IUser;
   match: IMatch;
-  updateScore: (data: Parameters<typeof updateScore>[0]) => void;
   big?: boolean;
 };
 
-type MatchFormState = {
-  useInput: boolean;
-  inputScore: string;
-  currentScore: IMatchScore;
-};
+const MatchForm = ({ user, match, big }: MatchFormProps) => {
+  const dispatch = useTtcDispatch();
+  const [useInput, setUseInput] = useState(false);
+  const [inputScore, setInputScore] = useState('');
+  const [currentScore, setCurrentScore] = useState<IMatchScore>(scoreOrDefault(match));
 
-class MatchForm extends Component<MatchFormProps, MatchFormState> {
-  constructor(props: MatchFormProps) {
-    super(props);
-    this.state = {
-      useInput: false,
-      inputScore: '',
-      currentScore: scoreOrDefault(props.match),
-    };
-    this._onUpdateScoreDebounced = this._onUpdateScoreDebounced.bind(this);
-  }
+  useEffect(() => {
+    setCurrentScore(scoreOrDefault(match));
+  }, [match]);
 
-  UNSAFE_componentWillReceiveProps(nextProps: MatchFormProps) {
-    this.setState({ currentScore: scoreOrDefault(nextProps.match) });
-  }
+  const dispatchUpdateScore = useCallback((data: Parameters<typeof updateScore>[0]) => dispatch(updateScore(data)), [dispatch]);
 
-  render() {
-    const { match } = this.props;
-    const score = this.state.currentScore;
-    const isEditable = this.props.user.canChangeMatchScore(match);
+  const onUpdateScoreDebounced = useMemo(
+    () =>
+      debounce((matchScore: IMatchScore & { matchId: number }) => {
+        dispatchUpdateScore(matchScore);
+      }, 1000),
+    [dispatchUpdateScore],
+  );
 
-    if (this.state.useInput) {
-      return (
-        <form>
-          <div className="form-group">
-            <input onChange={e => this.setState({ inputScore: e.target.value })} placeholder="xx-xx" style={{ width: 70, height: 30 }} />
-            <button type="button" className="btn btn-outline-secondary" onClick={e => this._onInputScoreUpdate(e)} style={{ marginLeft: 7 }}>
-              <Icon fa="fa fa-floppy-o" />
-            </button>
-          </div>
-        </form>
-      );
-    }
-
-    return (
-      <div className={`match-manipulator ${this.props.big ? 'big' : ''}`}>
-        {isEditable ? (
-          <MatchManipulation
-            isHome
-            plusClick={this._onUpdateScore.bind(this, { matchId: match.id, home: score.home + 1, out: score.out })}
-            minClick={this._onUpdateScore.bind(this, { matchId: match.id, home: score.home - 1, out: score.out })}
-          />
-        ) : null}
-
-        <div className="score" onClick={e => this._onOpenInputScore(e)} role="button" tabIndex={0}>
-          <MatchScore match={match} forceDisplay style={{ fontSize: this.props.big ? 46 : 24 }} showThrophy={false} />
-        </div>
-
-        {isEditable ? (
-          <MatchManipulation
-            plusClick={this._onUpdateScore.bind(this, { matchId: match.id, home: score.home, out: score.out + 1 })}
-            minClick={this._onUpdateScore.bind(this, { matchId: match.id, home: score.home, out: score.out - 1 })}
-          />
-        ) : null}
-      </div>
-    );
-  }
-
-  _onOpenInputScore(e: React.MouseEvent) {
+  const onUpdateScore = (matchScore: IMatchScore & { matchId: number }, e: React.MouseEvent) => {
     e.stopPropagation();
-    this.setState(prevState => ({ useInput: !prevState.useInput }));
-  }
+    e.preventDefault();
+    setCurrentScore(matchScore);
+    onUpdateScoreDebounced(matchScore);
+  };
 
-  _onInputScoreUpdate(e: React.MouseEvent) {
+  const onOpenInputScore = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newScores = this.state.inputScore.split('-');
+    setUseInput(prev => !prev);
+  };
+
+  const onInputScoreUpdate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newScores = inputScore.split('-');
     if (newScores.length === 2) {
       const home = parseInt(newScores[0]?.trim() ?? '0', 10);
       const out = parseInt(newScores[1]?.trim() ?? '0', 10);
-      this.props.updateScore({ matchId: this.props.match.id, home, out });
+      dispatchUpdateScore({ matchId: match.id, home, out });
     }
-    this.setState({ useInput: false });
+    setUseInput(false);
+  };
+
+  const score = currentScore;
+  const isEditable = user.canChangeMatchScore(match);
+
+  if (useInput) {
+    return (
+      <form>
+        <div className="form-group">
+          <input onChange={e => setInputScore(e.target.value)} placeholder="xx-xx" style={{ width: 70, height: 30 }} />
+          <button type="button" className="btn btn-outline-secondary" onClick={e => onInputScoreUpdate(e)} style={{ marginLeft: 7 }}>
+            <Icon fa="fa fa-floppy-o" />
+          </button>
+        </div>
+      </form>
+    );
   }
 
-  _onUpdateScore(matchScore: IMatchScore & { matchId: number }, e: React.MouseEvent) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.setState({ currentScore: matchScore });
-    this._onUpdateScoreDebounced(matchScore);
-  }
+  return (
+    <div className={`match-manipulator ${big ? 'big' : ''}`}>
+      {isEditable ? (
+        <MatchManipulation
+          isHome
+          plusClick={e => onUpdateScore({ matchId: match.id, home: score.home + 1, out: score.out }, e)}
+          minClick={e => onUpdateScore({ matchId: match.id, home: score.home - 1, out: score.out }, e)}
+        />
+      ) : null}
 
-  _onUpdateScoreDebounced = debounce((matchScore: IMatchScore & { matchId: number }) => {
-    this.props.updateScore(matchScore);
-  }, 1000);
-}
+      <div className="score" onClick={e => onOpenInputScore(e)} role="button" tabIndex={0}>
+        <MatchScore match={match} forceDisplay style={{ fontSize: big ? 46 : 24 }} showThrophy={false} />
+      </div>
+
+      {isEditable ? (
+        <MatchManipulation
+          plusClick={e => onUpdateScore({ matchId: match.id, home: score.home, out: score.out + 1 }, e)}
+          minClick={e => onUpdateScore({ matchId: match.id, home: score.home, out: score.out - 1 }, e)}
+        />
+      ) : null}
+    </div>
+  );
+};
 
 type MatchManipulationProps = {
-  plusClick: Function;
-  minClick: Function;
+  plusClick: (e: React.MouseEvent) => void;
+  minClick: (e: React.MouseEvent) => void;
   isHome?: boolean;
 };
 
@@ -133,8 +123,4 @@ const MatchManipulation = ({ plusClick, minClick, isHome }: MatchManipulationPro
   </div>
 );
 
-const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  updateScore: (data: Parameters<typeof updateScore>[0]) => dispatch(updateScore(data)),
-});
-
-export default connect(null, mapDispatchToProps)(MatchForm);
+export default MatchForm;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -19,46 +19,51 @@ type PlayersToolbarProps = {
   myPlayerPageUrl?: string;
 };
 
-export class PlayersToolbar extends Component<PlayersToolbarProps> {
-  render() {
-    const { marginLeft, onFilterChange } = this.props;
+export const PlayersToolbar = ({
+  marginLeft,
+  onFilterChange,
+  canSort,
+  activeSort,
+  activeSortDirection,
+  onSortChange,
+  onSortDirectionChange,
+  myPlayerPageUrl,
+}: PlayersToolbarProps) => {
+  const sortConfig = [
+    { key: 'name', text: t('player.sort.name') },
+    { key: 'Vttl', text: t('player.sort.vttl') },
+    { key: 'Sporta', text: t('player.sort.sporta') },
+  ];
 
-    const sortConfig = [
-      { key: 'name', text: t('player.sort.name') },
-      { key: 'Vttl', text: t('player.sort.vttl') },
-      { key: 'Sporta', text: t('player.sort.sporta') },
-    ];
+  return (
+    <div style={{ marginRight: 5, marginLeft, marginBottom: 5 }}>
+      <Form.Control placeholder={t('players.search')} onChange={e => onFilterChange(e.target.value.toLowerCase())} style={{ width: 150, marginTop: 8 }} />
 
-    return (
-      <div style={{ marginRight: 5, marginLeft, marginBottom: 5 }}>
-        <Form.Control placeholder={t('players.search')} onChange={e => onFilterChange(e.target.value.toLowerCase())} style={{ width: 150, marginTop: 8 }} />
+      <div className="button-bar-right" style={{ marginTop: 5 }}>
+        {myPlayerPageUrl && (
+          <OverlayTrigger placement="top" overlay={<Tooltip id="my-player-page">{t('nav.myPlayerPage')}</Tooltip>}>
+            <Link to={myPlayerPageUrl} className="btn btn-outline-secondary" aria-label={t('nav.myPlayerPage')}>
+              <i className="fa fa-user fa-2x" />
+            </Link>
+          </OverlayTrigger>
+        )}
 
-        <div className="button-bar-right" style={{ marginTop: 5 }}>
-          {this.props.myPlayerPageUrl && (
-            <OverlayTrigger placement="top" overlay={<Tooltip id="my-player-page">{t('nav.myPlayerPage')}</Tooltip>}>
-              <Link to={this.props.myPlayerPageUrl} className="btn btn-outline-secondary" aria-label={t('nav.myPlayerPage')}>
-                <i className="fa fa-user fa-2x" />
-              </Link>
-            </OverlayTrigger>
-          )}
-
-          {this.props.canSort ? (
-            <SortIconDropDown
-              config={sortConfig}
-              activeSort={this.props.activeSort}
-              activeSortDirection={this.props.activeSortDirection}
-              onSortChange={(newSort: string) => this.props.onSortChange(newSort)}
-              onSortDirectionChange={newDir => this.props.onSortDirectionChange(newDir)}
-            />
-          ) : null}
-
-          <ExcelButton
-            onClick={() => downloadPlayersExcel(t('players.downloadExcelFileName'))}
-            tooltip={t('players.downloadExcel')}
-            className="btn-outline-secondary"
+        {canSort ? (
+          <SortIconDropDown
+            config={sortConfig}
+            activeSort={activeSort}
+            activeSortDirection={activeSortDirection}
+            onSortChange={(newSort: string) => onSortChange(newSort)}
+            onSortDirectionChange={newDir => onSortDirectionChange(newDir)}
           />
-        </div>
+        ) : null}
+
+        <ExcelButton
+          onClick={() => downloadPlayersExcel(t('players.downloadExcelFileName'))}
+          tooltip={t('players.downloadExcel')}
+          className="btn-outline-secondary"
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
