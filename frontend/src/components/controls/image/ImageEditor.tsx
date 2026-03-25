@@ -1,6 +1,6 @@
 import React from 'react';
 import Slider from '@mui/material/Slider';
-import AvatarEditor from 'react-avatar-editor';
+import AvatarEditor, { type AvatarEditorRef } from 'react-avatar-editor';
 import { MaterialButton } from '../Buttons/MaterialButton';
 import { t } from '../../../locales';
 
@@ -20,7 +20,7 @@ type ImageEditorState = {
 };
 
 export default class ImageEditor extends React.Component<ImageEditorProps, ImageEditorState> {
-  editor?: AvatarEditor | null;
+  editor?: AvatarEditorRef | null;
 
   constructor(props: ImageEditorProps) {
     super(props);
@@ -66,13 +66,6 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
     if (this.editor) {
       const canvas = this.editor.getImageScaledToCanvas();
       this.props.updateImage(canvas);
-
-      // Also possible to get a blob:
-      // this.editor.getImageScaledToCanvas().toBlob(blob => {
-      //   if (blob) {
-      //     const file = new File([blob], 'updatedImage.png', { type: 'image/png' });
-      //   }
-      // });
     }
   };
 }

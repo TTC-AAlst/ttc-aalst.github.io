@@ -86,6 +86,6 @@ export const teamRankingsSlice = createSlice({
   },
 });
 
-export const { simpleLoaded } = teamsSlice.actions;
+const { simpleLoaded } = teamsSlice.actions;
 
 export default teamsSlice.reducer;

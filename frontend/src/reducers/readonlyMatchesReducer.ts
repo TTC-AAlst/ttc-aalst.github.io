@@ -67,6 +67,6 @@ const readonlyMatchesSlice = createSlice({
   },
 });
 
-export const { simpleLoaded } = readonlyMatchesSlice.actions;
+const { simpleLoaded } = readonlyMatchesSlice.actions;
 
 export default readonlyMatchesSlice.reducer;
