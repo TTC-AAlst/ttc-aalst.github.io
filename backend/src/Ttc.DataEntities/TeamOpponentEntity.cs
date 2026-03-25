@@ -1,0 +1,27 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Ttc.DataEntities;
+
+[Table("TeamOpponent")]
+public class TeamOpponentEntity
+{
+    [Key]
+    public int Id { get; set; }
+
+    [ForeignKey("TeamId")]
+    public TeamEntity Team { get; set; } = null!;
+    public int TeamId { get; set; }
+
+    [ForeignKey("ClubId")]
+    public ClubEntity Club { get; set; } = null!;
+    public int ClubId { get; set; }
+
+    /// <summary>
+    /// Team A, B, C, ...
+    /// </summary>
+    [MaxLength(2)]
+    public string TeamCode { get; set; } = "";
+
+    public override string ToString() => $"Id={Id}, Reeks=_{Team}_, ClubId={ClubId}, TeamCode={TeamCode}";
+}
