@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { t } from '../../locales';
 
 const divStyle: CSSProperties = {
@@ -27,9 +27,13 @@ export const NotFound = () => {
       <p style={{ fontSize: 18, color: '#666', marginBottom: 40, maxWidth: 500 }}>{t('notFound.description')}</p>
 
       <div style={{ display: 'flex', gap: 15 }}>
-        <MaterialButton variant="contained" color="primary" label={t('notFound.goHome')} onClick={() => navigate('/')} />
+        <Button variant="primary" onClick={() => navigate('/')}>
+          {t('notFound.goHome')}
+        </Button>
 
-        <MaterialButton variant="outlined" color="primary" label={t('notFound.goBack')} onClick={() => navigate(-1)} />
+        <Button variant="outline-primary" onClick={() => navigate(-1)}>
+          {t('notFound.goBack')}
+        </Button>
       </div>
     </div>
   );

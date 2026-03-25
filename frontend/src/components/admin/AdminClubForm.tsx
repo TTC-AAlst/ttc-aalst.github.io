@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { IClub, IClubLocation } from '../../models/model-interfaces';
 import { t } from '../../locales';
 
@@ -133,20 +133,24 @@ const AdminClubForm = ({ club: initialClub, updateClub, onEnd }: AdminClubFormPr
           />
         ))}
 
-        <MaterialButton variant="outlined" label="Locatie toevoegen" style={{ marginTop: 15 }} onClick={handleAddAlternativeLocation} />
+        <Button variant="outline-primary" style={{ marginTop: 15 }} onClick={handleAddAlternativeLocation}>
+          Locatie toevoegen
+        </Button>
       </div>
-      <MaterialButton
-        variant="contained"
-        label={t('common.save')}
-        color="primary"
+      <Button
+        variant="primary"
         style={{ marginTop: 15 }}
         onClick={() => {
           updateClub(club);
           onEnd();
         }}
-      />
+      >
+        {t('common.save')}
+      </Button>
 
-      <MaterialButton variant="contained" label={t('common.cancel')} style={{ marginTop: 15, marginLeft: 10 }} onClick={() => onEnd()} />
+      <Button variant="primary" style={{ marginTop: 15, marginLeft: 10 }} onClick={() => onEnd()}>
+        {t('common.cancel')}
+      </Button>
     </div>
   );
 };

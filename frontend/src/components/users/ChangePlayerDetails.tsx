@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { t } from '../../locales';
 import { IStorePlayer } from '../../models/model-interfaces';
 import { useTtcDispatch } from '../../utils/hooks/storeHooks';
@@ -43,13 +43,13 @@ export const ChangePlayerDetails = ({ player }: { player: IStorePlayer }) => {
         <Form.Control defaultValue={city} onChange={e => setCity(e.target.value)} />
       </Form.Group>
 
-      <MaterialButton
-        variant="contained"
-        label={t('profile.editDetails')}
-        color="primary"
+      <Button
+        variant="primary"
         style={{ marginTop: 15 }}
         onClick={() => dispatch(updatePlayer({ player: { ...player, ...{ contact: { playerId: player.id, email, mobile, address, city } } } }))}
-      />
+      >
+        {t('profile.editDetails')}
+      </Button>
     </div>
   );
 };

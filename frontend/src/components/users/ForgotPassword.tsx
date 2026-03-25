@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import { paperStyle } from './Login';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { t } from '../../locales';
 import { requestResetPasswordLink, setNewPasswordFromGuid } from '../../reducers/userActions';
 import { useTtcDispatch } from '../../utils/hooks/storeHooks';
@@ -31,14 +31,14 @@ export const ForgotPassword = () => {
         <br />
         <br />
 
-        <MaterialButton
-          variant="contained"
-          label={t('password.sendNewButton')}
-          color="primary"
+        <Button
+          variant="primary"
           style={{ marginTop: 15, width: '100%' }}
           onClick={() => dispatch(requestResetPasswordLink({ email, playerId, navigate }))}
           disabled={!playerId || !email}
-        />
+        >
+          {t('password.sendNewButton')}
+        </Button>
       </Card.Body>
     </Card>
   );
@@ -62,14 +62,14 @@ export const ForgotPasswordReset = () => {
           <Form.Control type="password" onChange={e => setPassword(e.target.value)} />
         </Form.Group>
 
-        <MaterialButton
-          variant="contained"
-          label={t('password.changeTitle')}
-          color="primary"
+        <Button
+          variant="primary"
           style={{ marginTop: 15 }}
           onClick={() => dispatch(setNewPasswordFromGuid({ playerId, password, guid: params.guid || '', navigate }))}
           disabled={!playerId || !password}
-        />
+        >
+          {t('password.changeTitle')}
+        </Button>
       </Card.Body>
     </Card>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { TabbedContainer } from '../controls/TabbedContainer';
 import { ChangePassword } from './ChangePassword';
 import { ChangePlayerDetails } from './ChangePlayerDetails';
@@ -78,7 +78,9 @@ export const Profile = () => {
     return (
       <div>
         <h1>SYSTEM USER</h1>
-        <MaterialButton variant="contained" label={t('login.logoutButton')} color="secondary" style={{ marginTop: -15 }} onClick={logoutAndGoHome} />
+        <Button variant="secondary" style={{ marginTop: -15 }} onClick={logoutAndGoHome}>
+          {t('login.logoutButton')}
+        </Button>
       </div>
     );
   }
@@ -119,9 +121,13 @@ const ProfilePlayerDetails = ({ player, logoutAndGoHome }: ProfilePlayerDetailsP
       </p>
 
       <Link to={playerUrl}>
-        <MaterialButton variant="contained" label={t('nav.myPlayerPage')} color="primary" style={{ marginTop: 15, marginRight: 10 }} />
+        <Button variant="primary" style={{ marginTop: 15, marginRight: 10 }}>
+          {t('nav.myPlayerPage')}
+        </Button>
       </Link>
-      <MaterialButton variant="contained" label={t('login.logoutButton')} color="secondary" style={{ marginTop: 15 }} onClick={() => logoutAndGoHome()} />
+      <Button variant="secondary" style={{ marginTop: 15 }} onClick={() => logoutAndGoHome()}>
+        {t('login.logoutButton')}
+      </Button>
     </div>
   );
 };

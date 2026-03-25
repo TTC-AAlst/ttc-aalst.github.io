@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import ImageEditor from '../controls/image/ImageEditor';
 import { playerUtils } from '../../models/PlayerModel';
 import ImageDropzone from '../controls/image/ImageDropzone';
@@ -76,7 +76,9 @@ const ProfilePhotoForm = ({ size = playerUtils.getPlayerImageSize(), type = 'pla
               <img src={preview} style={{ marginTop: 7, borderRadius: 19 }} width={size.width} height={size.height} alt="Preview" />
 
               <div className="caption" style={{ textAlign: 'center', marginTop: 40 }}>
-                <MaterialButton label={t('photos.save')} color="primary" style={{ marginTop: -40 }} onClick={saveImage} />
+                <Button variant="primary" style={{ marginTop: -40 }} onClick={saveImage}>
+                  {t('photos.save')}
+                </Button>
               </div>
             </div>
           </div>

@@ -4,7 +4,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
 import { saveConfig } from '../../reducers/configReducer';
 import { parseEvents } from '../../utils/paramParser';
@@ -64,13 +63,9 @@ export const AdminEvents = () => {
       </Row>
 
       <div style={{ paddingTop: 10 }}>
-        <MaterialButton
-          variant="contained"
-          label={t('common.save')}
-          color="primary"
-          style={{ marginTop: 5 }}
-          onClick={() => dispatch(saveConfig({ key: 'events', value: JSON.stringify(events) }))}
-        />
+        <Button variant="primary" style={{ marginTop: 5 }} onClick={() => dispatch(saveConfig({ key: 'events', value: JSON.stringify(events) }))}>
+          {t('common.save')}
+        </Button>
       </div>
     </div>
   );

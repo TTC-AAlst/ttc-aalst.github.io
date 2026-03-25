@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { t } from '../../locales';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { changePassword } from '../../reducers/userActions';
@@ -34,14 +34,14 @@ export const ChangePassword = () => {
 
       <br />
 
-      <MaterialButton
-        variant="contained"
-        label={t('profile.editPassword')}
-        color="primary"
+      <Button
+        variant="primary"
         style={{ marginTop: 15 }}
         onClick={() => dispatch(changePassword({ playerId: user.playerId, oldPassword, newPassword }))}
         disabled={!oldPassword || !newPassword}
-      />
+      >
+        {t('profile.editPassword')}
+      </Button>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { EditIcon } from '../controls/Icons/EditIcon';
 import { PlayerAutoComplete } from './PlayerAutoComplete';
 import PlayerStyleAutocomplete from './PlayerStyleAutocomplete';
@@ -84,8 +84,12 @@ export const PlayerPlayingStyleForm = ({ player, ...props }: PlayerPlayingStyleF
   }
 
   const changeStyleModalActions = [
-    <MaterialButton key="1" label={t('common.cancel')} color="secondary" onClick={closeStyle} />,
-    <MaterialButton key="2" label={t('common.save')} color="primary" onClick={saveStyle} />,
+    <Button key="1" variant="outline-secondary" onClick={closeStyle}>
+      {t('common.cancel')}
+    </Button>,
+    <Button key="2" variant="primary" onClick={saveStyle}>
+      {t('common.save')}
+    </Button>,
   ];
 
   return (

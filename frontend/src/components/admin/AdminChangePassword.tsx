@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { t } from '../../locales';
 import { adminSetNewPassword } from '../../reducers/userActions';
 import { useTtcDispatch } from '../../utils/hooks/storeHooks';
@@ -36,17 +36,17 @@ const AdminChangePassword = ({ onEnd }: AdminChangePasswordProps) => {
 
       <br />
 
-      <MaterialButton
-        variant="contained"
-        label={t('profile.editPassword')}
-        color="primary"
+      <Button
+        variant="primary"
         style={{ marginTop: 15 }}
         onClick={() => {
           dispatch(adminSetNewPassword({ playerId, newPassword }));
           onEnd();
         }}
         disabled={!playerId && !newPassword}
-      />
+      >
+        {t('profile.editPassword')}
+      </Button>
     </div>
   );
 };

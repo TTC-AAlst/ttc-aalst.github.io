@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { t } from '../../locales';
 import { login } from '../../reducers/userActions';
 import { useTtcDispatch } from '../../utils/hooks/storeHooks';
@@ -43,14 +43,14 @@ export const Login = () => {
         <br />
         <br />
 
-        <MaterialButton
-          variant="contained"
-          label={t('login.loginButton')}
-          color="primary"
+        <Button
+          variant="primary"
           style={{ marginTop: 15, width: '100%' }}
           onClick={() => dispatch(login({ playerId, password, navigate }))}
           disabled={!playerId}
-        />
+        >
+          {t('login.loginButton')}
+        </Button>
 
         <br />
         <br />

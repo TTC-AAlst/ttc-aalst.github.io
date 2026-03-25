@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { PlayerAutoComplete } from '../../players/PlayerAutoComplete';
 import ImageDropzone from '../../controls/image/ImageDropzone';
 const QuillEditor = React.lazy(() => import('../../controls/Editor'));
-import { MaterialButton } from '../../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { Icon } from '../../controls/Icons/Icon';
 import { EditIcon } from '../../controls/Icons/EditIcon';
 import { TimeAgo } from '../../controls/controls/TimeAgo';
@@ -90,15 +90,15 @@ export const MatchReport = ({ match, skipContainerClass }: MatchReportProps) => 
                 </div>
 
                 <div style={{ textAlign: 'right', marginRight: 15, paddingTop: 12 }}>
-                  <MaterialButton
-                    variant="contained"
-                    label={t('common.save')}
-                    color="primary"
+                  <Button
+                    variant="primary"
                     onClick={() => {
                       dispatch(postReport({ matchId: match.id, text, playerId: user.playerId }));
                       setReportFormOpen(false);
                     }}
-                  />
+                  >
+                    {t('common.save')}
+                  </Button>
                 </div>
               </div>
             ) : (
@@ -163,10 +163,8 @@ export const MatchReport = ({ match, skipContainerClass }: MatchReportProps) => 
               </div>
             )}
 
-            <MaterialButton
-              label={t(`match.report.commentsOpenForm${commentFormOpen ? 'Confirm' : ''}`)}
-              color="primary"
-              variant={commentFormOpen ? 'contained' : 'outlined'}
+            <Button
+              variant={commentFormOpen ? 'primary' : 'outline-primary'}
               onClick={() => {
                 if (commentFormOpen) {
                   if (comment.text) {
@@ -178,7 +176,9 @@ export const MatchReport = ({ match, skipContainerClass }: MatchReportProps) => 
                   setCommentFormOpen(true);
                 }
               }}
-            />
+            >
+              {t(`match.report.commentsOpenForm${commentFormOpen ? 'Confirm' : ''}`)}
+            </Button>
 
             <button type="button" className="btn btn-outline-primary" style={{ marginLeft: 15 }} onClick={openPictureForm}>
               <Icon fa="fa fa-picture-o" translate tooltip="match.report.commentsPhotoTooltip" tooltipPlacement="right" />

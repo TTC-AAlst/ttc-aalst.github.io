@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import AvatarEditor, { type AvatarEditorRef } from 'react-avatar-editor';
-import { MaterialButton } from '../Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { t } from '../../../locales';
 
 type ImageEditorProps = {
@@ -49,7 +49,9 @@ const ImageEditor = ({ image, updateImage, size, borderRadius }: ImageEditorProp
 
       <br />
 
-      <MaterialButton label={t('photos.preview')} color="secondary" style={{ marginBottom: 10 }} onClick={onClickSave} />
+      <Button variant="outline-secondary" style={{ marginBottom: 10 }} onClick={onClickSave}>
+        {t('photos.preview')}
+      </Button>
     </div>
   );
 };

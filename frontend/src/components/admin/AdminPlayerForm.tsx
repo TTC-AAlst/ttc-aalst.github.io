@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import { Alert } from 'react-bootstrap';
 import { UserRoles, userRoles } from '../../models/UserModel';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import PlayerStyleAutocomplete from '../players/PlayerStyleAutocomplete';
 import { IPlayer, IStorePlayer } from '../../models/model-interfaces';
 import { t } from '../../locales';
@@ -193,10 +193,8 @@ export const AdminPlayerForm = (props: AdminPlayerFormProps) => {
           </Card>
         )}
       </div>
-      <MaterialButton
-        variant="contained"
-        label={t('common.save')}
-        color="primary"
+      <Button
+        variant="primary"
         style={{ marginTop: 5 }}
         disabled={!!emailError}
         onClick={() => {
@@ -207,9 +205,13 @@ export const AdminPlayerForm = (props: AdminPlayerFormProps) => {
           dispatch(updatePlayer({ player }));
           props.onEnd();
         }}
-      />
+      >
+        {t('common.save')}
+      </Button>
 
-      <MaterialButton variant="contained" label={t('common.cancel')} style={{ marginTop: 5, marginLeft: 10 }} onClick={props.onEnd} />
+      <Button variant="primary" style={{ marginTop: 5, marginLeft: 10 }} onClick={props.onEnd}>
+        {t('common.cancel')}
+      </Button>
     </div>
   );
 };

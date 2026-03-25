@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
+import Button from 'react-bootstrap/Button';
 import { t } from '../../locales';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { OwnClubId } from '../../models/ClubModel';
@@ -107,24 +107,21 @@ export const AdminBoardMembers = () => {
 
       <br />
 
-      <MaterialButton
-        variant="contained"
-        label={t('admin.board.save')}
+      <Button
+        variant="primary"
         style={{ marginTop: 15, marginRight: 8 }}
         onClick={() => {
           const boardfn = boardFunctionCustom || clubManagerTypes[boardFunction]?.text || 'Default';
           dispatch(saveBoardMember({ playerId, boardFunction: boardfn, sort }));
         }}
         disabled={!playerId}
-      />
+      >
+        {t('admin.board.save')}
+      </Button>
 
-      <MaterialButton
-        variant="contained"
-        label={t('admin.board.del')}
-        style={{ marginTop: 15 }}
-        onClick={() => dispatch(deleteBoardMember({ playerId }))}
-        disabled={!playerId}
-      />
+      <Button variant="primary" style={{ marginTop: 15 }} onClick={() => dispatch(deleteBoardMember({ playerId }))} disabled={!playerId}>
+        {t('admin.board.del')}
+      </Button>
     </div>
   );
 };

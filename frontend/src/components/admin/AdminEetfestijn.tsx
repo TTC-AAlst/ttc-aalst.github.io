@@ -5,7 +5,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
-import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { saveConfig } from '../../reducers/configReducer';
 import { t } from '../../locales';
 import { EetfestijnModel, EetfestijnMenu } from './EetfestijnModel';
@@ -29,13 +28,9 @@ export const AdminEetfestijn = () => {
       />
       {eetfestijn.show && <AdminEetfestijnForm eetfestijn={eetfestijn} setEetfestijn={setEetfestijn} />}
       <div>
-        <MaterialButton
-          variant="contained"
-          label={t('common.save')}
-          color="primary"
-          style={{ marginTop: 5 }}
-          onClick={() => dispatch(saveConfig({ key: 'eetfestijn', value: JSON.stringify(eetfestijn) }))}
-        />
+        <Button variant="primary" style={{ marginTop: 5 }} onClick={() => dispatch(saveConfig({ key: 'eetfestijn', value: JSON.stringify(eetfestijn) }))}>
+          {t('common.save')}
+        </Button>
       </div>
     </>
   );
