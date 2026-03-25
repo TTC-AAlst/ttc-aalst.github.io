@@ -24,13 +24,13 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@microsoft/signalr": "^8.0.17",
+    "@microsoft/signalr": "10.0.0",
     "@mui/icons-material": "^6.5.0",
     "@mui/material": "^6.5.0",
     "@reduxjs/toolkit": "^2.11.2",
     "classnames": "2.5.1",
     "dayjs": "^1.11.19",
-    "dompurify": "^3.3.1",
+    "dompurify": "3.3.3",
     "font-awesome-animation": "0.0.8",
     "normalize.css": "3.0.3",
     "quill": "^2.0.3",
@@ -52,7 +52,9 @@
       "react": "$react",
       "react-dom": "$react-dom"
     },
-    "minimatch": "^10.2.1"
+    "minimatch": "^10.2.3",
+    "immutable": "^5.1.5",
+    "flatted": "^3.4.0"
   },
   "knip": {
     "ignoreDependencies": ["husky", "lint-staged"]
@@ -76,7 +78,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
     "@vitest/coverage-v8": "^4.0.18",
-    "eslint": "^9.39.3",
+    "eslint": "9.39.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "gh-pages": "^6.3.0",
@@ -85,9 +87,9 @@
     "knip": "^5.85.0",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
-    "sass": "^1.97.3",
+    "sass": "1.98.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.0",
+    "typescript-eslint": "8.57.2",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
   }
