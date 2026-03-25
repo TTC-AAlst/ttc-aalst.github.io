@@ -1,0 +1,6 @@
+node_modules
+dist
+bun-debug.log
+public/img/players
+todo.txt
+coverage/

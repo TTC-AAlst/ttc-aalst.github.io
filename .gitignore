@@ -1,12 +1,23 @@
-node_modules
-dist
-bun-debug.log
-public/img/players
-todo.txt
-.claude/settings.local.json
-.claude/
-_bmad/
-coverage/
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Environment
 .env
 .env.*
 !.env.example
+
+# Claude
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# BMAD
+_bmad/
+
+# Images (dev only, not tracked)
+images/
