@@ -74,7 +74,7 @@ describe('PlayerModel', () => {
     const player = new PlayerModel({
       contact: { playerId: 1, email: 'test@test.com', mobile: '0476123456', address: 'Street 1', city: 'Aalst' },
     });
-    expect(player.contact.getMobile()).toBe('0476/12 34 56');
+    expect(displayMobile(player.contact.mobile)).toBe('0476/12 34 56');
   });
 });
 
