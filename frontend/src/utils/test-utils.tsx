@@ -49,8 +49,4 @@ export function renderWithProviders(ui: React.ReactElement, { preloadedState, ..
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
 }
 
-export const TestRouter = ({ children, ...props }: MemoryRouterProps) => (
-  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} {...props}>
-    {children}
-  </MemoryRouter>
-);
+export const TestRouter = ({ children, ...props }: MemoryRouterProps) => <MemoryRouter {...props}>{children}</MemoryRouter>;
