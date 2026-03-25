@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ttc.DataAccess;
+using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -23,7 +24,6 @@ namespace Ttc.DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("Ttc.DataEntities.ClubEntity", b =>
                 {
@@ -31,7 +31,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Active")
                         .HasColumnType("tinyint(1)");
@@ -67,7 +66,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -132,7 +130,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Hidden")
                         .HasColumnType("tinyint(1)");
@@ -167,7 +164,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AwayClubId")
                         .HasColumnType("int");
@@ -259,7 +255,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AwayPlayerSets")
                         .HasColumnType("int");
@@ -295,7 +290,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Home")
                         .HasColumnType("tinyint(1)");
@@ -369,7 +363,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasMaxLength(250)
@@ -483,7 +476,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("ExpiresOn")
                         .HasColumnType("datetime");
@@ -505,7 +497,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Competition")
                         .IsRequired()
@@ -561,7 +552,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClubId")
                         .HasColumnType("int");
@@ -589,7 +579,6 @@ namespace Ttc.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("PlayerId")
                         .HasColumnType("int");

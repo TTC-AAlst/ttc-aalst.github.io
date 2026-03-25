@@ -59,8 +59,7 @@ public static class GlobalBackendConfiguration
             connectionString = connectionString.Replace("{MYSQL_ROOT_PASSWORD}", mysqlPassword);
         }
 
-        var serverVersion = ServerVersion.AutoDetect(connectionString);
-        builder.UseMySql(connectionString, serverVersion)
+        builder.UseMySQL(connectionString!)
             // The following three options help with debugging, but should
             // be changed or removed for production.
             .LogTo(Console.WriteLine, LogLevel.Warning);

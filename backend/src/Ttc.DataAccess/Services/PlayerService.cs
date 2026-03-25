@@ -2,7 +2,6 @@ using AutoMapper;
 using Frenoy.Api;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using MySqlConnector;
 using Ttc.DataAccess.Utilities;
 using Ttc.DataAccess.Utilities.Excel;
 using Ttc.DataEntities;
@@ -251,8 +250,8 @@ public class PlayerService
 
         var playerEntity = await _context.Players.FromSqlRaw(
             $"SELECT * FROM {PlayerEntity.TableName} WHERE id={{0}} AND Password=MD5({{1}}) AND QuitYear IS NULL",
-            new MySqlParameter("@p1", user.PlayerId),
-            new MySqlParameter("@p2", user.Password)
+            new MySql.Data.MySqlClient.MySqlParameter("@p1", user.PlayerId),
+            new MySql.Data.MySqlClient.MySqlParameter("@p2", user.Password)
         ).SingleOrDefaultAsync();
 
         if (playerEntity == null)

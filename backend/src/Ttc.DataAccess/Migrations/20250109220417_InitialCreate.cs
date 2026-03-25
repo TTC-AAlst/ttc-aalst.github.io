@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -19,7 +20,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                     .Annotation("MySql:CharSet", "utf8mb4"),
                 CodeVttl = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true)
@@ -59,7 +60,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 FirstName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                     .Annotation("MySql:CharSet", "utf8mb4"),
                 LastName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
@@ -113,7 +114,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 Guid = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                 ExpiresOn = table.Column<DateTime>(type: "datetime", nullable: false),
                 PlayerId = table.Column<int>(type: "int", nullable: false)
@@ -129,7 +130,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 Competition = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
                     .Annotation("MySql:CharSet", "utf8mb4"),
                 DivisionNumber = table.Column<string>(type: "varchar(2)", maxLength: 2, nullable: false)
@@ -158,7 +159,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
                     .Annotation("MySql:CharSet", "utf8mb4"),
                 Address = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
@@ -210,7 +211,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 Date = table.Column<DateTime>(type: "datetime", nullable: false),
                 ShouldBePlayed = table.Column<bool>(type: "tinyint(1)", nullable: false),
                 Week = table.Column<int>(type: "int", nullable: false),
@@ -260,7 +261,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 TeamId = table.Column<int>(type: "int", nullable: false),
                 ClubId = table.Column<int>(type: "int", nullable: false),
                 TeamCode = table.Column<string>(type: "varchar(2)", maxLength: 2, nullable: false)
@@ -289,7 +290,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 PlayerType = table.Column<int>(type: "int", nullable: false),
                 PlayerId = table.Column<int>(type: "int", nullable: false),
                 TeamId = table.Column<int>(type: "int", nullable: false)
@@ -317,7 +318,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 PostedOn = table.Column<DateTime>(type: "datetime", nullable: false),
                 Text = table.Column<string>(type: "TEXT", maxLength: 65000, nullable: true)
                     .Annotation("MySql:CharSet", "utf8mb4"),
@@ -344,7 +345,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 MatchId = table.Column<int>(type: "int", nullable: false),
                 MatchNumber = table.Column<int>(type: "int", nullable: false),
                 HomePlayerUniqueIndex = table.Column<int>(type: "int", nullable: false),
@@ -370,7 +371,7 @@ public partial class InitialCreate : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 MatchId = table.Column<int>(type: "int", nullable: false),
                 PlayerId = table.Column<int>(type: "int", nullable: false),
                 Status = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)

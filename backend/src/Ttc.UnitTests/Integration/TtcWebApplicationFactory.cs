@@ -64,9 +64,8 @@ public class TtcWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
             // Add DbContext with test container connection string
             services.AddDbContext<TtcDbContext>(options =>
             {
-                options.UseMySql(
+                options.UseMySQL(
                     ConnectionString,
-                    ServerVersion.AutoDetect(ConnectionString),
                     mysqlOptions => mysqlOptions.EnableRetryOnFailure());
             });
             services.AddScoped<ITtcDbContext>(sp => sp.GetRequiredService<TtcDbContext>());

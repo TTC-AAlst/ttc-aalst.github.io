@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -16,7 +17,7 @@ public partial class PlayerLoginsAdded : Migration
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
-                    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    .Annotation("MySql:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                 At = table.Column<DateTime>(type: "datetime", nullable: false),
                 Alias = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                     .Annotation("MySql:CharSet", "utf8mb4"),
