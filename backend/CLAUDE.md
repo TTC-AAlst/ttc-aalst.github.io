@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-TTC Aalst backend - ASP.NET Core 8.0 Web API for table tennis club management. Integrates with Belgian table tennis federation (Frenoy) API.
+TTC Aalst backend - ASP.NET Core 10.0 Web API for table tennis club management. Integrates with Belgian table tennis federation (Frenoy) API.
 
 ## Commands
 
