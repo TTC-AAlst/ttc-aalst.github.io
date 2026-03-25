@@ -20,19 +20,16 @@ const colorMap: Record<string, string> = {
   info: 'info',
 };
 
-export class MaterialButton extends React.Component<MaterialButtonProps> {
-  render() {
-    const { label, color = 'primary', variant, style, ...rest } = this.props;
-    let bsVariant = colorMap[color] || 'primary';
-    if (variant === 'outlined') {
-      bsVariant = `outline-${bsVariant}`;
-    } else if (variant === 'text' || (!variant && color !== 'primary')) {
-      bsVariant = `outline-${bsVariant}`;
-    }
-    return (
-      <Button variant={bsVariant as never} style={style} {...rest}>
-        {label}
-      </Button>
-    );
+export const MaterialButton = ({ label, color = 'primary', variant, style, ...rest }: MaterialButtonProps) => {
+  let bsVariant = colorMap[color] || 'primary';
+  if (variant === 'outlined') {
+    bsVariant = `outline-${bsVariant}`;
+  } else if (variant === 'text' || (!variant && color !== 'primary')) {
+    bsVariant = `outline-${bsVariant}`;
   }
-}
+  return (
+    <Button variant={bsVariant as never} style={style} {...rest}>
+      {label}
+    </Button>
+  );
+};

@@ -1,129 +1,64 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { connect } from 'react-redux';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
 import { PlayersImageGallery } from '../players/PlayersImageGallery';
 import { teamPlayerType, ITeam, Competition, TeamPlayerType } from '../../models/model-interfaces';
 import { frenoyTeamSync } from '../../reducers/matchesReducer';
 import { toggleTeamPlayer } from '../../reducers/teamsReducer';
-import { AppDispatch } from '../../store';
+import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 
-type AdminTeamsProps = {
-  teams: ITeam[];
-  toggleTeamPlayer: (data: Parameters<typeof toggleTeamPlayer>[0]) => void;
-  frenoyTeamSync: (data: { teamId: number }) => void;
-};
+const AdminTeamPlayers = ({ team }: { team: ITeam }) => {
+  const [role, setRole] = useState<TeamPlayerType>('Standard');
+  const dispatch = useTtcDispatch();
 
-type AdminTeamsState = {
-  filter: Competition;
-};
+  const onToggleTeamPlayer = (playerId: number) => {
+    dispatch(toggleTeamPlayer({ teamId: team.id, playerId, role }));
+    setRole('Standard');
+  };
 
-class AdminTeams extends React.Component<AdminTeamsProps, AdminTeamsState> {
-  constructor(props: AdminTeamsProps) {
-    super(props);
-    this.state = { filter: 'Vttl' };
-  }
-
-  _toggleTeamPlayer(teamId: number, playerId: number, role: TeamPlayerType) {
-    this.props.toggleTeamPlayer({ teamId, playerId, role });
-  }
-
-  render() {
-    return (
-      <div>
-        <AdminTeamsToolbar onFilterChange={newFilter => this.setState({ filter: newFilter })} />
-        {this.props.teams
-          .filter(team => team.competition === this.state.filter)
-          .sort((a, b) => a.teamCode.localeCompare(b.teamCode))
-          .map(team => (
-            <AdminTeamPlayers
-              key={team.id}
-              team={team}
-              toggleTeamPlayer={this._toggleTeamPlayer.bind(this, team.id)}
-              onFrenoySync={this.props.frenoyTeamSync}
-            />
-          ))}
-      </div>
-    );
-  }
-}
-
-type AdminTeamPlayersProps = {
-  team: ITeam;
-  toggleTeamPlayer: (playerId: number, role: TeamPlayerType) => void;
-  onFrenoySync: (data: { teamId: number }) => void;
-};
-
-type AdminTeamPlayersState = {
-  role: TeamPlayerType;
-};
-
-class AdminTeamPlayers extends Component<AdminTeamPlayersProps, AdminTeamPlayersState> {
-  constructor(props: AdminTeamPlayersProps) {
-    super(props);
-    this.state = { role: 'Standard' };
-  }
-
-  _onRoleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    this.setState({ role: event.target.value as TeamPlayerType });
-  }
-
-  _onToggleTeamPlayer(playerId: number) {
-    this.props.toggleTeamPlayer(playerId, this.state.role);
-    this.setState({ role: 'Standard' });
-  }
-
-  _renderPlayerSubtitle(team: ITeam, ply: { id: number }) {
+  const renderPlayerSubtitle = (ply: { id: number }) => {
     const player = team.getPlayers().find(p => p.player.id === ply.id);
     return <span>{player ? player.type : null}</span>;
-  }
+  };
 
-  render() {
-    const { team } = this.props;
-    const teamCompetition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
-    return (
-      <div style={{ paddingLeft: 10, paddingRight: 10 }}>
-        <Card style={{ padding: 20, marginBottom: 20 }}>
-          <Card.Body>
-            <h4>
-              {team.renderOwnTeamTitle()}
-              <Button style={{ marginLeft: 20 }} onClick={() => this.props.onFrenoySync({ teamId: team.id })}>
-                Frenoy Sync
-              </Button>
-            </h4>
+  const teamCompetition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
+  return (
+    <div style={{ paddingLeft: 10, paddingRight: 10 }}>
+      <Card style={{ padding: 20, marginBottom: 20 }}>
+        <Card.Body>
+          <h4>
+            {team.renderOwnTeamTitle()}
+            <Button style={{ marginLeft: 20 }} onClick={() => dispatch(frenoyTeamSync({ teamId: team.id }))}>
+              Frenoy Sync
+            </Button>
+          </h4>
 
-            <PlayersImageGallery
-              players={team.getPlayers().map(ply => ply.player)}
-              competition={team.competition}
-              subtitle={this._renderPlayerSubtitle.bind(this, team)}
-              forceSmall
+          <PlayersImageGallery players={team.getPlayers().map(ply => ply.player)} competition={team.competition} subtitle={renderPlayerSubtitle} forceSmall />
+
+          <div style={{ clear: 'both' }} />
+
+          <Form.Select value={role} onChange={e => setRole(e.target.value as TeamPlayerType)} style={{ width: 100, marginRight: 10, display: 'inline-block' }}>
+            {Object.values(teamPlayerType).map(r => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </Form.Select>
+
+          <div style={{ width: 250 }}>
+            <PlayerAutoComplete
+              selectPlayer={playerId => playerId !== 'system' && onToggleTeamPlayer(playerId)}
+              label="Selecteer speler"
+              competition={teamCompetition}
             />
-
-            <div style={{ clear: 'both' }} />
-
-            <Form.Select value={this.state.role} onChange={e => this._onRoleChange(e)} style={{ width: 100, marginRight: 10, display: 'inline-block' }}>
-              {Object.values(teamPlayerType).map(role => (
-                <option key={role} value={role}>
-                  {role}
-                </option>
-              ))}
-            </Form.Select>
-
-            <div style={{ width: 250 }}>
-              <PlayerAutoComplete
-                selectPlayer={playerId => playerId !== 'system' && this._onToggleTeamPlayer(playerId)}
-                label="Selecteer speler"
-                competition={teamCompetition}
-              />
-            </div>
-          </Card.Body>
-        </Card>
-      </div>
-    );
-  }
-}
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
+  );
+};
 
 const AdminTeamsToolbar = ({ onFilterChange }: { onFilterChange: (comp: Competition) => void }) => (
   <div style={{ padding: 10 }}>
@@ -139,9 +74,20 @@ const AdminTeamsToolbar = ({ onFilterChange }: { onFilterChange: (comp: Competit
   </div>
 );
 
-const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  toggleTeamPlayer: (data: Parameters<typeof toggleTeamPlayer>[0]) => dispatch(toggleTeamPlayer(data)),
-  frenoyTeamSync: (data: { teamId: number }) => dispatch(frenoyTeamSync(data)),
-});
+const AdminTeams = ({ teams }: { teams: ITeam[] }) => {
+  const [filter, setFilter] = useState<Competition>('Vttl');
 
-export default connect(null, mapDispatchToProps)(AdminTeams);
+  return (
+    <div>
+      <AdminTeamsToolbar onFilterChange={setFilter} />
+      {teams
+        .filter(team => team.competition === filter)
+        .sort((a, b) => a.teamCode.localeCompare(b.teamCode))
+        .map(team => (
+          <AdminTeamPlayers key={team.id} team={team} />
+        ))}
+    </div>
+  );
+};
+
+export default AdminTeams;
