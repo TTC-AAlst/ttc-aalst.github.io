@@ -1,0 +1,49 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: ttc-mysql-dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: ttc_aalst
+    ports:
+      - "7202:3306"
+    volumes:
+      - mysql-dev-data:/var/lib/mysql
+
+  backend:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    container_name: ttc-backend-dev
+    working_dir: /app
+    command: dotnet watch run --project src/Ttc.WebApi
+    ports:
+      - "5193:5193"
+    volumes:
+      - ./backend:/app
+      - ./images:/images
+    environment:
+      - ASPNETCORE_URLS=http://+:5193
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
+      - ConnectionStrings__Ttc=server=db;user=root;password=my-secret-pw;database=ttc_aalst;port=3306
+      - TtcSettings__PublicImageFolder=/images
+      - TtcSettings__Origins=http://localhost:3000
+    depends_on:
+      - db
+
+  frontend:
+    image: node:22-alpine
+    container_name: ttc-frontend-dev
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - frontend-node-modules:/app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  mysql-dev-data:
+  frontend-node-modules:
