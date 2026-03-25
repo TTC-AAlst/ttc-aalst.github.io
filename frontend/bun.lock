@@ -54,7 +54,6 @@
     },
   },
   "overrides": {
-    "@restart/hooks": "^0.6.2",
     "flatted": "^3.4.0",
     "immutable": "^5.1.5",
     "minimatch": "^10.2.3",
