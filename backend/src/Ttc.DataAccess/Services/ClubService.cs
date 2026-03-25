@@ -130,10 +130,7 @@ public class ClubService
     private async Task ChangeClub(int clubId)
     {
         var club = await _context.Clubs.FindAsync(clubId);
-        if (club != null)
-        {
-            club.Audit.ModifiedOn = DateTime.Now;
-        }
+        club?.Audit.ModifiedOn = DateTime.Now;
     }
 
     private static void MapClub(Club club, ClubEntity existingClub)

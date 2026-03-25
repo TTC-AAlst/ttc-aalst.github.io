@@ -54,6 +54,9 @@
     },
     "minimatch": "^10.2.1"
   },
+  "knip": {
+    "ignoreDependencies": ["husky", "lint-staged"]
+  },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
       "eslint --fix",

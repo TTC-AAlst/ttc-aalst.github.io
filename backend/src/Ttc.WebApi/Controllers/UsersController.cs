@@ -33,10 +33,7 @@ public class UsersController : ControllerBase
     public async Task<User?> Login([FromBody] UserCredentials user)
     {
         var player = await _service.Login(user);
-        if (player != null)
-        {
-            player.Token = _user.GenerateJwtToken(player);
-        }
+        player?.Token = _user.GenerateJwtToken(player);
         return player;
     }
 
@@ -45,10 +42,7 @@ public class UsersController : ControllerBase
     public async Task<User?> ChangePassword([FromBody] PasswordCredentials userNewPassword)
     {
         var player = await _service.ChangePassword(userNewPassword);
-        if (player != null)
-        {
-            player.Token = _user.GenerateJwtToken(player);
-        }
+        player?.Token = _user.GenerateJwtToken(player);
         return player;
     }
 

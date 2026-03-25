@@ -26,14 +26,13 @@ internal class SportaMatchExcelCreator
     private readonly ICollection<PlayerEntity> _opponentPlayers;
     private readonly ITtcDbContext _context;
     private readonly MatchEntity _match;
-    private SportaMatchFileInfo? _fileInfo;
 
     private static string TemplatePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\SportaScoresheetTemplate.xlsx");
 
     /// <summary>
     /// ATTN: Set after create!
     /// </summary>
-    public SportaMatchFileInfo FileInfo => _fileInfo!;
+    public SportaMatchFileInfo FileInfo { get => field!; private set; }
 
     public SportaMatchExcelCreator(
         ITtcDbContext context,
@@ -76,7 +75,7 @@ internal class SportaMatchExcelCreator
             var theirTeam = GetTheirTeam();
             scoresheet.Cells["A16"].Value = theirTeam.ClubName + " " + theirTeam.TeamCode;
 
-            _fileInfo = new SportaMatchFileInfo()
+            FileInfo = new SportaMatchFileInfo()
             {
                 FrenoyId = _match.FrenoyMatchId?.Replace("/", "-") ?? "",
                 OurTeamCode = ourTeam.TeamCode,
