@@ -35,6 +35,6 @@ dotnet run --project src/Ttc.WebApi
 
 # Frontend (in separate terminal)
 cd frontend
-npm install
-npm start
+bun install
+bun start
 ```
