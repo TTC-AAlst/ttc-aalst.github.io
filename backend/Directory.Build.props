@@ -1,7 +1,6 @@
 <Project>
   <PropertyGroup>
-    <!-- Treat warnings as errors in CI/Release builds -->
-    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <!-- Enable strict nullable analysis -->
     <Nullable>enable</Nullable>
