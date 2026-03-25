@@ -1,0 +1,7 @@
+cd frontend && bunx lint-staged
+
+cd ../backend
+echo "Checking backend formatting..."
+dotnet format Ttc.slnx --verify-no-changes --verbosity quiet || { echo "Run 'dotnet format Ttc.slnx' to fix."; exit 1; }
+echo "Building backend..."
+dotnet build Ttc.slnx --verbosity quiet --no-restore || { echo "Build failed."; exit 1; }

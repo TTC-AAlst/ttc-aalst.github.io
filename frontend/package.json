@@ -18,8 +18,7 @@
     "format:check": "prettier --check src",
     "knip": "knip",
     "predeploy": "bun run build",
-    "deploy": "gh-pages -d dist --cname ttc-aalst.be",
-    "prepare": "husky"
+    "deploy": "gh-pages -d dist --cname ttc-aalst.be"
   },
   "license": "MIT",
   "dependencies": {

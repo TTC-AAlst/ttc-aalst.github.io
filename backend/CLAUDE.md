@@ -37,7 +37,3 @@ dotnet ef database update -p src/Ttc.DataAccess -s src/Ttc.WebApi
 External API for Belgian Table Tennis Federation data sync:
 - `FrenoyPlayersApi`, `FrenoyMatchesApi`, `FrenoyTeamsApi`
 - `FrenoySyncJob`: Background sync (controlled by `TtcSettings.StartSyncJob`)
-
-## Git Hooks
-
-Located in `hooks/` directory. Pre-commit runs format check + build.
