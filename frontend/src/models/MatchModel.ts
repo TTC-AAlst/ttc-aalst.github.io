@@ -1,10 +1,25 @@
-import dayjs, {Dayjs} from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import storeUtil from '../storeUtil';
 import PlayerModel from './PlayerModel';
-import {OwnClubId} from './ClubModel';
-import {IMatch, ITeam, Competition, IMatchScore, MatchScoreType, IMatchPlayer, IMatchGame,
-  ITeamOpponent, IClub, IMatchPlayerInfo, IPlayer, IGetGameMatches,
-  MatchPlayerStatus} from './model-interfaces';
+import { OwnClubId } from './ClubModel';
+import {
+  IMatch,
+  ITeam,
+  Competition,
+  IMatchScore,
+  MatchScoreType,
+  IMatchPlayer,
+  IMatchGame,
+  ITeamOpponent,
+  IClub,
+  IMatchPlayerInfo,
+  IPlayer,
+  IGetGameMatches,
+  MatchPlayerStatus,
+  IStoreMatchCommon,
+  IFullStoreMatchOwn,
+  IMatchComment,
+} from './model-interfaces';
 import httpClient from '../utils/httpClient';
 
 // TODO: Duplicted in backend. Should be in db.
@@ -18,10 +33,8 @@ export const matchOutcome = {
   WalkOver: 'WalkOver',
 };
 
-
 // Reality:
 // type MatchModelType = IMatchCommon & (IMatchOwn | IMatchOther);
-
 
 export default class MatchModel implements IMatch {
   // IMatch
@@ -43,16 +56,16 @@ export default class MatchModel implements IMatch {
   // IMatchOwn
   isHomeMatch = false;
   teamId = 0;
-  description = "";
+  description = '';
   reportPlayerId = 0;
-  block = "" as MatchPlayerStatus | '';
-  comments: any[] = [];
-  opponent: ITeamOpponent = {teamCode: '', clubId: 0};
+  block = '' as MatchPlayerStatus | '';
+  comments: IMatchComment[] = [];
+  opponent: ITeamOpponent = { teamCode: '', clubId: 0 };
   isDerby = false;
 
   // IMatchOther
-  home: ITeamOpponent = {teamCode: '', clubId: 0};
-  away: ITeamOpponent = {teamCode: '', clubId: 0};
+  home: ITeamOpponent = { teamCode: '', clubId: 0 };
+  away: ITeamOpponent = { teamCode: '', clubId: 0 };
   /** True when TTC Aalst is either home or away team */
   isOurMatch = false;
   /** If isOurMatch, get the IMatchOwn MatchModel */
@@ -60,7 +73,7 @@ export default class MatchModel implements IMatch {
     return storeUtil.getMatch(this.id);
   }
 
-  constructor(json) {
+  constructor(json: IStoreMatchCommon & Partial<IFullStoreMatchOwn> & { home?: ITeamOpponent; away?: ITeamOpponent }) {
     this.id = json.id;
     this.frenoyMatchId = json.frenoyMatchId;
     this.shouldBePlayed = json.shouldBePlayed;
@@ -81,49 +94,48 @@ export default class MatchModel implements IMatch {
     // this.opponent = null;
     if (json.opponent) {
       // TTC Aalst Match
-      this.isHomeMatch = json.isHomeMatch;
-      this.teamId = json.teamId;
-      this.description = json.description;
-      this.reportPlayerId = json.reportPlayerId;
-      this.block = json.block;
+      this.isHomeMatch = json.isHomeMatch!;
+      this.teamId = json.teamId!;
+      this.description = json.description!;
+      this.reportPlayerId = json.reportPlayerId!;
+      this.block = json.block!;
 
-      const comments = json.comments.map(c => ({
+      this.comments = json.comments!.map(c => ({
         ...c,
-        postedOn: dayjs(c.postedOn),
-      }));
-      this.comments = comments;
+        postedOn: dayjs(c.postedOn as string | Date | undefined),
+      })) as unknown as IMatchComment[];
 
       this.opponent = json.opponent;
       this.isDerby = json.opponent.clubId === OwnClubId;
     } else {
       // OtherMatch
-      this.home = json.home;
-      this.away = json.away;
+      this.home = json.home!;
+      this.away = json.away!;
 
       this.isOurMatch = this.home.clubId === OwnClubId || this.away.clubId === OwnClubId;
     }
   }
 
-  getDisplayDate(format?: "s" | "d"): string {
+  getDisplayDate(format?: 's' | 'd'): string {
     // Usage: this.context.t('match.date', match.getDisplayDate())
-    if (format === "s") {
-      return this.date.format("D/M");
+    if (format === 's') {
+      return this.date.format('D/M');
     }
-    if (format === "d") {
-      return this.date.format("ddd D/M");
+    if (format === 'd') {
+      return this.date.format('ddd D/M');
     }
 
     if (this.date.minute()) {
-      return this.date.format("ddd D/M HH:mm");
+      return this.date.format('ddd D/M HH:mm');
     }
-    return this.date.format("ddd D/M HH");
+    return this.date.format('ddd D/M HH');
   }
 
   getDisplayTime(): string {
     if (this.date.minute()) {
-      return this.date.format("HH:mm");
+      return this.date.format('HH:mm');
     }
-    return this.date.format("HH");
+    return this.date.format('HH');
   }
 
   renderOpponentTitle(): string {
@@ -138,14 +150,14 @@ export default class MatchModel implements IMatch {
     return storeUtil.getClub(this.opponent.clubId);
   }
 
-  getClub(which: "home" | "away"): IClub | undefined {
+  getClub(which: 'home' | 'away'): IClub | undefined {
     if (this.opponent?.clubId) {
-      console.warn("MatchModel.getClub: use getOpponentClub for TTC Aalst matches", this.opponent);
+      console.warn('MatchModel.getClub: use getOpponentClub for TTC Aalst matches', this.opponent);
     }
-    if (which === "home") {
+    if (which === 'home') {
       return storeUtil.getClub(this.home.clubId);
     }
-    if (which === "away") {
+    if (which === 'away') {
       return storeUtil.getClub(this.away.clubId);
     }
     console.error(`MatchModel.getClub passed ${which}: expected home or away.`);
@@ -181,7 +193,7 @@ export default class MatchModel implements IMatch {
 
   renderScore(): string {
     if (this.score.home === 0 && this.score.out === 0) {
-      return "";
+      return '';
     }
     return `${this.score.home} - ${this.score.out}`;
   }
@@ -201,21 +213,20 @@ export default class MatchModel implements IMatch {
   }
 
   getTeamPlayerCount(): 4 | 3 {
-    return this.competition === "Vttl" ? 4 : 3;
+    return this.competition === 'Vttl' ? 4 : 3;
   }
 
   getPreviousMatch(): IMatch | undefined {
     const otherMatch = storeUtil.matches
       .getAllMatches()
-      .find(m => m.teamId === this.teamId
-        && m.opponent.clubId === this.opponent.clubId
-        && m.opponent.teamCode === this.opponent.teamCode
-        && m.date < this.date);
+      .find(
+        m => m.teamId === this.teamId && m.opponent.clubId === this.opponent.clubId && m.opponent.teamCode === this.opponent.teamCode && m.date < this.date,
+      );
 
     return otherMatch;
   }
 
-  plays(playerId: number | IPlayer, statusFilter?: "onlyFinal"): IMatchPlayer | undefined {
+  plays(playerId: number | IPlayer, statusFilter?: 'onlyFinal'): IMatchPlayer | undefined {
     if (playerId instanceof PlayerModel) {
       playerId = playerId.id;
     }
@@ -223,29 +234,29 @@ export default class MatchModel implements IMatch {
     return playerInfo ? playerInfo.matchPlayer : undefined;
   }
 
-  getPlayerFormation(statusFilter: undefined | "onlyFinal" | "Play" | "Captain" | "Major"): IMatchPlayerInfo[] {
+  getPlayerFormation(statusFilter: undefined | 'onlyFinal' | 'Play' | 'Captain' | 'Major'): IMatchPlayerInfo[] {
     const plys = this.getOwnPlayers();
 
     let filter: (ply: IMatchPlayerInfo) => boolean;
-    if (!statusFilter || statusFilter === "onlyFinal") {
+    if (!statusFilter || statusFilter === 'onlyFinal') {
       filter = (ply: IMatchPlayerInfo): boolean => {
         const { status } = ply.matchPlayer;
         if (this.isSyncedWithFrenoy) {
-          return status === "Major";
+          return status === 'Major';
         }
 
         if (this.block) {
           return status === this.block;
         }
 
-        if (statusFilter === "onlyFinal") {
+        if (statusFilter === 'onlyFinal') {
           return false;
         }
 
-        return status !== "Major" && status !== "Captain";
+        return status !== 'Major' && status !== 'Captain';
       };
-    } else if (statusFilter === "Play") {
-      filter = ply => ply.matchPlayer.status !== "Captain" && ply.matchPlayer.status !== "Major";
+    } else if (statusFilter === 'Play') {
+      filter = ply => ply.matchPlayer.status !== 'Captain' && ply.matchPlayer.status !== 'Major';
     } else {
       filter = ply => ply.matchPlayer.status === statusFilter;
     }
@@ -273,20 +284,16 @@ export default class MatchModel implements IMatch {
       .sort(sortMappedMatchPlayers);
   }
 
-  getOwnPlayerModels(statusFilter?: undefined | "onlyFinal" | "Play" | "Captain"): IPlayer[] {
+  getOwnPlayerModels(statusFilter?: undefined | 'onlyFinal' | 'Play' | 'Captain'): IPlayer[] {
     return this.getPlayerFormation(statusFilter).map(x => x.player);
   }
 
   getOwnPlayers(): IMatchPlayer[] {
-    return this.players
-      .filter(player => player.home)
-      .sort((a, b) => a.position - b.position);
+    return this.players.filter(player => player.home).sort((a, b) => a.position - b.position);
   }
 
   getTheirPlayers(): IMatchPlayer[] {
-    return this.players
-      .filter(player => !player.home)
-      .sort((a, b) => a.position - b.position);
+    return this.players.filter(player => !player.home).sort((a, b) => a.position - b.position);
   }
 
   getGamePlayer(uniqueIndex: number): IMatchPlayer {
@@ -310,7 +317,7 @@ export default class MatchModel implements IMatch {
         outSets: game.outPlayerSets,
         outcome: game.outcome,
         isDoubles: false,
-        ownPlayer: {playerId: 0},
+        ownPlayer: { playerId: 0 },
       };
 
       if (result.home && result.out) {
@@ -325,7 +332,7 @@ export default class MatchModel implements IMatch {
           // RISKY: Are readonlyMatches now a problem? (ie all readonlyMatches recognized as doubles match...)
           //         --> This didn't seem to be the case
           // console.log('FrenoyAPI change: Doubles vs readonlyMatches?', game, result);
-          result.ownPlayer = {playerId: 0};
+          result.ownPlayer = { playerId: 0 };
           result.isDoubles = false;
         }
       } else {
@@ -333,7 +340,7 @@ export default class MatchModel implements IMatch {
         // uhoh boy... morgen es checken hoe doubles match er in de db uitziet in 2017 en 2018?
 
         // debugger;
-        result.ownPlayer = {playerId: 0};
+        result.ownPlayer = { playerId: 0 };
         result.isDoubles = true;
       }
       return result;

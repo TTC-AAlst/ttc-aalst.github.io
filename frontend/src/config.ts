@@ -12,14 +12,9 @@ export function isDev() {
 }
 
 export function getSignalRUrl() {
-  return isDev()
-    ? `${devUrl}/hubs/ttc`
-    : `${config.backend}/hubs/ttc`;
+  return isDev() ? `${devUrl}/hubs/ttc` : `${config.backend}/hubs/ttc`;
 }
 
-
 export function getStaticFileUrl(path: string) {
-  return isDev()
-    ? `${devUrl}${path}`
-    : `${config.images}${path}`;
+  return isDev() ? `${devUrl}${path}` : `${config.images}${path}`;
 }

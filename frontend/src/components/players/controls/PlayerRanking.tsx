@@ -4,12 +4,13 @@ import { IPlayerCompetition } from '../../../models/model-interfaces';
 import { useTtcSelector } from '../../../utils/hooks/storeHooks';
 
 type PlayerRankingProps = {
-  player: IPlayerCompetition | undefined,
-}
+  player: IPlayerCompetition | undefined;
+};
 
-export const PlayerRanking = ({player}: PlayerRankingProps) => {
+export const PlayerRanking = ({ player }: PlayerRankingProps) => {
   const endOfSeason = useTtcSelector(state => state.config.params.endOfSeason);
-  const hasNextRankings = useTtcSelector(state => state.players.some(p => p[player?.competition?.toLowerCase() || 'vttl']?.nextRanking));
+  const compKey = (player?.competition?.toLowerCase() || 'vttl') as 'vttl' | 'sporta';
+  const hasNextRankings = useTtcSelector(state => state.players.some(p => p[compKey]?.nextRanking));
 
   if (!player) {
     return null;
@@ -17,7 +18,11 @@ export const PlayerRanking = ({player}: PlayerRankingProps) => {
 
   const showEndOfSeason = endOfSeason && hasNextRankings;
   if (showEndOfSeason && player.nextRanking) {
-    return <>{player.ranking} ⮕ {player.nextRanking}</>;
+    return (
+      <>
+        {player.ranking} ⮕ {player.nextRanking}
+      </>
+    );
   }
 
   if (!showEndOfSeason && player.prediction) {
@@ -25,9 +30,9 @@ export const PlayerRanking = ({player}: PlayerRankingProps) => {
     return (
       <>
         {player.ranking}
-        <span style={{color: 'gray'}}> ⮕ </span>
+        <span style={{ color: 'gray' }}> ⮕ </span>
         <OverlayTrigger overlay={tooltip}>
-          <span style={{color: 'gray'}}>{player.prediction}</span>
+          <span style={{ color: 'gray' }}>{player.prediction}</span>
         </OverlayTrigger>
       </>
     );

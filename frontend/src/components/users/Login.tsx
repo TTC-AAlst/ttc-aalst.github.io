@@ -17,7 +17,6 @@ export const paperStyle = {
   display: 'inline-block',
 };
 
-
 export const Login = () => {
   const [playerId, setPlayerId] = useState<number | 'system'>(0);
   const [password, setPassword] = useState('');
@@ -25,27 +24,17 @@ export const Login = () => {
   const navigate = useNavigate();
 
   return (
-    <Paper style={{...paperStyle, height: 425}}>
+    <Paper style={{ ...paperStyle, height: 425 }}>
       <h3>{t('login.title')}</h3>
       <div>{t('login.introText')}</div>
 
       <br />
 
-      <PlayerAutoComplete
-        selectPlayer={id => setPlayerId(id)}
-        label={t('login.loginName')}
-        style={{margin: 10}}
-      />
+      <PlayerAutoComplete selectPlayer={id => setPlayerId(id)} label={t('login.loginName')} style={{ margin: 10 }} />
 
       <br />
 
-      <TextField
-        label={t('login.password')}
-        placeholder={t('login.passwordHint')}
-        type="password"
-        fullWidth
-        onChange={e => setPassword(e.target.value)}
-      />
+      <TextField label={t('login.password')} placeholder={t('login.passwordHint')} type="password" fullWidth onChange={e => setPassword(e.target.value)} />
 
       <br />
       <br />
@@ -54,14 +43,14 @@ export const Login = () => {
         variant="contained"
         label={t('login.loginButton')}
         color="primary"
-        style={{marginTop: 15, width: '100%'}}
-        onClick={() => dispatch(login({playerId, password, navigate}))}
+        style={{ marginTop: 15, width: '100%' }}
+        onClick={() => dispatch(login({ playerId, password, navigate }))}
         disabled={!playerId}
       />
 
       <br />
       <br />
-      <Link to={t.route('forgotPassword')} className="pull-right" style={{marginTop: 20, marginRight: 10, fontSize: 18}}>
+      <Link to={t.route('forgotPassword')} className="pull-right" style={{ marginTop: 20, marginRight: 10, fontSize: 18 }}>
         {t('password.forgotLink')}
       </Link>
     </Paper>

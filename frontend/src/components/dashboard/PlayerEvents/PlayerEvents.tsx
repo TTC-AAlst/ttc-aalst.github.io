@@ -20,9 +20,9 @@ export const PlayerEvents = () => {
   }
 
   return (
-    <div style={{marginBottom: 20}}>
+    <div style={{ marginBottom: 20 }}>
       <Strike text={t('dashboard.playerEvents')} />
-      <div style={{backgroundColor: '#fafafa', padding: 10, borderRadius: 4}}>
+      <div style={{ backgroundColor: '#fafafa', padding: 10, borderRadius: 4 }}>
         {recentEvents.map(event => (
           <PlayerEventItem key={event.id} event={event} />
         ))}

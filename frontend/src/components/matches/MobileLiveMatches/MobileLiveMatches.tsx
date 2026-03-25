@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Button } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import { MobileLiveMatchCard } from './MobileLiveMatchCard';
@@ -8,8 +8,6 @@ import { t } from '../../../locales';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { frenoyMatchSync } from '../../../reducers/matchesReducer';
 import { toggleMatchCardExpanded } from '../../../reducers/configReducer';
-
-const SYNC_COOLDOWN_MS = 10 * 60 * 1000;
 
 type MobileLiveMatchesProps = {
   matches: IMatch[];
@@ -21,18 +19,15 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
   const dispatch = useTtcDispatch();
   const user = useTtcSelector(selectUser);
   const expandedMatchCards = useTtcSelector(state => state.config.expandedMatchCards);
-  const [syncDisabled, setSyncDisabled] = useState(false);
-  const syncTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const handleSyncAll = useCallback(() => {
     matches.forEach(match => dispatch(frenoyMatchSync({ match, forceSync: true })));
-    setSyncDisabled(true);
-    clearTimeout(syncTimerRef.current);
-    syncTimerRef.current = setTimeout(() => setSyncDisabled(false), SYNC_COOLDOWN_MS);
   }, [matches, dispatch]);
 
   // Only collapsible on mobile with multiple matches
   const isCollapsible = isMobile && matches.length > 1;
+  // Compact buttons when multi-card layout (side-by-side on desktop, or multiple on mobile)
+  const useCompactButtons = matches.length > 1;
 
   const allExpanded = matches.every(m => !!expandedMatchCards[m.id]);
   const toggleAll = () => {
@@ -53,7 +48,7 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+          gridTemplateColumns: isMobile || matches.length === 1 ? '1fr' : 'repeat(2, 1fr)',
           gap: 16,
         }}
       >
@@ -64,19 +59,18 @@ export const MobileLiveMatches = ({ matches }: MobileLiveMatchesProps) => {
             expanded={!isCollapsible || !!expandedMatchCards[match.id]}
             onToggle={() => toggleMatch(match.id)}
             isCollapsible={isCollapsible}
+            compactButtons={useCompactButtons}
           />
         ))}
       </div>
       <div style={{ marginTop: 16, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 8 }}>
         {isCollapsible && (
           <Button variant="outline-secondary" size="sm" onClick={toggleAll}>
-            <Icon fa={allExpanded ? 'fa fa-compress' : 'fa fa-expand'} />
-            {' '}
-            {allExpanded ? t('match.collapseAll') : t('match.expandAll')}
+            <Icon fa={allExpanded ? 'fa fa-compress' : 'fa fa-expand'} /> {allExpanded ? t('match.collapseAll') : t('match.expandAll')}
           </Button>
         )}
         {user.playerId > 0 && (
-          <Button variant="outline-secondary" size="sm" aria-label="sync" onClick={handleSyncAll} disabled={syncDisabled}>
+          <Button variant="outline-secondary" size="sm" aria-label="sync" onClick={handleSyncAll}>
             <Icon fa="fa fa-refresh" />
           </Button>
         )}

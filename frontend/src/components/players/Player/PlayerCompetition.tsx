@@ -8,9 +8,9 @@ import { useTtcSelector } from '../../../utils/hooks/storeHooks';
 type PlayerCompetitionProps = {
   player: IPlayer;
   competition: Competition;
-}
+};
 
-export const PlayerCompetition = ({player, competition}: PlayerCompetitionProps) => {
+export const PlayerCompetition = ({ player, competition }: PlayerCompetitionProps) => {
   const endOfSeason = useTtcSelector(state => state.config.params.endOfSeason);
   const comp = player.getCompetition(competition);
   if (!comp.ranking) {
@@ -21,11 +21,10 @@ export const PlayerCompetition = ({player, competition}: PlayerCompetitionProps)
   return (
     <Card>
       <Card.Header>
-        <div style={{fontSize: 22}}>
+        <div style={{ fontSize: 22 }}>
           {competition} {team ? team.teamCode : null}
-
           {team ? (
-            <span style={{fontSize: 16, marginTop: 5}} className="pull-right">
+            <span style={{ fontSize: 16, marginTop: 5 }} className="pull-right">
               <DivisionHeader team={team} withVictoryBadges={false} />
             </span>
           ) : null}
@@ -35,17 +34,18 @@ export const PlayerCompetition = ({player, competition}: PlayerCompetitionProps)
       <Card.Body>
         <PlayerIndividual player={player} competition={competition} />
 
-        {(endOfSeason && comp.nextRanking) ? (
+        {endOfSeason && comp.nextRanking ? (
           <div>
             {comp.ranking !== comp.nextRanking ? (
               <span>
-                <b>Nieuw klassement</b>:
-                {comp.ranking}
-                <i className="fa fa-long-arrow-right" style={{marginLeft: 8, marginRight: 8}} />
+                <b>Nieuw klassement</b>:{comp.ranking}
+                <i className="fa fa-long-arrow-right" style={{ marginLeft: 8, marginRight: 8 }} />
                 {comp.nextRanking}
               </span>
             ) : (
-              <span><b>Behoud klassement</b>: {comp.nextRanking}</span>
+              <span>
+                <b>Behoud klassement</b>: {comp.nextRanking}
+              </span>
             )}
           </div>
         ) : null}

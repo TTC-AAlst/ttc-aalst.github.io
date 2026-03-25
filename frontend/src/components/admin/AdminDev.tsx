@@ -9,46 +9,44 @@ const AdminDev = () => {
   const [filter, setFilter] = useState('matches');
 
   const viewsConfig = Object.keys(storeState).map(key => ({ key, text: key }));
-  const data = storeState[filter];
+  const data = (storeState as Record<string, unknown>)[filter];
   return (
-    <div style={{padding: 5}}>
+    <div style={{ padding: 5 }}>
       <div className="pull-right">
-        <a href="https://itenium-test.synology.me:1709" target="_blank" rel="noopener noreferrer">Goto TabT test site</a>
+        <a href="https://itenium-test.synology.me:1709" target="_blank" rel="noopener noreferrer">
+          Goto TabT test site
+        </a>
         <br />
-        <a href={`${config.backend}/api/config/Log/Get`} target="_blank" rel="noopener noreferrer">Goto log dump</a>
+        <a href={`${config.backend}/api/config/Log/Get`} target="_blank" rel="noopener noreferrer">
+          Goto log dump
+        </a>
       </div>
-      <ButtonStack
-        config={viewsConfig}
-        small={false}
-        activeView={filter}
-        onClick={newFilter => setFilter(newFilter)}
-      />
+      <ButtonStack config={viewsConfig} small={false} activeView={filter} onClick={newFilter => setFilter(newFilter)} />
 
       <AdminStateDisplayer data={data} />
     </div>
   );
 };
 
-
-const AdminStateDisplayer = ({data}: {data: any}) => {
+const AdminStateDisplayer = ({ data }: { data: unknown }) => {
   const [filter, setFilter] = useState('');
 
   let filteredData = data;
   if (filter) {
-    if (filteredData.length) {
-      filteredData = filteredData.filter(entry => JSON.stringify(entry).toLowerCase().includes(filter));
+    if (Array.isArray(filteredData)) {
+      filteredData = filteredData.filter((entry: unknown) => JSON.stringify(entry).toLowerCase().includes(filter));
     }
   }
 
   return (
-    <div style={{padding: 5}}>
+    <div style={{ padding: 5 }}>
       <div>
         <Icon fa="fa fa-search" />
         &nbsp;
         <input type="text" width={150} onChange={e => setFilter(e.target.value.toLowerCase())} />
-        {filteredData.length ? <span style={{marginLeft: 10}}>Records: {data.length}</span> : null}
+        {Array.isArray(filteredData) ? <span style={{ marginLeft: 10 }}>Records: {filteredData.length}</span> : null}
       </div>
-      <pre style={{marginTop: 20}}>{JSON.stringify(filteredData, null, 4)}</pre>
+      <pre style={{ marginTop: 20 }}>{JSON.stringify(filteredData, null, 4)}</pre>
     </div>
   );
 };

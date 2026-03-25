@@ -6,7 +6,7 @@ import AdminTeams from './AdminTeams';
 import AdminClubs from './AdminClubs';
 import AdminDev from './AdminDev';
 import { AdminPlayerLineup } from './AdminPlayerLineup';
-import ProfilePhotoForm, {ProfilePhotoAvatarForm} from '../users/ProfilePhotoForm';
+import ProfilePhotoForm, { ProfilePhotoAvatarForm } from '../users/ProfilePhotoForm';
 import { AdminEmail } from './AdminEmail';
 import { AdminMatches } from './AdminMatches';
 import { AdminParams } from './AdminParams';
@@ -24,7 +24,6 @@ const tabEventKeys = {
   configParams: 'configParams',
   dev: 'dev',
 };
-
 
 const Admin = () => {
   const user = useTtcSelector(selectUser);
@@ -47,10 +46,10 @@ const Admin = () => {
       case tabEventKeys.pictures:
         return (
           <div>
-            <h1 style={{marginLeft: 25}}>Foto</h1>
+            <h1 style={{ marginLeft: 25 }}>Foto</h1>
             <ProfilePhotoForm user={user} />
-            <hr style={{marginTop: 50}} />
-            <h1 style={{marginLeft: 25}}>Avatar</h1>
+            <hr style={{ marginTop: 50 }} />
+            <h1 style={{ marginLeft: 25 }}>Avatar</h1>
             <ProfilePhotoAvatarForm />
           </div>
         );
@@ -73,7 +72,7 @@ const Admin = () => {
     { key: tabEventKeys.clubs, title: 'Clubs' },
     { key: tabEventKeys.formation, title: 'Opstellingen' },
     { key: tabEventKeys.matches, title: 'Matchen' },
-    { key: tabEventKeys.pictures, title: 'Foto\'s' },
+    { key: tabEventKeys.pictures, title: "Foto's" },
     { key: tabEventKeys.emails, title: 'Email' },
     { key: tabEventKeys.configParams, title: 'Params' },
     { key: tabEventKeys.dev, title: 'Dev' },
@@ -82,8 +81,8 @@ const Admin = () => {
   return (
     <TabbedContainer
       selectedTab={params.tabKey ?? tabEventKeys.players}
-      style={{marginTop: 10, marginBottom: 20}}
-      route={{base: t.route('admin')}}
+      style={{ marginTop: 10, marginBottom: 20 }}
+      route={{ base: t.route('admin') }}
       tabKeys={tabConfig}
       tabRenderer={eventKey => renderSection(eventKey)}
     />

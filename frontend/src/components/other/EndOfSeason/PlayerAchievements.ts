@@ -33,8 +33,7 @@ import * as achievement from './achievements/otherAchievements';
 // 🔁 "Revanche!": Team dat een tegenstander versloeg na eerder dat seizoen te hebben verloren
 // 🧙 "Consistency is Key": Team dat het vaakst won met dezelfde score(bv. 12–4 of 7–3)
 
-
-const allAchievements: {[key: string]: ((playerStats: ITeamPlayerStats[], matches: IMatch[]) => achievement.AchievementInfo)[]} = {
+const allAchievements: { [key: string]: ((playerStats: ITeamPlayerStats[], matches: IMatch[]) => achievement.AchievementInfo)[] } = {
   Vttl: [
     achievement.getHighestJumper.bind(this, 'Vttl'),
     getMostTeamsParticipated.bind(this, 'Vttl'),
@@ -58,20 +57,9 @@ const allAchievements: {[key: string]: ((playerStats: ITeamPlayerStats[], matche
     getClutchMaster.bind(this, 'Sporta'),
     getUndefeatedStreak.bind(this, 'Sporta'),
   ],
-  belles: [
-    achievement.getMostBellesWon,
-    achievement.getMostBellesPercentageWon,
-    achievement.getMostBellesPercentageLost,
-    achievement.getMostBellesPlayed,
-  ],
+  belles: [achievement.getMostBellesWon, achievement.getMostBellesPercentageWon, achievement.getMostBellesPercentageLost, achievement.getMostBellesPlayed],
 };
 
 export default allAchievements;
 
-export const teamAchievements = [
-  getTeamUndefeatedStreak,
-  getTeamHighestWinPercentage,
-  getPerfectFormation,
-  getTeamMostCloseWins,
-  getCleanSweepTeams,
-];
+export const teamAchievements = [getTeamUndefeatedStreak, getTeamHighestWinPercentage, getPerfectFormation, getTeamMostCloseWins, getCleanSweepTeams];

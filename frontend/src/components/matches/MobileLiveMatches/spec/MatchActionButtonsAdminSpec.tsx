@@ -1,9 +1,8 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../../utils/test-utils';
+import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { MobileLiveMatchInProgress } from '../MobileLiveMatchInProgress';
 import { IMatch } from '../../../../models/model-interfaces';
 
@@ -26,38 +25,42 @@ vi.mock('../../../../utils/httpClient', () => ({
   },
 }));
 
-const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
-  id: 1,
-  competition: 'Vttl',
-  frenoyDivisionId: 1,
-  frenoyMatchId: 'OVLH01/001',
-  games: [],
-  players: [],
-  comments: [],
-  block: 'Major',
-  isHomeMatch: true,
-  description: '',
-  opponent: { clubId: 10, teamCode: 'A' },
-  teamId: 1,
-  date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00' } as any,
-  getTeam: () => ({
-    renderOwnTeamTitle: () => 'TTC Aalst A',
-    getDivisionRanking: () => ({ empty: true }),
-    getThriller: () => null,
-  }) as any,
-  renderOpponentTitle: () => 'Opponent A',
-  getOwnPlayers: () => [],
-  getTheirPlayers: () => [{ position: 1, name: 'Player 1', ranking: 'C6', uniqueIndex: 100, won: 0, home: false, status: 'Major', alias: 'P1' }],
-  getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }) as any,
-  isSyncedWithFrenoy: false,
-  isStandardStartTime: () => true,
-  getTeamPlayerCount: () => 4,
-  ...overrides,
-} as any);
+const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
+  ({
+    id: 1,
+    competition: 'Vttl',
+    frenoyDivisionId: 1,
+    frenoyMatchId: 'OVLH01/001',
+    games: [],
+    players: [],
+    comments: [],
+    block: 'Major',
+    isHomeMatch: true,
+    description: '',
+    opponent: { clubId: 10, teamCode: 'A' },
+    teamId: 1,
+    date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true } as unknown,
+    getTeam: () =>
+      ({
+        renderOwnTeamTitle: () => 'TTC Aalst A',
+        getDivisionRanking: () => ({ empty: true }),
+        getThriller: () => null,
+      }) as unknown,
+    renderOpponentTitle: () => 'Opponent A',
+    getOwnPlayers: () => [],
+    getTheirPlayers: () => [{ position: 1, name: 'Player 1', ranking: 'C6', uniqueIndex: 100, won: 0, home: false, status: 'Major', alias: 'P1' }],
+    getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }) as unknown,
+    isSyncedWithFrenoy: false,
+    isStandardStartTime: () => true,
+    getTeamPlayerCount: () => 4,
+    ...overrides,
+  }) as unknown as IMatch;
 
 const renderInProgress = (match: IMatch, userState = {}) =>
   renderWithProviders(
-    <MemoryRouter><MobileLiveMatchInProgress match={match} /></MemoryRouter>,
+    <TestRouter>
+      <MobileLiveMatchInProgress match={match} />
+    </TestRouter>,
     { preloadedState: { user: { playerId: 1, teams: [1], security: [], ...userState }, readonlyMatches: [] } },
   );
 

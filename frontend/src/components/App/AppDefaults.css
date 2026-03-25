@@ -2,12 +2,17 @@
  * Base styles
  * ========================================================================== */
 
-html, body {
+html,
+body {
   color: #222;
   font-weight: 100;
   font-size: 1em; /* ~16px; */
   font-family: var(--font-family-base);
   line-height: 1.375; /* ~22px */
+}
+
+html {
+  overflow-y: scroll;
 }
 
 /*
@@ -107,11 +112,11 @@ textarea {
   }
 
   a[href]:after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
   }
 
   abbr[title]:after {
-    content: " (" attr(title) ")";
+    content: ' (' attr(title) ')';
   }
 
   /*
@@ -119,9 +124,9 @@ textarea {
    * or use the `javascript:` pseudo protocol
    */
 
-  a[href^="#"]:after,
-  a[href^="javascript:"]:after {
-    content: "";
+  a[href^='#']:after,
+  a[href^='javascript:']:after {
+    content: '';
   }
 
   pre,

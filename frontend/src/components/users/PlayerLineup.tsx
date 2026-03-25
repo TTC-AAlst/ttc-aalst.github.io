@@ -1,5 +1,4 @@
- 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import dayjs from 'dayjs';
 import cn from 'classnames';
 import { connect } from 'react-redux';
@@ -8,32 +7,32 @@ import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import {getPlayingStatusClass} from '../../models/PlayerModel';
-import {CommentButton} from '../controls/Buttons/CommentButton';
+import { getPlayingStatusClass } from '../../models/PlayerModel';
+import { CommentButton } from '../controls/Buttons/CommentButton';
 import MatchVs from '../matches/Match/MatchVs';
-import {CannotEditMatchIcon} from '../matches/controls/CannotEditMatchIcon';
-import {SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOrLast} from '../teams/SwitchBetweenFirstAndLastRoundButton';
+import { Icon } from '../controls/Icons/Icon';
+import { SwitchBetweenFirstAndLastRoundButton, getFirstOrLastMatches, getFirstOrLast } from '../teams/SwitchBetweenFirstAndLastRoundButton';
 import { t } from '../../locales';
 import { selectPlayer } from '../../reducers/matchesReducer';
 import { IMatch, ITeam, MatchPlayerStatus } from '../../models/model-interfaces';
+import { AppDispatch } from '../../store';
 
 type PlayerLineupProps = {
-  selectPlayer: typeof selectPlayer,
-  playerId: number,
-  teams: ITeam[],
-  disableBlockedMatches?: boolean,
-}
+  selectPlayer: (data: Parameters<typeof selectPlayer>[0]) => void;
+  playerId: number;
+  teams: ITeam[];
+  disableBlockedMatches?: boolean;
+};
 
 type PlayerLineupState = {
   filter: string | null;
   showCommentId: number;
   comment: string;
   matchesFilter: ReturnType<typeof getFirstOrLast>;
-}
-
+};
 
 class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
-  constructor(props) {
+  constructor(props: PlayerLineupProps) {
     super(props);
     this.state = {
       filter: null,
@@ -47,14 +46,14 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
     this.props.selectPlayer({
       matchId: match.id,
       status,
-      statusNote: this.state.showCommentId ? this.state.comment : (comment || ''),
+      statusNote: this.state.showCommentId ? this.state.comment : comment || '',
       playerId: this.props.playerId,
     });
-    this.setState({showCommentId: 0, comment: ''});
+    this.setState({ showCommentId: 0, comment: '' });
   }
 
   render() {
-    let {teams} = this.props;
+    let { teams } = this.props;
     if (this.state.filter) {
       teams = teams.filter(x => x.competition === this.state.filter);
     }
@@ -65,25 +64,24 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
       .filter(match => dayjs().isBefore(match.date))
       .sort((a, b) => a.date.valueOf() - b.date.valueOf());
 
-    const {matches, hasMore} = getFirstOrLastMatches(allMatchesToCome, this.state.matchesFilter);
+    const { matches, hasMore } = getFirstOrLastMatches(allMatchesToCome, this.state.matchesFilter);
     const allText = t('common.all');
     const activeFilter = this.state.filter || allText;
 
     const uniqueCompetitionCount = this.props.teams
       .map(team => team.competition)
-      .filter((competition, index, arr) => arr.indexOf(competition) === index)
-      .length;
+      .filter((competition, index, arr) => arr.indexOf(competition) === index).length;
 
     return (
       <div>
         {uniqueCompetitionCount > 1 ? (
-          <div className="btn-group" style={{padding: 5}}>
+          <div className="btn-group" style={{ padding: 5 }}>
             {[allText, 'Vttl', 'Sporta'].map(button => (
               <button
                 type="button"
                 className={cn('btn', button === activeFilter ? 'btn-info' : 'btn-outline-secondary')}
                 key={button}
-                onClick={() => this.setState({filter: button === allText ? null : button})}
+                onClick={() => this.setState({ filter: button === allText ? null : button })}
               >
                 {button}
               </button>
@@ -106,27 +104,48 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
               const matchPlayer = formation.find(x => x.id === this.props.playerId)?.matchPlayer;
               const statusNote = matchPlayer ? matchPlayer.statusNote : '';
 
+              // Check if user is in blocked formation using undefined filter (includes all statuses)
+              const allFormation = match.getPlayerFormation(undefined);
+              const playerInAllFormation = allFormation.find(x => x.id === this.props.playerId)?.matchPlayer;
+              const isInBlockedFormation = match.block && playerInAllFormation?.status === match.block;
+
               const getOnChangePlaying = (status: MatchPlayerStatus) => this._onChangePlaying.bind(this, match, status, statusNote);
+
               let buttons: React.ReactNode;
-              if (match.block && this.props.disableBlockedMatches) {
-                buttons = <CannotEditMatchIcon />;
+              if (match.isSyncedWithFrenoy) {
+                // Match already played - no changes allowed
+                buttons = (
+                  <div className="text-muted">
+                    <Icon fa="fa fa-check" style={{ marginRight: 4 }} />
+                    {t('profile.play.matchPlayed')}
+                  </div>
+                );
+              } else if (isInBlockedFormation) {
+                // User is in the blocked formation - contact captain
+                buttons = (
+                  <div className="text-muted">
+                    <Icon fa="fa fa-lock" style={{ marginRight: 4 }} />
+                    {t('profile.play.contactCaptain')}
+                  </div>
+                );
               } else {
+                // Normal case or blocked but user not in formation - allow preference changes
                 buttons = (
                   <ButtonToolbar>
-                    <Button style={{marginBottom: 5, width: 90}} variant="success" onClick={getOnChangePlaying('Play')}>
+                    <Button style={{ marginBottom: 5, width: 90 }} variant="success" onClick={getOnChangePlaying('Play')}>
                       {t('profile.play.canPlay')}
                     </Button>
-                    <Button style={{marginBottom: 5, width: 90}} variant="danger" onClick={getOnChangePlaying('NotPlay')}>
+                    <Button style={{ marginBottom: 5, width: 90 }} variant="danger" onClick={getOnChangePlaying('NotPlay')}>
                       {t('profile.play.canNotPlay')}
                     </Button>
-                    <Button style={{marginBottom: 5, width: 90}} variant="info" onClick={getOnChangePlaying('Maybe')}>
+                    <Button style={{ marginBottom: 5, width: 90 }} variant="info" onClick={getOnChangePlaying('Maybe')}>
                       {t('profile.play.canMaybe')}
                     </Button>
-                    <Button style={{width: 90}} onClick={getOnChangePlaying('DontKnow')}>
+                    <Button style={{ width: 90 }} onClick={getOnChangePlaying('DontKnow')}>
                       {t('profile.play.canDontKnow')}
                     </Button>
                     {this.state.showCommentId !== match.id ? (
-                      <CommentButton onClick={() => this.setState({showCommentId: match.id, comment: statusNote})} className="d-none d-sm-inline" />
+                      <CommentButton onClick={() => this.setState({ showCommentId: match.id, comment: statusNote })} className="d-none d-sm-inline" />
                     ) : null}
                   </ButtonToolbar>
                 );
@@ -145,16 +164,19 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
 
                     {this.state.showCommentId !== match.id && !match.block ? (
                       <CommentButton
-                        onClick={() => this.setState({showCommentId: match.id, comment: matchPlayer ? matchPlayer.statusNote : ''})}
+                        onClick={() => this.setState({ showCommentId: match.id, comment: matchPlayer ? matchPlayer.statusNote : '' })}
                         className="d-block d-md-none"
-                        style={{marginTop: 8}}
+                        style={{ marginTop: 8 }}
                       />
                     ) : null}
                     {this.state.showCommentId === match.id ? (
-                      <div className="d-block d-md-none" style={{marginTop: 12}}>
+                      <div className="d-block d-md-none" style={{ marginTop: 12 }}>
                         <br />
                         <br />
-                        <CommentEditForm onChange={e => this.setState({comment: e.target.value})} value={this.state.comment || ''} />
+                        <CommentEditForm
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.setState({ comment: e.target.value })}
+                          value={this.state.comment || ''}
+                        />
                       </div>
                     ) : matchPlayer && matchPlayer.statusNote ? (
                       <div className="d-block d-md-none">
@@ -162,11 +184,16 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
                       </div>
                     ) : null}
                   </td>
-                  <td style={{width: '1%'}} className="d-table-cell d-md-none">{buttons}</td>
+                  <td style={{ width: '1%' }} className="d-table-cell d-md-none">
+                    {buttons}
+                  </td>
                   <td className="d-none d-md-table-cell">
                     {buttons}
                     {this.state.showCommentId === match.id ? (
-                      <CommentEditForm onChange={e => this.setState({comment: e.target.value})} value={this.state.comment || ''} />
+                      <CommentEditForm
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.setState({ comment: e.target.value })}
+                        value={this.state.comment || ''}
+                      />
                     ) : matchPlayer && matchPlayer.statusNote ? (
                       <Comment matchPlayer={matchPlayer} />
                     ) : null}
@@ -178,15 +205,17 @@ class PlayerLineup extends Component<PlayerLineupProps, PlayerLineupState> {
         </Table>
 
         {hasMore ? (
-          <SwitchBetweenFirstAndLastRoundButton setMatchesFilter={filter => this.setState({matchesFilter: filter})} matchesFilter={this.state.matchesFilter} />
+          <SwitchBetweenFirstAndLastRoundButton
+            setMatchesFilter={filter => this.setState({ matchesFilter: filter })}
+            matchesFilter={this.state.matchesFilter}
+          />
         ) : null}
       </div>
     );
   }
 }
 
-
-const Comment = ({matchPlayer}: {matchPlayer: any}) => (
+const Comment = ({ matchPlayer }: { matchPlayer: { statusNote: string } }) => (
   <div>
     <strong>{t('profile.play.extraComment')}</strong>
     <br />
@@ -194,25 +223,19 @@ const Comment = ({matchPlayer}: {matchPlayer: any}) => (
   </div>
 );
 
-
 type CommentEditFormProps = {
-  onChange: any;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
 };
 
-const CommentEditForm = ({onChange, value}: CommentEditFormProps) => (
+const CommentEditForm = ({ onChange, value }: CommentEditFormProps) => (
   <div>
     <Form.Label>{t('profile.play.extraCommentHelp')}</Form.Label>
-    <FormControl
-      type="text"
-      value={value}
-      placeholder={t('profile.play.extraComment')}
-      onChange={onChange}
-    />
+    <FormControl type="text" value={value} placeholder={t('profile.play.extraComment')} onChange={onChange} />
   </div>
 );
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   selectPlayer: (data: Parameters<typeof selectPlayer>[0]) => dispatch(selectPlayer(data)),
 });
 

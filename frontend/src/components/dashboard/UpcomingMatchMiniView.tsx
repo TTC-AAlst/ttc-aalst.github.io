@@ -24,30 +24,24 @@ export const UpcomingMatchMiniView = ({ match }: UpcomingMatchMiniViewProps) => 
 
   const renderFormation = () => {
     if (formation.length === 0) {
-      return (
-        <div style={{marginTop: 8, fontSize: '0.85em', color: '#999', fontStyle: 'italic'}}>
-          Nog geen opstelling
-        </div>
-      );
+      return <div style={{ marginTop: 8, fontSize: '0.85em', color: '#999', fontStyle: 'italic' }}>Nog geen opstelling</div>;
     }
 
-    const renderPlayerList = (playerList: IMatchPlayerInfo[]) => playerList.map((ply, i) => {
-      const player = getPlayer(ply.id);
-      const ranking = player?.getCompetition(match.competition)?.ranking;
-      return (
-        <span key={ply.id} style={{whiteSpace: 'nowrap'}}>
-          {player ? (
-            <PlayerLink player={player}>{player.alias}</PlayerLink>
-          ) : (
-            ply.player?.alias || 'Unknown'
-          )}
-          {ranking && <small style={{opacity: 0.7}}> ({ranking})</small>}{i < playerList.length - 1 && ', '}
-        </span>
-      );
-    });
+    const renderPlayerList = (playerList: IMatchPlayerInfo[]) =>
+      playerList.map((ply, i) => {
+        const player = getPlayer(ply.id);
+        const ranking = player?.getCompetition(match.competition)?.ranking;
+        return (
+          <span key={ply.id} style={{ whiteSpace: 'nowrap' }}>
+            {player ? <PlayerLink player={player}>{player.alias}</PlayerLink> : ply.player?.alias || 'Unknown'}
+            {ranking && <small style={{ opacity: 0.7 }}> ({ranking})</small>}
+            {i < playerList.length - 1 && ', '}
+          </span>
+        );
+      });
 
     return (
-      <div style={{marginTop: 8, fontSize: '0.85em', color: '#555', display: 'flex', alignItems: 'center', gap: 6}}>
+      <div style={{ marginTop: 8, fontSize: '0.85em', color: '#555', display: 'flex', alignItems: 'center', gap: 6 }}>
         <MatchBlock block={match.block} displayNonBlocked={false} />
         {renderPlayerList(formation)}
       </div>
@@ -63,14 +57,14 @@ export const UpcomingMatchMiniView = ({ match }: UpcomingMatchMiniViewProps) => 
         border: isUserInFinalFormation ? '2px solid #4CAF50' : '1px solid #ddd',
       }}
     >
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <MatchVs match={match} withLinks withPosition ownTeamLink="main" />
-          <div style={{fontSize: '0.85em', color: '#666'}}>
+          <div style={{ fontSize: '0.85em', color: '#666' }}>
             <MatchDate match={match} bigDisplayMinWidth={0} />
           </div>
         </div>
-        <Link to={t.route('match', {matchId: match.id})} className="btn btn-outline-secondary btn-sm">
+        <Link to={t.route('match', { matchId: match.id })} className="btn btn-outline-secondary btn-sm">
           {t('match.details')}
         </Link>
       </div>

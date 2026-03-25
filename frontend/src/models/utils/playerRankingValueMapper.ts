@@ -1,6 +1,6 @@
-import {Competition} from '../model-interfaces';
+import { Competition } from '../model-interfaces';
 
-const vttlRankingValues = {
+const vttlRankingValues: Record<string, number> = {
   A: 18,
   B0: 17,
   B2: 16,
@@ -21,7 +21,7 @@ const vttlRankingValues = {
   NG: 1,
 };
 
-const sportaRankingValues = {
+const sportaRankingValues: Record<string, number> = {
   A: 19,
   B0: 18,
   B2: 17,
@@ -45,7 +45,7 @@ const sportaRankingValues = {
 
 export const getRankingValue = (competition: Competition, ranking: string): number => {
   if (competition === 'Vttl' || competition === 'Jeugd') {
-    return vttlRankingValues[ranking];
+    return vttlRankingValues[ranking] ?? 0;
   }
-  return sportaRankingValues[ranking];
+  return sportaRankingValues[ranking] ?? 0;
 };

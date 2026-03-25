@@ -7,6 +7,10 @@ Website for TTC Aalst table tennis club.
 - `frontend/` - React, TypeScript, Vite frontend (see `frontend/CLAUDE.md`)
 - `backend/` - C#, .NET 8, WebApi, MySQL backend (see `backend/CLAUDE.md`)
 
+## Rules
+
+- **Boy scout rule**: When touching a component, add or update tests for it.
+
 ## Local Development
 
 ### With Docker (recommended)

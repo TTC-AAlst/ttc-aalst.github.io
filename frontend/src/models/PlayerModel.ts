@@ -1,8 +1,7 @@
 import { config, getStaticFileUrl } from '../config';
 import storeUtil from '../storeUtil';
-import {IPlayer, IPlayerContact, IPlayerCompetition, IPlayerStyle, Competition, ITeam, MatchPlayerStatus} from './model-interfaces';
+import { IPlayer, IPlayerContact, IPlayerCompetition, IPlayerStyle, Competition, ITeam, MatchPlayerStatus } from './model-interfaces';
 import { UserRoles } from './UserModel';
-
 
 export default class PlayerModel implements IPlayer {
   alias: string;
@@ -11,28 +10,28 @@ export default class PlayerModel implements IPlayer {
   active: boolean;
   firstName: string;
   lastName: string;
-  sporta: IPlayerCompetition;
-  vttl: IPlayerCompetition;
+  sporta?: IPlayerCompetition;
+  vttl?: IPlayerCompetition;
   style: IPlayerStyle;
-  quitYear: number;
+  quitYear: number | null;
   security: UserRoles;
-  hasKey: boolean;
+  hasKey: boolean | null;
   imageVersion: number;
 
-  constructor(json: any = {security: 'Player'}) {
+  constructor(json: Partial<IPlayer> = { security: 'Player' }) {
     this.alias = json.alias || json.name || '';
-    this.contact = new PlayerContactModel(json.contact || {}); // playerId, email, mobile, address, city
-    this.id = json.id;
-    this.active = json.active;
-    this.firstName = json.firstName;
-    this.lastName = json.lastName;
+    this.contact = new PlayerContactModel(json.contact ?? ({} as IPlayerContact)); // playerId, email, mobile, address, city
+    this.id = json.id ?? 0;
+    this.active = json.active ?? false;
+    this.firstName = json.firstName ?? '';
+    this.lastName = json.lastName ?? '';
     this.sporta = json.sporta; // clubId, competition, frenoyLink, position (=index), ranking, rankingIndex, rankingValue
     this.vttl = json.vttl;
-    this.style = json.style || {}; // playerId, name, bestStroke
-    this.quitYear = json.quitYear;
-    this.security = json.security;
-    this.hasKey = json.hasKey;
-    this.imageVersion = json.imageVersion;
+    this.style = json.style ?? ({ playerId: 0, name: '', bestStroke: '' } as IPlayerStyle); // playerId, name, bestStroke
+    this.quitYear = json.quitYear ?? null;
+    this.security = json.security ?? 'Player';
+    this.hasKey = json.hasKey ?? null;
+    this.imageVersion = json.imageVersion ?? 0;
   }
 
   get name(): string {
@@ -45,22 +44,20 @@ export default class PlayerModel implements IPlayer {
 
   getCompetition(competition: Competition): IPlayerCompetition {
     const comp = competition === 'Vttl' || competition === 'Jeugd' ? this.vttl : this.sporta;
-    return comp || {};
+    return comp ?? ({} as IPlayerCompetition);
   }
 
-  getTeam(competition: Competition): ITeam {
+  getTeam(competition: Competition): ITeam | undefined {
     const teams = this.getTeams().filter(team => team.competition === competition);
     return teams[0];
   }
 
   getTeams(): ITeam[] {
-    const teams = storeUtil.getTeams()
-      .filter(team => team.players.some(tp => tp.playerId === this.id && (tp.type === 'Captain' || tp.type === 'Standard')));
+    const teams = storeUtil.getTeams().filter(team => team.players.some(tp => tp.playerId === this.id && (tp.type === 'Captain' || tp.type === 'Standard')));
 
     return teams;
   }
 }
-
 
 export function displayMobile(n: string): string {
   if (!n) {
@@ -68,7 +65,6 @@ export function displayMobile(n: string): string {
   }
   return n.replace(/^(\d{3,4})(\d{2})(\d{2})(\d{2})$/, '$1/$2 $3 $4');
 }
-
 
 class PlayerContactModel implements IPlayerContact {
   playerId: number;
@@ -90,15 +86,14 @@ class PlayerContactModel implements IPlayerContact {
   }
 }
 
-
 export const playerUtils = {
-  getPlayerImageSize(): {width: number, height: number} {
+  getPlayerImageSize(): { width: number; height: number } {
     return {
       width: 200,
       height: 200,
     };
   },
-  getPlayerAvatarImageSize(): {width: number, height: number} {
+  getPlayerAvatarImageSize(): { width: number; height: number } {
     return {
       width: 40,
       height: 40,
@@ -121,7 +116,6 @@ export function createFrenoyLink(comp: IPlayerCompetition): string {
     return `https://competitie.vttl.be/?menu=6&result=1&sel=${comp.frenoyLink}`;
   }
   return `https://ttonline.sporta.be/?menu=6&result=1&sel=${comp.frenoyLink}`;
-
 }
 
 export function createFrenoyLinkByUniqueId(comp: Competition, uniqueId: number): string {
@@ -129,7 +123,7 @@ export function createFrenoyLinkByUniqueId(comp: Competition, uniqueId: number):
   if (comp === 'Vttl' || comp === 'Jeugd') {
     return `https://competitie.vttl.be/${uniqueId}`;
   }
-  return `https://ttonline.sporta.be/${(`000000${uniqueId}`).slice(-6)}`;
+  return `https://ttonline.sporta.be/${`000000${uniqueId}`.slice(-6)}`;
 }
 
 export function getPlayingStatusClass(playingStatus?: MatchPlayerStatus | ''): undefined | 'success' | 'danger' | 'info' | 'warning' {
@@ -152,8 +146,7 @@ export function getPlayingStatusClass(playingStatus?: MatchPlayerStatus | ''): u
   }
 }
 
-
-export function getPlayingStatusColor(playingStatus?: {status: MatchPlayerStatus}): null | string {
+function getPlayingStatusColor(playingStatus?: { status: MatchPlayerStatus }): null | string {
   if (!playingStatus) {
     return null;
   }

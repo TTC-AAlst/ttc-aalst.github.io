@@ -1,9 +1,8 @@
 import React from 'react';
-import { screen, act } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
-import { vi, beforeEach, afterEach } from 'vitest';
-import { renderWithProviders } from '../../../../utils/test-utils';
+import { vi } from 'vitest';
+import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { MobileLiveMatches } from '../MobileLiveMatches';
 import { IMatch } from '../../../../models/model-interfaces';
 
@@ -26,47 +25,43 @@ vi.mock('../../../../utils/httpClient', () => ({
   },
 }));
 
-const createMockMatch = (id: number): IMatch => ({
-  id,
-  competition: 'Vttl',
-  frenoyDivisionId: 1,
-  frenoyMatchId: `OVLH01/00${id}`,
-  games: [],
-  players: [],
-  comments: [],
-  block: 'Major',
-  isHomeMatch: true,
-  description: '',
-  opponent: { clubId: 10, teamCode: 'A' },
-  teamId: id,
-  date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00' } as any,
-  getTeam: () => ({
-    renderOwnTeamTitle: () => `TTC Aalst ${String.fromCharCode(64 + id)}`,
-    getDivisionRanking: () => ({ empty: true }),
-    getThriller: () => null,
-  }) as any,
-  renderOpponentTitle: () => `Opponent ${id}`,
-  getOwnPlayers: () => [],
-  getTheirPlayers: () => [{ position: 1, name: 'Player', ranking: 'C6', uniqueIndex: 100, won: 0, home: false, status: 'Major', alias: 'P' }],
-  getOpponentClub: () => ({ id: 10, name: 'Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }) as any,
-  isSyncedWithFrenoy: false,
-  isStandardStartTime: () => true,
-  getTeamPlayerCount: () => 4,
-} as any);
+const createMockMatch = (id: number): IMatch =>
+  ({
+    id,
+    competition: 'Vttl',
+    frenoyDivisionId: 1,
+    frenoyMatchId: `OVLH01/00${id}`,
+    games: [],
+    players: [],
+    comments: [],
+    block: 'Major',
+    isHomeMatch: true,
+    description: '',
+    opponent: { clubId: 10, teamCode: 'A' },
+    teamId: id,
+    date: { isBefore: () => true, subtract: () => ({ isBefore: () => true }), format: () => '19:00', isSame: () => true } as unknown,
+    getTeam: () =>
+      ({
+        renderOwnTeamTitle: () => `TTC Aalst ${String.fromCharCode(64 + id)}`,
+        getDivisionRanking: () => ({ empty: true }),
+        getThriller: () => null,
+      }) as unknown,
+    renderOpponentTitle: () => `Opponent ${id}`,
+    getOwnPlayers: () => [],
+    getTheirPlayers: () => [{ position: 1, name: 'Player', ranking: 'C6', uniqueIndex: 100, won: 0, home: false, status: 'Major', alias: 'P' }],
+    getOpponentClub: () => ({ id: 10, name: 'Club', codeVttl: 'OB001', codeSporta: '', mainLocation: null }) as unknown,
+    isSyncedWithFrenoy: false,
+    isStandardStartTime: () => true,
+    getTeamPlayerCount: () => 4,
+  }) as unknown as IMatch;
 
 const renderMatches = (matches: IMatch[], userState = {}) =>
   renderWithProviders(
-    <MemoryRouter><MobileLiveMatches matches={matches} /></MemoryRouter>,
+    <TestRouter>
+      <MobileLiveMatches matches={matches} />
+    </TestRouter>,
     { preloadedState: { user: { playerId: 1, teams: [1], security: [], ...userState }, readonlyMatches: [] } },
   );
-
-beforeEach(() => {
-  vi.useFakeTimers({ shouldAdvanceTime: true });
-});
-
-afterEach(() => {
-  vi.useRealTimers();
-});
 
 describe('Sync all matches button', () => {
   it('shows sync button for logged-in users', () => {
@@ -81,16 +76,16 @@ describe('Sync all matches button', () => {
     expect(screen.queryByRole('button', { name: 'sync' })).not.toBeInTheDocument();
   });
 
-  it('disables sync button for 10 minutes after clicking', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it('allows multiple clicks on sync button', async () => {
+    const user = userEvent.setup();
     renderMatches([createMockMatch(1)]);
 
     const syncButton = screen.getByRole('button', { name: 'sync' });
     await user.click(syncButton);
 
-    expect(syncButton).toBeDisabled();
+    expect(syncButton).toBeEnabled();
 
-    act(() => { vi.advanceTimersByTime(10 * 60 * 1000); });
+    await user.click(syncButton);
 
     expect(syncButton).toBeEnabled();
   });

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 
-export type Viewport = {
+type Viewport = {
   width: number;
   height: number;
-}
+};
 
 export const useViewport = () => {
   const [width, setWidth] = useState(window.innerWidth);

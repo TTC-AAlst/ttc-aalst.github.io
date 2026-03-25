@@ -21,3 +21,10 @@ _bmad/
 
 # Images (dev only, not tracked)
 images/
+
+# Frontend
+node_modules
+dist
+bun-debug.log
+coverage/
+test-results

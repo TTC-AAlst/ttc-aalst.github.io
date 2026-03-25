@@ -1,9 +1,9 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { renderWithProviders } from '../../../../utils/test-utils';
+import { renderWithProviders, TestRouter } from '../../../../utils/test-utils';
 import { MobileLiveMatchCard } from '../MobileLiveMatchCard';
-import { IMatch, IMatchPlayer, IMatchPlayerInfo } from '../../../../models/model-interfaces';
+import { IMatch, IMatchPlayer, IMatchPlayerInfo, IMatchGame } from '../../../../models/model-interfaces';
 
 vi.mock('../../../../storeUtil', () => ({
   default: {
@@ -17,39 +17,59 @@ vi.mock('../../../../storeUtil', () => ({
   },
 }));
 
-const createMockPlayer = (alias: string, ranking: string, uniqueIndex: number, status = 'Captain'): IMatchPlayer => ({
-  uniqueIndex,
-  playerId: uniqueIndex,
-  alias,
-  ranking,
-  status,
-  home: true,
-  position: 1,
-  won: 0,
-} as any);
+const createMockPlayer = (alias: string, ranking: string, uniqueIndex: number, status = 'Captain'): IMatchPlayer =>
+  ({
+    uniqueIndex,
+    playerId: uniqueIndex,
+    alias,
+    ranking,
+    status,
+    home: true,
+    position: 1,
+    won: 0,
+  }) as unknown as IMatchPlayer;
 
-const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
-  id: 1,
-  competition: 'Vttl',
-  frenoyDivisionId: 1,
-  teamId: 1,
-  games: [],
-  players: [],
-  block: 'Captain',
-  isSyncedWithFrenoy: false,
-  opponent: { clubId: 10, teamCode: 'A' },
-  date: { format: () => '19:45' } as any,
-  score: { home: 0, out: 0 },
-  isHomeMatch: true,
-  getOwnPlayers: () => [],
-  getTheirPlayers: () => [],
-  getTeamPlayerCount: () => 4,
-  getTeam: () => ({ teamCode: 'A', competition: 'Vttl', getDivisionRanking: () => ({ empty: true }) } as any),
-  getPlayerFormation: () => [],
-  getGameMatches: () => [],
-  renderScore: () => '0-0',
-  ...overrides,
-} as any);
+const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
+  ({
+    id: 1,
+    competition: 'Vttl',
+    frenoyDivisionId: 1,
+    teamId: 1,
+    games: [] as IMatchGame[],
+    players: [] as IMatchPlayer[],
+    comments: [],
+    block: 'Captain',
+    description: '',
+    isSyncedWithFrenoy: false,
+    opponent: { clubId: 10, teamCode: 'A' },
+    date: { format: () => '19:45', isBefore: () => true, subtract: () => ({ isBefore: () => true }), isSame: () => true },
+    score: { home: 0, out: 0 },
+    isHomeMatch: true,
+    getOwnPlayers: () => [] as IMatchPlayer[],
+    getTheirPlayers: () => [] as IMatchPlayer[],
+    getTeamPlayerCount: () => 4 as 3 | 4,
+    getTeam: () => ({
+      teamCode: 'A',
+      competition: 'Vttl',
+      getDivisionRanking: () => ({ empty: true }),
+      getThriller: () => null,
+      renderOwnTeamTitle: () => 'TTC Aalst A',
+    }),
+    getPlayerFormation: () => [] as IMatchPlayerInfo[],
+    getGameMatches: () => [],
+    renderScore: () => '0-0',
+    renderOpponentTitle: () => 'Opponent A',
+    getOpponentClub: () => ({ id: 10, name: 'Test Club', codeVttl: 'OB001', codeSporta: '' }),
+    ...overrides,
+  }) as unknown as IMatch;
+
+const renderCard = (match: IMatch, expanded = false) =>
+  renderWithProviders(
+    <TestRouter>
+      <MobileLiveMatchCard match={match} expanded={expanded} onToggle={() => {}} isCollapsible />
+    </TestRouter>,
+    { preloadedState: { players: [], user: { playerId: 0, teams: [], security: [] } } },
+  );
 
 describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
   it('shows player names with rankings when formation is confirmed (pre-match)', () => {
@@ -61,36 +81,30 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
     ];
 
     const match = createMockMatch({
-      getPlayerFormation: () => players.map(p => ({
-        player: { id: p.playerId, name: p.alias } as any,
-        matchPlayer: p,
-      })) as IMatchPlayerInfo[],
+      getPlayerFormation: () =>
+        players.map(p => ({
+          player: { id: p.playerId, name: p.alias } as unknown,
+          matchPlayer: p,
+        })) as IMatchPlayerInfo[],
     });
 
-    renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded={false} onToggle={() => {}} isCollapsible />,
-    );
+    renderCard(match);
 
     expect(screen.getByText(/Wouter B2/)).toBeInTheDocument();
     expect(screen.getByText(/Jan B6/)).toBeInTheDocument();
   });
 
   it('shows player names with rankings and win counts when match has games', () => {
-    const players: IMatchPlayer[] = [
-      createMockPlayer('Wouter', 'B2', 1),
-      createMockPlayer('Jan', 'B6', 2),
-    ];
+    const players: IMatchPlayer[] = [createMockPlayer('Wouter', 'B2', 1), createMockPlayer('Jan', 'B6', 2)];
 
     const match = createMockMatch({
-      games: [{ id: 1 }] as any,
+      games: [{ id: 1 }] as unknown as IMatchGame[],
       getOwnPlayers: () => players,
       getTheirPlayers: () => [createMockPlayer('Opponent', 'C0', 10)],
       getGameMatches: () => [],
     });
 
-    renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded={false} onToggle={() => {}} isCollapsible />,
-    );
+    renderCard(match);
 
     // With games, should show win counts
     expect(screen.getByText(/Wouter B2 \(0\)/)).toBeInTheDocument();
@@ -102,53 +116,43 @@ describe('CollapsedPlayerSummary in MobileLiveMatchCard', () => {
       getPlayerFormation: () => [],
     });
 
-    const { container } = renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded={false} onToggle={() => {}} isCollapsible />,
-    );
+    const { container } = renderCard(match);
 
     // No player summary should be shown
     expect(container.querySelector('div[style*="font-size: 0.8em"]')).toBeNull();
   });
 
   it('does not show mini body when expanded', () => {
-    const players: IMatchPlayer[] = [
-      createMockPlayer('Wouter', 'B2', 1),
-    ];
+    const players: IMatchPlayer[] = [createMockPlayer('Wouter', 'B2', 1)];
 
     const match = createMockMatch({
-      getPlayerFormation: () => players.map(p => ({
-        player: { id: p.playerId, name: p.alias } as any,
-        matchPlayer: p,
-      })) as IMatchPlayerInfo[],
+      getPlayerFormation: () =>
+        players.map(p => ({
+          id: p.playerId,
+          player: { id: p.playerId, name: p.alias, getCompetition: () => ({ ranking: p.ranking, position: 1 }) } as unknown,
+          matchPlayer: p,
+        })) as IMatchPlayerInfo[],
     });
 
-    renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded onToggle={() => {}} isCollapsible />,
-    );
+    renderCard(match, true);
 
     // When expanded, mini body is not shown
-    const miniBody = screen.queryByText(/Wouter B2/);
-    // The player name might appear in the expanded content, but not in mini body
     // We check that mini body is not rendered specifically
     expect(document.querySelector('div[style*="font-size: 0.8em"]')).toBeNull();
   });
 
   it('uses middle dot separator between players', () => {
-    const players: IMatchPlayer[] = [
-      createMockPlayer('A', 'B2', 1),
-      createMockPlayer('B', 'C2', 2),
-    ];
+    const players: IMatchPlayer[] = [createMockPlayer('A', 'B2', 1), createMockPlayer('B', 'C2', 2)];
 
     const match = createMockMatch({
-      getPlayerFormation: () => players.map(p => ({
-        player: { id: p.playerId, name: p.alias } as any,
-        matchPlayer: p,
-      })) as IMatchPlayerInfo[],
+      getPlayerFormation: () =>
+        players.map(p => ({
+          player: { id: p.playerId, name: p.alias } as unknown,
+          matchPlayer: p,
+        })) as IMatchPlayerInfo[],
     });
 
-    renderWithProviders(
-      <MobileLiveMatchCard match={match} expanded={false} onToggle={() => {}} isCollapsible />,
-    );
+    renderCard(match);
 
     // The separator should be present
     expect(screen.getByText(/·/)).toBeInTheDocument();

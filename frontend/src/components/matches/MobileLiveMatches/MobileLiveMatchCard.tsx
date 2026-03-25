@@ -13,6 +13,10 @@ type MobileLiveMatchCardProps = {
   onToggle: () => void;
   /** When false, the card is always expanded and not collapsible */
   isCollapsible: boolean;
+  /** When true, hides the "Details" link (use when already on match detail page) */
+  hideDetailsLink?: boolean;
+  /** When true, action buttons show icons only (for multi-card layouts) */
+  compactButtons?: boolean;
 };
 
 const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
@@ -41,12 +45,7 @@ const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
         return (
           <span key={ply.uniqueIndex || i}>
             {i > 0 && ' · '}
-            {storePlayer ? (
-              <PlayerLink player={storePlayer} alias style={{ color: 'inherit' }}/>
-            ) : (
-              ply.alias
-            )}
-            {' '}{ply.ranking}
+            {storePlayer ? <PlayerLink player={storePlayer} alias style={{ color: 'inherit' }} /> : ply.alias} {ply.ranking}
             {hasGames && ` (${wins})`}
           </span>
         );
@@ -55,7 +54,7 @@ const CollapsedPlayerSummary = ({ match }: { match: IMatch }) => {
   );
 };
 
-export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible }: MobileLiveMatchCardProps) => {
+export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible, hideDetailsLink, compactButtons }: MobileLiveMatchCardProps) => {
   const showContent = !isCollapsible || expanded;
 
   return (
@@ -68,7 +67,7 @@ export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible }
       }}
     >
       <div style={{ position: 'relative' }}>
-        <MobileLiveMatchHeader match={match} />
+        <MobileLiveMatchHeader match={match} hideDetailsLink={hideDetailsLink} />
         {isCollapsible && (
           <button
             type="button"
@@ -95,7 +94,7 @@ export const MobileLiveMatchCard = ({ match, expanded, onToggle, isCollapsible }
         )}
       </div>
       {isCollapsible && !expanded && <CollapsedPlayerSummary match={match} />}
-      {showContent && <MobileLiveMatchInProgress match={match} />}
+      {showContent && <MobileLiveMatchInProgress match={match} compact={compactButtons} />}
     </div>
   );
 };

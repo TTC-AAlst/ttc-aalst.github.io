@@ -5,21 +5,16 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 
 type ButtonStackProps = {
   small?: boolean;
-  config: {key: string, text: string}[];
+  config: { key: string; text: string }[];
   activeView: string;
   onClick: (key: string) => void;
-  id?: 'team-view' | string,
-}
+  id?: 'team-view' | string;
+};
 
-
-export const ButtonStack = ({small, config, activeView, onClick, id = 'team-view'}: ButtonStackProps) => {
+export const ButtonStack = ({ small, config, activeView, onClick, id = 'team-view' }: ButtonStackProps) => {
   if (small) {
     return (
-      <DropdownButton
-        title={(config.find(x => x.key === activeView) || {text: activeView}).text}
-        id={id}
-        onSelect={key => onClick(key || activeView)}
-      >
+      <DropdownButton title={(config.find(x => x.key === activeView) || { text: activeView }).text} id={id} onSelect={key => onClick(key || activeView)}>
         {config.map(button => (
           <Dropdown.Item eventKey={button.key} key={button.key}>
             {button.text}

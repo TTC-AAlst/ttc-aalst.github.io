@@ -3,17 +3,21 @@ import { Table } from 'react-bootstrap';
 import { IMatch, ITeam } from '../../../models/model-interfaces';
 import { getPlayerFormation, getTablePlayers, tableMatchViewportWidths } from './matchesTableUtil';
 import { MatchesTablePlayerLineUpHeader } from './MatchesTablePlayerLineUpHeader';
-import { MatchesTablePlayerLineUpDateCell, MatchesTablePlayerLineUpFrenoyMatchIdCell, MatchesTablePlayerLineUpMatchBlockCell,
+import {
+  MatchesTablePlayerLineUpDateCell,
+  MatchesTablePlayerLineUpFrenoyMatchIdCell,
+  MatchesTablePlayerLineUpMatchBlockCell,
   MatchesTablePlayerLineUpMatchVsCell,
-  MatchesTablePlayerLineUpPlayerPlayingCell} from './MatchesTablePlayerLineUpCells';
+  MatchesTablePlayerLineUpPlayerPlayingCell,
+} from './MatchesTablePlayerLineUpCells';
 import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 
 type MatchesTablePlayerLineUpProps = {
   team: ITeam;
   matches: IMatch[];
-}
+};
 
-export const MatchesTablePlayerLineUp = ({team, matches}: MatchesTablePlayerLineUpProps) => {
+export const MatchesTablePlayerLineUp = ({ team, matches }: MatchesTablePlayerLineUpProps) => {
   const user = useTtcSelector(selectUser);
   const teamPlayers = getTablePlayers(team);
 
@@ -21,7 +25,7 @@ export const MatchesTablePlayerLineUp = ({team, matches}: MatchesTablePlayerLine
     <Table className="matches-table max-width-table">
       <MatchesTablePlayerLineUpHeader team={team} />
       {matches.map((match, i) => {
-        const stripeColor = {backgroundColor: i % 2 === 0 ? '#f9f9f9' : undefined};
+        const stripeColor = { backgroundColor: i % 2 === 0 ? '#f9f9f9' : undefined };
         const playerFormation = getPlayerFormation(match);
         const canSeeFormation = !!match.block || user.canEditMatchPlayers(match);
 

@@ -5,7 +5,7 @@ import { config, devUrl, isDev } from '../config';
 
 const LogRequestTimes = false;
 
-export function getUrl(path, appendApi = true) {
+function getUrl(path: string, appendApi = true): string {
   if (path[0] !== '/') {
     console.error('HttpClient: path passed should start with a /');
   }
@@ -16,30 +16,29 @@ export function getUrl(path, appendApi = true) {
     path = `/api${path}`;
   }
 
-  return isDev()
-    ? `${devUrl}${path}`
-    : `${config.backend}${path}`;
+  return isDev() ? `${devUrl}${path}` : `${config.backend}${path}`;
 }
 
 function authHeaders(): Record<string, string> {
   const token = localStorage.getItem('token');
-  return token ? {Authorization: `Bearer ${token}`} : {};
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 const HttpClient = {
-  get: <T>(path: string, qs?: any): Promise<T> => {
+  get: <T>(path: string, qs?: Record<string, string | number | boolean>): Promise<T> => {
     let url = getUrl(path);
-    if (qs) {
-      url += `?${new URLSearchParams(qs).toString()}`;
+    const qsStringified = qs ? Object.fromEntries(Object.entries(qs).map(([k, v]) => [k, String(v)])) : undefined;
+    if (qsStringified) {
+      url += `?${new URLSearchParams(qsStringified).toString()}`;
     }
-    const fullUrl = `GET ${qs ? `${path}?${new URLSearchParams(qs).toString()}` : path}`;
+    const fullUrl = `GET ${qsStringified ? `${path}?${new URLSearchParams(qsStringified).toString()}` : path}`;
     return (async () => {
       if (LogRequestTimes) {
         console.time(fullUrl);
       }
 
       const response = await fetch(url, {
-        headers: {Accept: 'application/json', ...authHeaders()},
+        headers: { Accept: 'application/json', ...authHeaders() },
       });
 
       if (LogRequestTimes) {
@@ -49,7 +48,7 @@ const HttpClient = {
       return response.json();
     })();
   },
-  post: <T>(url: string, data?: any): Promise<T> => {
+  post: <T>(url: string, data?: unknown): Promise<T> => {
     const fullUrl = `POST ${url}`;
     return (async () => {
       if (LogRequestTimes) {
@@ -58,7 +57,7 @@ const HttpClient = {
 
       const response = await fetch(getUrl(url), {
         method: 'POST',
-        headers: {'Accept': 'application/json', 'Content-Type': 'application/json', ...authHeaders()},
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...authHeaders() },
         body: data !== undefined ? JSON.stringify(data) : undefined,
       });
 
@@ -69,7 +68,7 @@ const HttpClient = {
       return response.json();
     })();
   },
-  upload: async (file: File, type = 'temp', typeId = 0): Promise<{fileName?: string}> => {
+  upload: async (file: File, type = 'temp', typeId = 0): Promise<{ fileName?: string }> => {
     const formData = new FormData();
     formData.append('uploadType', type);
     formData.append('uploadTypeId', String(typeId));
@@ -77,7 +76,7 @@ const HttpClient = {
 
     const response = await fetch(getUrl('/upload'), {
       method: 'POST',
-      headers: {Accept: 'application/json', ...authHeaders()},
+      headers: { Accept: 'application/json', ...authHeaders() },
       body: formData,
     });
 
@@ -88,11 +87,11 @@ const HttpClient = {
 
     return response.json();
   },
-  uploadImage: async (imageBase64: string, dataId: number, type: string): Promise<any> => {
+  uploadImage: async (imageBase64: string, dataId: number, type: string): Promise<{ imageVersion: number }> => {
     const response = await fetch(getUrl('/upload/image'), {
       method: 'POST',
-      headers: {'Accept': 'application/json', 'Content-Type': 'application/json', ...authHeaders()},
-      body: JSON.stringify({image: imageBase64, dataId, type}),
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ image: imageBase64, dataId, type }),
     });
 
     if (!response.ok) {
@@ -121,7 +120,7 @@ function b64ToBlob(b64Data: string, contentType = '', sliceSize = 512) {
     byteArrays.push(byteArray);
   }
 
-  const blob = new Blob(byteArrays as BlobPart[], {type: contentType});
+  const blob = new Blob(byteArrays as BlobPart[], { type: contentType });
   return blob;
 }
 
@@ -141,7 +140,7 @@ function downloadExcel(respBody: string, fileName: string, addTimestampToFileNam
 
 async function downloadJson(path: string): Promise<string> {
   const response = await fetch(getUrl(path), {
-    headers: {Accept: 'application/json', ...authHeaders()},
+    headers: { Accept: 'application/json', ...authHeaders() },
   });
   return response.json();
 }

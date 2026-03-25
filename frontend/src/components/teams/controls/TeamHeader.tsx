@@ -7,9 +7,9 @@ type TeamHeaderProps = {
   showRanking: boolean;
 };
 
-export const TeamHeader = ({team, showRanking}: TeamHeaderProps) => (
+export const TeamHeader = ({ team, showRanking }: TeamHeaderProps) => (
   <div>
-    <h4 style={{marginLeft: 5}}>
+    <h4 style={{ marginLeft: 5 }}>
       {team.getDivisionDescription()}
       {showRanking ? <TeamRankingBadges team={team} /> : null}
     </h4>

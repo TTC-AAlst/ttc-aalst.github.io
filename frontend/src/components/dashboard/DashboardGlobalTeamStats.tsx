@@ -39,16 +39,16 @@ export const DashboardGlobalTeamStats = () => {
           border: '2px solid #4CAF50',
         }}
       >
-        <Link to={browseTo.getTeam(team)} style={{textDecoration: 'none', color: 'inherit'}}>
-          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-            <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
+        <Link to={browseTo.getTeam(team)} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <TeamPosition team={team} />
               <div>
                 <strong>{team.renderOwnTeamTitle()}</strong>
-                {!isSmallDevice && <div style={{fontSize: '0.9em', color: '#666'}}>{team.getDivisionDescription()}</div>}
+                {!isSmallDevice && <div style={{ fontSize: '0.9em', color: '#666' }}>{team.getDivisionDescription()}</div>}
               </div>
             </div>
-            <TeamRankingBadges team={team} style={isSmallDevice ? {fontSize: 18, marginTop: -5} : undefined} />
+            <TeamRankingBadges team={team} style={isSmallDevice ? { fontSize: 18, marginTop: -5 } : undefined} />
           </div>
         </Link>
       </div>
@@ -62,11 +62,7 @@ export const DashboardGlobalTeamStats = () => {
     }
 
     return (
-      <Link
-        key={team.id}
-        to={browseTo.getTeam(team)}
-        style={{textDecoration: 'none', color: 'inherit'}}
-      >
+      <Link key={team.id} to={browseTo.getTeam(team)} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div
           style={{
             padding: 6,
@@ -80,14 +76,23 @@ export const DashboardGlobalTeamStats = () => {
             fontSize: '0.85em',
           }}
         >
-          <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
-            <TeamPosition team={team} style={{marginRight: 4, marginTop: 0, fontSize: '0.9em'}} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <TeamPosition team={team} style={{ marginRight: 4, marginTop: 0, fontSize: '0.9em' }} />
             <span>{team.renderOwnTeamTitle()}</span>
           </div>
-          <div style={{display: 'flex', alignItems: 'center', gap: 4, fontSize: '1.2em'}}>
-            <span style={{color: '#4CAF50', marginRight: 4}}><Icon fa="fa fa-thumbs-up" style={{marginRight: 2}} />{ranking.gamesWon}</span>
-            <span style={{color: '#FF9800', marginRight: 4}}><Icon fa="fa fa-meh-o" style={{marginRight: 2}} />{ranking.gamesDraw}</span>
-            <span style={{color: '#f44336'}}><Icon fa="fa fa-thumbs-down" style={{marginRight: 2}} />{ranking.gamesLost}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '1.2em' }}>
+            <span style={{ color: '#4CAF50', marginRight: 4 }}>
+              <Icon fa="fa fa-thumbs-up" style={{ marginRight: 2 }} />
+              {ranking.gamesWon}
+            </span>
+            <span style={{ color: '#FF9800', marginRight: 4 }}>
+              <Icon fa="fa fa-meh-o" style={{ marginRight: 2 }} />
+              {ranking.gamesDraw}
+            </span>
+            <span style={{ color: '#f44336' }}>
+              <Icon fa="fa fa-thumbs-down" style={{ marginRight: 2 }} />
+              {ranking.gamesLost}
+            </span>
           </div>
         </div>
       </Link>
@@ -98,14 +103,14 @@ export const DashboardGlobalTeamStats = () => {
   if (isSmallDevice) smallGridTemplateColumns = '1fr';
 
   return (
-    <div style={{marginBottom: 20}}>
-      <Strike text={t('dashboard.globalTeamStats')} style={{marginBottom: 6}} />
+    <div style={{ marginBottom: 20 }}>
+      <Strike text={t('dashboard.globalTeamStats')} style={{ marginBottom: 6 }} />
       <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr' : '1fr', gap: 8 }}>
         {primaryTeams.map(team => renderPrimaryTeamStats(team))}
       </div>
 
-      {otherTeams.length > 0 && (
-        isSmallDevice && !showOtherTeams ? (
+      {otherTeams.length > 0 &&
+        (isSmallDevice && !showOtherTeams ? (
           <button
             type="button"
             onClick={() => setShowOtherTeams(true)}
@@ -123,11 +128,8 @@ export const DashboardGlobalTeamStats = () => {
             Meer Teams Tonen
           </button>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: smallGridTemplateColumns, gap: 4 }}>
-            {otherTeams.map(team => renderCompactTeamStats(team))}
-          </div>
-        )
-      )}
+          <div style={{ display: 'grid', gridTemplateColumns: smallGridTemplateColumns, gap: 4 }}>{otherTeams.map(team => renderCompactTeamStats(team))}</div>
+        ))}
     </div>
   );
 };

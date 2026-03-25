@@ -34,39 +34,44 @@ export const Administration = () => {
   if (!club) {
     return <div />;
   }
-  const {managers} = club;
+  const { managers } = club;
 
   return (
-    <div style={{marginTop: 10}}>
+    <div style={{ marginTop: 10 }}>
       <h1>{t('clubs.managementTitle')}</h1>
       <div className="row">
-        {managers.slice().sort((a, b) => a.sortOrder - b.sortOrder).map(manager => {
-          const player = players.find(p => p.id === manager.playerId);
-          return (
-            <div className="col-lg-4 col-sm-6" key={manager.playerId} style={{paddingBottom: 10}}>
-              <Card>
-                <Card.Header>
-                  <span>
-                    <strong>{player?.firstName} {player?.lastName}</strong>
-                    <br />
-                    {getManagerDescription(manager)}
-                  </span>
-                </Card.Header>
+        {managers
+          .slice()
+          .sort((a, b) => a.sortOrder - b.sortOrder)
+          .map(manager => {
+            const player = players.find(p => p.id === manager.playerId);
+            return (
+              <div className="col-lg-4 col-sm-6" key={manager.playerId} style={{ paddingBottom: 10 }}>
+                <Card>
+                  <Card.Header>
+                    <span>
+                      <strong>
+                        {player?.firstName} {player?.lastName}
+                      </strong>
+                      <br />
+                      {getManagerDescription(manager)}
+                    </span>
+                  </Card.Header>
 
-                <Card.Body>
-                  <PlayerImage playerId={manager.playerId} center shape="circle" />
-                  {!!user.playerId && <PlayerDetails playerId={manager.playerId} />}
-                </Card.Body>
-              </Card>
-            </div>
-          );
-        })}
+                  <Card.Body>
+                    <PlayerImage playerId={manager.playerId} center shape="circle" />
+                    {!!user.playerId && <PlayerDetails playerId={manager.playerId} />}
+                  </Card.Body>
+                </Card>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
 };
 
-const PlayerDetails = ({playerId}: {playerId: number}) => {
+const PlayerDetails = ({ playerId }: { playerId: number }) => {
   const player = useTtcSelector(selectPlayers).find(x => x.id === playerId);
   if (!player) {
     return null;
@@ -77,9 +82,9 @@ const PlayerDetails = ({playerId}: {playerId: number}) => {
       <br />
       <Email email={player.contact.email} showIcon />
       <br />
-      <Telephone number={player.contact.mobile} style={{marginTop: 5}} />
+      <Telephone number={player.contact.mobile} style={{ marginTop: 5 }} />
 
-      <PlayerAddress contact={player.contact} style={{marginTop: 5}} />
+      <PlayerAddress contact={player.contact} style={{ marginTop: 5 }} />
     </>
   );
 };

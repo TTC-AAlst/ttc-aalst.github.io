@@ -6,8 +6,10 @@ type StrikeProps = {
   textStyle?: React.CSSProperties;
   /** Styling on the container (outer div) */
   style?: React.CSSProperties;
-}
+};
 
-export const Strike = ({text, textStyle, ...props}: StrikeProps) => (
-  <div className="strike" {...props}><span style={{color: 'black', ...textStyle}}>{text}</span></div>
+export const Strike = ({ text, textStyle, ...props }: StrikeProps) => (
+  <div className="strike" {...props}>
+    <span style={{ color: 'black', ...textStyle }}>{text}</span>
+  </div>
 );

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 import { IMatch } from '../../../models/model-interfaces';
 import { MatchScore } from '../../matches/MatchScore';
+import { Icon } from '../../controls/Icons/Icon';
 import { t } from '../../../locales';
 
 type HeaderScoreCarouselProps = {
@@ -57,6 +59,7 @@ export const HeaderScoreCarousel = ({ matches }: HeaderScoreCarouselProps) => {
             const team = match.getTeam();
             const teamLabel = `${match.competition} ${team.teamCode}`;
             const locationEmoji = match.isHomeMatch ? '🏠' : '✈️';
+            const matchHasStarted = dayjs().isAfter(match.date);
 
             return (
               <div
@@ -74,7 +77,14 @@ export const HeaderScoreCarousel = ({ matches }: HeaderScoreCarouselProps) => {
                 <span style={{ color: '#fff' }}>
                   {locationEmoji} {teamLabel}
                 </span>
-                <MatchScore match={match} noLink forceDisplay showThrophy={false} />
+                {matchHasStarted ? (
+                  <MatchScore match={match} noLink forceDisplay showThrophy={false} />
+                ) : (
+                  <span style={{ color: '#fff', fontWeight: 500 }}>
+                    <Icon fa="fa fa-clock-o" style={{ marginRight: 4 }} />
+                    {match.date.format('HH:mm')}
+                  </span>
+                )}
               </div>
             );
           })}

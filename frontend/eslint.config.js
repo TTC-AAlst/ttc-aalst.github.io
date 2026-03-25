@@ -31,14 +31,14 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': 'off',
       'no-use-before-define': 'off',
 
-      // Carried over from .eslintrc
-      'implicit-arrow-linebreak': ['error', 'beside'],
+      // Carried over from .eslintrc (formatting rules disabled - Prettier handles these)
+      'implicit-arrow-linebreak': 'off',
       'no-shadow': 'warn',
-      'no-multiple-empty-lines': ['error', {max: 7}],
-      'max-len': ['error', {code: 160}],
+      'no-multiple-empty-lines': 'off',
+      'max-len': 'off',
       'dot-notation': 'warn',
-      'object-curly-newline': ['error', {ImportDeclaration: 'never'}],
-      'arrow-parens': ['error', 'as-needed'],
+      'object-curly-newline': 'off',
+      'arrow-parens': 'off',
       'no-console': 'off',
       'no-debugger': 'warn',
 
@@ -53,7 +53,7 @@ export default tseslint.config(
       'react/display-name': 'off',
 
       // Relaxed
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-this-alias': 'off',

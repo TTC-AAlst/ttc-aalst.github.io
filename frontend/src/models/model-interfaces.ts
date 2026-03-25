@@ -1,32 +1,35 @@
- 
 import { Dayjs } from 'dayjs';
 import { UserRoles } from './UserModel';
 import { PlayerRanking } from './utils/rankingSorter';
 
 export interface ITeamPlayerStats {
   ply: IPlayer;
-  won: {[ranking: string]: number};
-  lost: {[ranking: string]: number};
+  won: { [ranking: string]: number };
+  lost: { [ranking: string]: number };
   games: number;
-  victories: number,
+  victories: number;
   isDoubles: boolean;
-  belles: {[ranking: string]: {
-    won: number;
-    lost: number;
-  }};
+  belles: {
+    [ranking: string]: {
+      won: number;
+      lost: number;
+    };
+  };
   belleVictories: number;
   belleGames: number;
 }
 
 /* ****************************************************
-*                       UTILITY
-**************************************************** */
+ *                       UTILITY
+ **************************************************** */
 
-export type TranslatorFn = (key?: string, params?: any) => string;
+export type TranslatorParams = Record<string, string | number> | string | number;
+
+export type TranslatorFn = (key?: string, params?: TranslatorParams) => string;
 
 export type Translator = TranslatorFn & {
   reverseRoute: (baseRoute: string, translatedRoute: string) => string;
-  route: (routeName: string, params?: any) => string;
+  route: (routeName: string, params?: Record<string, string | number>) => string;
 };
 
 export type OwnTeamLink = 'main' | 'matches' | 'ranking' | 'players' | 'matchesTable' | 'week';
@@ -37,8 +40,8 @@ export interface ICacheResponse<T> {
 }
 
 /* ****************************************************
-*                       MATCHES
-**************************************************** */
+ *                       MATCHES
+ **************************************************** */
 
 export type Competition = 'Vttl' | 'Sporta' | 'Jeugd';
 
@@ -85,14 +88,7 @@ interface IMatchCommon extends IStoreMatchCommon {
 /** If you are unsure what kind of match it is */
 export interface IMatch extends IMatchCommon, IMatchOwn, IMatchOther {}
 
-/** If you know it needs a TTC Aalst match, use this one */
-export interface IFullMatchOwn extends IMatchCommon, IMatchOwn {}
-
-/** If you know it needs a ReadonlyMatch, use this one */
-export interface IFullMatchOther extends IMatchCommon, IMatchOther {}
-
 export interface IFullStoreMatchOwn extends IStoreMatchCommon, IStoreMatchOwn {}
-export interface IFullStoreMatchOther extends IStoreMatchCommon, IStoreMatchOther {}
 
 interface IStoreMatchOwn {
   isHomeMatch: boolean;
@@ -121,7 +117,6 @@ interface IMatchOwn extends IStoreMatchOwn {
   getGameMatches(): IGetGameMatches[];
 }
 
-
 interface IStoreMatchOther {
   home: ITeamOpponent;
   away: ITeamOpponent;
@@ -138,10 +133,9 @@ interface IMatchOther extends IStoreMatchOther {
   /** If isOurMatch, get the IMatchOwn MatchModel */
   getOurMatch: () => IMatch;
 
-  getClub(which: "home" | "away"): IClub | undefined;
+  getClub(which: 'home' | 'away'): IClub | undefined;
   won(opponent: ITeamOpponent): boolean;
 }
-
 
 export interface IMatchPlayer {
   id: number;
@@ -158,7 +152,6 @@ export interface IMatchPlayer {
   alias: string;
 }
 
-
 export interface IMatchGame {
   id: number;
   matchId: number;
@@ -169,7 +162,6 @@ export interface IMatchGame {
   outPlayerSets: number;
   outcome: MatchGameOutcome;
 }
-
 
 /** Previous encounters of players */
 export type PlayerEncounter = {
@@ -188,8 +180,7 @@ export type PlayerEncounter = {
   awayPlayerUniqueId: number;
   awayPlayerSets: number;
   awayRanking: PlayerRanking;
-}
-
+};
 
 export interface IGetGameMatches {
   matchNumber: number;
@@ -200,9 +191,8 @@ export interface IGetGameMatches {
   outcome: MatchGameOutcome;
 
   isDoubles: boolean;
-  ownPlayer: {playerId: 0} | IMatchPlayer;
+  ownPlayer: { playerId: 0 } | IMatchPlayer;
 }
-
 
 export interface IMatchComment {
   id: number;
@@ -211,14 +201,13 @@ export interface IMatchComment {
   text: string;
   /** Hidden is only visible for TTC Aalst players */
   hidden: boolean;
-  postedOn: any;
+  postedOn: string | Date | null;
   imageUrl: string;
 }
 
-
 /* ****************************************************
-*                       PLAYERS
-**************************************************** */
+ *                       PLAYERS
+ **************************************************** */
 
 export interface IStorePlayer {
   alias: string;
@@ -240,7 +229,7 @@ export interface IPlayer extends IStorePlayer {
   name: string;
   slug: string;
   getCompetition: (competition: Competition) => IPlayerCompetition;
-  getTeam(comp: Competition): ITeam;
+  getTeam(comp: Competition): ITeam | undefined;
   getTeams(): ITeam[];
 }
 
@@ -280,7 +269,7 @@ export type PredictionResult = {
   name: string;
   oldRanking: string;
   newRanking: string;
-}
+};
 
 export type PlayerEventType = 'PlayerStyleUpdated' | 'MatchReport' | 'MatchComment';
 
@@ -295,19 +284,17 @@ export interface IPlayerEvent {
   createdBy: string;
 }
 
-
 /* ****************************************************
-*                       TEAMS
-**************************************************** */
+ *                       TEAMS
+ **************************************************** */
 
-export type TeamPlayerType = typeof teamPlayerType[keyof typeof teamPlayerType] | 'Invaller';
+export type TeamPlayerType = (typeof teamPlayerType)[keyof typeof teamPlayerType] | 'Invaller';
 
 export const teamPlayerType = {
   standard: 'Standard',
   captain: 'Captain',
   reserve: 'Reserve',
 } as const;
-
 
 export interface IStoreTeam {
   competition: Competition;
@@ -328,7 +315,7 @@ export interface ITeam extends IStoreTeam {
   getScoreCount(): 16 | 10 | 5;
   renderOwnTeamTitle(): string;
   getDivisionDescription(): string;
-  getDivisionRanking(opponent?: 'our-ranking' | ITeamOpponent): ITeamRanking & {empty: false} | {empty: true};
+  getDivisionRanking(opponent?: 'our-ranking' | ITeamOpponent): (ITeamRanking & { empty: false }) | { empty: true };
   getThriller(match: IMatch): undefined | 'topMatch' | 'degradationMatch';
   isCaptain: (player: IPlayer) => boolean;
   getCaptainPlayerIds: () => number[];
@@ -358,8 +345,8 @@ export interface ITeamPlayerInfo {
 
 export interface IMatchPlayerInfo {
   id: number;
-  player: IPlayer,
-  matchPlayer: IMatchPlayer,
+  player: IPlayer;
+  matchPlayer: IMatchPlayer;
 }
 
 /** Selecting players for a match form */
@@ -372,7 +359,7 @@ export type PickedPlayer = {
     status: MatchPlayerStatus | '';
     statusNote: string;
   };
-}
+};
 
 export interface ITeamRanking {
   position: number;
@@ -396,11 +383,9 @@ export interface ITeamFrenoy {
   getWeekUrl(weekName: number): string;
 }
 
-
 /* ****************************************************
-*                       CLUBS
-**************************************************** */
-
+ *                       CLUBS
+ **************************************************** */
 
 export interface IClub {
   active: boolean;

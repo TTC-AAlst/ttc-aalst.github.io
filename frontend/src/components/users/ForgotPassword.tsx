@@ -9,7 +9,6 @@ import { t } from '../../locales';
 import { requestResetPasswordLink, setNewPasswordFromGuid } from '../../reducers/userActions';
 import { useTtcDispatch } from '../../utils/hooks/storeHooks';
 
-
 export const ForgotPassword = () => {
   const [playerId, setPlayerId] = useState<number | 'system'>(0);
   const [email, setEmail] = useState('');
@@ -17,20 +16,13 @@ export const ForgotPassword = () => {
   const dispatch = useTtcDispatch();
 
   return (
-    <Paper style={{...paperStyle, height: 280}}>
+    <Paper style={{ ...paperStyle, height: 280 }}>
       <h3>{t('password.newPassword')}</h3>
-      <PlayerAutoComplete
-        selectPlayer={id => setPlayerId(id)}
-        label={t('login.loginName')}
-      />
+      <PlayerAutoComplete selectPlayer={id => setPlayerId(id)} label={t('login.loginName')} />
 
       <br />
 
-      <TextField
-        label={t('player.email')}
-        onChange={e => setEmail(e.target.value)}
-        fullWidth
-      />
+      <TextField label={t('player.email')} onChange={e => setEmail(e.target.value)} fullWidth />
 
       <br />
       <br />
@@ -39,14 +31,13 @@ export const ForgotPassword = () => {
         variant="contained"
         label={t('password.sendNewButton')}
         color="primary"
-        style={{marginTop: 15, width: '100%'}}
-        onClick={() => dispatch(requestResetPasswordLink({email, playerId, navigate}))}
+        style={{ marginTop: 15, width: '100%' }}
+        onClick={() => dispatch(requestResetPasswordLink({ email, playerId, navigate }))}
         disabled={!playerId || !email}
       />
     </Paper>
   );
 };
-
 
 export const ForgotPasswordReset = () => {
   const params = useParams();
@@ -56,26 +47,18 @@ export const ForgotPasswordReset = () => {
   const navigate = useNavigate();
 
   return (
-    <Paper style={{...paperStyle, height: 210}}>
+    <Paper style={{ ...paperStyle, height: 210 }}>
       <br />
-      <PlayerAutoComplete
-        selectPlayer={id => setPlayerId(id === 'system' ? -1 : id)}
-        label={t('login.loginName')}
-      />
+      <PlayerAutoComplete selectPlayer={id => setPlayerId(id === 'system' ? -1 : id)} label={t('login.loginName')} />
 
-      <TextField
-        label={t('password.newPassword')}
-        type="password"
-        onChange={e => setPassword(e.target.value)}
-        fullWidth
-      />
+      <TextField label={t('password.newPassword')} type="password" onChange={e => setPassword(e.target.value)} fullWidth />
 
       <MaterialButton
         variant="contained"
         label={t('password.changeTitle')}
         color="primary"
-        style={{marginTop: 15}}
-        onClick={() => dispatch(setNewPasswordFromGuid({playerId, password, guid: params.guid || '', navigate}))}
+        style={{ marginTop: 15 }}
+        onClick={() => dispatch(setNewPasswordFromGuid({ playerId, password, guid: params.guid || '', navigate }))}
         disabled={!playerId || !password}
       />
     </Paper>

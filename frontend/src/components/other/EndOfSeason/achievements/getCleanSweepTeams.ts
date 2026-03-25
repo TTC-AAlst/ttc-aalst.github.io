@@ -1,8 +1,8 @@
-import { IMatch, ITeam } from "../../../../models/model-interfaces";
-import { TeamAchievementInfo } from "./achievement-models";
+import { IMatch, ITeam } from '../../../../models/model-interfaces';
+import { TeamAchievementInfo } from './achievement-models';
 
 export function getCleanSweepTeams(matches: IMatch[]): TeamAchievementInfo {
-  const cleanSweepCounts: Record<number, { team: ITeam, count: number }> = {};
+  const cleanSweepCounts: Record<number, { team: ITeam; count: number }> = {};
 
   matches.forEach(match => {
     if (!match.shouldBePlayed || !match.isSyncedWithFrenoy || !match.isPlayed || match.scoreType !== 'Won') {
@@ -13,13 +13,15 @@ export function getCleanSweepTeams(matches: IMatch[]): TeamAchievementInfo {
       return;
     }
 
-    if (!cleanSweepCounts[match.teamId]) {
-      cleanSweepCounts[match.teamId] = {
+    let entry = cleanSweepCounts[match.teamId];
+    if (!entry) {
+      entry = {
         team: match.getTeam(),
         count: 0,
       };
+      cleanSweepCounts[match.teamId] = entry;
     }
-    cleanSweepCounts[match.teamId].count++;
+    entry.count++;
   });
 
   const cleanSweeps = Object.values(cleanSweepCounts).sort((a, b) => b.count - a.count);

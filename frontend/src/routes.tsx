@@ -31,7 +31,7 @@ const Routes = () => {
   useSignalR();
 
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Switch>
         <Route path={`${t.route('matchesWeek')}/:week?/:comp?`} element={<App Component={MatchesWeek} />} />
         <Route path={`${t.route('teams')}/:tabKey?/:view?`} element={<App Component={Teams} />} />
@@ -63,13 +63,13 @@ const Routes = () => {
   );
 };
 
-
 export const browseTo = {
-  getTeam({competition, teamCode = 'A'}: ITeam, view = 'main') {
+  getTeam({ competition, teamCode = 'A' }: ITeam, view = 'main') {
     return `${t.route('teams').replace(':competition', competition)}/${teamCode}/${view}`;
   },
-  getOpponent(competition: Competition, {clubId, teamCode}: ITeamOpponent) {
-    return t.route('opponent')
+  getOpponent(competition: Competition, { clubId, teamCode }: ITeamOpponent) {
+    return t
+      .route('opponent')
       .replace(':competition', competition)
       .replace(':clubId', clubId?.toString())
       .replace(':teamCode', teamCode || '');

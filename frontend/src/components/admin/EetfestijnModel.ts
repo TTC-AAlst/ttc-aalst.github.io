@@ -12,7 +12,7 @@ export type EetfestijnModel = {
   };
   menu: EetfestijnMenu[];
   steunkaart: number;
-}
+};
 
 export type EetfestijnMenu = {
   name: string;

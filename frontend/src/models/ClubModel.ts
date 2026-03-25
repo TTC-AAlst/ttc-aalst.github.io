@@ -1,10 +1,10 @@
-import {IClub, IClubManager, IClubLocation} from './model-interfaces';
+import { IClub, IClubManager, IClubLocation } from './model-interfaces';
 
 export const OwnClubId = 1;
 
-export default class ClubModel implements IClub {
+class ClubModel implements IClub {
   active: boolean;
-  alternativeLocations: any[];
+  alternativeLocations: IClubLocation[];
   codeSporta: string;
   codeVttl: string;
   id: number;

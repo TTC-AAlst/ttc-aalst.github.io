@@ -1,23 +1,23 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import {ButtonStack} from '../controls/Buttons/ButtonStack';
+import { ButtonStack } from '../controls/Buttons/ButtonStack';
 import { t } from '../../locales';
 import { IStoreMatchCommon } from '../../models/model-interfaces';
 
 type Filters = 'all' | 'first' | 'last';
 
 type SwitchBetweenFirstAndLastRoundButtonProps = {
-  setMatchesFilter: (f: Filters) => void,
-  matchesFilter: Filters,
+  setMatchesFilter: (f: Filters) => void;
+  matchesFilter: Filters;
 };
 
-export const SwitchBetweenFirstAndLastRoundButton = ({setMatchesFilter, matchesFilter}: SwitchBetweenFirstAndLastRoundButtonProps) => (
-  <div style={{textAlign: 'center'}}>
+export const SwitchBetweenFirstAndLastRoundButton = ({ setMatchesFilter, matchesFilter }: SwitchBetweenFirstAndLastRoundButtonProps) => (
+  <div style={{ textAlign: 'center' }}>
     <ButtonStack
       config={[
-        {key: 'all', text: t('common.all')},
-        {key: 'first', text: t('comp.roundFirst')},
-        {key: 'last', text: t('comp.roundBack')},
+        { key: 'all', text: t('common.all') },
+        { key: 'first', text: t('comp.roundFirst') },
+        { key: 'last', text: t('comp.roundBack') },
       ]}
       small={false}
       activeView={matchesFilter}
@@ -28,7 +28,6 @@ export const SwitchBetweenFirstAndLastRoundButton = ({setMatchesFilter, matchesF
     />
   </div>
 );
-
 
 export function getFirstOrLastMatches<T extends IStoreMatchCommon>(allMatchesToCome: T[], filter: Filters) {
   if (filter === 'all') {
@@ -51,9 +50,6 @@ export function getFirstOrLastMatches<T extends IStoreMatchCommon>(allMatchesToC
     hasMore: firstMatches.length !== 0,
   };
 }
-
-
-
 
 export function getFirstOrLast(): Filters {
   const today = dayjs();

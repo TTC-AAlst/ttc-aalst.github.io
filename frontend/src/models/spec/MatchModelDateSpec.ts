@@ -1,17 +1,18 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import MatchModel from '../MatchModel';
 
-const createMatch = (dateStr: string) => new MatchModel({
-  id: 1,
-  date: dateStr,
-  competition: 'Vttl',
-  players: [],
-  games: [],
-  comments: [],
-  opponent: {},
-  isHomeMatch: true,
-  score: {home: 0, out: 0},
-});
+const createMatch = (dateStr: string | null | undefined) =>
+  new MatchModel({
+    id: 1,
+    date: dateStr,
+    competition: 'Vttl',
+    players: [],
+    games: [],
+    comments: [],
+    opponent: {},
+    isHomeMatch: true,
+    score: { home: 0, out: 0 },
+  } as unknown as ConstructorParameters<typeof MatchModel>[0]);
 
 describe('MatchModel date methods', () => {
   describe('getDisplayDate', () => {
@@ -126,16 +127,16 @@ describe('MatchModel date methods', () => {
         competition: 'Vttl',
         players: [],
         games: [],
-        comments: [
-          {id: 1, text: 'Great match', postedOn: '2025-03-15T22:30:00', playerId: 1},
-        ],
-        opponent: {clubId: 1, teamCode: 'A'},
+        comments: [{ id: 1, text: 'Great match', postedOn: '2025-03-15T22:30:00', playerId: 1 }],
+        opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
-        score: {home: 10, out: 6},
-      });
-      expect(dayjs.isDayjs(match.comments[0].postedOn)).toBe(true);
-      expect(match.comments[0].postedOn.hour()).toBe(22);
-      expect(match.comments[0].postedOn.minute()).toBe(30);
+        score: { home: 10, out: 6 },
+      } as unknown as ConstructorParameters<typeof MatchModel>[0]);
+      const comment = match.comments[0]!;
+      const postedOn = comment.postedOn as unknown as Dayjs;
+      expect(dayjs.isDayjs(postedOn)).toBe(true);
+      expect(postedOn.hour()).toBe(22);
+      expect(postedOn.minute()).toBe(30);
     });
 
     it('preserves other comment properties alongside postedOn', () => {
@@ -145,28 +146,27 @@ describe('MatchModel date methods', () => {
         competition: 'Vttl',
         players: [],
         games: [],
-        comments: [
-          {id: 42, text: 'Nice one', postedOn: '2025-03-15T23:00:00', playerId: 7},
-        ],
-        opponent: {clubId: 1, teamCode: 'A'},
+        comments: [{ id: 42, text: 'Nice one', postedOn: '2025-03-15T23:00:00', playerId: 7 }],
+        opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
-        score: {home: 10, out: 6},
-      });
-      expect(match.comments[0].id).toBe(42);
-      expect(match.comments[0].text).toBe('Nice one');
-      expect(match.comments[0].playerId).toBe(7);
+        score: { home: 10, out: 6 },
+      } as unknown as ConstructorParameters<typeof MatchModel>[0]);
+      const comment = match.comments[0]!;
+      expect(comment.id).toBe(42);
+      expect(comment.text).toBe('Nice one');
+      expect(comment.playerId).toBe(7);
     });
   });
 
   describe('invalid date handling', () => {
     it('null date creates an invalid dayjs', () => {
-      const match = createMatch(null as any);
+      const match = createMatch(null);
       expect(match.date.isValid()).toBe(false);
       expect(match.date.format('YYYY-MM-DD')).toBe('Invalid Date');
     });
 
     it('undefined date silently becomes current time', () => {
-      const match = createMatch(undefined as any);
+      const match = createMatch(undefined);
       expect(match.date.isValid()).toBe(true);
       expect(match.date.diff(dayjs(), 'seconds')).toBeLessThan(2);
     });
@@ -177,12 +177,12 @@ describe('MatchModel date methods', () => {
     });
 
     it('isBeingPlayed returns false for invalid date', () => {
-      const match = createMatch(null as any);
+      const match = createMatch(null);
       expect(match.isBeingPlayed()).toBe(false);
     });
 
     it('getDisplayDate returns "Invalid Date" for null date', () => {
-      const match = createMatch(null as any);
+      const match = createMatch(null);
       expect(match.getDisplayDate()).toContain('Invalid Date');
     });
 
@@ -193,14 +193,13 @@ describe('MatchModel date methods', () => {
         competition: 'Vttl',
         players: [],
         games: [],
-        comments: [
-          {id: 1, text: 'Test', postedOn: null, playerId: 1},
-        ],
-        opponent: {clubId: 1, teamCode: 'A'},
+        comments: [{ id: 1, text: 'Test', postedOn: null, playerId: 1 }],
+        opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
-        score: {home: 0, out: 0},
-      });
-      expect(match.comments[0].postedOn.isValid()).toBe(false);
+        score: { home: 0, out: 0 },
+      } as unknown as ConstructorParameters<typeof MatchModel>[0]);
+      const postedOn = match.comments[0]!.postedOn as unknown as Dayjs;
+      expect(postedOn.isValid()).toBe(false);
     });
 
     it('undefined comment postedOn becomes current time', () => {
@@ -210,14 +209,13 @@ describe('MatchModel date methods', () => {
         competition: 'Vttl',
         players: [],
         games: [],
-        comments: [
-          {id: 1, text: 'Test', postedOn: undefined, playerId: 1},
-        ],
-        opponent: {clubId: 1, teamCode: 'A'},
+        comments: [{ id: 1, text: 'Test', postedOn: undefined, playerId: 1 }],
+        opponent: { clubId: 1, teamCode: 'A' },
         isHomeMatch: true,
-        score: {home: 0, out: 0},
-      });
-      expect(match.comments[0].postedOn.isValid()).toBe(true);
+        score: { home: 0, out: 0 },
+      } as unknown as ConstructorParameters<typeof MatchModel>[0]);
+      const postedOn = match.comments[0]!.postedOn as unknown as Dayjs;
+      expect(postedOn.isValid()).toBe(true);
     });
   });
 

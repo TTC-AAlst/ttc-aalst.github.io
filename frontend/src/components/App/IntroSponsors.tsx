@@ -11,22 +11,22 @@ export const IntroSponsors = () => {
   const big = viewport.width > 830;
   if (big) {
     return (
-      <Row style={{marginTop: 25, marginBottom: 15}}>
-        <div style={{width: 800, margin: 'auto'}}>
-          <Strike text={t('intro.ourSponsors')} style={{marginBottom: 5}} />
+      <Row style={{ marginTop: 25, marginBottom: 15 }}>
+        <div style={{ width: 800, margin: 'auto' }}>
+          <Strike text={t('intro.ourSponsors')} style={{ marginBottom: 5 }} />
           <Sponsor.NextGenLED big={big} />
-          <Sponsor.Capatt big={big} style={{marginLeft: 20}} />
+          <Sponsor.Capatt big={big} style={{ marginLeft: 20 }} />
         </div>
-        <div style={{width: 770, margin: 'auto', paddingTop: 25, display: 'flex'}}>
+        <div style={{ width: 770, margin: 'auto', paddingTop: 25, display: 'flex' }}>
           <div>
-            <Sponsor.Itenium big={big} style={{marginBottom: 20}} />
+            <Sponsor.Itenium big={big} style={{ marginBottom: 20 }} />
             <Sponsor.HappyPlays big={big} />
           </div>
-          <div style={{marginLeft: 20}}>
-            <Sponsor.NextGenLasers big={big} style={{marginBottom: 15}} />
+          <div style={{ marginLeft: 20 }}>
+            <Sponsor.NextGenLasers big={big} style={{ marginBottom: 15 }} />
           </div>
         </div>
-        <div style={{width: 770, margin: 'auto', paddingTop: 25, paddingLeft: 200}}>
+        <div style={{ width: 770, margin: 'auto', paddingTop: 25, paddingLeft: 200 }}>
           <Sponsor.Mijlbeek big={big} />
         </div>
       </Row>
@@ -34,24 +34,24 @@ export const IntroSponsors = () => {
   }
 
   return (
-    <Row style={{margin: 10}}>
-      <Strike text={t('intro.ourSponsors')} style={{marginBottom: 5}} />
-      <Col sm={12} style={{marginTop: 20}}>
+    <Row style={{ margin: 10 }}>
+      <Strike text={t('intro.ourSponsors')} style={{ marginBottom: 5 }} />
+      <Col sm={12} style={{ marginTop: 20 }}>
         <Sponsor.Itenium big={big} />
       </Col>
-      <Col sm={12} style={{marginTop: 20}}>
+      <Col sm={12} style={{ marginTop: 20 }}>
         <Sponsor.NextGenLED big={big} />
       </Col>
-      <Col sm={12} style={{marginTop: 20}}>
+      <Col sm={12} style={{ marginTop: 20 }}>
         <Sponsor.Capatt big={big} />
       </Col>
-      <Col sm={12} style={{marginTop: 20}}>
+      <Col sm={12} style={{ marginTop: 20 }}>
         <Sponsor.Mijlbeek big={big} />
       </Col>
-      <Col sm={12} style={{marginTop: 20}}>
+      <Col sm={12} style={{ marginTop: 20 }}>
         <Sponsor.HappyPlays big={big} />
       </Col>
-      <Col sm={12} style={{marginTop: 20}}>
+      <Col sm={12} style={{ marginTop: 20 }}>
         <Sponsor.NextGenLasers big={big} />
       </Col>
     </Row>

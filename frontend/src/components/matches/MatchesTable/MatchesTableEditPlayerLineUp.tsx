@@ -5,9 +5,13 @@ import { getPlayerFormation, getTablePlayers, tableMatchViewportWidths } from '.
 import { selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { useViewport } from '../../../utils/hooks/useViewport';
 import { MatchesTablePlayerLineUpHeader } from './MatchesTablePlayerLineUpHeader';
-import { MatchesTablePlayerLineUpDateCell, MatchesTablePlayerLineUpFrenoyMatchIdCell, MatchesTablePlayerLineUpMatchBlockCell,
+import {
+  MatchesTablePlayerLineUpDateCell,
+  MatchesTablePlayerLineUpFrenoyMatchIdCell,
+  MatchesTablePlayerLineUpMatchBlockCell,
   MatchesTablePlayerLineUpMatchVsCell,
-  MatchesTablePlayerLineUpPlayerPlayingCell} from './MatchesTablePlayerLineUpCells';
+  MatchesTablePlayerLineUpPlayerPlayingCell,
+} from './MatchesTablePlayerLineUpCells';
 import { getPlayingStatusClass } from '../../../models/PlayerModel';
 import { PlayerCompetitionButton } from '../../players/PlayerBadges';
 
@@ -16,9 +20,9 @@ type MatchesTablePlayerLineUpProps = {
   matches: IMatch[];
   tablePlayers: PickedPlayer[];
   onTablePlayerSelect: (players: PickedPlayer[], match: IMatch) => void;
-}
+};
 
-export const MatchesTableEditPlayerLineUp = ({team, matches, tablePlayers, onTablePlayerSelect}: MatchesTablePlayerLineUpProps) => {
+export const MatchesTableEditPlayerLineUp = ({ team, matches, tablePlayers, onTablePlayerSelect }: MatchesTablePlayerLineUpProps) => {
   const user = useTtcSelector(selectUser);
   const viewport = useViewport();
   const teamPlayers = getTablePlayers(team);
@@ -57,7 +61,7 @@ export const MatchesTableEditPlayerLineUp = ({team, matches, tablePlayers, onTab
                   decision = {
                     id: ply.player.id,
                     matchId: match.id,
-                    matchPlayer: {status: '', statusNote: ''},
+                    matchPlayer: { status: '', statusNote: '' },
                     player: ply.player,
                   };
                   if (playerDecision?.matchPlayer.statusNote) {
@@ -68,15 +72,17 @@ export const MatchesTableEditPlayerLineUp = ({team, matches, tablePlayers, onTab
                 const onButtonClick = () => {
                   const player = tablePlayers?.find(x => x.id === ply.player.id && x.matchId === match.id);
                   if (player) {
-                    onTablePlayerSelect(tablePlayers.filter(x => x !== player), match);
-
+                    onTablePlayerSelect(
+                      tablePlayers.filter(x => x !== player),
+                      match,
+                    );
                   } else {
                     const plyInfo = {
                       id: ply.player.id,
                       matchId: match.id,
                       player: ply.player,
                       matchPlayer: {
-                        status: user.canManageTeams() ? 'Major' as const : 'Captain' as const,
+                        status: user.canManageTeams() ? ('Major' as const) : ('Captain' as const),
                         statusNote: '',
                       },
                     };
@@ -102,11 +108,15 @@ export const MatchesTableEditPlayerLineUp = ({team, matches, tablePlayers, onTab
       <tr>
         <td colSpan={viewport.width > tableMatchViewportWidths.frenoyMatchId ? 4 : 3}>&nbsp;</td>
         {teamPlayers.map(ply => {
-          const played = matches.filter(match => tablePlayers
-            .filter(frm => frm.matchId === match.id && frm.id === ply.player.id)
-            .find(frm => frm.matchPlayer.status === 'Captain' || frm.matchPlayer.status === 'Major'));
+          const played = matches.filter(match =>
+            tablePlayers
+              .filter(frm => frm.matchId === match.id && frm.id === ply.player.id)
+              .find(frm => frm.matchPlayer.status === 'Captain' || frm.matchPlayer.status === 'Major'),
+          );
           return (
-            <td key={ply.player.id} style={{textAlign: 'center', fontWeight: 'bold'}}>{played.length}</td>
+            <td key={ply.player.id} style={{ textAlign: 'center', fontWeight: 'bold' }}>
+              {played.length}
+            </td>
           );
         })}
       </tr>

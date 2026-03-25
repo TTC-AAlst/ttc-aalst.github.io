@@ -1,9 +1,4 @@
-export function mergeInStore2<T extends {id: number}>(
-  state: T[],
-  anyPayload: T | T[],
-  filter?: (itm: T) => boolean,
-) {
-
+export function mergeInStore2<T extends { id: number }>(state: T[], anyPayload: T | T[], filter?: (itm: T) => boolean) {
   if (!anyPayload) {
     return state;
   }

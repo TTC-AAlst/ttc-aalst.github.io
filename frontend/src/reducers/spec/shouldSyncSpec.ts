@@ -4,9 +4,7 @@ import { IStoreMatchCommon } from '../../models/model-interfaces';
 // shouldSync is exported from matchesReducer but importing it triggers
 // the full store initialization chain. Replicate the logic here to test
 // the date pattern in isolation.
-const shouldSync = (match: IStoreMatchCommon) => !match.isSyncedWithFrenoy
-  && dayjs().isAfter(match.date)
-  && match.shouldBePlayed;
+const shouldSync = (match: IStoreMatchCommon) => !match.isSyncedWithFrenoy && dayjs().isAfter(match.date) && match.shouldBePlayed;
 
 const createStoreMatch = (overrides: Partial<IStoreMatchCommon> = {}): IStoreMatchCommon => ({
   id: 1,
@@ -17,7 +15,7 @@ const createStoreMatch = (overrides: Partial<IStoreMatchCommon> = {}): IStoreMat
   competition: 'Vttl',
   frenoyDivisionId: 0,
   date: dayjs('2020-01-01T20:00:00'),
-  score: {home: 0, out: 0},
+  score: { home: 0, out: 0 },
   scoreType: 'NotYetPlayed',
   isPlayed: false,
   players: [],
@@ -28,7 +26,7 @@ const createStoreMatch = (overrides: Partial<IStoreMatchCommon> = {}): IStoreMat
 
 describe('shouldSync', () => {
   it('returns true for a past, unsynced match that should be played', () => {
-    const match = createStoreMatch({date: dayjs('2020-01-01T20:00:00')});
+    const match = createStoreMatch({ date: dayjs('2020-01-01T20:00:00') });
     expect(shouldSync(match)).toBe(true);
   });
 

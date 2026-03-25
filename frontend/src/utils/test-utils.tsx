@@ -2,6 +2,7 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { render, RenderOptions } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { MemoryRouter, MemoryRouterProps } from 'react-router-dom';
 import type { RootState } from '../store';
 import matchesReducer, { freeMatchesSlice } from '../reducers/matchesReducer';
 import configReducer from '../reducers/configReducer';
@@ -31,10 +32,10 @@ const rootReducer = combineReducers({
   clubPlayers: clubPlayersReducer,
 });
 
-export function createTestStore(preloadedState?: DeepPartial<RootState>) {
+function createTestStore(preloadedState?: DeepPartial<RootState>) {
   return configureStore({
     reducer: rootReducer,
-    preloadedState: preloadedState as any,
+    preloadedState: preloadedState as Partial<RootState>,
   });
 }
 
@@ -42,13 +43,14 @@ type RenderWithStoreOptions = {
   preloadedState?: DeepPartial<RootState>;
 } & Omit<RenderOptions, 'wrapper'>;
 
-export function renderWithProviders(
-  ui: React.ReactElement,
-  { preloadedState, ...renderOptions }: RenderWithStoreOptions = {},
-) {
+export function renderWithProviders(ui: React.ReactElement, { preloadedState, ...renderOptions }: RenderWithStoreOptions = {}) {
   const store = createTestStore(preloadedState);
-  const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <Provider store={store}>{children}</Provider>
-  );
+  const Wrapper = ({ children }: { children: React.ReactNode }) => <Provider store={store}>{children}</Provider>;
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
 }
+
+export const TestRouter = ({ children, ...props }: MemoryRouterProps) => (
+  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} {...props}>
+    {children}
+  </MemoryRouter>
+);

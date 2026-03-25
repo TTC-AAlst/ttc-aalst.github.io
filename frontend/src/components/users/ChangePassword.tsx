@@ -20,19 +20,11 @@ export const ChangePassword = () => {
     <div style={paperStyle}>
       <h3>{t('password.changeTitle')}</h3>
 
-      <TextField
-        label={t('password.oldPassword')}
-        type="password"
-        onChange={e => setOld(e.target.value)}
-      />
+      <TextField label={t('password.oldPassword')} type="password" onChange={e => setOld(e.target.value)} />
 
       <br />
 
-      <TextField
-        label={t('password.newPassword')}
-        type="password"
-        onChange={e => setNew(e.target.value)}
-      />
+      <TextField label={t('password.newPassword')} type="password" onChange={e => setNew(e.target.value)} />
 
       <br />
 
@@ -40,11 +32,10 @@ export const ChangePassword = () => {
         variant="contained"
         label={t('profile.editPassword')}
         color="primary"
-        style={{marginTop: 15}}
-        onClick={() => dispatch(changePassword({playerId: user.playerId, oldPassword, newPassword}))}
+        style={{ marginTop: 15 }}
+        onClick={() => dispatch(changePassword({ playerId: user.playerId, oldPassword, newPassword }))}
         disabled={!oldPassword || !newPassword}
       />
-
     </div>
   );
 };

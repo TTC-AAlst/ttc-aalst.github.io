@@ -12,9 +12,10 @@ import t from '../../../locales';
 
 type MobileLiveMatchHeaderProps = {
   match: IMatch;
+  hideDetailsLink?: boolean;
 };
 
-export const MobileLiveMatchHeader = ({ match }: MobileLiveMatchHeaderProps) => {
+export const MobileLiveMatchHeader = ({ match, hideDetailsLink }: MobileLiveMatchHeaderProps) => {
   const user = useTtcSelector(selectUser);
   const team = match.getTeam();
 
@@ -60,9 +61,7 @@ export const MobileLiveMatchHeader = ({ match }: MobileLiveMatchHeaderProps) => 
             {homeRanking && <small className="match-opponent-team">{homeRanking.position}. </small>}
             {match.isHomeMatch ? renderOwnTeam() : renderOpponentTeam()}
           </div>
-          <div style={{ color: '#888', fontSize: '0.85em', margin: '4px 0' }}>
-            {t('match.vs')}
-          </div>
+          <div style={{ color: '#888', fontSize: '0.85em', margin: '4px 0' }}>{t('match.vs')}</div>
           <div style={{ fontWeight: !match.isHomeMatch ? 'bold' : 'normal', fontSize: '1.1em' }}>
             {awayRanking && <small className="match-opponent-team">{awayRanking.position}. </small>}
             {match.isHomeMatch ? renderOpponentTeam() : renderOwnTeam()}
@@ -70,7 +69,7 @@ export const MobileLiveMatchHeader = ({ match }: MobileLiveMatchHeaderProps) => 
         </div>
 
         <div style={{ marginLeft: 12 }}>
-          <MatchScoreOrForm match={match} user={user} />
+          <MatchScoreOrForm match={match} user={user} hideDetailsLink={hideDetailsLink} />
         </div>
       </div>
     </div>
@@ -104,10 +103,13 @@ const CornerRibbon = ({ type }: { type: 'topMatch' | 'degradationMatch' }) => {
   );
 };
 
-const MatchScoreOrForm = ({ match, user }: { match: IMatch; user: IUser }) => {
+const MatchScoreOrForm = ({ match, user, hideDetailsLink }: { match: IMatch; user: IUser; hideDetailsLink?: boolean }) => {
   const hasStarted = match.date.isBefore(dayjs());
 
   if (!hasStarted) {
+    if (hideDetailsLink) {
+      return null;
+    }
     return <ViewMatchDetailsButton match={match} size="sm" />;
   }
 

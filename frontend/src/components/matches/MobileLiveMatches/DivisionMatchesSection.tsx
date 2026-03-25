@@ -4,6 +4,8 @@ import { IMatch } from '../../../models/model-interfaces';
 import { OtherMatchPlayerResults } from '../Match/OtherMatchPlayerResults';
 import { ReadonlyIndividualMatches } from '../Match/IndividualMatches';
 import { OpponentMatchScore } from '../Match/OpponentMatchScore';
+import { OpponentLink } from '../../teams/controls/OpponentLink';
+import { Icon } from '../../controls/Icons/Icon';
 import { selectReadOnlyMatches, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { frenoyReadOnlyMatchSync } from '../../../reducers/readonlyMatchesReducer';
 
@@ -29,9 +31,12 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
 
   // Auto-sync every 10 minutes
   useEffect(() => {
-    const interval = setInterval(() => {
-      todayDivisionMatches.forEach(m => dispatch(frenoyReadOnlyMatchSync(m)));
-    }, 10 * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        todayDivisionMatches.forEach(m => dispatch(frenoyReadOnlyMatchSync(m)));
+      },
+      10 * 60 * 1000,
+    );
     return () => clearInterval(interval);
   }, [todayDivisionMatches, dispatch]);
 
@@ -47,26 +52,42 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
     setModalMatch(m);
   };
 
+  const teamCellStyle: React.CSSProperties = {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: 120,
+  };
+
   return (
-    <div>
-      <Table size="sm" striped hover style={{ marginBottom: 0 }}>
+    <div style={{ maxWidth: 600, margin: '0 auto' }}>
+      <Table size="sm" striped hover style={{ marginBottom: 0, tableLayout: 'fixed' }}>
         <tbody>
           {todayDivisionMatches.map(m => {
             const hasPlayers = m.players.length > 0;
+            const isPlayed = m.isSyncedWithFrenoy && m.score;
+            const homeWon = isPlayed && m.score.home > m.score.out;
+            const awayWon = isPlayed && m.score.out > m.score.home;
+            const isDifferentDay = !m.date.isSame(match.date, 'day');
             return (
               <React.Fragment key={m.id}>
-                <tr
-                  style={{ cursor: hasPlayers ? 'pointer' : 'default' }}
-                  onClick={() => hasPlayers && handleRowClick(m.id)}
-                >
-                  <td style={{ whiteSpace: 'nowrap' }}>
-                    {m.getClub('home')?.name} {m.home.teamCode}
+                <tr style={{ cursor: hasPlayers ? 'pointer' : 'default' }} onClick={() => hasPlayers && handleRowClick(m.id)}>
+                  <td style={teamCellStyle}>
+                    <OpponentLink team={team} opponent={m.home} />
+                    {homeWon && <Icon fa="fa fa-trophy" style={{ marginLeft: 4, color: '#ffc107' }} />}
                   </td>
-                  <td style={{ textAlign: 'center', fontWeight: 600 }}>
-                    <OpponentMatchScore readonlyMatch={m} />
+                  <td style={{ textAlign: 'center', fontWeight: 600, width: 70 }}>
+                    {isDifferentDay && m.scoreType !== 'WalkOver' && !m.isSyncedWithFrenoy ? (
+                      <span style={{ color: '#666', fontWeight: 400 }}>{m.date.format('ddd')}</span>
+                    ) : !m.isSyncedWithFrenoy && m.scoreType !== 'WalkOver' ? (
+                      <span style={{ color: '#666', fontWeight: 400 }}>{m.date.format('HH:mm')}</span>
+                    ) : (
+                      <OpponentMatchScore readonlyMatch={m} />
+                    )}
                   </td>
-                  <td style={{ whiteSpace: 'nowrap', textAlign: 'right' }}>
-                    {m.getClub('away')?.name} {m.away.teamCode}
+                  <td style={{ ...teamCellStyle, textAlign: 'right' }}>
+                    {awayWon && <Icon fa="fa fa-trophy" style={{ marginRight: 4, color: '#ffc107' }} />}
+                    <OpponentLink team={team} opponent={m.away} />
                   </td>
                 </tr>
                 {expandedMatch === m.id && hasPlayers && (
@@ -88,9 +109,7 @@ export const DivisionMatchesSection = ({ match }: DivisionMatchesSectionProps) =
             {modalMatch?.getClub('home')?.name} {modalMatch?.home.teamCode} vs {modalMatch?.getClub('away')?.name} {modalMatch?.away.teamCode}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ padding: 6 }}>
-          {modalMatch && <ReadonlyIndividualMatches match={modalMatch} />}
-        </Modal.Body>
+        <Modal.Body style={{ padding: 6 }}>{modalMatch && <ReadonlyIndividualMatches match={modalMatch} />}</Modal.Body>
       </Modal>
     </div>
   );

@@ -2,19 +2,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IStoreUser } from '../models/UserModel';
 import { validateToken } from './userActions';
 
-
 const startState = {
   playerId: 0,
   teams: [] as number[],
   security: [] as string[],
 };
 
-
 export type ValidateUser = IStoreUser & {
   alias: string;
   token: string;
-}
-
+};
 
 export const userSlice = createSlice({
   name: 'user',

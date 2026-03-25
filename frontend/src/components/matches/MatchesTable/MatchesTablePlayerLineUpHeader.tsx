@@ -7,9 +7,9 @@ import { useViewport } from '../../../utils/hooks/useViewport';
 
 type MatchesTablePlayerLineUpProps = {
   team: ITeam;
-}
+};
 
-export const MatchesTablePlayerLineUpHeader = ({team}: MatchesTablePlayerLineUpProps) => {
+export const MatchesTablePlayerLineUpHeader = ({ team }: MatchesTablePlayerLineUpProps) => {
   const viewport = useViewport();
   const teamPlayers = getTablePlayers(team);
 
@@ -23,7 +23,7 @@ export const MatchesTablePlayerLineUpHeader = ({team}: MatchesTablePlayerLineUpP
         {teamPlayers.map(ply => (
           <th key={ply.player.id}>
             {ply.type === 'Captain' ? <TeamCaptainIcon /> : null}
-            <span style={{fontStyle: ply.type === 'Reserve' ? 'italic' : undefined}}>{ply.player.alias}</span>
+            <span style={{ fontStyle: ply.type === 'Reserve' ? 'italic' : undefined }}>{ply.player.alias}</span>
           </th>
         ))}
       </tr>

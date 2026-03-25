@@ -99,8 +99,8 @@ export const DashboardRankingPredictions = () => {
         fontSize: '0.85em',
       }}
     >
-      <PlayerLink player={pred.player} alias style={{fontWeight: 500, marginRight: 4}} />
-      <span style={{color: pred.isRise ? '#4CAF50' : '#f44336', fontWeight: 500}}>
+      <PlayerLink player={pred.player} alias style={{ fontWeight: 500, marginRight: 4 }} />
+      <span style={{ color: pred.isRise ? '#4CAF50' : '#f44336', fontWeight: 500 }}>
         {pred.current}→{pred.predicted}
       </span>
     </span>
@@ -109,29 +109,29 @@ export const DashboardRankingPredictions = () => {
   const renderSection = (label: string, predictions: PredictionInfo[]) => {
     if (predictions.length === 0) return null;
     return (
-      <div style={{marginBottom: 6}}>
-        <strong style={{fontSize: '0.85em', color: '#666', marginRight: 8}}>{label}:</strong>
+      <div style={{ marginBottom: 6 }}>
+        <strong style={{ fontSize: '0.85em', color: '#666', marginRight: 8 }}>{label}:</strong>
         {predictions.map(renderPrediction)}
       </div>
     );
   };
 
   return (
-    <div style={{marginBottom: 20}}>
-      <Strike text="Oiljst AI" style={{marginBottom: 6}} />
+    <div style={{ marginBottom: 20 }}>
+      <Strike text="Oiljst AI" style={{ marginBottom: 6 }} />
       {renderSection('Vttl', vttlRises)}
       {renderSection('Sporta', sportaRises)}
 
       {hasDrops && (
-        <div style={{marginTop: 6}}>
+        <div style={{ marginTop: 6 }}>
           {!showDrops && (
-            <div style={{textAlign: 'right'}}>
+            <div style={{ textAlign: 'right' }}>
               <Button
                 variant="link"
                 size="sm"
                 onClick={() => setShowDrops(!showDrops)}
                 className="text-dark text-decoration-none"
-                style={{padding: 0, fontSize: '0.85em'}}
+                style={{ padding: 0, fontSize: '0.85em' }}
                 onMouseEnter={e => e.currentTarget.classList.add('text-decoration-underline')}
                 onMouseLeave={e => e.currentTarget.classList.remove('text-decoration-underline')}
               >

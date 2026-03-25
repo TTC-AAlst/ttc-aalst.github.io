@@ -1,6 +1,6 @@
-import { createSelector } from "@reduxjs/toolkit";
-import { Competition } from "../../models/model-interfaces";
-import { selectReadOnlyMatches } from "../../utils/hooks/storeHooks";
+import { createSelector } from '@reduxjs/toolkit';
+import { Competition } from '../../models/model-interfaces';
+import { selectReadOnlyMatches } from '../../utils/hooks/storeHooks';
 
 export const selectOpponentMatchesForTeam = createSelector(
   [
@@ -11,7 +11,8 @@ export const selectOpponentMatchesForTeam = createSelector(
   ],
   (matches, competition, clubId, teamCode) => {
     const matchesCompetition = competition === 'Sporta' ? 'Sporta' : 'Vttl';
-    return matches.filter(m => m.competition === matchesCompetition)
+    return matches
+      .filter(m => m.competition === matchesCompetition)
       .filter(m => m.home && m.away)
       .filter(m => (m.home.clubId === clubId && m.home.teamCode === teamCode) || (m.away.clubId === clubId && m.away.teamCode === teamCode))
       .filter(m => m.shouldBePlayed)

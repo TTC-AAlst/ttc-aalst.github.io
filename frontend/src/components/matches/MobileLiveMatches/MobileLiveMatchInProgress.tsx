@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { Button, ButtonGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
@@ -11,6 +10,7 @@ import { OpponentMatches } from '../Match/OpponentMatches';
 import { OpponentsFormation } from '../Match/OpponentsFormation';
 import { OpponentsTeamFormation } from '../Match/OpponentsTeamFormation';
 import { selectOpponentMatches } from '../../../reducers/selectors/selectOpponentMatches';
+import { useViewport } from '../../../utils/hooks/useViewport';
 import { PreviousEncounters } from '../Match/PreviousEncounters';
 import { Scoresheet } from '../Match/Scoresheet';
 import { PlayerCompetitionBadge } from '../../players/PlayerBadges';
@@ -29,22 +29,31 @@ import { MatchCardAdmin } from '../Match/MatchCardAdmin';
 
 type MobileLiveMatchInProgressProps = {
   match: IMatch;
+  /** When true, buttons show icons only (for multi-card layouts like /vandaag) */
+  compact?: boolean;
 };
 
-export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressProps) => {
+export const MobileLiveMatchInProgress = ({ match, compact = false }: MobileLiveMatchInProgressProps) => {
   const hasPlayersOrGames = match.games.length || match.getTheirPlayers().length;
   const hasStarted = match.date.isBefore(dayjs());
   const canEnterOpponents = match.date.subtract(1, 'hour').isBefore(dayjs());
 
   // Pre-start: show our formation and away match details
+  const isToday = match.date.isSame(dayjs(), 'day');
   if (!hasPlayersOrGames) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 8 }}>
+        {!isToday && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Icon fa="fa fa-calendar" />
+            <span style={{ fontWeight: 600 }}>{match.date.format('dddd D MMMM')}</span>
+            {!match.isStandardStartTime() && <span style={{ color: '#666' }}>- {match.date.format('HH:mm')}</span>}
+          </div>
+        )}
         <OurFormationPreStart match={match} />
         {!match.isHomeMatch && !hasStarted && <AwayMatchDetails match={match} />}
         {canEnterOpponents && <OpponentPlayersPreStart match={match} />}
-        <MatchActionButtons match={match} />
-        {hasStarted && <MatchDetailsLink match={match} />}
+        <MatchActionButtons match={match} compact={compact} />
       </div>
     );
   }
@@ -53,12 +62,10 @@ export const MobileLiveMatchInProgress = ({ match }: MobileLiveMatchInProgressPr
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <FormationsWithResults match={match} />
-      <MatchActionButtons match={match} />
-      {!match.isSyncedWithFrenoy && <MatchDetailsLink match={match} />}
+      <MatchActionButtons match={match} compact={compact} />
     </div>
   );
 };
-
 
 const FormationsWithResults = ({ match }: { match: IMatch }) => {
   const [showEditOpponents, setShowEditOpponents] = useState(false);
@@ -72,26 +79,19 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => {
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
             <SectionTitle>{t('match.playersVictoryTitle')}</SectionTitle>
-            {canEditPlayers && user.playerId > 0 && (
-              <EditIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() => setShowEditOwn(!showEditOwn)}
-              />
-            )}
+            {canEditPlayers && user.playerId > 0 && <EditIcon style={{ cursor: 'pointer' }} onClick={() => setShowEditOwn(!showEditOwn)} />}
           </div>
-          {match.getOwnPlayers().filter(ply => ply.status === match.block).map(ply => (
-            <OwnPlayer key={ply.position} match={match} ply={ply} showRanking />
-          ))}
+          {match
+            .getOwnPlayers()
+            .filter(ply => ply.status === match.block)
+            .map(ply => (
+              <OwnPlayer key={ply.position} match={match} ply={ply} showRanking />
+            ))}
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
             <SectionTitle>{t('match.playersOpponentsTitle')}</SectionTitle>
-            {canEditPlayers && (
-              <EditIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() => setShowEditOpponents(!showEditOpponents)}
-              />
-            )}
+            {canEditPlayers && user.playerId > 0 && <EditIcon style={{ cursor: 'pointer' }} onClick={() => setShowEditOpponents(!showEditOpponents)} />}
           </div>
           {match.getTheirPlayers().map(ply => (
             <OpponentPlayer key={ply.position} ply={ply} t={t} competition={match.competition} fullName={false} />
@@ -112,7 +112,7 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => {
   );
 };
 
-const MatchActionButtons = ({ match }: { match: IMatch }) => {
+const MatchActionButtons = ({ match, compact = false }: { match: IMatch; compact?: boolean }) => {
   const [showGames, setShowGames] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showOpponentModal, setShowOpponentModal] = useState(false);
@@ -124,6 +124,10 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   const opponentMatches = useTtcSelector(state => selectOpponentMatches(state, match));
   const opponentMatchesList = [...opponentMatches.home, ...opponentMatches.away].filter(m => m.shouldBePlayed);
   const readonlyMatches = useTtcSelector(selectReadOnlyMatches);
+  const viewport = useViewport();
+  // In compact mode (multi-card layout), always show icons only
+  // In non-compact mode (single card), use viewport to determine
+  const isMobile = compact || viewport.width < 768;
 
   const hasReportOrComments = !!match.description || match.comments.length > 0;
   const hasTheirPlayers = match.getTheirPlayers().length > 0;
@@ -153,39 +157,41 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
   return (
     <div>
       <div style={{ textAlign: 'center', marginBottom: 12 }}>
-        <ButtonGroup size="sm">
+        <ButtonGroup size={isMobile ? undefined : 'sm'}>
           <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.report')}</Tooltip>}>
             <Button variant="outline-secondary" onClick={() => setShowReportModal(true)}>
               <Icon fa={hasReportOrComments ? 'fa fa-commenting-o' : 'fa fa-comment-o'} />
+              {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.tabs.report')}</span>}
             </Button>
           </OverlayTrigger>
           {match.games.length > 0 && (
             <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.matchesTitle')}</Tooltip>}>
               <Button variant={showGames ? 'secondary' : 'outline-secondary'} onClick={() => setShowGames(!showGames)}>
-                {t('match.tabs.matches')}
+                <Icon fa="fa fa-list-ol" />
+                {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.tabs.matches')}</span>}
               </Button>
             </OverlayTrigger>
           )}
           <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.opponentsFormationTitle')}</Tooltip>}>
             <Button variant="outline-secondary" onClick={() => setShowOpponentModal(true)}>
-              {t('match.individual.opponentPlayer')}
+              <Icon fa="fa fa-users" />
+              {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.individual.opponentPlayer')}</span>}
             </Button>
           </OverlayTrigger>
-          <MatchOtherRoundButton match={match} shortLabel small />
+          <MatchOtherRoundButton match={match} shortLabel={isMobile} small={!isMobile} />
           {hasTheirPlayers && (
             <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.previousEncountersTitle')}</Tooltip>}>
               <Button variant="outline-secondary" onClick={() => setShowEncountersModal(true)}>
-                {t('match.tabs.previousEncounters')}
+                <Icon fa="fa fa-history" />
+                {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.tabs.previousEncounters')}</span>}
               </Button>
             </OverlayTrigger>
           )}
           {todayDivisionMatches.length > 0 && (
             <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.division')}</Tooltip>}>
-              <Button
-                variant={showDivision ? 'secondary' : 'outline-secondary'}
-                onClick={() => setShowDivision(!showDivision)}
-              >
-                {t('match.tabs.division')}
+              <Button variant={showDivision ? 'secondary' : 'outline-secondary'} onClick={() => setShowDivision(!showDivision)}>
+                <Icon fa="fa fa-table" />
+                {!isMobile && <span style={{ marginLeft: 4 }}>{t('match.tabs.division')}</span>}
               </Button>
             </OverlayTrigger>
           )}
@@ -209,71 +215,58 @@ const MatchActionButtons = ({ match }: { match: IMatch }) => {
         </div>
       )}
 
-      <Modal show={showReportModal} onHide={() => setShowReportModal(false)} fullscreen style={{zIndex: 99999}}>
+      <Modal show={showReportModal} onHide={() => setShowReportModal(false)} fullscreen style={{ zIndex: 99999 }}>
         <Modal.Header closeButton>
           <Modal.Title>
             {match.getTeam().renderOwnTeamTitle()} vs {match.renderOpponentTitle()}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{padding: 6}}>
+        <Modal.Body style={{ padding: 6 }}>
           <MatchReport match={match} skipContainerClass />
         </Modal.Body>
       </Modal>
 
-      <Modal show={showOpponentModal} onHide={() => setShowOpponentModal(false)} fullscreen style={{zIndex: 99999}}>
+      <Modal show={showOpponentModal} onHide={() => setShowOpponentModal(false)} fullscreen style={{ zIndex: 99999 }}>
         <Modal.Header closeButton>
           <Modal.Title>
             {match.renderOpponentTitle()}
-            <div style={{marginLeft: -6, marginTop: -8}}>
+            <div style={{ marginLeft: -6, marginTop: -8 }}>
               <TeamRankingBadges team={match.getTeam()} opponent={match.opponent} small />
             </div>
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{padding: 6}}>
+        <Modal.Body style={{ padding: 6 }}>
           <h4>{t('match.tabs.opponentsFormationTitle')}</h4>
           <OpponentsTeamFormation matches={opponentMatchesList} opponent={match.opponent} limitRows />
 
-          <h4 style={{marginTop: 24}}>{t('teamCalendar.individual')}</h4>
+          <h4 style={{ marginTop: 24 }}>{t('teamCalendar.individual')}</h4>
           <OpponentsFormation match={match} opponent={match.opponent} />
 
-          <h4 style={{marginTop: 24}}>{t('teamCalendar.matches')}</h4>
+          <h4 style={{ marginTop: 24 }}>{t('teamCalendar.matches')}</h4>
           <OpponentMatches team={match.getTeam()} readonlyMatches={opponentMatchesList} opponent={match.opponent} roundSwitchButton />
         </Modal.Body>
       </Modal>
 
-      <Modal show={showEncountersModal} onHide={() => setShowEncountersModal(false)} fullscreen style={{zIndex: 99999}}>
+      <Modal show={showEncountersModal} onHide={() => setShowEncountersModal(false)} fullscreen style={{ zIndex: 99999 }}>
         <Modal.Header closeButton>
-          <Modal.Title>
-            {t('match.tabs.previousEncountersTitle')}
-          </Modal.Title>
+          <Modal.Title>{t('match.tabs.previousEncountersTitle')}</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{padding: 6}}>
+        <Modal.Body style={{ padding: 6 }}>
           <PreviousEncounters match={match} />
         </Modal.Body>
       </Modal>
 
-      <Modal show={showAdminModal} onHide={() => setShowAdminModal(false)} fullscreen style={{zIndex: 99999}}>
+      <Modal show={showAdminModal} onHide={() => setShowAdminModal(false)} fullscreen style={{ zIndex: 99999 }}>
         <Modal.Header closeButton>
           <Modal.Title>admin</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{padding: 6}}>
+        <Modal.Body style={{ padding: 6 }}>
           <MatchCardAdmin match={match} />
         </Modal.Body>
       </Modal>
     </div>
   );
 };
-
-const MatchDetailsLink = ({ match }: { match: IMatch }) => (
-  <div style={{ textAlign: 'center', marginTop: 4 }}>
-    <Link
-      to={t.route('match').replace(':matchId', match.id.toString())}
-      style={{ color: '#007bff', fontSize: '0.9em' }}
-    >
-      {t('match.details')} &rarr;
-    </Link>
-  </div>
-);
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <div
@@ -301,27 +294,18 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
           <SectionTitle>{t('match.tabs.playersTitle')}</SectionTitle>
           {playingPlayers.length > 0 && user.playerId > 0 && match.games.length === 0 && (
-            <EditIcon
-              style={{ cursor: 'pointer' }}
-              onClick={() => setShowEditOwn(!showEditOwn)}
-            />
+            <EditIcon style={{ cursor: 'pointer' }} onClick={() => setShowEditOwn(!showEditOwn)} />
           )}
         </div>
         {playingPlayers.length > 0 && (
           <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.tabs.scoresheet')}</Tooltip>}>
-            <Button
-              size="sm"
-              variant={showScoresheet ? 'secondary' : 'outline-secondary'}
-              onClick={() => setShowScoresheet(!showScoresheet)}
-            >
+            <Button size="sm" variant={showScoresheet ? 'secondary' : 'outline-secondary'} onClick={() => setShowScoresheet(!showScoresheet)}>
               <Icon fa="fa fa-table" />
             </Button>
           </OverlayTrigger>
         )}
       </div>
-      {playingPlayers.length === 0 && user.playerId > 0 && (
-        <OwnPlayerSelector match={match} />
-      )}
+      {playingPlayers.length === 0 && user.playerId > 0 && <OwnPlayerSelector match={match} />}
       {playingPlayers.length === 0 && user.playerId <= 0 && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#666' }}>
           <Icon fa="fa fa-question-circle" />
@@ -333,9 +317,7 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
           <OwnPlayerSelector match={match} initialOpen onClose={() => setShowEditOwn(false)} />
         </div>
       )}
-      {playingPlayers.length > 0 && showScoresheet && (
-        <Scoresheet match={match} hideDownload />
-      )}
+      {playingPlayers.length > 0 && showScoresheet && <Scoresheet match={match} hideDownload />}
       {playingPlayers.length > 0 && !showScoresheet && !showEditOwn && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {playingPlayers.map(ply => (
@@ -353,8 +335,11 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
 };
 
 const AwayMatchDetails = ({ match }: { match: IMatch }) => {
+  const [showInfo, setShowInfo] = useState(false);
   const club = match.getOpponentClub();
   const loc = club?.mainLocation;
+  const altLocations = club?.alternativeLocations?.filter(l => l.address) || [];
+  const hasExtraInfo = loc?.comment || altLocations.length > 0;
 
   return (
     <div>
@@ -373,26 +358,55 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
                 <Icon fa="fa fa-map-marker" />
                 <span style={{ fontWeight: 600 }}>{loc.description}</span>
               </div>
-              <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.navigateToClub')}</Tooltip>}>
-                <Button
-                  size="sm"
-                  variant="outline-secondary"
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${loc.address}, ${loc.postalCode} ${loc.city}`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Icon fa="fa fa-location-arrow" />
-                </Button>
-              </OverlayTrigger>
+              <ButtonGroup size="sm">
+                {hasExtraInfo && (
+                  <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.club.showInfo')}</Tooltip>}>
+                    <Button variant={showInfo ? 'secondary' : 'outline-secondary'} onClick={() => setShowInfo(!showInfo)}>
+                      <Icon fa="fa fa-info-circle" />
+                    </Button>
+                  </OverlayTrigger>
+                )}
+                <OverlayTrigger placement="top" overlay={<Tooltip>{t('match.navigateToClub')}</Tooltip>}>
+                  <Button
+                    variant="outline-secondary"
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${loc.address}, ${loc.postalCode} ${loc.city}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon fa="fa fa-location-arrow" />
+                  </Button>
+                </OverlayTrigger>
+              </ButtonGroup>
             </div>
             <div style={{ fontSize: '0.9em', color: '#666', marginLeft: 17, textTransform: 'capitalize' }}>
               {loc.address}, {loc.postalCode} {loc.city}
             </div>
+            {showInfo && (
+              <div style={{ marginTop: 8, marginLeft: 17 }}>
+                {loc.comment && (
+                  <div style={{ fontSize: '0.85em', color: '#856404', backgroundColor: '#fff3cd', padding: '4px 8px', borderRadius: 4, marginBottom: 8 }}>
+                    <Icon fa="fa fa-info-circle" style={{ marginRight: 4 }} />
+                    {loc.comment}
+                  </div>
+                )}
+                {altLocations.length > 0 && (
+                  <div>
+                    <div style={{ fontSize: '0.8em', color: '#666', textTransform: 'uppercase', marginBottom: 4 }}>{t('match.club.alternativeLocations')}</div>
+                    {altLocations.map((altLoc, i) => (
+                      <div key={i} style={{ marginBottom: 8 }}>
+                        <div style={{ fontWeight: 600 }}>{altLoc.description}</div>
+                        <div style={{ fontSize: '0.9em', color: '#666', textTransform: 'capitalize' }}>
+                          {altLoc.address}, {altLoc.postalCode} {altLoc.city}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ) : (
-          <div style={{ color: '#666', fontStyle: 'italic' }}>
-            {t('match.club.locationUnknown')}
-          </div>
+          <div style={{ color: '#666', fontStyle: 'italic' }}>{t('match.club.locationUnknown')}</div>
         )}
       </div>
     </div>
@@ -405,13 +419,7 @@ const OpponentPlayersPreStart = ({ match }: { match: IMatch }) => {
   return (
     <div>
       <SectionTitle>{t('match.theirFormation')}</SectionTitle>
-      {canEdit ? (
-        <OpponentPlayerSelector match={match} />
-      ) : (
-        <div style={{ color: '#666', fontStyle: 'italic' }}>
-          {t('match.opponentPlayersLocked')}
-        </div>
-      )}
+      {canEdit ? <OpponentPlayerSelector match={match} /> : <div style={{ color: '#666', fontStyle: 'italic' }}>{t('match.opponentPlayersLocked')}</div>}
     </div>
   );
 };

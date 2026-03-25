@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import { renderWithProviders } from '../../../../utils/test-utils';
 import { OpponentPlayerSelector } from '../OpponentPlayerSelector';
-import { IMatch } from '../../../../models/model-interfaces';
+import { IMatch, IMatchPlayer, IClub } from '../../../../models/model-interfaces';
 import { ClubPlayer } from '../../../../reducers/clubPlayersReducer';
 
 vi.mock('../../../../storeUtil', () => ({
@@ -83,19 +83,20 @@ const testPlayers: ClubPlayer[] = [
   },
 ];
 
-const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch => ({
-  id: 1,
-  competition: 'Vttl',
-  frenoyDivisionId: 1,
-  games: [],
-  opponent: { clubId: 10, teamCode: 'A' },
-  date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) } as any,
-  getOpponentClub: () => ({ codeVttl: 'OB001', codeSporta: '', id: 10, name: 'Test Club' } as any),
-  getTheirPlayers: () => [],
-  getTeamPlayerCount: () => 4,
-  getOwnPlayers: () => [],
-  ...overrides,
-} as any);
+const createMockMatch = (overrides: Partial<IMatch> = {}): IMatch =>
+  ({
+    id: 1,
+    competition: 'Vttl',
+    frenoyDivisionId: 1,
+    games: [],
+    opponent: { clubId: 10, teamCode: 'A' },
+    date: { isBefore: () => false, clone: () => ({ subtract: () => ({ isBefore: () => true }) }) },
+    getOpponentClub: () => ({ codeVttl: 'OB001', codeSporta: '', id: 10, name: 'Test Club' }),
+    getTheirPlayers: () => [] as IMatchPlayer[],
+    getTeamPlayerCount: () => 4 as 3 | 4,
+    getOwnPlayers: () => [] as IMatchPlayer[],
+    ...overrides,
+  }) as unknown as IMatch;
 
 const defaultStoreState = {
   clubPlayers: {
@@ -105,69 +106,53 @@ const defaultStoreState = {
   readonlyMatches: [],
 };
 
-
 describe('OpponentPlayerSelector', () => {
   it('renders select button when form is closed', () => {
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} />, { preloadedState: defaultStoreState });
 
     expect(screen.getByRole('button', { name: /selecteer tegenstanders/i })).toBeInTheDocument();
   });
 
   it('shows location unknown when no club code', () => {
     const match = createMockMatch({
-      getOpponentClub: () => ({ codeVttl: '', codeSporta: '' } as any),
+      getOpponentClub: () => ({ codeVttl: '', codeSporta: '' }) as unknown as IClub,
     });
 
-    renderWithProviders(
-      <OpponentPlayerSelector match={match} />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={match} />, { preloadedState: defaultStoreState });
 
     expect(screen.getByText('Niet gekend')).toBeInTheDocument();
   });
 
   it('shows loading spinner', () => {
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
-      {
-        preloadedState: {
-          ...defaultStoreState,
-          clubPlayers: {
-            players: { 'vttl-ob001': [] },
-            loading: { 'vttl-ob001': true },
-          },
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, {
+      preloadedState: {
+        ...defaultStoreState,
+        clubPlayers: {
+          players: { 'vttl-ob001': [] },
+          loading: { 'vttl-ob001': true },
         },
       },
-    );
+    });
 
     expect(screen.getByText('Laden...')).toBeInTheDocument();
   });
 
   it('shows formation unknown when club players list is empty', () => {
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
-      {
-        preloadedState: {
-          ...defaultStoreState,
-          clubPlayers: {
-            players: { 'vttl-ob001': [] },
-            loading: {},
-          },
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, {
+      preloadedState: {
+        ...defaultStoreState,
+        clubPlayers: {
+          players: { 'vttl-ob001': [] },
+          loading: {},
         },
       },
-    );
+    });
 
     expect(screen.getByText('Opstelling onbekend')).toBeInTheDocument();
   });
 
   it('renders player list when opened with data', () => {
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     testPlayers.forEach(p => {
       expect(screen.getByText(p.name)).toBeInTheDocument();
@@ -177,10 +162,7 @@ describe('OpponentPlayerSelector', () => {
 
   it('filters players with latinize search (accent-insensitive)', async () => {
     const user = userEvent.setup();
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const searchInput = screen.getByPlaceholderText('Zoeken...');
     await user.type(searchInput, 'francois');
@@ -191,35 +173,29 @@ describe('OpponentPlayerSelector', () => {
 
   it('toggles player selection', async () => {
     const user = userEvent.setup();
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    expect(checkboxes[0]).not.toBeChecked();
+    expect(checkboxes[0]!).not.toBeChecked();
 
-    await user.click(checkboxes[0]);
-    expect(checkboxes[0]).toBeChecked();
+    await user.click(checkboxes[0]!);
+    expect(checkboxes[0]!).toBeChecked();
 
-    await user.click(checkboxes[0]);
-    expect(checkboxes[0]).not.toBeChecked();
+    await user.click(checkboxes[0]!);
+    expect(checkboxes[0]!).not.toBeChecked();
   });
 
   it('disables excess players when max reached', async () => {
-    const match = createMockMatch({ getTeamPlayerCount: () => 2 as any });
+    const match = createMockMatch({ getTeamPlayerCount: () => 2 as 3 | 4 });
     const user = userEvent.setup();
-    renderWithProviders(
-      <OpponentPlayerSelector match={match} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
-    await user.click(checkboxes[1]);
+    await user.click(checkboxes[0]!);
+    await user.click(checkboxes[1]!);
 
     // Third checkbox should be disabled
-    expect(checkboxes[2]).toBeDisabled();
+    expect(checkboxes[2]!).toBeDisabled();
   });
 
   it('pre-selects existing opponent players on open', async () => {
@@ -228,13 +204,10 @@ describe('OpponentPlayerSelector', () => {
       { uniqueIndex: 103, name: 'André Van Damme', position: 2, ranking: 'C6' },
     ];
     const match = createMockMatch({
-      getTheirPlayers: () => existingPlayers as any,
+      getTheirPlayers: () => existingPlayers as unknown as IMatchPlayer[],
     });
 
-    renderWithProviders(
-      <OpponentPlayerSelector match={match} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     await waitFor(() => {
       const checkboxes = screen.getAllByRole('checkbox');
@@ -245,17 +218,12 @@ describe('OpponentPlayerSelector', () => {
   });
 
   it('sorts selected players to top of list', async () => {
-    const existingPlayers = [
-      { uniqueIndex: 105, name: 'Pieter De Smet', position: 1, ranking: 'D2' },
-    ];
+    const existingPlayers = [{ uniqueIndex: 105, name: 'Pieter De Smet', position: 1, ranking: 'D2' }];
     const match = createMockMatch({
-      getTheirPlayers: () => existingPlayers as any,
+      getTheirPlayers: () => existingPlayers as unknown as IMatchPlayer[],
     });
 
-    renderWithProviders(
-      <OpponentPlayerSelector match={match} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     await waitFor(() => {
       const labels = screen.getAllByText(/Dupont|Peeters|Van Damme|Janssens|De Smet/);
@@ -265,10 +233,7 @@ describe('OpponentPlayerSelector', () => {
   });
 
   it('allows saving with no players selected', () => {
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const saveButton = screen.getByRole('button', { name: /bewaren/i });
     expect(saveButton).toBeEnabled();
@@ -276,10 +241,7 @@ describe('OpponentPlayerSelector', () => {
 
   it('clears search and refocuses after selecting a player while searching', async () => {
     const user = userEvent.setup();
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const searchInput = screen.getByPlaceholderText('Zoeken...');
     await user.type(searchInput, 'jean');
@@ -300,16 +262,13 @@ describe('OpponentPlayerSelector', () => {
 
   it('does not focus search input when selecting without search text', async () => {
     const user = userEvent.setup();
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     const searchInput = screen.getByPlaceholderText('Zoeken...');
     const checkboxes = screen.getAllByRole('checkbox');
 
     // Click a player without any search text
-    await user.click(checkboxes[0]);
+    await user.click(checkboxes[0]!);
 
     // Search input should NOT be focused
     expect(searchInput).not.toHaveFocus();
@@ -317,14 +276,11 @@ describe('OpponentPlayerSelector', () => {
 
   it('cancel button closes form and resets state', async () => {
     const user = userEvent.setup();
-    renderWithProviders(
-      <OpponentPlayerSelector match={createMockMatch()} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={createMockMatch()} initialOpen />, { preloadedState: defaultStoreState });
 
     // Select a player first
     const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
+    await user.click(checkboxes[0]!);
 
     // Click cancel
     const cancelButton = screen.getByRole('button', { name: /annuleren/i });
@@ -335,16 +291,13 @@ describe('OpponentPlayerSelector', () => {
   });
 
   it('auto-saves when reaching required player count', async () => {
-    const match = createMockMatch({ getTeamPlayerCount: () => 2 as any });
+    const match = createMockMatch({ getTeamPlayerCount: () => 2 as 3 | 4 });
     const user = userEvent.setup();
-    renderWithProviders(
-      <OpponentPlayerSelector match={match} initialOpen />,
-      { preloadedState: defaultStoreState },
-    );
+    renderWithProviders(<OpponentPlayerSelector match={match} initialOpen />, { preloadedState: defaultStoreState });
 
     const checkboxes = screen.getAllByRole('checkbox');
-    await user.click(checkboxes[0]);
-    await user.click(checkboxes[1]);
+    await user.click(checkboxes[0]!);
+    await user.click(checkboxes[1]!);
 
     // Should auto-save and close the form
     await waitFor(() => {

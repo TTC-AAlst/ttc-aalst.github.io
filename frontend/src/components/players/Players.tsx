@@ -80,10 +80,10 @@ export const Players = () => {
       <div>
         <PlayersToolbar
           marginLeft={15}
-          onFilterChange={text => setFilter(text)}
+          onFilterChange={(text: string) => setFilter(text)}
           canSort={tabKey !== 'vttl' && tabKey !== 'sporta'}
-          onSortChange={key => setSort(key)}
-          onSortDirectionChange={key => setSortDir(key)}
+          onSortChange={(key: string) => setSort(key as Competition)}
+          onSortDirectionChange={(key: string) => setSortDir(key as SortDirection)}
           activeSort={sort}
           activeSortDirection={sortDir}
           myPlayerPageUrl={playerUrl || undefined}
@@ -93,19 +93,24 @@ export const Players = () => {
     );
   };
 
-  const tabKeysConfig = [{
-    key: 'gallery',
-    title: t('players.gallery'),
-  }, {
-    key: 'vttl',
-    title: 'Vttl',
-  }, {
-    key: 'sporta',
-    title: 'Sporta',
-  }, {
-    key: 'list',
-    title: t('players.list'),
-  }];
+  const tabKeysConfig = [
+    {
+      key: 'gallery',
+      title: t('players.gallery'),
+    },
+    {
+      key: 'vttl',
+      title: 'Vttl',
+    },
+    {
+      key: 'sporta',
+      title: 'Sporta',
+    },
+    {
+      key: 'list',
+      title: t('players.list'),
+    },
+  ];
   // console.log('config', tabKeysConfig);
   // let selectedTab = viewport.width < 450 ? 'list' : 'gallery';
   // console.log('tabKey', tabKey);
@@ -115,19 +120,19 @@ export const Players = () => {
   // console.log('selectedTab', selectedTab);
 
   return (
-    <div style={{marginTop: 20, marginBottom: 10}}>
+    <div style={{ marginTop: 20, marginBottom: 10 }}>
       <TabbedContainer
         selectedTab={viewport.width < 450 ? 'list' : 'gallery'}
         tabKeys={tabKeysConfig}
         tabRenderer={eventKey => renderTabContent(eventKey)}
-        route={{base: t.route('players'), subs: 'playersTabs'}}
+        route={{ base: t.route('players'), subs: 'playersTabs' }}
         forceTabs
       />
     </div>
   );
 };
 
-const AllPlayers = ({players}: {players: IPlayer[]}) => {
+const AllPlayers = ({ players }: { players: IPlayer[] }) => {
   const viewport = useViewport();
   const user = useTtcSelector(selectUser);
 

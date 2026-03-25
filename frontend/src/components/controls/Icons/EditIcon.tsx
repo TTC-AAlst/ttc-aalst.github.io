@@ -7,9 +7,9 @@ import { Icon, IconProps } from './Icon';
 type EditIconProps = Omit<IconProps, 'fa'> & {
   tooltip?: string;
   tooltipPlacement?: Placement;
-}
+};
 
-export const EditIcon = ({tooltip, tooltipPlacement, ...props}: EditIconProps) => {
+export const EditIcon = ({ tooltip, tooltipPlacement, ...props }: EditIconProps) => {
   const icon = <Icon fa="fa fa-pencil-square-o" {...props} />;
 
   if (tooltip) {

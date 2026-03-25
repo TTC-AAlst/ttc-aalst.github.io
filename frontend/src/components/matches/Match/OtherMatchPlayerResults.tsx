@@ -9,7 +9,7 @@ type OtherMatchPlayerResultsProps = {
   onFullView?: (match: IMatch) => void;
 };
 
-export const OtherMatchPlayerResults = ({match, onFullView}: OtherMatchPlayerResultsProps) => {
+export const OtherMatchPlayerResults = ({ match, onFullView }: OtherMatchPlayerResultsProps) => {
   const [fullView, setFullView] = useState(false);
 
   if (!match) {
@@ -26,7 +26,7 @@ export const OtherMatchPlayerResults = ({match, onFullView}: OtherMatchPlayerRes
 
   const SwitchButton = (
     <div className="col-12 text-center">
-      <button type="button" className="btn btn-outline-secondary" style={{marginTop: 15}} onClick={handleFullViewClick}>
+      <button type="button" className="btn btn-outline-secondary" style={{ marginTop: 15 }} onClick={handleFullViewClick}>
         {fullView ? t('match.report.viewDetails') : t('match.report.viewFull')}
       </button>
     </div>
@@ -44,20 +44,28 @@ export const OtherMatchPlayerResults = ({match, onFullView}: OtherMatchPlayerRes
   return (
     <div className="row">
       <div className="col-sm-6">
-        <h4 style={{marginTop: 5}}>{match.getClub('home')?.name} {match.home.teamCode}</h4>
-        {match.getOwnPlayers().map(ply => <OpponentPlayer ply={ply} key={ply.position} t={t} competition={match.competition} />)}
+        <h4 style={{ marginTop: 5 }}>
+          {match.getClub('home')?.name} {match.home.teamCode}
+        </h4>
+        {match.getOwnPlayers().map(ply => (
+          <OpponentPlayer ply={ply} key={ply.position} t={t} competition={match.competition} />
+        ))}
       </div>
 
       <div className="col-sm-6">
-        <h4>{match.getClub('away')?.name} {match.away.teamCode}</h4>
-        {match.getTheirPlayers().map(ply => <OpponentPlayer ply={ply} key={ply.position} t={t} competition={match.competition} />)}
+        <h4>
+          {match.getClub('away')?.name} {match.away.teamCode}
+        </h4>
+        {match.getTheirPlayers().map(ply => (
+          <OpponentPlayer ply={ply} key={ply.position} t={t} competition={match.competition} />
+        ))}
       </div>
       {SwitchButton}
     </div>
   );
 };
 
-export const OtherMatchPlayerResultsTableRow = ({match, show, colSpan = 5}: OtherMatchPlayerResultsTableRowProps) => {
+export const OtherMatchPlayerResultsTableRow = ({ match, show, colSpan = 5 }: OtherMatchPlayerResultsTableRowProps) => {
   if (!show) {
     return null;
   }
@@ -70,7 +78,6 @@ export const OtherMatchPlayerResultsTableRow = ({match, show, colSpan = 5}: Othe
     </tr>
   );
 };
-
 
 type OtherMatchPlayerResultsTableRowProps = {
   match: IMatch;

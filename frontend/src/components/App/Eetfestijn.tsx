@@ -13,7 +13,6 @@ const eetfestijnStyle = {
   marginBottom: 16,
 };
 
-
 export const Eetfestijn = () => {
   const eetfestijnString = useTtcSelector(state => state.config.params.eetfestijn);
   if (!eetfestijnString) {
@@ -28,25 +27,26 @@ export const Eetfestijn = () => {
   return (
     <Paper style={eetfestijnStyle}>
       <div id="eetfestijn">
-        <h1 style={{fontSize: 26}}>
+        <h1 style={{ fontSize: 26 }}>
           Eetfestijn TTC Aalst
           <br />
           {dayjs(eetfestijn.date).format('ddd DD MMMM YYYY')}
         </h1>
-
-        Van {eetfestijn.hour.from} tot {eetfestijn.hour.to} in zaal
-        &nbsp;
+        Van {eetfestijn.hour.from} tot {eetfestijn.hour.to} in zaal &nbsp;
         <a className="eetfestijn" href={eetfestijn.venue.mapsUrl} target="_blank" rel="noopener noreferrer">
           {eetfestijn.venue.name}
         </a>
         <br />
         {eetfestijn.venue.address}
-
-        <br /><br />
-
+        <br />
+        <br />
         <table width="100%">
           <tbody>
-            <tr><th colSpan={2} style={{textAlign: 'center'}}>Menu</th></tr>
+            <tr>
+              <th colSpan={2} style={{ textAlign: 'center' }}>
+                Menu
+              </th>
+            </tr>
             {eetfestijn.menu.map(menu => (
               <tr key={menu.name}>
                 <td width="99%">
@@ -58,7 +58,6 @@ export const Eetfestijn = () => {
             ))}
           </tbody>
         </table>
-
         {eetfestijn.steunkaart > 0 && (
           <>
             <br />

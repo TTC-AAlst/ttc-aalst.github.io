@@ -1,12 +1,10 @@
- 
-import { AchievementInfo } from "./otherAchievements";
-import { Competition, IMatch, ITeamPlayerStats } from "../../../../models/model-interfaces";
+import { AchievementInfo } from './otherAchievements';
+import { Competition, IMatch, ITeamPlayerStats } from '../../../../models/model-interfaces';
 
 export function getClutchMaster(competition: Competition, playerStats: ITeamPlayerStats[], matches: IMatch[]): AchievementInfo {
-  const clutchCounts: Record<number, { count: number, player: ITeamPlayerStats["ply"] }> = {};
+  const clutchCounts: Record<number, { count: number; player: ITeamPlayerStats['ply'] }> = {};
 
-  const sortedMatches = matches
-    .filter(m => m.shouldBePlayed && m.isSyncedWithFrenoy && m.isPlayed && m.scoreType === 'Won' && m.competition === competition);
+  const sortedMatches = matches.filter(m => m.shouldBePlayed && m.isSyncedWithFrenoy && m.isPlayed && m.scoreType === 'Won' && m.competition === competition);
 
   for (const match of sortedMatches) {
     const requiredPoints = match.competition === 'Sporta' ? 6 : 9;
@@ -32,13 +30,14 @@ export function getClutchMaster(competition: Competition, playerStats: ITeamPlay
           }
 
           if (playerUniqueIndex) {
-            if (!clutchCounts[playerUniqueIndex]) {
+            const existing = clutchCounts[playerUniqueIndex];
+            if (!existing) {
               const player = playerStats.find(stats => stats.ply.getCompetition(competition).uniqueIndex === playerUniqueIndex);
               if (player) {
                 clutchCounts[playerUniqueIndex] = { count: 1, player: player.ply };
               }
             } else {
-              clutchCounts[playerUniqueIndex].count++;
+              existing.count++;
             }
           }
 
@@ -55,11 +54,12 @@ export function getClutchMaster(competition: Competition, playerStats: ITeamPlay
     players: [],
   };
 
-  if (sorted.length === 0) {
+  const first = sorted[0];
+  if (!first) {
     return result;
   }
 
-  const topCount = sorted[0].count;
+  const topCount = first.count;
   const topPlayers = sorted.filter(p => p.count === topCount);
   result.players = topPlayers.map(p => ({
     throphy: `${p.count} keer het beslissende punt`,

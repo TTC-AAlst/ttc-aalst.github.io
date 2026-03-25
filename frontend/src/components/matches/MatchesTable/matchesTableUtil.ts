@@ -1,20 +1,19 @@
-import { IMatch, IMatchPlayerInfo, ITeam, ITeamPlayerInfo } from "../../../models/model-interfaces";
+import { IMatch, IMatchPlayerInfo, ITeam, ITeamPlayerInfo } from '../../../models/model-interfaces';
+import { PlayerRanking } from '../../../models/utils/rankingSorter';
 
 export const tableMatchViewportWidths = {
   frenoyMatchId: 2000,
   other: 2000,
 };
 
-
 export const getTablePlayers = (team: ITeam) => {
   // Matches the sorting with the Excel output (which happens on the backend)
   const comp = team.competition === 'Sporta' ? 'sporta' : 'vttl';
-  return team.getPlayers()
-    .sort((a, b) => {
-      const keyA = `${(a.type === 'Reserve' ? '1' : '0')}${a.player[comp]?.ranking}${a.player.alias}`;
-      const keyB = `${(b.type === 'Reserve' ? '1' : '0')}${b.player[comp]?.ranking}${b.player.alias}`;
-      return keyA.localeCompare(keyB);
-    });
+  return team.getPlayers().sort((a, b) => {
+    const keyA = `${a.type === 'Reserve' ? '1' : '0'}${a.player[comp]?.ranking}${a.player.alias}`;
+    const keyB = `${b.type === 'Reserve' ? '1' : '0'}${b.player[comp]?.ranking}${b.player.alias}`;
+    return keyA.localeCompare(keyB);
+  });
 };
 
 export const getPlayerFormation = (match: IMatch) => {
@@ -28,12 +27,11 @@ export function getRowStripeColor(index: number, match: IMatch, playerId: number
   if (playerId && !forceStriped) {
     const playsThisMatch = match.plays(playerId, 'onlyFinal');
     const playsThisTeam = match.getTeam().plays(playerId);
-    return (playsThisMatch || playsThisTeam) ? '#f9f9f9' : undefined;
+    return playsThisMatch || playsThisTeam ? '#f9f9f9' : undefined;
   }
 
   return index % 2 === 0 ? '#f9f9f9' : undefined;
 }
-
 
 export const toDontKnowPlayer = (match: IMatch, teamPlayer: ITeamPlayerInfo): IMatchPlayerInfo => ({
   id: teamPlayer.player.id,
@@ -45,7 +43,7 @@ export const toDontKnowPlayer = (match: IMatch, teamPlayer: ITeamPlayerInfo): IM
     statusNote: '',
     position: 0,
     name: teamPlayer.player.name,
-    ranking: teamPlayer.player[match.competition.toLowerCase()]?.ranking || '',
+    ranking: (teamPlayer.player[match.competition.toLowerCase() as 'vttl' | 'sporta']?.ranking || 'NG') as PlayerRanking,
     uniqueIndex: 0,
     won: 0,
     home: true,

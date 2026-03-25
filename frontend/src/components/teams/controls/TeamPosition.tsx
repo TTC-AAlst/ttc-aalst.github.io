@@ -7,7 +7,7 @@ type TeamPositionProps = {
   opponent?: ITeamOpponent;
   style?: React.CSSProperties;
   small?: boolean;
-}
+};
 
 const defaultStyle = {
   marginRight: 8,
@@ -19,7 +19,7 @@ const smallStyle = {
   fontSize: 12,
 };
 
-export const TeamPosition = ({team, opponent, style, small}: TeamPositionProps) => {
+export const TeamPosition = ({ team, opponent, style, small }: TeamPositionProps) => {
   const appliedStyle = style || (small ? smallStyle : defaultStyle);
   const ranking = team.getDivisionRanking(opponent);
   if (ranking.empty) {

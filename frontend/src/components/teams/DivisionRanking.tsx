@@ -1,17 +1,16 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
 import cn from 'classnames';
-import {OwnClubId} from '../../models/ClubModel';
-import {OpponentLink} from './controls/OpponentLink';
+import { OwnClubId } from '../../models/ClubModel';
+import { OpponentLink } from './controls/OpponentLink';
 import { t } from '../../locales';
 import { ITeam } from '../../models/model-interfaces';
-
 
 type DivisionRankingProps = {
   team: ITeam;
 };
 
-export const DivisionRanking = ({team}: DivisionRankingProps) => (
+export const DivisionRanking = ({ team }: DivisionRankingProps) => (
   <Table size="sm" hover>
     <thead>
       <tr>
@@ -26,12 +25,12 @@ export const DivisionRanking = ({team}: DivisionRankingProps) => (
     <tbody>
       {team.ranking.map(teamRanking => (
         <tr
-          className={cn({'match-won accentuate': teamRanking.clubId === OwnClubId, irrelevant: teamRanking.isForfait})}
+          className={cn({ 'match-won accentuate': teamRanking.clubId === OwnClubId, irrelevant: teamRanking.isForfait })}
           key={teamRanking.clubId + teamRanking.teamCode}
         >
           <td>{teamRanking.position}</td>
           <td>
-            <OpponentLink team={team} opponent={{clubId: teamRanking.clubId, teamCode: teamRanking.teamCode}} withPosition={false} />
+            <OpponentLink team={team} opponent={{ clubId: teamRanking.clubId, teamCode: teamRanking.teamCode }} withPosition={false} />
           </td>
           <td className="d-none d-sm-table-cell">{teamRanking.gamesWon}</td>
           <td className="d-none d-sm-table-cell">{teamRanking.gamesLost}</td>

@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import {Placement} from 'react-bootstrap/types';
+import { Placement } from 'react-bootstrap/types';
 import t from '../../locales';
 
 type WithTooltipProps = {
@@ -9,7 +9,7 @@ type WithTooltipProps = {
   title?: string;
   translate?: boolean;
   tooltipPlacement?: Placement;
-}
+};
 
 export function withTooltip<P extends object>(ComposedComponent: React.ComponentType<P>) {
   return class WithTooltip extends Component<P & WithTooltipProps> {
@@ -18,11 +18,11 @@ export function withTooltip<P extends object>(ComposedComponent: React.Component
     };
 
     render() {
-      const {tooltip, title, translate, tooltipPlacement, ...props} = this.props;
+      const { tooltip, title, translate, tooltipPlacement, ...props } = this.props;
 
       let realTooltip: string = (tooltip || title || '') as string;
       if (!realTooltip) {
-        return <ComposedComponent {...props as P} />;
+        return <ComposedComponent {...(props as P)} />;
       }
 
       const id = realTooltip;
@@ -32,7 +32,7 @@ export function withTooltip<P extends object>(ComposedComponent: React.Component
 
       return (
         <OverlayTrigger placement={tooltipPlacement} overlay={<Tooltip id={id}>{realTooltip}</Tooltip>}>
-          <ComposedComponent {...props as P} />
+          <ComposedComponent {...(props as P)} />
         </OverlayTrigger>
       );
     }

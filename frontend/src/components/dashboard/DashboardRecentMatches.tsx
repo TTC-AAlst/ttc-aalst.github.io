@@ -46,26 +46,19 @@ export const DashboardRecentMatches = () => {
   }
 
   return (
-    <div style={{marginBottom: 20}}>
-      <Strike text={t('dashboard.recentMatches')} style={{marginBottom: 6}} />
+    <div style={{ marginBottom: 20 }}>
+      <Strike text={t('dashboard.recentMatches')} style={{ marginBottom: 6 }} />
       <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr' : '1fr', gap: 8 }}>
         {userMatches.map(match => (
-          <MatchMiniView
-            key={match.id}
-            match={match}
-          />
+          <MatchMiniView key={match.id} match={match} />
         ))}
       </div>
 
       {otherMatches.length > 0 && (
-        <div style={{marginTop: 12}}>
+        <div style={{ marginTop: 12 }}>
           {!showOtherMatches && (
-            <div style={{textAlign: 'center'}}>
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={() => setShowOtherMatches(!showOtherMatches)}
-              >
+            <div style={{ textAlign: 'center' }}>
+              <Button variant="outline-secondary" size="sm" onClick={() => setShowOtherMatches(!showOtherMatches)}>
                 {t('dashboard.showOtherMatches')}
               </Button>
             </div>
@@ -74,10 +67,7 @@ export const DashboardRecentMatches = () => {
           {showOtherMatches && (
             <div style={{ display: 'grid', gridTemplateColumns: isLargeDevice ? '1fr 1fr' : '1fr', gap: 8, marginTop: 8 }}>
               {otherMatches.map(match => (
-                <MatchMiniView
-                  key={match.id}
-                  match={match}
-                />
+                <MatchMiniView key={match.id} match={match} />
               ))}
             </div>
           )}

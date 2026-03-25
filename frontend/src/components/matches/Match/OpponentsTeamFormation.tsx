@@ -10,11 +10,11 @@ type OpponentsTeamFormationProps = {
   opponent?: ITeamOpponent;
   hideHeader?: boolean;
   limitRows?: boolean;
-}
+};
 
 const INITIAL_ROW_LIMIT = 5;
 
-export const OpponentsTeamFormation = ({matches, opponent, hideHeader, limitRows}: OpponentsTeamFormationProps) => {
+export const OpponentsTeamFormation = ({ matches, opponent, hideHeader, limitRows }: OpponentsTeamFormationProps) => {
   const [showAll, setShowAll] = useState(false);
   const formations = getOpponentFormations(matches, opponent)
     .filter(f => f.value > 0) // Filter out forfeits with no real players
@@ -24,12 +24,12 @@ export const OpponentsTeamFormation = ({matches, opponent, hideHeader, limitRows
   const displayedFormations = shouldLimit ? formations.slice(0, INITIAL_ROW_LIMIT) : formations;
 
   return (
-    <Table size="sm" striped style={{maxWidth: 250}}>
+    <Table size="sm" striped style={{ maxWidth: 250 }}>
       {!hideHeader ? (
         <thead>
           <tr>
             <th colSpan={2}>{t('common.teamFormation')}</th>
-            <th style={{width: 80}}>{t('comp.sporta.rankingValue')}</th>
+            <th style={{ width: 80 }}>{t('comp.sporta.rankingValue')}</th>
           </tr>
         </thead>
       ) : null}
@@ -47,7 +47,7 @@ export const OpponentsTeamFormation = ({matches, opponent, hideHeader, limitRows
         ))}
         {shouldLimit && (
           <tr>
-            <td colSpan={3} style={{textAlign: 'right'}}>
+            <td colSpan={3} style={{ textAlign: 'right' }}>
               <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => setShowAll(true)}>
                 Meer tonen
               </button>

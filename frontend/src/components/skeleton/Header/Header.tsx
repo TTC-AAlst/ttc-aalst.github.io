@@ -15,21 +15,18 @@ import { selectMatchesBeingPlayed, useTtcSelector } from '../../../utils/hooks/s
 
 import './Header.css';
 
-const HeaderButton = ({label, href}: {label: string, href: string}) => (
+const HeaderButton = ({ label, href }: { label: string; href: string }) => (
   <Link to={href}>
-    <Button style={{color: 'white'}}>
-      {label}
-    </Button>
+    <Button style={{ color: 'white' }}>{label}</Button>
   </Link>
 );
 
-
 type HeaderProps = {
-  navOpen: boolean,
-  setNavOpen: (open: boolean) => void,
-}
+  navOpen: boolean;
+  setNavOpen: (open: boolean) => void;
+};
 
-export const Header = ({navOpen, setNavOpen}: HeaderProps) => {
+export const Header = ({ navOpen, setNavOpen }: HeaderProps) => {
   const user = useTtcSelector(state => state.user);
   const matchesToday = useTtcSelector(selectMatchesBeingPlayed);
   const viewport = useViewport();
@@ -37,31 +34,28 @@ export const Header = ({navOpen, setNavOpen}: HeaderProps) => {
   const showCarousel = matchesToday.length > 0;
 
   return (
-    <div style={{flexGrow: 1}}>
+    <div style={{ flexGrow: 1 }}>
       <AppBar position="sticky">
         <Toolbar variant="dense">
-          <IconButton
-            style={{marginLeft: -12, marginRight: 20}}
-            color="inherit"
-            aria-label="Menu"
-            onClick={() => setNavOpen(!navOpen)}
-          >
+          <IconButton style={{ marginLeft: -12, marginRight: 20 }} color="inherit" aria-label="Menu" onClick={() => setNavOpen(!navOpen)}>
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="subtitle1" color="inherit" style={{flexGrow: 1, fontSize: '1.7rem'}}>
+          <Typography variant="subtitle1" color="inherit" style={{ flexGrow: 1, fontSize: '1.7rem' }}>
             {showCarousel && !navOpen ? (
               <HeaderScoreCarousel matches={matchesToday} />
             ) : (
-              <Link className="Header-link" to="/">{navOpen ? null : t('clubName')}</Link>
+              <Link className="Header-link" to="/">
+                {navOpen ? null : t('clubName')}
+              </Link>
             )}
           </Typography>
 
           <div>
             {showExtraNavigationButtons ? (
-              <div style={{display: 'inline-block', textAlign: 'center', width: 300}}>
-                <HeaderButton label={t('common.vttl')} href={t.route('teams', {competition: 'Vttl'})} />
-                <HeaderButton label={t('common.sporta')} href={t.route('teams', {competition: 'Sporta'})} />
+              <div style={{ display: 'inline-block', textAlign: 'center', width: 300 }}>
+                <HeaderButton label={t('common.vttl')} href={t.route('teams', { competition: 'Vttl' })} />
+                <HeaderButton label={t('common.sporta')} href={t.route('teams', { competition: 'Sporta' })} />
                 <HeaderButton label={t('nav.players')} href={t.route('players')} />
               </div>
             ) : null}
@@ -77,10 +71,7 @@ export const Header = ({navOpen, setNavOpen}: HeaderProps) => {
         </Toolbar>
       </AppBar>
 
-      <Navigation
-        navOpen={navOpen}
-        closeNav={() => setNavOpen(false)}
-      />
+      <Navigation navOpen={navOpen} closeNav={() => setNavOpen(false)} />
     </div>
   );
 };

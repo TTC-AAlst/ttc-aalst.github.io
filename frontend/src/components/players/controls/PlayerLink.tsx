@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import t from '../../../locales';
-import {IStorePlayer} from '../../../models/model-interfaces';
+import { IStorePlayer } from '../../../models/model-interfaces';
 import PlayerModel from '../../../models/PlayerModel';
 
 type PlayerLinkProps = {
   player: IStorePlayer;
   /** Allow to show alias */
   alias?: boolean;
-  children?: any;
+  children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-}
+};
 
 export class PlayerLink extends Component<PlayerLinkProps> {
   static defaultProps = {
@@ -19,7 +19,7 @@ export class PlayerLink extends Component<PlayerLinkProps> {
   };
 
   render() {
-    const {player, alias, children, className, ...props} = this.props;
+    const { player, alias, children, className, ...props } = this.props;
     const ply = new PlayerModel(player);
 
     const url = t.route('player').replace(':playerId', encodeURI(ply.slug));
@@ -31,7 +31,7 @@ export class PlayerLink extends Component<PlayerLinkProps> {
   }
 
   getContent() {
-    const {player, alias, children} = this.props;
+    const { player, alias, children } = this.props;
     if (children) {
       return children;
     }

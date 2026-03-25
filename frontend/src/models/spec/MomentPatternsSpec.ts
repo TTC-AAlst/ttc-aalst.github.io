@@ -119,19 +119,9 @@ describe('dayjs API patterns used in codebase', () => {
 
   describe('valueOf sorting with inline dayjs construction (PlayerEvents)', () => {
     it('sorts string dates descending using dayjs(b).valueOf() - dayjs(a).valueOf()', () => {
-      const events = [
-        {createdOn: '2025-03-10T10:00:00'},
-        {createdOn: '2025-03-15T20:00:00'},
-        {createdOn: '2025-03-12T14:00:00'},
-      ];
-      const sorted = [...events].sort(
-        (a, b) => dayjs(b.createdOn).valueOf() - dayjs(a.createdOn).valueOf(),
-      );
-      expect(sorted.map(e => e.createdOn)).toEqual([
-        '2025-03-15T20:00:00',
-        '2025-03-12T14:00:00',
-        '2025-03-10T10:00:00',
-      ]);
+      const events = [{ createdOn: '2025-03-10T10:00:00' }, { createdOn: '2025-03-15T20:00:00' }, { createdOn: '2025-03-12T14:00:00' }];
+      const sorted = [...events].sort((a, b) => dayjs(b.createdOn).valueOf() - dayjs(a.createdOn).valueOf());
+      expect(sorted.map(e => e.createdOn)).toEqual(['2025-03-15T20:00:00', '2025-03-12T14:00:00', '2025-03-10T10:00:00']);
     });
 
     it('handles equal dates in valueOf subtraction', () => {
@@ -307,13 +297,13 @@ describe('dayjs API patterns used in codebase', () => {
 
   describe('invalid input handling (MatchModel constructor, TimeAgo)', () => {
     it('dayjs(null) creates an invalid dayjs', () => {
-      const m = dayjs(null as any);
+      const m = dayjs(null);
       expect(m.isValid()).toBe(false);
       expect(m.format('YYYY-MM-DD')).toBe('Invalid Date');
     });
 
     it('dayjs(undefined) is treated as dayjs() - valid current time', () => {
-      const m = dayjs(undefined as any);
+      const m = dayjs(undefined);
       expect(m.isValid()).toBe(true);
     });
 
