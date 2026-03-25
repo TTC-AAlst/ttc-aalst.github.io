@@ -8,7 +8,7 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -71,8 +71,26 @@ jobs:
     - name: Dependency audit
       run: bun audit --audit-level=high
 
-    # TODO: Wait until we have a gitleaks secret
-    # - name: Secret detection
-    #   uses: gitleaks/gitleaks-action@v2
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - run: dotnet restore Ttc.slnx
+
+    - name: Format check
+      run: dotnet format Ttc.slnx --verify-no-changes --verbosity quiet
+
+    - name: Build
+      run: dotnet build Ttc.slnx --no-restore --verbosity quiet
+
+    - name: Test
+      run: dotnet test Ttc.slnx --no-build --verbosity quiet
