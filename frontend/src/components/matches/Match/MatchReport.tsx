@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import DOMPurify from 'dompurify';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Form from 'react-bootstrap/Form';
 import { PlayerAutoComplete } from '../../players/PlayerAutoComplete';
 import ImageDropzone from '../../controls/image/ImageDropzone';
 const QuillEditor = React.lazy(() => import('../../controls/Editor'));
@@ -155,13 +154,13 @@ export const MatchReport = ({ match, skipContainerClass }: MatchReportProps) => 
         {user.playerId ? (
           <div style={{ width: '100%', paddingTop: 16 }}>
             {commentFormOpen && (
-              <FormControlLabel
-                style={{ float: 'right', textAlign: 'right' }}
-                control={
-                  <Checkbox checked={!comment.hidden} onChange={() => setComment({ ...comment, hidden: !comment.hidden })} value="hidden" color="primary" />
-                }
-                label={t('match.report.commentVisible')}
-              />
+              <div style={{ float: 'right', textAlign: 'right' }}>
+                <Form.Check
+                  checked={!comment.hidden}
+                  onChange={() => setComment({ ...comment, hidden: !comment.hidden })}
+                  label={t('match.report.commentVisible')}
+                />
+              </div>
             )}
 
             <MaterialButton

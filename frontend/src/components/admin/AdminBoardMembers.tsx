@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
+import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
@@ -83,22 +83,27 @@ export const AdminBoardMembers = () => {
 
       <div>
         <br />
-        <TextField
-          label="Specifieke functie omschrijving"
-          onChange={e => {
-            setBoardFunctionCustom(e.target.value);
-            if (e.target.value) {
-              setBoardFunction(ManagerTypeOther);
-            }
-          }}
-          value={boardFunctionCustom}
-        />
+        <Form.Group>
+          <Form.Label>Specifieke functie omschrijving</Form.Label>
+          <Form.Control
+            onChange={e => {
+              setBoardFunctionCustom(e.target.value);
+              if (e.target.value) {
+                setBoardFunction(ManagerTypeOther);
+              }
+            }}
+            value={boardFunctionCustom}
+          />
+        </Form.Group>
       </div>
 
       <br />
       <br />
 
-      <TextField label={t('admin.board.sort')} type="number" onChange={e => setSort(parseInt(e.target.value, 10))} value={sort} />
+      <Form.Group>
+        <Form.Label>{t('admin.board.sort')}</Form.Label>
+        <Form.Control type="number" onChange={e => setSort(parseInt(e.target.value, 10))} value={sort} />
+      </Form.Group>
 
       <br />
 

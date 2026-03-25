@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TextField from '@mui/material/TextField';
+import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
@@ -40,7 +40,10 @@ class AdminChangePassword extends Component<AdminChangePasswordProps, AdminChang
 
         <br />
 
-        <TextField label={t('password.newPassword')} type="password" onChange={e => this.setState({ newPassword: e.target.value })} />
+        <Form.Group>
+          <Form.Label>{t('password.newPassword')}</Form.Label>
+          <Form.Control type="password" onChange={e => this.setState({ newPassword: e.target.value })} />
+        </Form.Group>
 
         <br />
 

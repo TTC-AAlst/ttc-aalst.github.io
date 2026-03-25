@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Avatar from '@mui/material/Avatar';
 import { IPlayer } from '../../../models/model-interfaces';
 import { playerUtils } from '../../../models/PlayerModel';
 import { PlayerLink } from '../../players/controls/PlayerLink';
@@ -133,35 +132,30 @@ export const PlayerPerformanceCard = ({
     );
   };
 
+  const avatarStyle: React.CSSProperties = {
+    width: 80,
+    height: 80,
+    margin: '0 auto 8px',
+    fontSize: '1.5em',
+    backgroundColor: '#bdbdbd',
+    color: '#fff',
+  };
+
   const renderAvatar = () => {
     if (imageError || !player.imageVersion) {
       return (
-        <Avatar
-          style={{
-            width: 80,
-            height: 80,
-            margin: '0 auto 8px',
-            fontSize: '1.5em',
-          }}
-        >
+        <div className="rounded-circle d-flex align-items-center justify-content-center" style={avatarStyle}>
           {player.alias?.[0] || player.firstName?.[0] || '?'}
-        </Avatar>
+        </div>
       );
     }
 
     return (
       <>
         {!imageLoaded && (
-          <Avatar
-            style={{
-              width: 80,
-              height: 80,
-              margin: '0 auto 8px',
-              fontSize: '1.5em',
-            }}
-          >
+          <div className="rounded-circle d-flex align-items-center justify-content-center" style={avatarStyle}>
             {player.alias?.[0] || player.firstName?.[0] || '?'}
-          </Avatar>
+          </div>
         )}
         <img
           src={imageUrl}

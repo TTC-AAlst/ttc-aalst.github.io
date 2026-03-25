@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import MenuItem from '@mui/material/MenuItem';
 import { connect } from 'react-redux';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
 import { PlayersImageGallery } from '../players/PlayersImageGallery';
@@ -67,7 +66,7 @@ class AdminTeamPlayers extends Component<AdminTeamPlayersProps, AdminTeamPlayers
     this.state = { role: 'Standard' };
   }
 
-  _onRoleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  _onRoleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     this.setState({ role: event.target.value as TeamPlayerType });
   }
 
@@ -86,39 +85,41 @@ class AdminTeamPlayers extends Component<AdminTeamPlayersProps, AdminTeamPlayers
     const teamCompetition = team.competition === 'Sporta' ? 'Sporta' : 'Vttl';
     return (
       <div style={{ paddingLeft: 10, paddingRight: 10 }}>
-        <Paper style={{ padding: 20, marginBottom: 20 }}>
-          <h4>
-            {team.renderOwnTeamTitle()}
-            <Button style={{ marginLeft: 20 }} onClick={() => this.props.onFrenoySync({ teamId: team.id })}>
-              Frenoy Sync
-            </Button>
-          </h4>
+        <Card style={{ padding: 20, marginBottom: 20 }}>
+          <Card.Body>
+            <h4>
+              {team.renderOwnTeamTitle()}
+              <Button style={{ marginLeft: 20 }} onClick={() => this.props.onFrenoySync({ teamId: team.id })}>
+                Frenoy Sync
+              </Button>
+            </h4>
 
-          <PlayersImageGallery
-            players={team.getPlayers().map(ply => ply.player)}
-            competition={team.competition}
-            subtitle={this._renderPlayerSubtitle.bind(this, team)}
-            forceSmall
-          />
-
-          <div style={{ clear: 'both' }} />
-
-          <TextField select value={this.state.role} onChange={e => this._onRoleChange(e)} style={{ width: 100, marginRight: 10 }}>
-            {Object.values(teamPlayerType).map(role => (
-              <MenuItem key={role} value={role}>
-                {role}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          <div style={{ width: 250 }}>
-            <PlayerAutoComplete
-              selectPlayer={playerId => playerId !== 'system' && this._onToggleTeamPlayer(playerId)}
-              label="Selecteer speler"
-              competition={teamCompetition}
+            <PlayersImageGallery
+              players={team.getPlayers().map(ply => ply.player)}
+              competition={team.competition}
+              subtitle={this._renderPlayerSubtitle.bind(this, team)}
+              forceSmall
             />
-          </div>
-        </Paper>
+
+            <div style={{ clear: 'both' }} />
+
+            <Form.Select value={this.state.role} onChange={e => this._onRoleChange(e)} style={{ width: 100, marginRight: 10, display: 'inline-block' }}>
+              {Object.values(teamPlayerType).map(role => (
+                <option key={role} value={role}>
+                  {role}
+                </option>
+              ))}
+            </Form.Select>
+
+            <div style={{ width: 250 }}>
+              <PlayerAutoComplete
+                selectPlayer={playerId => playerId !== 'system' && this._onToggleTeamPlayer(playerId)}
+                label="Selecteer speler"
+                competition={teamCompetition}
+              />
+            </div>
+          </Card.Body>
+        </Card>
       </div>
     );
   }

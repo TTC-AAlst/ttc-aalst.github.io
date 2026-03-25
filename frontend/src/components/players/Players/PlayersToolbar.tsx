@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
+import Form from 'react-bootstrap/Form';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { downloadPlayersExcel } from '../../../utils/httpClient';
@@ -31,7 +31,7 @@ export class PlayersToolbar extends Component<PlayersToolbarProps> {
 
     return (
       <div style={{ marginRight: 5, marginLeft, marginBottom: 5 }}>
-        <TextField placeholder={t('players.search')} onChange={e => onFilterChange(e.target.value.toLowerCase())} style={{ width: 150, marginTop: 8 }} />
+        <Form.Control placeholder={t('players.search')} onChange={e => onFilterChange(e.target.value.toLowerCase())} style={{ width: 150, marginTop: 8 }} />
 
         <div className="button-bar-right" style={{ marginTop: 5 }}>
           {this.props.myPlayerPageUrl && (

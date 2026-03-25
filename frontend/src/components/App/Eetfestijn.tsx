@@ -1,5 +1,5 @@
 import React from 'react';
-import Paper from '@mui/material/Paper';
+import Card from 'react-bootstrap/Card';
 import dayjs from 'dayjs';
 import { useTtcSelector } from '../../utils/hooks/storeHooks';
 import { EetfestijnModel } from '../admin/EetfestijnModel';
@@ -25,46 +25,48 @@ export const Eetfestijn = () => {
   }
 
   return (
-    <Paper style={eetfestijnStyle}>
-      <div id="eetfestijn">
-        <h1 style={{ fontSize: 26 }}>
-          Eetfestijn TTC Aalst
-          <br />
-          {dayjs(eetfestijn.date).format('ddd DD MMMM YYYY')}
-        </h1>
-        Van {eetfestijn.hour.from} tot {eetfestijn.hour.to} in zaal &nbsp;
-        <a className="eetfestijn" href={eetfestijn.venue.mapsUrl} target="_blank" rel="noopener noreferrer">
-          {eetfestijn.venue.name}
-        </a>
-        <br />
-        {eetfestijn.venue.address}
-        <br />
-        <br />
-        <table width="100%">
-          <tbody>
-            <tr>
-              <th colSpan={2} style={{ textAlign: 'center' }}>
-                Menu
-              </th>
-            </tr>
-            {eetfestijn.menu.map(menu => (
-              <tr key={menu.name}>
-                <td width="99%">
-                  <b>{menu.name}</b>
-                  &nbsp;{menu.desc}
-                </td>
-                <td width="1%">&euro;{menu.price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {eetfestijn.steunkaart > 0 && (
-          <>
+    <Card style={eetfestijnStyle}>
+      <Card.Body>
+        <div id="eetfestijn">
+          <h1 style={{ fontSize: 26 }}>
+            Eetfestijn TTC Aalst
             <br />
-            <span>Steunkaarten ook beschikbaar voor &euro;{eetfestijn.steunkaart}</span>
-          </>
-        )}
-      </div>
-    </Paper>
+            {dayjs(eetfestijn.date).format('ddd DD MMMM YYYY')}
+          </h1>
+          Van {eetfestijn.hour.from} tot {eetfestijn.hour.to} in zaal &nbsp;
+          <a className="eetfestijn" href={eetfestijn.venue.mapsUrl} target="_blank" rel="noopener noreferrer">
+            {eetfestijn.venue.name}
+          </a>
+          <br />
+          {eetfestijn.venue.address}
+          <br />
+          <br />
+          <table width="100%">
+            <tbody>
+              <tr>
+                <th colSpan={2} style={{ textAlign: 'center' }}>
+                  Menu
+                </th>
+              </tr>
+              {eetfestijn.menu.map(menu => (
+                <tr key={menu.name}>
+                  <td width="99%">
+                    <b>{menu.name}</b>
+                    &nbsp;{menu.desc}
+                  </td>
+                  <td width="1%">&euro;{menu.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {eetfestijn.steunkaart > 0 && (
+            <>
+              <br />
+              <span>Steunkaarten ook beschikbaar voor &euro;{eetfestijn.steunkaart}</span>
+            </>
+          )}
+        </div>
+      </Card.Body>
+    </Card>
   );
 };

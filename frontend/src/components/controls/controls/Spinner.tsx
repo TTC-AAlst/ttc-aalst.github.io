@@ -1,5 +1,5 @@
 import React from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
+import BSSpinner from 'react-bootstrap/Spinner';
 import { Icon } from '../Icons/Icon';
 
 type SpinnerProps = {
@@ -14,6 +14,6 @@ export const Spinner = ({ size = 1 }: SpinnerProps) => (
 
 export const FullScreenSpinner = () => (
   <div style={{ width: 210, margin: 'auto', paddingTop: 75 }}>
-    <CircularProgress color="secondary" size={200} />
+    <BSSpinner animation="border" variant="secondary" style={{ width: 200, height: 200 }} />
   </div>
 );

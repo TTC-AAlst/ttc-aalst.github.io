@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MenuItem, TextField } from '@mui/material';
+import Form from 'react-bootstrap/Form';
 import TeamModel from '../../models/TeamModel';
 import { t } from '../../locales';
 import PlayerLineup from './PlayerLineup';
@@ -14,16 +14,16 @@ export const CaptainPlayerLineup = ({ teams }: CaptainPlayerLineupProps) => {
 
   return (
     <div style={{ padding: 10 }}>
-      <TextField select value={playerId} onChange={e => setPlayerId(+e.target.value)} style={{ width: 250, marginRight: 10 }}>
-        <MenuItem key="0" value={0} style={{ color: 'gray' }}>
+      <Form.Select value={playerId} onChange={e => setPlayerId(+e.target.value)} style={{ width: 250, marginRight: 10 }}>
+        <option key="0" value={0} style={{ color: 'gray' }}>
           {t('profile.editCaptainSelectPlayer')}
-        </MenuItem>
+        </option>
         {players.map(ply => (
-          <MenuItem key={ply.player.id} value={ply.player.id}>
+          <option key={ply.player.id} value={ply.player.id}>
             {ply.player.alias}
-          </MenuItem>
+          </option>
         ))}
-      </TextField>
+      </Form.Select>
 
       {playerId > 0 && (
         <div style={{ marginTop: 25 }}>

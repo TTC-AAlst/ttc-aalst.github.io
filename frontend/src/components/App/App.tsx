@@ -2,9 +2,8 @@ import React, { Suspense, useEffect, useRef, useState } from 'react';
 import ReactGA from 'react-ga4';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Toast from 'react-bootstrap/Toast';
+import ToastContainer from 'react-bootstrap/ToastContainer';
 import { Header } from '../skeleton/Header/Header';
 import { Footer } from '../skeleton/Footer/Footer';
 import { FullScreenSpinner } from '../controls/controls/Spinner';
@@ -47,33 +46,28 @@ export const App = ({ Component }: { Component: React.ComponentType }) => {
 
   return (
     <div id="react">
-      <ThemeProvider theme={createTheme()}>
-        <div style={{ height: '100%' }}>
-          <div className="wrapper">
-            <Header navOpen={navOpen} setNavOpen={setNavOpen} />
-            <Container style={containerStyle} ref={ref}>
-              <ErrorBoundary>
-                <Suspense fallback={<FullScreenSpinner />}>
-                  <Component />
-                </Suspense>
-              </ErrorBoundary>
-            </Container>
-            <div className="push" />
-          </div>
-          {!isBigTodayMatches ? <Footer /> : null}
-          <Snackbar
-            open={!!config.snackbar}
-            message={config.snackbar}
-            autoHideDuration={3000}
-            onClose={() => dispatch(clearSnackbar())}
-            action={
-              <IconButton size="small" aria-label="close" color="inherit" onClick={() => dispatch(clearSnackbar())}>
-                <i className="fa fa-times" />
-              </IconButton>
-            }
-          />
+      <div style={{ height: '100%' }}>
+        <div className="wrapper">
+          <Header navOpen={navOpen} setNavOpen={setNavOpen} />
+          <Container style={containerStyle} ref={ref}>
+            <ErrorBoundary>
+              <Suspense fallback={<FullScreenSpinner />}>
+                <Component />
+              </Suspense>
+            </ErrorBoundary>
+          </Container>
+          <div className="push" />
         </div>
-      </ThemeProvider>
+        {!isBigTodayMatches ? <Footer /> : null}
+        <ToastContainer position="bottom-start" className="p-3">
+          <Toast show={!!config.snackbar} onClose={() => dispatch(clearSnackbar())} delay={3000} autohide bg="dark">
+            <Toast.Body className="text-white d-flex justify-content-between align-items-center">
+              {config.snackbar}
+              <button type="button" className="btn-close btn-close-white ms-2" aria-label="close" onClick={() => dispatch(clearSnackbar())} />
+            </Toast.Body>
+          </Toast>
+        </ToastContainer>
+      </div>
     </div>
   );
 };

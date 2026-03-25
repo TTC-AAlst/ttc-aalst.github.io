@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
+import Form from 'react-bootstrap/Form';
+import Card from 'react-bootstrap/Card';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { IClub, IClubLocation } from '../../models/model-interfaces';
 import { t } from '../../locales';
@@ -33,58 +31,46 @@ type LocationEditorProps = {
 const LocationEditor = ({ location, onChange, onRemove, title }: LocationEditorProps) => {
   const fieldMargin = 15;
   return (
-    <Paper style={{ padding: 15, marginTop: 15 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h4>{title}</h4>
-        {onRemove && (
-          <IconButton onClick={onRemove} size="small" title="Verwijderen">
-            <i className="fa fa-times" />
-          </IconButton>
-        )}
-      </div>
-      <TextField
-        style={{ width: 300, marginRight: fieldMargin }}
-        label={t('Beschrijving')}
-        value={location.description}
-        onChange={e => onChange({ ...location, description: e.target.value })}
-      />
-      <TextField
-        style={{ width: 200, marginRight: fieldMargin }}
-        label={t('Telefoon')}
-        value={location.mobile}
-        onChange={e => onChange({ ...location, mobile: e.target.value })}
-      />
-      <br />
-      <br />
-      <TextField
-        style={{ width: 300, marginRight: fieldMargin }}
-        label={t('Adres')}
-        value={location.address}
-        onChange={e => onChange({ ...location, address: e.target.value })}
-      />
-      <TextField
-        style={{ width: 100, marginRight: fieldMargin }}
-        label={t('Postcode')}
-        value={location.postalCode}
-        onChange={e => onChange({ ...location, postalCode: e.target.value })}
-      />
-      <TextField
-        style={{ width: 200, marginRight: fieldMargin }}
-        label={t('Gemeente')}
-        value={location.city}
-        onChange={e => onChange({ ...location, city: e.target.value })}
-      />
-      <br />
-      <br />
-      <TextField
-        style={{ width: 630 }}
-        label={t('Opmerking')}
-        value={location.comment}
-        onChange={e => onChange({ ...location, comment: e.target.value })}
-        multiline
-        rows={3}
-      />
-    </Paper>
+    <Card style={{ padding: 15, marginTop: 15 }}>
+      <Card.Body>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h4>{title}</h4>
+          {onRemove && (
+            <button className="btn btn-link btn-sm" onClick={onRemove} title="Verwijderen">
+              <i className="fa fa-times" />
+            </button>
+          )}
+        </div>
+        <Form.Group style={{ width: 300, display: 'inline-block', marginRight: fieldMargin }}>
+          <Form.Label>{t('Beschrijving')}</Form.Label>
+          <Form.Control value={location.description} onChange={e => onChange({ ...location, description: e.target.value })} />
+        </Form.Group>
+        <Form.Group style={{ width: 200, display: 'inline-block', marginRight: fieldMargin }}>
+          <Form.Label>{t('Telefoon')}</Form.Label>
+          <Form.Control value={location.mobile} onChange={e => onChange({ ...location, mobile: e.target.value })} />
+        </Form.Group>
+        <br />
+        <br />
+        <Form.Group style={{ width: 300, display: 'inline-block', marginRight: fieldMargin }}>
+          <Form.Label>{t('Adres')}</Form.Label>
+          <Form.Control value={location.address} onChange={e => onChange({ ...location, address: e.target.value })} />
+        </Form.Group>
+        <Form.Group style={{ width: 100, display: 'inline-block', marginRight: fieldMargin }}>
+          <Form.Label>{t('Postcode')}</Form.Label>
+          <Form.Control value={location.postalCode} onChange={e => onChange({ ...location, postalCode: e.target.value })} />
+        </Form.Group>
+        <Form.Group style={{ width: 200, display: 'inline-block', marginRight: fieldMargin }}>
+          <Form.Label>{t('Gemeente')}</Form.Label>
+          <Form.Control value={location.city} onChange={e => onChange({ ...location, city: e.target.value })} />
+        </Form.Group>
+        <br />
+        <br />
+        <Form.Group style={{ width: 630 }}>
+          <Form.Label>{t('Opmerking')}</Form.Label>
+          <Form.Control as="textarea" rows={3} value={location.comment} onChange={e => onChange({ ...location, comment: e.target.value })} />
+        </Form.Group>
+      </Card.Body>
+    </Card>
   );
 };
 
@@ -118,25 +104,22 @@ const AdminClubForm = ({ club: initialClub, updateClub, onEnd }: AdminClubFormPr
     <div style={{ marginLeft: 10, marginRight: 10 }}>
       <h3>{club.name}</h3>
       <div>
-        <Paper style={{ padding: 15 }}>
-          <h4>Gegevens</h4>
-          <TextField
-            style={{ width: 200, marginRight: fieldMargin }}
-            label={t('Naam')}
-            value={club.name}
-            onChange={e => setClub({ ...club, name: e.target.value })}
-          />
+        <Card style={{ padding: 15 }}>
+          <Card.Body>
+            <h4>Gegevens</h4>
+            <Form.Group style={{ width: 200, display: 'inline-block', marginRight: fieldMargin }}>
+              <Form.Label>{t('Naam')}</Form.Label>
+              <Form.Control value={club.name} onChange={e => setClub({ ...club, name: e.target.value })} />
+            </Form.Group>
 
-          <TextField
-            style={{ width: 300, marginRight: fieldMargin }}
-            label={t('Website')}
-            value={club.website || ''}
-            onChange={e => setClub({ ...club, website: e.target.value })}
-          />
+            <Form.Group style={{ width: 300, display: 'inline-block', marginRight: fieldMargin }}>
+              <Form.Label>{t('Website')}</Form.Label>
+              <Form.Control value={club.website || ''} onChange={e => setClub({ ...club, website: e.target.value })} />
+            </Form.Group>
 
-          <Checkbox checked={club.shower} onChange={() => setClub({ ...club, shower: !club.shower })} value="hasShower" />
-          {t('Shower')}
-        </Paper>
+            <Form.Check type="checkbox" inline checked={club.shower} onChange={() => setClub({ ...club, shower: !club.shower })} label={t('Shower')} />
+          </Card.Body>
+        </Card>
 
         <LocationEditor location={club.mainLocation} onChange={handleMainLocationChange} title="Hoofdlocatie" />
 

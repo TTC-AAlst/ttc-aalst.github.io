@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Avatar from '@mui/material/Avatar';
 import { playerUtils } from '../../models/PlayerModel';
 import { PlayerLink } from './controls/PlayerLink';
 import { withTooltip } from '../../utils/decorators/withTooltip';
@@ -30,18 +29,35 @@ class PlayerAvatar extends Component<PlayerAvatarProps, PlayerAvatarState> {
   }
 
   render() {
-    const { player, ...props } = this.props;
+    const { player, style, ...props } = this.props;
+    const baseStyle: React.CSSProperties = {
+      width: 40,
+      height: 40,
+      backgroundColor: '#bdbdbd',
+      color: '#fff',
+      fontSize: '1.25rem',
+      ...style,
+    };
+
     if (!this.state.isLoaded) {
       return (
         <PlayerLink player={player} className="">
-          <Avatar {...props}>{player.alias[0]}</Avatar>
+          <div className="rounded-circle d-flex align-items-center justify-content-center" style={baseStyle} {...props}>
+            {player.alias[0]}
+          </div>
         </PlayerLink>
       );
     }
 
     return (
       <PlayerLink player={player} className="">
-        <Avatar {...props} src={this.state.img} />
+        <img
+          className="rounded-circle"
+          src={this.state.img}
+          alt={player.alias}
+          style={{ width: baseStyle.width, height: baseStyle.height, objectFit: 'cover', ...style }}
+          {...props}
+        />
       </PlayerLink>
     );
   }

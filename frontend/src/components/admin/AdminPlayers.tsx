@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import Table from 'react-bootstrap/Table';
-import TextField from '@mui/material/TextField';
+import Form from 'react-bootstrap/Form';
 import { AdminPlayerForm } from './AdminPlayerForm';
 import AdminChangePassword from './AdminChangePassword';
 import { AdminBoardMembers } from './AdminBoardMembers';
@@ -89,7 +89,7 @@ export const AdminPlayers = () => {
 
       {playersContent ? (
         <div>
-          <TextField placeholder="Zoek speler" onChange={e => setPlayerFilter(e.target.value.toLowerCase())} style={{ width: 200, marginLeft: 10 }} />
+          <Form.Control placeholder="Zoek speler" onChange={e => setPlayerFilter(e.target.value.toLowerCase())} style={{ width: 200, marginLeft: 10 }} />
 
           <button type="button" className="btn btn-outline-secondary pull-right" style={{ marginRight: 15 }} onClick={() => dispatch(frenoySync())}>
             Frenoy Sync

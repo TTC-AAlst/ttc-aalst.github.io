@@ -1,12 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Drawer from '@mui/material/Drawer';
-import MenuItem from '@mui/material/MenuItem';
-import Divider from '@mui/material/Divider';
-import Badge from '@mui/material/Badge';
-import AppBar from '@mui/material/AppBar';
-import Typography from '@mui/material/Typography';
-import Toolbar from '@mui/material/Toolbar';
+import { Badge, Offcanvas } from 'react-bootstrap';
 import { t } from '../../../locales';
 import { selectMatchesBeingPlayed, selectPlayers, selectUser, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import PlayerModel from '../../../models/PlayerModel';
@@ -35,41 +29,75 @@ export const Navigation = ({ navOpen, closeNav }: NavigationProps) => {
   };
 
   return (
-    <Drawer open={navOpen} onClose={closeNav}>
-      <AppBar>
-        <Toolbar variant="dense">
-          <Typography className="clickable" variant="subtitle1" color="inherit" style={{ flexGrow: 1, fontSize: '1.7rem' }} onClick={closeNav}>
-            {t('clubName')}
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <Offcanvas show={navOpen} onHide={closeNav} placement="start">
+      <Offcanvas.Header closeButton className="bg-primary text-white">
+        <Offcanvas.Title className="clickable" style={{ fontSize: '1.7rem' }} onClick={closeNav}>
+          {t('clubName')}
+        </Offcanvas.Title>
+      </Offcanvas.Header>
 
-      <div style={{ marginTop: 60, width: 250 }}>
-        <MenuItem onClick={() => goto('/')}>{t('nav.home')}</MenuItem>
-        <MenuItem onClick={() => goto(t.route('matches'))}>{t('nav.matches')}</MenuItem>
-        {matchesToday.length ? (
-          <MenuItem onClick={() => goto(t.route('matchesToday'))}>
-            <Badge badgeContent={matchesToday.length} color="secondary">
-              {t('nav.matchesToday')}
-            </Badge>
-          </MenuItem>
-        ) : null}
-        <MenuItem onClick={() => goto(t.route('matchesWeek'))}>{t('nav.matchesWeek')}</MenuItem>
-        <MenuItem onClick={() => goto(t.route('teams', { competition: 'Vttl' }))}>{t('nav.teamsVttl')}</MenuItem>
-        <MenuItem onClick={() => goto(t.route('teams', { competition: 'Sporta' }))}>{t('nav.teamsSporta')}</MenuItem>
-        {hasYouthTeam && <MenuItem onClick={() => goto(t.route('teams', { competition: 'Jeugd' }))}>{t('nav.teamsJeugd')}</MenuItem>}
-        {currentPlayer && <MenuItem onClick={() => goto(playerUrl)}>{t('nav.myPlayerPage')}</MenuItem>}
-        <MenuItem onClick={() => goto(t.route('players'))}>{t('nav.players')}</MenuItem>
-        {user.isAdmin() ? <MenuItem onClick={() => goto(t.route('admin'))}>{t('nav.admin')}</MenuItem> : null}
-        <Divider />
-        <MenuItem onClick={() => goto(t.route('generalInfo'))}>{t('nav.generalInfo')}</MenuItem>
-        <MenuItem onClick={() => goto(t.route('administration'))}>{t('nav.administration')}</MenuItem>
-        <MenuItem onClick={() => goto(t.route('links'))}>{t('nav.links')}</MenuItem>
-        <MenuItem onClick={() => goto(t.route('facts'))}>{t('nav.facts')}</MenuItem>
-        <MenuItem onClick={handleClickHelpButton}>{t('nav.help')}</MenuItem>
-        <MenuItem onClick={closeNav}>{t('nav.closeMenu')}</MenuItem>
-        <Divider />
-      </div>
-    </Drawer>
+      <Offcanvas.Body className="p-0">
+        <div className="list-group list-group-flush">
+          <button className="list-group-item list-group-item-action" onClick={() => goto('/')}>
+            {t('nav.home')}
+          </button>
+          <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('matches'))}>
+            {t('nav.matches')}
+          </button>
+          {matchesToday.length ? (
+            <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('matchesToday'))}>
+              {t('nav.matchesToday')} <Badge bg="secondary">{matchesToday.length}</Badge>
+            </button>
+          ) : null}
+          <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('matchesWeek'))}>
+            {t('nav.matchesWeek')}
+          </button>
+          <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('teams', { competition: 'Vttl' }))}>
+            {t('nav.teamsVttl')}
+          </button>
+          <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('teams', { competition: 'Sporta' }))}>
+            {t('nav.teamsSporta')}
+          </button>
+          {hasYouthTeam && (
+            <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('teams', { competition: 'Jeugd' }))}>
+              {t('nav.teamsJeugd')}
+            </button>
+          )}
+          {currentPlayer && (
+            <button className="list-group-item list-group-item-action" onClick={() => goto(playerUrl)}>
+              {t('nav.myPlayerPage')}
+            </button>
+          )}
+          <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('players'))}>
+            {t('nav.players')}
+          </button>
+          {user.isAdmin() ? (
+            <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('admin'))}>
+              {t('nav.admin')}
+            </button>
+          ) : null}
+          <hr className="my-0" />
+          <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('generalInfo'))}>
+            {t('nav.generalInfo')}
+          </button>
+          <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('administration'))}>
+            {t('nav.administration')}
+          </button>
+          <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('links'))}>
+            {t('nav.links')}
+          </button>
+          <button className="list-group-item list-group-item-action" onClick={() => goto(t.route('facts'))}>
+            {t('nav.facts')}
+          </button>
+          <button className="list-group-item list-group-item-action" onClick={handleClickHelpButton}>
+            {t('nav.help')}
+          </button>
+          <button className="list-group-item list-group-item-action" onClick={closeNav}>
+            {t('nav.closeMenu')}
+          </button>
+          <hr className="my-0" />
+        </div>
+      </Offcanvas.Body>
+    </Offcanvas>
   );
 };

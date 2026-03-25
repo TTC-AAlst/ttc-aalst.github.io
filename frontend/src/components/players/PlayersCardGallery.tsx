@@ -1,6 +1,5 @@
 import React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import Card from 'react-bootstrap/Card';
 import { PlayerImage } from './PlayerImage';
 import { PlayerCard } from './PlayerCard';
 import { PlayerLink } from './controls/PlayerLink';
@@ -32,7 +31,7 @@ export const PlayersCardGallery = ({ players, competition }: PlayersCardGalleryP
         return (
           <div key={player.id} style={{ paddingBottom: 10, textAlign: 'center' }}>
             <Card>
-              <CardContent>
+              <Card.Body>
                 <h4>
                   <PlayerLink player={player} />
                   <small style={{ marginLeft: 6 }}>{comp.ranking}</small>
@@ -40,7 +39,7 @@ export const PlayersCardGallery = ({ players, competition }: PlayersCardGalleryP
                   <small>{player.style && player.style.name ? player.style.name : null}</small>
                 </h4>
                 <PlayerImage playerId={player.id} center shape="thumbnail" />
-              </CardContent>
+              </Card.Body>
             </Card>
           </div>
         );

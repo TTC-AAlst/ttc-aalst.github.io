@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
-import TextField from '@mui/material/TextField';
+import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
 import AdminClubForm from './AdminClubForm';
 import { EditButton } from '../controls/Buttons/EditButton';
@@ -38,7 +38,7 @@ class AdminClubs extends Component<AdminClubsProps, AdminClubsState> {
     return (
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-          <TextField
+          <Form.Control
             placeholder="Zoek club"
             onChange={e => this.setState({ clubFilter: e.target.value.toLowerCase() })}
             style={{ width: 150, marginLeft: 10 }}

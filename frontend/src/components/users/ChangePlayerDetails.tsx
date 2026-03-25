@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
+import Form from 'react-bootstrap/Form';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
 import { IStorePlayer } from '../../models/model-interfaces';
@@ -23,13 +23,25 @@ export const ChangePlayerDetails = ({ player }: { player: IStorePlayer }) => {
     <div style={paperStyle}>
       <h3>{t('profile.editDetails')}</h3>
 
-      <TextField label={t('player.email')} defaultValue={email} onChange={e => setEmail(e.target.value)} />
+      <Form.Group>
+        <Form.Label>{t('player.email')}</Form.Label>
+        <Form.Control defaultValue={email} onChange={e => setEmail(e.target.value)} />
+      </Form.Group>
 
-      <TextField label={t('player.gsm')} type="number" defaultValue={mobile} onChange={e => setMobile(e.target.value)} />
+      <Form.Group>
+        <Form.Label>{t('player.gsm')}</Form.Label>
+        <Form.Control type="number" defaultValue={mobile} onChange={e => setMobile(e.target.value)} />
+      </Form.Group>
 
-      <TextField label={t('player.address')} defaultValue={address} onChange={e => setAddress(e.target.value)} />
+      <Form.Group>
+        <Form.Label>{t('player.address')}</Form.Label>
+        <Form.Control defaultValue={address} onChange={e => setAddress(e.target.value)} />
+      </Form.Group>
 
-      <TextField label={t('player.city')} defaultValue={city} onChange={e => setCity(e.target.value)} />
+      <Form.Group>
+        <Form.Label>{t('player.city')}</Form.Label>
+        <Form.Control defaultValue={city} onChange={e => setCity(e.target.value)} />
+      </Form.Group>
 
       <MaterialButton
         variant="contained"

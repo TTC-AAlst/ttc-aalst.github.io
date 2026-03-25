@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Paper from '@mui/material/Paper';
+import Card from 'react-bootstrap/Card';
 
 type SponsorWrapperProps = Omit<ImageSponsorProps, 'img'> & Partial<Pick<ImageSponsorProps, 'img'>>;
 
@@ -44,15 +44,17 @@ class ImageSponsor extends Component<ImageSponsorProps> {
     const style = this.props.big ? bottomSponsorsStyleBig : bottomSponsorsStyleSmall;
     const img = <img src={`/img/sponsors/${this.props.img}`} alt="Sponsor logo" style={imgStyle} />;
     return (
-      <Paper style={{ ...style, ...this.props.style }}>
-        {this.props.url ? (
-          <a href={this.props.url} target="_blank" rel="noopener noreferrer">
-            {img}
-          </a>
-        ) : (
-          img
-        )}
-      </Paper>
+      <Card style={{ ...style, ...this.props.style }}>
+        <Card.Body style={{ padding: 0 }}>
+          {this.props.url ? (
+            <a href={this.props.url} target="_blank" rel="noopener noreferrer">
+              {img}
+            </a>
+          ) : (
+            img
+          )}
+        </Card.Body>
+      </Card>
     );
   }
 }

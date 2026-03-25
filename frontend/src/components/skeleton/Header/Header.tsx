@@ -1,10 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import { Button, Container, Navbar } from 'react-bootstrap';
 import { Navigation } from './HeaderNavigation';
 import { HeaderScoreCarousel } from './HeaderScoreCarousel';
 import { Icon } from '../../controls/Icons/Icon';
@@ -16,7 +12,9 @@ import './Header.css';
 
 const HeaderButton = ({ label, href }: { label: string; href: string }) => (
   <Link to={href}>
-    <Button style={{ color: 'white' }}>{label}</Button>
+    <Button variant="link" style={{ color: 'white' }}>
+      {label}
+    </Button>
   </Link>
 );
 
@@ -34,13 +32,13 @@ export const Header = ({ navOpen, setNavOpen }: HeaderProps) => {
 
   return (
     <div style={{ flexGrow: 1 }}>
-      <AppBar position="sticky">
-        <Toolbar variant="dense">
-          <IconButton style={{ marginLeft: -12, marginRight: 20 }} color="inherit" aria-label="Menu" onClick={() => setNavOpen(!navOpen)}>
+      <Navbar bg="primary" sticky="top" data-bs-theme="dark">
+        <Container fluid>
+          <button className="btn btn-link text-white" style={{ marginLeft: -12, marginRight: 20 }} aria-label="Menu" onClick={() => setNavOpen(!navOpen)}>
             <i className="fa fa-bars" />
-          </IconButton>
+          </button>
 
-          <Typography variant="subtitle1" color="inherit" style={{ flexGrow: 1, fontSize: '1.7rem' }}>
+          <span style={{ flexGrow: 1, fontSize: '1.7rem' }}>
             {showCarousel && !navOpen ? (
               <HeaderScoreCarousel matches={matchesToday} />
             ) : (
@@ -48,7 +46,7 @@ export const Header = ({ navOpen, setNavOpen }: HeaderProps) => {
                 {navOpen ? null : t('clubName')}
               </Link>
             )}
-          </Typography>
+          </span>
 
           <div>
             {showExtraNavigationButtons ? (
@@ -67,8 +65,8 @@ export const Header = ({ navOpen, setNavOpen }: HeaderProps) => {
               </Link>
             )}
           </div>
-        </Toolbar>
-      </AppBar>
+        </Container>
+      </Navbar>
 
       <Navigation navOpen={navOpen} closeNav={() => setNavOpen(false)} />
     </div>

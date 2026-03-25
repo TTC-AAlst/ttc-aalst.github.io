@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, Grid2, IconButton, TextField, Typography } from '@mui/material';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
@@ -12,50 +15,53 @@ export const AdminEvents = () => {
   const dispatch = useTtcDispatch();
 
   return (
-    <Box sx={{ mt: 2 }}>
-      <Grid2 container spacing={1}>
-        <Grid2 size={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="mt-2">
+      <Row className="g-1">
+        <Col xs={12}>
+          <div className="d-flex justify-content-between align-items-center">
             <h3>Beheer Events</h3>
-            <Button variant="contained" startIcon={<i className="fa fa-plus" />} onClick={() => setEvents([...events, ''])} size="small">
-              Voeg Event Toe
+            <Button variant="primary" size="sm" onClick={() => setEvents([...events, ''])}>
+              <i className="fa fa-plus" /> Voeg Event Toe
             </Button>
-          </Box>
-        </Grid2>
+          </div>
+        </Col>
 
         {events.map((event, index) => (
-          <>
-            <Grid2 size={11} key={index} mb={1}>
-              <TextField
-                fullWidth
-                label="Event"
-                value={event}
-                onChange={e =>
-                  setEvents(
-                    events.map((item, i) => {
-                      if (i === index) {
-                        return e.target.value;
-                      }
-                      return item;
-                    }),
-                  )
-                }
-              />
-            </Grid2>
-            <IconButton onClick={() => setEvents(events.filter((_, i) => i !== index))} color="error" size="small">
-              <i className="fa fa-trash-o" />
-            </IconButton>
-          </>
+          <React.Fragment key={index}>
+            <Col xs={11} className="mb-1">
+              <Form.Group>
+                <Form.Label>Event</Form.Label>
+                <Form.Control
+                  value={event}
+                  onChange={e =>
+                    setEvents(
+                      events.map((item, i) => {
+                        if (i === index) {
+                          return e.target.value;
+                        }
+                        return item;
+                      }),
+                    )
+                  }
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={1} className="d-flex align-items-end mb-1">
+              <button className="btn btn-link btn-sm" onClick={() => setEvents(events.filter((_, i) => i !== index))}>
+                <i className="fa fa-trash-o text-danger" />
+              </button>
+            </Col>
+          </React.Fragment>
         ))}
 
         {events.length === 0 && (
-          <Grid2 size={12}>
-            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 1 }}>
+          <Col xs={12}>
+            <p className="text-muted small" style={{ textAlign: 'center', paddingTop: 4, paddingBottom: 4 }}>
               Geen actieve events. Klik op &quot;Voeg Event Toe&quot; om te beginnen.
-            </Typography>
-          </Grid2>
+            </p>
+          </Col>
         )}
-      </Grid2>
+      </Row>
 
       <div style={{ paddingTop: 10 }}>
         <MaterialButton
@@ -66,6 +72,6 @@ export const AdminEvents = () => {
           onClick={() => dispatch(saveConfig({ key: 'events', value: JSON.stringify(events) }))}
         />
       </div>
-    </Box>
+    </div>
   );
 };

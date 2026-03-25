@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
 import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
@@ -24,35 +24,40 @@ export const Login = () => {
   const navigate = useNavigate();
 
   return (
-    <Paper style={{ ...paperStyle, height: 425 }}>
-      <h3>{t('login.title')}</h3>
-      <div>{t('login.introText')}</div>
+    <Card style={{ ...paperStyle, height: 425 }}>
+      <Card.Body>
+        <h3>{t('login.title')}</h3>
+        <div>{t('login.introText')}</div>
 
-      <br />
+        <br />
 
-      <PlayerAutoComplete selectPlayer={id => setPlayerId(id)} label={t('login.loginName')} style={{ margin: 10 }} />
+        <PlayerAutoComplete selectPlayer={id => setPlayerId(id)} label={t('login.loginName')} style={{ margin: 10 }} />
 
-      <br />
+        <br />
 
-      <TextField label={t('login.password')} placeholder={t('login.passwordHint')} type="password" fullWidth onChange={e => setPassword(e.target.value)} />
+        <Form.Group>
+          <Form.Label>{t('login.password')}</Form.Label>
+          <Form.Control placeholder={t('login.passwordHint')} type="password" onChange={e => setPassword(e.target.value)} />
+        </Form.Group>
 
-      <br />
-      <br />
+        <br />
+        <br />
 
-      <MaterialButton
-        variant="contained"
-        label={t('login.loginButton')}
-        color="primary"
-        style={{ marginTop: 15, width: '100%' }}
-        onClick={() => dispatch(login({ playerId, password, navigate }))}
-        disabled={!playerId}
-      />
+        <MaterialButton
+          variant="contained"
+          label={t('login.loginButton')}
+          color="primary"
+          style={{ marginTop: 15, width: '100%' }}
+          onClick={() => dispatch(login({ playerId, password, navigate }))}
+          disabled={!playerId}
+        />
 
-      <br />
-      <br />
-      <Link to={t.route('forgotPassword')} className="pull-right" style={{ marginTop: 20, marginRight: 10, fontSize: 18 }}>
-        {t('password.forgotLink')}
-      </Link>
-    </Paper>
+        <br />
+        <br />
+        <Link to={t.route('forgotPassword')} className="pull-right" style={{ marginTop: 20, marginRight: 10, fontSize: 18 }}>
+          {t('password.forgotLink')}
+        </Link>
+      </Card.Body>
+    </Card>
   );
 };

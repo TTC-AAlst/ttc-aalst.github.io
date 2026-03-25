@@ -1,7 +1,4 @@
 import React from 'react';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { playerUtils } from '../../models/PlayerModel';
 import { PlayerPlayingStyle, PlayerPlayingStyleForm } from './PlayerPlayingStyle';
 import { PlayerImage } from './PlayerImage';
@@ -41,29 +38,40 @@ export const PlayersImageGallery = ({ competition, players, ...props }: PlayersI
   // This one is used in the MatchCard
 
   if (viewport.width > 600 && !props.forceSmall) {
+    const cols = Math.min(5, Math.floor(viewport.width / (props.viewportWidthContainerCount || 1) / PlayersImageWidth));
     // big image gallery
     return (
       <div style={gridStylesRoot}>
-        <ImageList rowHeight={PlayersImageHeight} cols={Math.min(5, Math.floor(viewport.width / (props.viewportWidthContainerCount || 1) / PlayersImageWidth))}>
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 4 }}>
           {players.map(ply => {
             const comp = ply.getCompetition(competition);
             return (
-              <ImageListItem key={ply.id}>
-                <ImageListItemBar
-                  title={
-                    <span>
-                      <PlayerLink player={ply} style={{ color: 'white' }} />
-                      <small style={{ marginLeft: 5 }}>{comp ? comp.ranking : '??'}</small>
-                    </span>
-                  }
-                  subtitle={props.subtitle ? props.subtitle(ply) : <PlayerPlayingStyle ply={ply} allowEdit={false} />}
-                />
+              <div key={ply.id} style={{ position: 'relative', height: PlayersImageHeight }}>
                 <PlayerPlayingStyleForm player={ply} iconStyle="edit-icon" style={editStyleIcon} />
                 <PlayerImage playerId={ply.id} />
-              </ImageListItem>
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    color: 'white',
+                    padding: '6px 8px',
+                  }}
+                >
+                  <div>
+                    <PlayerLink player={ply} style={{ color: 'white' }} />
+                    <small style={{ marginLeft: 5 }}>{comp ? comp.ranking : '??'}</small>
+                  </div>
+                  <div style={{ fontSize: '0.85em', opacity: 0.8 }}>
+                    {props.subtitle ? props.subtitle(ply) : <PlayerPlayingStyle ply={ply} allowEdit={false} />}
+                  </div>
+                </div>
+              </div>
             );
           })}
-        </ImageList>
+        </div>
       </div>
     );
   }

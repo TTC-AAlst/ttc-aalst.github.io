@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import Checkbox from '@mui/material/Checkbox';
-import { Box, Button, Grid2, IconButton, Paper, TextField, Typography } from '@mui/material';
+import Form from 'react-bootstrap/Form';
+import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { saveConfig } from '../../reducers/configReducer';
@@ -17,8 +20,13 @@ export const AdminEetfestijn = () => {
   return (
     <>
       <h3>Beheer Eetfestijn</h3>
-      <Checkbox checked={eetfestijn.show} onChange={() => setEetfestijn({ ...eetfestijn, show: !eetfestijn.show })} value="show" />
-      Eetfestijn tonen?
+      <Form.Check
+        type="checkbox"
+        inline
+        checked={eetfestijn.show}
+        onChange={() => setEetfestijn({ ...eetfestijn, show: !eetfestijn.show })}
+        label="Eetfestijn tonen?"
+      />
       {eetfestijn.show && <AdminEetfestijnForm eetfestijn={eetfestijn} setEetfestijn={setEetfestijn} />}
       <div>
         <MaterialButton
@@ -50,124 +58,136 @@ const AdminEetfestijnForm = ({ eetfestijn, setEetfestijn }: AdminEetfestijnFormP
   };
 
   return (
-    <Box sx={{ mt: 2 }}>
-      <Grid2 container spacing={3}>
-        <Grid2 size={{ xs: 12, md: 4 }}>
-          <TextField fullWidth label="Datum" type="date" value={eetfestijn.date} onChange={e => setEetfestijn({ ...eetfestijn, date: e.target.value })} />
-        </Grid2>
-        <Grid2 size={{ xs: 12, md: 4 }}>
-          <TextField
-            fullWidth
-            label="Van"
-            type="time"
-            value={eetfestijn.hour.from}
-            onChange={e => setEetfestijn({ ...eetfestijn, hour: { ...eetfestijn.hour, from: e.target.value } })}
-          />
-        </Grid2>
-        <Grid2 size={{ xs: 12, md: 4 }}>
-          <TextField
-            fullWidth
-            label="Tot"
-            type="time"
-            value={eetfestijn.hour.to}
-            onChange={e => setEetfestijn({ ...eetfestijn, hour: { ...eetfestijn.hour, to: e.target.value } })}
-          />
-        </Grid2>
+    <div className="mt-2">
+      <Row className="g-3">
+        <Col xs={12} md={4}>
+          <Form.Group>
+            <Form.Label>Datum</Form.Label>
+            <Form.Control type="date" value={eetfestijn.date} onChange={e => setEetfestijn({ ...eetfestijn, date: e.target.value })} />
+          </Form.Group>
+        </Col>
+        <Col xs={12} md={4}>
+          <Form.Group>
+            <Form.Label>Van</Form.Label>
+            <Form.Control
+              type="time"
+              value={eetfestijn.hour.from}
+              onChange={e => setEetfestijn({ ...eetfestijn, hour: { ...eetfestijn.hour, from: e.target.value } })}
+            />
+          </Form.Group>
+        </Col>
+        <Col xs={12} md={4}>
+          <Form.Group>
+            <Form.Label>Tot</Form.Label>
+            <Form.Control
+              type="time"
+              value={eetfestijn.hour.to}
+              onChange={e => setEetfestijn({ ...eetfestijn, hour: { ...eetfestijn.hour, to: e.target.value } })}
+            />
+          </Form.Group>
+        </Col>
 
         {/* Venue */}
-        <Grid2 size={12}>
-          <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-            Locatie
-          </Typography>
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 4 }}>
-          <TextField
-            fullWidth
-            label="Naam van de locatie"
-            value={eetfestijn.venue.name}
-            onChange={e => setEetfestijn({ ...eetfestijn, venue: { ...eetfestijn.venue, name: e.target.value } })}
-          />
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 8 }}>
-          <TextField
-            fullWidth
-            label="Adres"
-            value={eetfestijn.venue.address}
-            onChange={e => setEetfestijn({ ...eetfestijn, venue: { ...eetfestijn.venue, address: e.target.value } })}
-          />
-        </Grid2>
-        <Grid2 size={12}>
-          <TextField
-            fullWidth
-            label="Google Maps URL"
-            value={eetfestijn.venue.mapsUrl}
-            onChange={e => setEetfestijn({ ...eetfestijn, venue: { ...eetfestijn.venue, mapsUrl: e.target.value } })}
-          />
-        </Grid2>
+        <Col xs={12}>
+          <h6 className="mt-2 mb-1">Locatie</h6>
+        </Col>
+        <Col xs={12} sm={4}>
+          <Form.Group>
+            <Form.Label>Naam van de locatie</Form.Label>
+            <Form.Control
+              value={eetfestijn.venue.name}
+              onChange={e => setEetfestijn({ ...eetfestijn, venue: { ...eetfestijn.venue, name: e.target.value } })}
+            />
+          </Form.Group>
+        </Col>
+        <Col xs={12} sm={8}>
+          <Form.Group>
+            <Form.Label>Adres</Form.Label>
+            <Form.Control
+              value={eetfestijn.venue.address}
+              onChange={e => setEetfestijn({ ...eetfestijn, venue: { ...eetfestijn.venue, address: e.target.value } })}
+            />
+          </Form.Group>
+        </Col>
+        <Col xs={12}>
+          <Form.Group>
+            <Form.Label>Google Maps URL</Form.Label>
+            <Form.Control
+              value={eetfestijn.venue.mapsUrl}
+              onChange={e => setEetfestijn({ ...eetfestijn, venue: { ...eetfestijn.venue, mapsUrl: e.target.value } })}
+            />
+          </Form.Group>
+        </Col>
 
         {/* Menu */}
-        <Grid2 size={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2, mb: 1 }}>
-            <Typography variant="h6">Menu Items</Typography>
-            <Button
-              variant="contained"
-              startIcon={<i className="fa fa-plus" />}
-              onClick={() => setEetfestijn({ ...eetfestijn, menu: [...eetfestijn.menu, { name: '', desc: '', price: 0 }] })}
-              size="small"
-            >
-              Voeg Item Toe
+        <Col xs={12}>
+          <div className="d-flex justify-content-between align-items-center mt-2 mb-1">
+            <h6>Menu Items</h6>
+            <Button variant="primary" size="sm" onClick={() => setEetfestijn({ ...eetfestijn, menu: [...eetfestijn.menu, { name: '', desc: '', price: 0 }] })}>
+              <i className="fa fa-plus" /> Voeg Item Toe
             </Button>
-          </Box>
-        </Grid2>
+          </div>
+        </Col>
 
         {eetfestijn.menu.map((item, index) => (
-          <Grid2 size={12} key={index}>
-            <Paper sx={{ p: 2, mb: 1 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="subtitle1">Menu Item {index + 1}</Typography>
-                <IconButton onClick={() => setEetfestijn({ ...eetfestijn, menu: eetfestijn.menu.filter((_, i) => i !== index) })} color="error" size="small">
-                  <i className="fa fa-trash-o" />
-                </IconButton>
-              </Box>
+          <Col xs={12} key={index}>
+            <Card style={{ padding: 8, marginBottom: 4 }}>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <strong>Menu Item {index + 1}</strong>
+                  <button className="btn btn-link btn-sm" onClick={() => setEetfestijn({ ...eetfestijn, menu: eetfestijn.menu.filter((_, i) => i !== index) })}>
+                    <i className="fa fa-trash-o text-danger" />
+                  </button>
+                </div>
 
-              <Grid2 container spacing={2}>
-                <Grid2 size={{ xs: 12, md: 3 }}>
-                  <TextField fullWidth label="Naam" value={item.name} onChange={e => updateMenu(index, { name: e.target.value })} />
-                </Grid2>
-                <Grid2 size={{ xs: 12, md: 7 }}>
-                  <TextField fullWidth label="Beschrijving" value={item.desc} onChange={e => updateMenu(index, { desc: e.target.value })} />
-                </Grid2>
-                <Grid2 size={{ xs: 12, md: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Prijs (€)"
-                    type="number"
-                    value={item.price}
-                    onChange={e => updateMenu(index, { price: parseFloat(e.target.value) || 0 })}
-                    inputProps={{ min: 0, step: 0.01 }}
-                  />
-                </Grid2>
-              </Grid2>
-            </Paper>
-          </Grid2>
+                <Row className="g-2">
+                  <Col xs={12} md={3}>
+                    <Form.Group>
+                      <Form.Label>Naam</Form.Label>
+                      <Form.Control value={item.name} onChange={e => updateMenu(index, { name: e.target.value })} />
+                    </Form.Group>
+                  </Col>
+                  <Col xs={12} md={7}>
+                    <Form.Group>
+                      <Form.Label>Beschrijving</Form.Label>
+                      <Form.Control value={item.desc} onChange={e => updateMenu(index, { desc: e.target.value })} />
+                    </Form.Group>
+                  </Col>
+                  <Col xs={12} md={2}>
+                    <Form.Group>
+                      <Form.Label>Prijs (&euro;)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        value={item.price}
+                        onChange={e => updateMenu(index, { price: parseFloat(e.target.value) || 0 })}
+                        min={0}
+                        step={0.01}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
         ))}
 
         {/* Steunkaart */}
-        <Grid2 size={12}>
-          <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-            Steunkaart
-          </Typography>
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
-          <TextField
-            label="Steunkaart Prijs (€)"
-            type="number"
-            value={eetfestijn.steunkaart}
-            onChange={e => setEetfestijn({ ...eetfestijn, steunkaart: parseFloat(e.target.value) || 0 })}
-            inputProps={{ min: 0, step: 0.01 }}
-          />
-        </Grid2>
-      </Grid2>
-    </Box>
+        <Col xs={12}>
+          <h6 className="mt-2 mb-1">Steunkaart</h6>
+        </Col>
+        <Col xs={12} sm={6} md={3}>
+          <Form.Group>
+            <Form.Label>Steunkaart Prijs (&euro;)</Form.Label>
+            <Form.Control
+              type="number"
+              value={eetfestijn.steunkaart}
+              onChange={e => setEetfestijn({ ...eetfestijn, steunkaart: parseFloat(e.target.value) || 0 })}
+              min={0}
+              step={0.01}
+            />
+          </Form.Group>
+        </Col>
+      </Row>
+    </div>
   );
 };

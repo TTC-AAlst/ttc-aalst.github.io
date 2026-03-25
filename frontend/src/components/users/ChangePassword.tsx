@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
+import Form from 'react-bootstrap/Form';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
@@ -20,11 +20,17 @@ export const ChangePassword = () => {
     <div style={paperStyle}>
       <h3>{t('password.changeTitle')}</h3>
 
-      <TextField label={t('password.oldPassword')} type="password" onChange={e => setOld(e.target.value)} />
+      <Form.Group>
+        <Form.Label>{t('password.oldPassword')}</Form.Label>
+        <Form.Control type="password" onChange={e => setOld(e.target.value)} />
+      </Form.Group>
 
       <br />
 
-      <TextField label={t('password.newPassword')} type="password" onChange={e => setNew(e.target.value)} />
+      <Form.Group>
+        <Form.Label>{t('password.newPassword')}</Form.Label>
+        <Form.Control type="password" onChange={e => setNew(e.target.value)} />
+      </Form.Group>
 
       <br />
 

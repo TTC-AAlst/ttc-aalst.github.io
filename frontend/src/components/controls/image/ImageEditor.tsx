@@ -1,5 +1,5 @@
 import React from 'react';
-import Slider from '@mui/material/Slider';
+import Form from 'react-bootstrap/Form';
 import AvatarEditor, { type AvatarEditorRef } from 'react-avatar-editor';
 import { MaterialButton } from '../Buttons/MaterialButton';
 import { t } from '../../../locales';
@@ -46,13 +46,13 @@ export default class ImageEditor extends React.Component<ImageEditorProps, Image
           crossOrigin="anonymous"
         />
 
-        <Slider
+        <Form.Range
           value={this.state.scale}
           min={0.1}
           max={5}
           step={0.01}
           style={{ width: '100%', marginBottom: 20, marginTop: 20 }}
-          onChange={(event, newScale) => this.setState({ scale: newScale as number })}
+          onChange={e => this.setState({ scale: parseFloat(e.target.value) })}
         />
 
         <br />

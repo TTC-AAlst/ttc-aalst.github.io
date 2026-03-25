@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import TextField from '@mui/material/TextField';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { EditIcon } from '../controls/Icons/EditIcon';
 import { PlayerAutoComplete } from './PlayerAutoComplete';
@@ -92,21 +89,20 @@ export const PlayerPlayingStyleForm = ({ player, ...props }: PlayerPlayingStyleF
   ];
 
   return (
-    <Dialog open={!!editingPlayer} onClose={closeStyle} scroll="body" classes={{ paperScrollPaper: 'overflow-visible', paperScrollBody: 'overflow-visible' }}>
-      <DialogTitle style={{ overflow: 'visible' }}>{t('player.editStyle.title', player.alias)}</DialogTitle>
+    <Modal show={!!editingPlayer} onHide={closeStyle} scrollable className="overflow-visible">
+      <Modal.Header closeButton style={{ overflow: 'visible' }}>
+        <Modal.Title>{t('player.editStyle.title', player.alias)}</Modal.Title>
+      </Modal.Header>
 
-      <DialogContent style={{ overflow: 'visible' }}>
+      <Modal.Body style={{ overflow: 'visible' }}>
         <PlayerStyleAutocomplete value={newStyle.name || ''} onChange={text => setNewStyle({ ...newStyle, name: text })} />
 
         <br />
 
-        <TextField
-          fullWidth
-          label={t('player.editStyle.bestStroke')}
-          type="text"
-          value={newStyle.bestStroke || ''}
-          onChange={e => setNewStyle({ ...newStyle, bestStroke: e.target.value })}
-        />
+        <Form.Group>
+          <Form.Label>{t('player.editStyle.bestStroke')}</Form.Label>
+          <Form.Control type="text" value={newStyle.bestStroke || ''} onChange={e => setNewStyle({ ...newStyle, bestStroke: e.target.value })} />
+        </Form.Group>
 
         <br />
 
@@ -115,8 +111,8 @@ export const PlayerPlayingStyleForm = ({ player, ...props }: PlayerPlayingStyleF
             <PlayerAutoComplete selectPlayer={playerId => setEditingBy(playerId)} label={t('system.playerSelect')} />
           </div>
         ) : null}
-      </DialogContent>
-      <DialogActions>{changeStyleModalActions}</DialogActions>
-    </Dialog>
+      </Modal.Body>
+      <Modal.Footer>{changeStyleModalActions}</Modal.Footer>
+    </Modal>
   );
 };
