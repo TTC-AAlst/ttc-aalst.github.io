@@ -14,9 +14,7 @@ namespace Ttc.UnitTests.Integration;
 
 public class TtcWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    [Obsolete]
-    private readonly MySqlContainer _mySqlContainer = new MySqlBuilder()
-        .WithImage("mysql:8.4")
+    private readonly MySqlContainer _mySqlContainer = new MySqlBuilder("mysql:8.4")
         .WithDatabase("ttc_aalst_test")
         .WithUsername("root")
         .WithPassword("testpassword")
@@ -30,10 +28,8 @@ public class TtcWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
         _webApiDir = Path.Combine(solutionDir, "src", "Ttc.WebApi");
     }
 
-    [Obsolete]
     public string ConnectionString => _mySqlContainer.GetConnectionString();
 
-    [Obsolete]
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureAppConfiguration((context, config) =>
@@ -80,7 +76,6 @@ public class TtcWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
         builder.UseEnvironment("Testing");
     }
 
-    [Obsolete]
     public async Task InitializeAsync()
     {
         // Set environment variables BEFORE the app starts (LoadSettings reads these)
@@ -109,7 +104,6 @@ public class TtcWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLi
         return dir ?? throw new InvalidOperationException("Could not find solution directory");
     }
 
-    [Obsolete]
     public new async Task DisposeAsync()
     {
         await _mySqlContainer.StopAsync();

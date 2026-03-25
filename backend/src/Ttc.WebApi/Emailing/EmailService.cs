@@ -70,9 +70,9 @@ public class EmailService
             message.From.Add(new MailboxAddress(_userProvider.Name, _config.EmailFrom));
             var toEmails = players
                 .Where(ply => !string.IsNullOrWhiteSpace(ply.Contact?.Email))
-                .Select(ply => new MailboxAddress(ply.FirstName + " " + ply.LastName, ply.Contact!.Email));
+                .Select(ply => new MailboxAddress(ply.FirstName + " " + ply.LastName, ply.Contact!.Email!));
             message.ReplyTo.AddRange(toEmails);
-            message.To.Add(new MailboxAddress(player.FirstName + " " + player.LastName, player.Contact!.Email));
+            message.To.Add(new MailboxAddress(player.FirstName + " " + player.LastName, player.Contact!.Email!));
             message.Subject = email.Title;
             message.Body = new TextPart("html")
             {
