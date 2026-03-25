@@ -1,4 +1,3 @@
-import React from 'react';
 import { Icon } from '../../controls/Icons/Icon';
 import { GameResult, calculatePerformanceBadge, PerformanceBadgeInfo } from './PlayerPerformanceUtils';
 

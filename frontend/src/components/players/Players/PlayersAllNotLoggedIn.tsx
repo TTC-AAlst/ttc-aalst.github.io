@@ -1,4 +1,3 @@
-import React from 'react';
 import Table from 'react-bootstrap/Table';
 import { PlayerAllCompetitions } from '../PlayerCard';
 import { PlayerPlayingStyle } from '../PlayerPlayingStyle';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { ViewMatchDetailsButton } from '../controls/ViewMatchDetailsButton';
 import { IMatch } from '../../../models/model-interfaces';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { IPlayerCompetition } from '../../../models/model-interfaces';
 import { useTtcSelector } from '../../../utils/hooks/storeHooks';

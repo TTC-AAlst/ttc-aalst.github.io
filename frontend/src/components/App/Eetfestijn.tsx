@@ -1,4 +1,3 @@
-import React from 'react';
 import Card from 'react-bootstrap/Card';
 import dayjs from 'dayjs';
 import { useTtcSelector } from '../../utils/hooks/storeHooks';

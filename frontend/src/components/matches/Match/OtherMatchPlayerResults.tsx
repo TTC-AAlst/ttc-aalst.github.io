@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import OpponentPlayer from './OpponentPlayer';
 import { ReadonlyIndividualMatches } from './IndividualMatches';
 import { IMatch } from '../../../models/model-interfaces';

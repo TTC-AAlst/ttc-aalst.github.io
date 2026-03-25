@@ -54,7 +54,7 @@ const Editor = forwardRef<EditorRef, QuillEditorProps>(({ readOnly, text, onChan
       quill.setContents(delta);
     }
 
-    quill.on(Quill.events.TEXT_CHANGE, (...args) => {
+    quill.on(Quill.events.TEXT_CHANGE, (..._args) => {
       // args contains the json delta
       onTextChangeRef.current?.(quill.root.innerHTML);
     });

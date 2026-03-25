@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTtcDispatch } from '../../utils/hooks/storeHooks';
 import { frenoyMatchSync } from '../../reducers/matchesReducer';
 import { IStoreMatchCommon } from '../../models/model-interfaces';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Strike } from '../controls/controls/Strike';
 import { TeamRankingBadges } from '../teams/controls/TeamRankingBadges';

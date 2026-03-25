@@ -1,4 +1,3 @@
-import React from 'react';
 import cn from 'classnames';
 import { PlayerLink } from '../../players/controls/PlayerLink';
 import { AchievementsCalculator, NewPlayerRanking } from './AchievementsCalculator';

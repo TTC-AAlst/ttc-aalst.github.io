@@ -1,4 +1,3 @@
-import React from 'react';
 import { OpponentLink } from '../../teams/controls/OpponentLink';
 import { IMatch, ITeam } from '../../../models/model-interfaces';
 

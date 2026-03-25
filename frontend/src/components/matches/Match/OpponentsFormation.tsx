@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { createSelector } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
 import Table from 'react-bootstrap/Table';

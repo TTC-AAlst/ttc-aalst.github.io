@@ -1,4 +1,3 @@
-import React from 'react';
 import { EndOfSeason } from '../other/EndOfSeason/EndOfSeason';
 import { selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { Dashboard } from '../dashboard/Dashboard';

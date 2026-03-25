@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon, IconProps } from './Icon';
 import { t } from '../../../locales';

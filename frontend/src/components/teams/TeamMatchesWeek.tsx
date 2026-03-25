@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { WeekCalcer } from '../matches/MatchesWeeks/WeekCalcer';
 import { WeekTitle } from '../matches/MatchesWeeks/WeekTitle';
 import { OpponentMatches } from '../matches/Match/OpponentMatches';

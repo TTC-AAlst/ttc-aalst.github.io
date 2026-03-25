@@ -1,4 +1,3 @@
-import React from 'react';
 import { CommentButton } from '../../controls/Buttons/CommentButton';
 import { Icon } from '../../controls/Icons/Icon';
 import { SaveButton } from '../../controls/Buttons/SaveButton';

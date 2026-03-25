@@ -14,7 +14,7 @@ import storeUtil from '../../../storeUtil';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { deleteComment, postComment, postReport } from '../../../reducers/matchesReducer';
 import { useViewport } from '../../../utils/hooks/useViewport';
-import { config, getStaticFileUrl } from '../../../config';
+import { getStaticFileUrl } from '../../../config';
 
 function getEmptyComment(matchId: number, playerId: number): IMatchComment {
   return {

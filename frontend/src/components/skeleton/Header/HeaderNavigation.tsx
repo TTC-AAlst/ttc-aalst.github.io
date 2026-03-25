@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Badge, Offcanvas } from 'react-bootstrap';
 import { t } from '../../../locales';

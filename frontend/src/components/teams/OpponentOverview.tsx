@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BackIcon } from '../controls/Icons/BackIcon';
 import { OpponentMatches } from '../matches/Match/OpponentMatches';

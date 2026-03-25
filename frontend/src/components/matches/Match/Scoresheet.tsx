@@ -1,4 +1,3 @@
-import React from 'react';
 import Table from 'react-bootstrap/Table';
 import { downloadScoresheetExcel } from '../../../utils/httpClient';
 import { ExcelButton } from '../../controls/Buttons/ExcelButton';

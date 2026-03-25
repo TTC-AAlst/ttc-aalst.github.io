@@ -1,4 +1,3 @@
-import React from 'react';
 import { t } from '../../locales';
 import { useTtcSelector } from '../../utils/hooks/storeHooks';
 

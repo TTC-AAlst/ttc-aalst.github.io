@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ButtonStack } from '../controls/Buttons/ButtonStack';
 import { IStorePlayer } from '../../models/model-interfaces';
 import { selectPlayers, selectQuitters, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';

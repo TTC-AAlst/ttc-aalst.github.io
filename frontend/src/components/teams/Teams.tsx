@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { downloadTeamsExcel } from '../../utils/httpClient';
 import { TabbedContainer, TabKey } from '../controls/TabbedContainer';

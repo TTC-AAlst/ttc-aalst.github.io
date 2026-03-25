@@ -1,4 +1,3 @@
-import React from 'react';
 import Card from 'react-bootstrap/Card';
 import { DivisionHeader } from '../../teams/controls/DivisionHeader';
 import { PlayerIndividual } from './PlayerIndividual';

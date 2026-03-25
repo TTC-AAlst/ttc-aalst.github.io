@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import { Competition, IMatch, IPlayer } from '../../../models/model-interfaces';
 import { useTtcDispatch, useTtcSelector, selectPlayers } from '../../../utils/hooks/storeHooks';

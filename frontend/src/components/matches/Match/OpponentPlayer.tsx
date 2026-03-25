@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FrenoyLink } from '../../controls/Buttons/FrenoyButton';
 import { Competition, IMatchPlayer, Translator } from '../../../models/model-interfaces';
 

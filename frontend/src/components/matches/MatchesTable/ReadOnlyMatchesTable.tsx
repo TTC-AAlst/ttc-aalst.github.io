@@ -1,4 +1,3 @@
-import React from 'react';
 import { Table } from 'react-bootstrap';
 import { MatchesTableDateCell, MatchesTableFrenoyLinkCell, MatchesTableHeader, MatchesTableMatchVsCell, ReadOnlyMatchPlayers } from './MatchesTableCells';
 import { IMatch } from '../../../models/model-interfaces';

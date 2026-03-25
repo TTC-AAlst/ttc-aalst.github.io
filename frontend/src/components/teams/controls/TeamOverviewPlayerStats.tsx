@@ -1,4 +1,3 @@
-import React from 'react';
 import { ThumbsUpIcon, ThumbsDownIcon } from '../../controls/Icons/ThumbsIcons';
 import { PercentageLabel } from '../../controls/controls/PercentageLabel';
 import { ITeamPlayerStats } from '../../../models/model-interfaces';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import { MobileLiveMatchCard } from '../MobileLiveMatches/MobileLiveMatchCard';
 import { FullScreenSpinner } from '../../controls/controls/Spinner';

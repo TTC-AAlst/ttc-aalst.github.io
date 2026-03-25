@@ -1,4 +1,3 @@
-import React from 'react';
 import { Icon, IconProps } from './Icon';
 import { t } from '../../../locales';
 

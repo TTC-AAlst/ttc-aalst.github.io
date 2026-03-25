@@ -1,4 +1,3 @@
-import React from 'react';
 import { t } from '../../../locales';
 import { ITeam } from '../../../models/model-interfaces';
 import { getTablePlayers, tableMatchViewportWidths } from './matchesTableUtil';

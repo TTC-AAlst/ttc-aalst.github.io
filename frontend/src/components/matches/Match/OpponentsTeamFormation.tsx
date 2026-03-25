@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { getOpponentFormations } from '../../../storeUtil';
 import { PlayerRankings } from '../controls/MatchPlayerRankings';

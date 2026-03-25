@@ -17,7 +17,7 @@ const ButtonComponent = React.forwardRef<HTMLAnchorElement, ButtonComponentProps
 ));
 ButtonComponent.displayName = 'ButtonComponent';
 
-const Button = withTooltip(ButtonComponent);
+export const Button = withTooltip(ButtonComponent);
 
 export type IconButtonComponentProps = {
   onClick: () => void;
@@ -33,4 +33,4 @@ const IconButtonComponent = React.forwardRef<HTMLAnchorElement, IconButtonCompon
 ));
 IconButtonComponent.displayName = 'IconButtonComponent';
 
-const IconButton = withTooltip(IconButtonComponent);
+export const IconButton = withTooltip(IconButtonComponent);

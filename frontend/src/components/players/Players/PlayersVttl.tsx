@@ -1,4 +1,3 @@
-import React from 'react';
 import cn from 'classnames';
 import Table from 'react-bootstrap/Table';
 import { PlayerFrenoyLink } from '../PlayerCard';

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { TrophyIcon } from '../controls/Icons/TrophyIcon';

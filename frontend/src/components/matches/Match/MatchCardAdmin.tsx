@@ -1,4 +1,3 @@
-import React from 'react';
 import { IMatch } from '../../../models/model-interfaces';
 import { useTtcDispatch } from '../../../utils/hooks/storeHooks';
 import { frenoyMatchSync } from '../../../reducers/matchesReducer';

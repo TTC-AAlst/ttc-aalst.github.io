@@ -1,4 +1,3 @@
-import React from 'react';
 import { EditIcon } from '../../controls/Icons/EditIcon';
 import { Icon } from '../../controls/Icons/Icon';
 

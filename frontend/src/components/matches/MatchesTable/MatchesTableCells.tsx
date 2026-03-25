@@ -1,4 +1,3 @@
-import React from 'react';
 import { t } from '../../../locales';
 import { IMatch } from '../../../models/model-interfaces';
 import { useViewport } from '../../../utils/hooks/useViewport';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Email } from '../../controls/controls/Email';
 import { Telephone } from '../../controls/controls/Telephone';
 import { PlayerAddress } from './PlayerAddress';

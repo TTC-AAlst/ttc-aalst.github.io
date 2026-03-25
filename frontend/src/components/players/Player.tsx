@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { BackIcon } from '../controls/Icons/BackIcon';
 import { PlayerCard } from './PlayerCard';

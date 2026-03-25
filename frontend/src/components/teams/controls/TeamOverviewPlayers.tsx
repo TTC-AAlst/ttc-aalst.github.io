@@ -1,4 +1,3 @@
-import React from 'react';
 import Table from 'react-bootstrap/Table';
 import { TeamOverviewPlayerStats } from './TeamOverviewPlayerStats';
 import { PlayerCompetitionLabel } from '../../players/PlayerCard';

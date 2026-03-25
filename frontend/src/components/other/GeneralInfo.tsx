@@ -1,4 +1,3 @@
-import React from 'react';
 import { OwnEmail } from '../controls/controls/Email';
 import { GoogleMap } from '../controls/controls/GoogleMap';
 import { t } from '../../locales';

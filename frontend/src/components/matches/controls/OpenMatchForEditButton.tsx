@@ -1,4 +1,3 @@
-import React from 'react';
 import { EditIcon } from '../../controls/Icons/EditIcon';
 import { IMatch } from '../../../models/model-interfaces';
 import { t } from '../../../locales';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { IntroClub } from '../../App/IntroClub';
 import { IntroSponsors } from '../../App/IntroSponsors';
 import { Kampioenen } from './Kampioenen';

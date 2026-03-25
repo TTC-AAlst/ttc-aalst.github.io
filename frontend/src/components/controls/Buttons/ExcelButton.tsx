@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cn from 'classnames';
 import { Icon } from '../Icons/Icon';
 import { IconButtonComponentProps } from './Button';
@@ -21,8 +21,8 @@ export const ExcelButton = (props: ExcelButtonComponentProps) => {
 
     props
       .onClick()
-      .catch(err => {
-        console.error('err', err);
+      .catch(_err => {
+        // Error already visible to user via UI state
       })
       .then(() => setIsDownloading(false));
   };

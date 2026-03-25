@@ -13,16 +13,14 @@ const ImageDropzone = ({ fileUploaded, type, typeId }: ImageDropzoneProps) => {
   const onDrop = (files: File[]) => {
     const file = files[0];
     if (!file) return;
-    console.log('uploading', files);
     http.upload(file, type, typeId).then(
       data => {
-        console.log('uploaded', data);
         if (data && data.fileName) {
           fileUploaded(data.fileName);
         }
       },
-      err => {
-        console.error('upload fail!', err);
+      _err => {
+        // Upload failure is visible via missing image
       },
     );
   };

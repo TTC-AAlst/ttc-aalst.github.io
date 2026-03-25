@@ -1,4 +1,3 @@
-import React from 'react';
 import { MobileLiveMatches } from './MobileLiveMatches/MobileLiveMatches';
 import { selectMatchesBeingPlayed, useTtcSelector } from '../../utils/hooks/storeHooks';
 

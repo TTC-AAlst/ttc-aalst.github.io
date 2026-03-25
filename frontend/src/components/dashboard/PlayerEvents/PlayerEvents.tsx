@@ -1,4 +1,3 @@
-import React from 'react';
 import dayjs from 'dayjs';
 import { Strike } from '../../controls/controls/Strike';
 import { PlayerEventItem } from './PlayerEventItem';

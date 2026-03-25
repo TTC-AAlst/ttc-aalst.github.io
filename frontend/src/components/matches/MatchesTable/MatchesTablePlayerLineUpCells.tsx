@@ -1,4 +1,3 @@
-import React from 'react';
 import { IMatch, IPlayer, ITeam } from '../../../models/model-interfaces';
 import { tableMatchViewportWidths } from './matchesTableUtil';
 import { MatchDate } from '../controls/MatchDate';

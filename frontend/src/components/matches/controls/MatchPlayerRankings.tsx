@@ -1,4 +1,3 @@
-import React from 'react';
 import { getMatchPlayerRankings } from '../../../storeUtil';
 import { IMatch } from '../../../models/model-interfaces';
 

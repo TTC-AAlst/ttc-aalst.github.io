@@ -25,7 +25,7 @@ export const Badgy = ({ type, style, children, tooltip }: BadgyProps) => (
   </OverlayTrigger>
 );
 
-const ThrillerBadge = ({ match }: { match: IMatch }) => {
+export const ThrillerBadge = ({ match }: { match: IMatch }) => {
   const team = match.getTeam();
   const thrillerType = team.getThriller(match);
   if (thrillerType) {

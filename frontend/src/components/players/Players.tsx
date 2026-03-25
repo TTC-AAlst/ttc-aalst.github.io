@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { TabbedContainer } from '../controls/TabbedContainer';
 import { PlayersCardGallery } from './PlayersCardGallery';
 import { PlayersToolbar } from './Players/PlayersToolbar';

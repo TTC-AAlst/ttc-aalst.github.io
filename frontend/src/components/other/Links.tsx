@@ -1,4 +1,3 @@
-import React from 'react';
 import { t } from '../../locales';
 
 const Links = () => (

@@ -1,4 +1,3 @@
-import React from 'react';
 import { TeamRankingBadges } from './TeamRankingBadges';
 import { TeamPosition } from './TeamPosition';
 import { ITeam, ITeamOpponent } from '../../../models/model-interfaces';

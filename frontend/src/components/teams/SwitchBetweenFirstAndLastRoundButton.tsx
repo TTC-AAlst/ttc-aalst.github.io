@@ -1,4 +1,3 @@
-import React from 'react';
 import dayjs from 'dayjs';
 import { ButtonStack } from '../controls/Buttons/ButtonStack';
 import { t } from '../../locales';

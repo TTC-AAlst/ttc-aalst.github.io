@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { TrophyIcon } from '../../controls/Icons/TrophyIcon';
 import { TeamRankingBadges } from '../../teams/controls/TeamRankingBadges';

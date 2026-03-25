@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTtcSelector } from '../../../utils/hooks/storeHooks';
 
 type EmailProps = {

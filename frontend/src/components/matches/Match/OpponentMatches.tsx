@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import cn from 'classnames';
 import Table from 'react-bootstrap/Table';
 import { OtherMatchPlayerResultsTableRow } from './OtherMatchPlayerResults';

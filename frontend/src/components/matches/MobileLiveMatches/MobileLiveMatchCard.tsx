@@ -1,4 +1,3 @@
-import React from 'react';
 import { IMatch, IMatchPlayer } from '../../../models/model-interfaces';
 import { MobileLiveMatchHeader } from './MobileLiveMatchHeader';
 import { MobileLiveMatchInProgress } from './MobileLiveMatchInProgress';

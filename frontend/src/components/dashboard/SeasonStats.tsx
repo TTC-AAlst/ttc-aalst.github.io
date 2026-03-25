@@ -1,4 +1,3 @@
-import React from 'react';
 import { Strike } from '../controls/controls/Strike';
 import { PlayerLink } from '../players/controls/PlayerLink';
 import { selectMatches, selectTeams, useTtcSelector } from '../../utils/hooks/storeHooks';

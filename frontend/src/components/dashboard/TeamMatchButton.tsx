@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { IMatch, ITeam } from '../../models/model-interfaces';

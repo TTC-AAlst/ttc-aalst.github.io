@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import AvatarEditor, { type AvatarEditorRef } from 'react-avatar-editor';
 import Button from 'react-bootstrap/Button';

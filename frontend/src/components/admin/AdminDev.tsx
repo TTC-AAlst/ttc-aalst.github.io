@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ButtonStack } from '../controls/Buttons/ButtonStack';
 import { Icon } from '../controls/Icons/Icon';
 import { useTtcSelector } from '../../utils/hooks/storeHooks';

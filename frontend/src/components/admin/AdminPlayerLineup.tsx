@@ -4,7 +4,7 @@ import { PlayerAutoComplete } from '../players/PlayerAutoComplete';
 import PlayerLinup from '../users/PlayerLineup';
 import { Competition } from '../../models/model-interfaces';
 import storeUtil from '../../storeUtil';
-import { selectTeams, selectUser, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { selectTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
 
 type AdminPlayerLineupState = {
   comp: Competition;

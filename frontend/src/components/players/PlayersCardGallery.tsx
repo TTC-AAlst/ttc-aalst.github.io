@@ -1,4 +1,3 @@
-import React from 'react';
 import Card from 'react-bootstrap/Card';
 import { PlayerImage } from './PlayerImage';
 import { PlayerCard } from './PlayerCard';

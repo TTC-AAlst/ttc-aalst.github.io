@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import ImageEditor from '../controls/image/ImageEditor';
 import { playerUtils } from '../../models/PlayerModel';

@@ -28,7 +28,7 @@ export default tseslint.config(
       // TypeScript handles these
       'no-undef': 'off',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       'no-use-before-define': 'off',
 
       // Carried over from .eslintrc (formatting rules disabled - Prettier handles these)
@@ -39,7 +39,7 @@ export default tseslint.config(
       'dot-notation': 'warn',
       'object-curly-newline': 'off',
       'arrow-parens': 'off',
-      'no-console': 'off',
+      'no-console': 'warn',
       'no-debugger': 'warn',
 
       // React

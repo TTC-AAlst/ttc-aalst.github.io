@@ -1,4 +1,3 @@
-import React from 'react';
 import BSSpinner from 'react-bootstrap/Spinner';
 import { Icon } from '../Icons/Icon';
 

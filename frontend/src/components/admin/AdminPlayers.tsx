@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
@@ -8,7 +8,7 @@ import { AdminBoardMembers } from './AdminBoardMembers';
 import { ButtonStack } from '../controls/Buttons/ButtonStack';
 import { EditButton } from '../controls/Buttons/EditButton';
 import { Icon } from '../controls/Icons/Icon';
-import { IPlayer, Competition, IStorePlayer } from '../../models/model-interfaces';
+import { IPlayer, Competition } from '../../models/model-interfaces';
 import { displayMobile } from '../../models/PlayerModel';
 import { useViewport } from '../../utils/hooks/useViewport';
 import { selectPlayers, useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';

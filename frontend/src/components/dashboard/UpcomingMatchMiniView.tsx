@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { IMatch, IMatchPlayerInfo } from '../../models/model-interfaces';
 import MatchVs from '../matches/Match/MatchVs';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -7,7 +7,7 @@ import { PlayersImageGallery } from '../players/PlayersImageGallery';
 import { teamPlayerType, ITeam, Competition, TeamPlayerType } from '../../models/model-interfaces';
 import { frenoyTeamSync } from '../../reducers/matchesReducer';
 import { toggleTeamPlayer } from '../../reducers/teamsReducer';
-import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
+import { useTtcDispatch } from '../../utils/hooks/storeHooks';
 
 const AdminTeamPlayers = ({ team }: { team: ITeam }) => {
   const [role, setRole] = useState<TeamPlayerType>('Standard');

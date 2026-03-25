@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Button } from 'react-bootstrap';
 import { IMatch } from '../../../models/model-interfaces';
 import { MobileLiveMatchCard } from './MobileLiveMatchCard';

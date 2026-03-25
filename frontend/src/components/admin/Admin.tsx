@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import { TabbedContainer } from '../controls/TabbedContainer';
 import { AdminPlayers } from './AdminPlayers';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { ITeam } from '../../../models/model-interfaces';
 
 type DivisionRankingLabelProps = {
