@@ -44,7 +44,10 @@
   "overrides": {
     "minimatch": "^10.2.3",
     "immutable": "^5.1.5",
-    "flatted": "^3.4.0"
+    "flatted": "^3.4.0",
+    "smol-toml": "^1.6.1",
+    "yaml": "^1.10.3",
+    "picomatch": "^2.3.2"
   },
   "knip": {
     "ignoreDependencies": ["husky", "lint-staged"]
