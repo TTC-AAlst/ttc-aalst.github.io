@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using AutoMapper;
 using Frenoy.Api;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -16,15 +15,13 @@ namespace Ttc.DataAccess.Services;
 public class TeamService
 {
     private readonly ITtcDbContext _context;
-    private readonly IMapper _mapper;
     private readonly CacheHelper _cache;
     private static readonly ConcurrentDictionary<TeamRankingKey, ICollection<DivisionRanking>> RankingCache = new();
     private static readonly TimeSpan FrenoyTeamRankingExpiration = TimeSpan.FromMinutes(30);
 
-    public TeamService(ITtcDbContext context, IMapper mapper, IMemoryCache cache)
+    public TeamService(ITtcDbContext context, IMemoryCache cache)
     {
         _context = context;
-        _mapper = mapper;
         _cache = new CacheHelper(cache);
     }
 
@@ -49,7 +46,7 @@ public class TeamService
             .ToArrayAsync();
 
         var lastChange = teams.Max(x => x.Audit.ModifiedOn) ?? DateTime.MinValue;
-        var result = _mapper.Map<IList<TeamEntity>, IList<Team>>(teams);
+        var result = EntityMapper.ToTeams(teams);
         return new CacheResponse<Team>(result, lastChange);
     }
 

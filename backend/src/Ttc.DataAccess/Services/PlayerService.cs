@@ -1,4 +1,3 @@
-using AutoMapper;
 using Frenoy.Api;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -15,14 +14,12 @@ namespace Ttc.DataAccess.Services;
 public class PlayerService
 {
     private readonly ITtcDbContext _context;
-    private readonly IMapper _mapper;
     private readonly IUserProvider _user;
     private readonly CacheHelper _cache;
 
-    public PlayerService(ITtcDbContext context, IMapper mapper, IMemoryCache cache, IUserProvider user)
+    public PlayerService(ITtcDbContext context, IMemoryCache cache, IUserProvider user)
     {
         _context = context;
-        _mapper = mapper;
         _user = user;
         _cache = new CacheHelper(cache);
     }
@@ -35,7 +32,7 @@ public class PlayerService
             .Where(eventEntity => eventEntity.Type != EventType.PlayerPicture)
             .Where(eventEntity => eventEntity.Audit.CreatedOn > DateTime.Today.AddMonths(-3))
             .ToArrayAsync();
-        var result = _mapper.Map<IList<EventEntity>, IList<EventModel>>(events);
+        var result = EntityMapper.ToEventModels(events);
         return result;
     }
 
@@ -56,7 +53,7 @@ public class PlayerService
             .ToArrayAsync();
 
         var lastChange = players.Max(x => x.Audit.ModifiedOn) ?? DateTime.MinValue;
-        var result = _mapper.Map<IList<PlayerEntity>, IList<Player>>(players);
+        var result = EntityMapper.ToPlayers(players);
         return new CacheResponse<Player>(result, lastChange);
     }
 
@@ -66,7 +63,7 @@ public class PlayerService
             .Where(x => x.QuitYear != null)
             .ToArrayAsync();
 
-        var result = _mapper.Map<IList<PlayerEntity>, IList<Player>>(players);
+        var result = EntityMapper.ToPlayers(players);
         return result;
     }
 

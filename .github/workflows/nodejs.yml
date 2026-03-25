@@ -82,7 +82,7 @@ jobs:
 
     - uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 10.0.x
 
     - run: dotnet restore Ttc.slnx
 
@@ -94,3 +94,6 @@ jobs:
 
     - name: Test
       run: dotnet test Ttc.slnx --no-build --verbosity quiet
+
+    - name: Vulnerability audit
+      run: dotnet list Ttc.slnx package --vulnerable --include-transitive 2>&1 | tee /dev/stderr | grep -q "no vulnerable packages"

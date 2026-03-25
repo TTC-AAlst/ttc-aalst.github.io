@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Ttc.DataAccess.Services;
-using Ttc.DataAccess.Utilities.AutoMapperConfig;
 using Ttc.DataEntities.Core;
 
 namespace Ttc.DataAccess;
@@ -16,7 +15,6 @@ public static class GlobalBackendConfiguration
     public static void Configure(IServiceCollection services, IConfigurationRoot configuration)
     {
         ConfigureDbContext(services, configuration);
-        ConfigureAutoMapper(services);
         ConfigureServices(services);
     }
 
@@ -27,11 +25,6 @@ public static class GlobalBackendConfiguration
         services.AddScoped<MatchService>();
         services.AddScoped<TeamService>();
         services.AddScoped<PlayerService>();
-    }
-
-    private static void ConfigureAutoMapper(IServiceCollection services)
-    {
-        services.AddAutoMapper(typeof(TeamProfile));
     }
 
     private static void ConfigureDbContext(IServiceCollection services, IConfigurationRoot configuration)

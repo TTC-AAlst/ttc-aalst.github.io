@@ -1,4 +1,3 @@
-using AutoMapper;
 using Frenoy.Api;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -14,14 +13,12 @@ namespace Ttc.DataAccess.Services;
 public class ClubService
 {
     private readonly ITtcDbContext _context;
-    private readonly IMapper _mapper;
     private readonly TtcLogger _logger;
     private readonly CacheHelper _cache;
 
-    public ClubService(ITtcDbContext context, IMapper mapper, IMemoryCache cache, TtcLogger logger)
+    public ClubService(ITtcDbContext context, IMemoryCache cache, TtcLogger logger)
     {
         _context = context;
-        _mapper = mapper;
         _logger = logger;
         _cache = new CacheHelper(cache);
     }
@@ -44,7 +41,7 @@ public class ClubService
             .ToListAsync();
 
         var lastChange = activeClubs.Max(x => x.Audit.ModifiedOn) ?? DateTime.MinValue;
-        var result = _mapper.Map<IList<ClubEntity>, IList<Club>>(activeClubs);
+        var result = EntityMapper.ToClubs(activeClubs);
 
 
         var ourClub = result.Single(x => x.Id == Constants.OwnClubId);

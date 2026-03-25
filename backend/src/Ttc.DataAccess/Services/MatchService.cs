@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using AutoMapper;
 using Frenoy.Api;
 using Microsoft.EntityFrameworkCore;
+using Ttc.DataAccess.Utilities;
 using Ttc.DataAccess.Utilities.Excel;
 using Ttc.DataEntities;
 using Ttc.DataEntities.Core;
@@ -14,12 +14,10 @@ namespace Ttc.DataAccess.Services;
 public class MatchService
 {
     private readonly ITtcDbContext _context;
-    private readonly IMapper _mapper;
 
-    public MatchService(ITtcDbContext context, IMapper mapper)
+    public MatchService(ITtcDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     #region Getters
@@ -41,7 +39,7 @@ public class MatchService
             match.Comments = comments.Where(x => x.MatchId == match.Id).ToArray();
         }
 
-        var result = _mapper.Map<IList<MatchEntity>, IList<Match>>(matchEntities);
+        var result = EntityMapper.ToMatches(matchEntities);
         return result;
     }
 
@@ -82,7 +80,7 @@ public class MatchService
 
         // No comments for OpponentMatches
 
-        var result = _mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(matchEntities);
+        var result = EntityMapper.ToOtherMatches(matchEntities);
         return result;
 
         // TODO: Bug PreSeason code: This doesn't work! These results are NOT displayed in the MatchCard, the spinner just keeps on spinnin'
@@ -123,7 +121,7 @@ public class MatchService
         var comments = await _context.MatchComments.Where(x => x.MatchId == matchId).ToArrayAsync();
         match.Comments = comments;
 
-        var matchModel = _mapper.Map<MatchEntity, Match>(match);
+        var matchModel = EntityMapper.ToMatch(match);
         return matchModel;
     }
 
@@ -134,7 +132,7 @@ public class MatchService
             .AsSingleQuery()
             .SingleAsync(x => x.Id == matchId);
 
-        var matchModel = _mapper.Map<MatchEntity, OtherMatch>(match);
+        var matchModel = EntityMapper.ToOtherMatch(match);
         return matchModel;
     }
     #endregion
@@ -174,7 +172,7 @@ public class MatchService
         }
         else
         {
-            var playerEntity = _mapper.Map<MatchPlayer, MatchPlayerEntity>(matchPlayer);
+            var playerEntity = EntityMapper.ToMatchPlayerEntity(matchPlayer);
             _context.MatchPlayers.Add(playerEntity);
         }
         await _context.SaveChangesAsync();
@@ -205,7 +203,7 @@ public class MatchService
         }
         else
         {
-            _context.MatchPlayers.Add(_mapper.Map<MatchPlayer, MatchPlayerEntity>(matchPlayer));
+            _context.MatchPlayers.Add(EntityMapper.ToMatchPlayerEntity(matchPlayer));
         }
         await _context.SaveChangesAsync();
         var newMatch = await GetMatch(matchPlayer.MatchId);
@@ -317,7 +315,7 @@ public class MatchService
 
     public async Task<Match> AddComment(MatchComment comment)
     {
-        var entity = _mapper.Map<MatchCommentEntity>(comment);
+        var entity = EntityMapper.ToMatchCommentEntity(comment);
         entity.PostedOn = TtcDbContext.GetCurrentBelgianDateTime();
         _context.MatchComments.Add(entity);
         await _context.SaveChangesAsync();
@@ -349,7 +347,7 @@ public class MatchService
                 .WithIncludes()
                 .AsSingleQuery()
                 .Single(x => x.Id == matchId);
-            return _mapper.Map<MatchEntity, OtherMatch>(match);
+            return EntityMapper.ToOtherMatch(match);
         }
         return null;
     }

@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
 using Ttc.DataEntities.Core;
 using Ttc.Model;
@@ -15,7 +14,6 @@ public class UserProvider : IUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly TtcSettings _settings;
-    private readonly IMapper _mapper;
 
     private ClaimsPrincipal? Principal => _httpContextAccessor.HttpContext?.User;
 
@@ -37,11 +35,10 @@ public class UserProvider : IUserProvider
         }
     }
 
-    public UserProvider(IHttpContextAccessor httpContextAccessor, TtcSettings settings, IMapper mapper)
+    public UserProvider(IHttpContextAccessor httpContextAccessor, TtcSettings settings)
     {
         _httpContextAccessor = httpContextAccessor;
         _settings = settings;
-        _mapper = mapper;
     }
 
     public string GenerateJwtToken(User user)
@@ -127,11 +124,7 @@ public class UserProvider : IUserProvider
             return data;
         }
 
-        // Due to AutoMapper configuration this will create copies
-        // for Players, but not for Matches. Since Players are being
-        // cached (and hiding data would mutate the cache) but
-        // Matches are not cached.
-        var dataCopy = _mapper.Map<T[]>(data);
+        var dataCopy = data.Select(x => (T)x.Clone()).ToArray();
         foreach (var record in dataCopy)
         {
             record.Hide();
@@ -147,7 +140,7 @@ public class UserProvider : IUserProvider
             return data;
         }
 
-        var dataCopy = _mapper.Map<T>(data);
+        var dataCopy = (T)data.Clone();
         dataCopy.Hide();
         return dataCopy;
     }

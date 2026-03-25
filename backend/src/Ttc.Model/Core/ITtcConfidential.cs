@@ -6,4 +6,5 @@ namespace Ttc.Model.Core;
 public interface ITtcConfidential
 {
     void Hide();
+    ITtcConfidential Clone();
 }

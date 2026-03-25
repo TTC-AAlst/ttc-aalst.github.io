@@ -36,5 +36,25 @@ public class Player : ITtcConfidential
         Contact = null;
     }
 
+    public ITtcConfidential Clone()
+    {
+        return new Player
+        {
+            Id = Id,
+            FirstName = FirstName,
+            LastName = LastName,
+            Alias = Alias,
+            Active = Active,
+            QuitYear = QuitYear,
+            Security = Security,
+            HasKey = HasKey,
+            Style = Style,
+            Contact = Contact,
+            Vttl = Vttl,
+            Sporta = Sporta,
+            ImageVersion = ImageVersion,
+        };
+    }
+
     public override string ToString() => $"Id={Id}, Alias={Alias}, Active={Active}";
 }

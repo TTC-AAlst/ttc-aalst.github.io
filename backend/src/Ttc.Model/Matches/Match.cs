@@ -38,6 +38,9 @@ public class OtherMatch : ITtcConfidential
         }
     }
 
+    // Matches aren't cached, so no need to deep-clone
+    public ITtcConfidential Clone() => this;
+
     public override string ToString() => $"Id: {Id}, Date: {Date}, FrenoyMatchId: {FrenoyMatchId}, IsSyncedWithFrenoy: {IsSyncedWithFrenoy}, Home: {Home}, Away: {Away}, Score: {Score}";
 }
 
@@ -109,6 +112,9 @@ public class Match : ITtcConfidential
             Comments.Remove(rm);
         }
     }
+
+    // Matches aren't cached, so no need to deep-clone
+    public ITtcConfidential Clone() => this;
 
     public override string ToString() => $"Id={Id} on {Date:g}, Home={IsHomeMatch}, TeamId={TeamId}, Opponent=({Opponent})";
 }
