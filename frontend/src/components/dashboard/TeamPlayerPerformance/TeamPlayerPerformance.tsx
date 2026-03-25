@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Button, ButtonGroup, Form } from 'react-bootstrap';
 import { Strike } from '../../controls/controls/Strike';
 import { Icon } from '../../controls/Icons/Icon';

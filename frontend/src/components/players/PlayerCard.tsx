@@ -139,18 +139,6 @@ const PerformanceRibbon = ({ badge }: PerformanceRibbonProps) => {
   );
 };
 
-type PlayerCardCompetitionProps = {
-  player: IPlayer;
-};
-
-const PlayerCardCompetition = ({ player }: PlayerCardCompetitionProps) => (
-  <div style={{ marginTop: 5 }}>
-    <strong>{t('common.competition')}</strong>
-    <br />
-    <PlayerAllCompetitions player={player} />
-  </div>
-);
-
 type PlayerAllCompetitionsProps = {
   player: IPlayer;
 };

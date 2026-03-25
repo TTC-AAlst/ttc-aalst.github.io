@@ -28,7 +28,7 @@ export default tseslint.config(
       // TypeScript handles these
       'no-undef': 'off',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
       'no-use-before-define': 'off',
 
       // Carried over from .eslintrc (formatting rules disabled - Prettier handles these)

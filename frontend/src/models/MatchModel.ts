@@ -145,6 +145,7 @@ export default class MatchModel implements IMatch {
 
   getOpponentClub(): IClub {
     if (this.home?.teamCode) {
+      // eslint-disable-next-line no-console
       console.error(`Called getOpponentClub on OtherMatch ${JSON.stringify(this, null, 2)}`);
     }
     return storeUtil.getClub(this.opponent.clubId);
@@ -152,6 +153,7 @@ export default class MatchModel implements IMatch {
 
   getClub(which: 'home' | 'away'): IClub | undefined {
     if (this.opponent?.clubId) {
+      // eslint-disable-next-line no-console
       console.warn('MatchModel.getClub: use getOpponentClub for TTC Aalst matches', this.opponent);
     }
     if (which === 'home') {
@@ -160,6 +162,7 @@ export default class MatchModel implements IMatch {
     if (which === 'away') {
       return storeUtil.getClub(this.away.clubId);
     }
+    // eslint-disable-next-line no-console
     console.error(`MatchModel.getClub passed ${which}: expected home or away.`);
     return undefined;
   }
@@ -206,6 +209,7 @@ export default class MatchModel implements IMatch {
         stack: '',
         componentStack: null,
       };
+      // eslint-disable-next-line no-console
       console.warn(errObj.message);
       httpClient.post('/config/Log', errObj);
     }

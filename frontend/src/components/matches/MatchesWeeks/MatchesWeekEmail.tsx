@@ -38,6 +38,7 @@ export const MatchesWeekEmail = ({ compFilter, weekCalcer, matches, prevMatches 
           stack: '',
           componentStack: null,
         };
+        // eslint-disable-next-line no-console
         console.warn(errObj.message);
         httpClient.post('/config/Log', errObj);
       } else {

@@ -7,8 +7,6 @@ import t from '../../../locales';
 export const PlayerEvents = () => {
   const playerEvents = useTtcSelector(state => state.events);
 
-  // Filter events from last 14 days
-  const twoWeeksAgo = dayjs().subtract(14, 'days');
   const recentEvents = playerEvents
     .slice()
     // .filter(event => dayjs(event.createdOn).isAfter(twoWeeksAgo))

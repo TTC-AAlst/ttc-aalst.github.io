@@ -2,7 +2,6 @@ import { Strike } from '../controls/controls/Strike';
 import { PlayerLink } from '../players/controls/PlayerLink';
 import { selectMatches, selectTeams, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { IPlayerCompetition, IStorePlayer, ITeamPlayerStats } from '../../models/model-interfaces';
-import { getPlayerStats } from '../../models/TeamModel';
 import rankingSorter from '../../models/utils/rankingSorter';
 
 type TopPerformer = {

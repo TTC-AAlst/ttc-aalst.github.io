@@ -44,6 +44,7 @@ export const useSignalR = () => {
       connection
         .start()
         .then(() => {
+          // eslint-disable-next-line no-console
           console.log('SignalR Connected!');
 
           connection.on('BroadcastReload', (entityType: Entities, id: number) => {
@@ -67,11 +68,13 @@ export const useSignalR = () => {
                 dispatch(fetchTeam({ id }));
                 break;
               default:
+                // eslint-disable-next-line no-console
                 console.warn(`BroadcastReload Unmapped!? ${entityType}: ${id}`);
             }
           });
 
           connection.onreconnected(() => {
+            // eslint-disable-next-line no-console
             console.log('SignalR Reconnected! Syncing data...');
             dispatch(fetchMatches());
             dispatch(fetchTeams());
@@ -87,6 +90,7 @@ export const useSignalR = () => {
           //   console.error("SignalR Connection closed", error);
           // });
         })
+        // eslint-disable-next-line no-console
         .catch(err => console.error('Connection failed: ', err));
     }
 

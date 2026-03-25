@@ -23,7 +23,6 @@ export const saveConfig = createAsyncThunk('config/Save', async (pair: { key: st
     return pair;
   } catch (err) {
     dispatch(showSnackbar(t('common.apiFail')));
-    console.log('saveConfigParam!', err);
     throw err;
   }
 });
@@ -93,7 +92,6 @@ function getDefaultConfig(initialState: IConfig): IConfig {
   // }
 }
 
-type ConfigParams = typeof defaultConfigState.params;
 type Settings = typeof defaultConfigState.settings;
 type SettingPair<K extends keyof Settings> = {
   key: K;
@@ -146,11 +144,11 @@ const configSlice = createSlice({
       (state.params as unknown as Record<string, string>)[action.payload.key] = action.payload.value;
     });
 
-    builder.addCase(validateToken.fulfilled, (state, action) => {
+    builder.addCase(validateToken.fulfilled, (state, _action) => {
       state.initialLoad = 'should-start';
     });
 
-    builder.addCase(login.fulfilled, (state, action) => {
+    builder.addCase(login.fulfilled, (state, _action) => {
       state.initialLoad = 'should-start';
     });
 

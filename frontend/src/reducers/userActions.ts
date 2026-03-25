@@ -28,7 +28,7 @@ export const login = createAsyncThunk(
       } else {
         dispatch(showSnackbar(t('login.fail', playerName)));
       }
-    } catch (err) {
+    } catch (_err) {
       dispatch(showSnackbar(t('login.fail', playerName)));
     }
   },
@@ -48,7 +48,7 @@ export const adminSetNewPassword = createAsyncThunk(
     try {
       await http.post('/users/AdminSetNewPassword', data);
       dispatch(showSnackbar(t('common.apiSuccess')));
-    } catch (err) {
+    } catch (_err) {
       dispatch(showSnackbar(t('common.apiFail')));
     }
   },
@@ -64,7 +64,7 @@ export const changePassword = createAsyncThunk(
       } else {
         dispatch(showSnackbar(t('password.passwordChangedFail')));
       }
-    } catch (err) {
+    } catch (_err) {
       dispatch(showSnackbar(t('common.apiFail')));
     }
   },
@@ -77,7 +77,7 @@ export const requestResetPasswordLink = createAsyncThunk(
       await http.post('/users/requestResetPasswordLink', { playerId, email });
       dispatch(showSnackbar(t('password.fogotMailSent')));
       navigate(-1);
-    } catch (err) {
+    } catch (_err) {
       dispatch(showSnackbar(t('common.apiFail')));
     }
   },
@@ -90,7 +90,7 @@ export const setNewPasswordFromGuid = createAsyncThunk(
       await http.post('/users/SetNewPasswordFromGuid', { guid, playerId, password });
       dispatch(showSnackbar(t('common.apiSuccess')));
       dispatch(login({ playerId, password, navigate }));
-    } catch (err) {
+    } catch (_err) {
       dispatch(showSnackbar(t('common.apiFail')));
     }
   },
@@ -103,7 +103,7 @@ export const uploadPlayer = createAsyncThunk(
       await http.uploadImage(imageBase64, playerId, type);
       dispatch(showSnackbar(t('common.apiSuccess')));
       return { playerId };
-    } catch (err) {
+    } catch (_err) {
       dispatch(showSnackbar(t('common.apiFail')));
       return { playerId };
     }

@@ -13,7 +13,6 @@ import { t } from '../../../locales';
 import storeUtil from '../../../storeUtil';
 import { selectUser, useTtcDispatch, useTtcSelector } from '../../../utils/hooks/storeHooks';
 import { deleteComment, postComment, postReport } from '../../../reducers/matchesReducer';
-import { useViewport } from '../../../utils/hooks/useViewport';
 import { getStaticFileUrl } from '../../../config';
 
 function getEmptyComment(matchId: number, playerId: number): IMatchComment {
@@ -36,7 +35,6 @@ type MatchReportProps = {
 export const MatchReport = ({ match, skipContainerClass }: MatchReportProps) => {
   const user = useTtcSelector(selectUser);
   const dispatch = useTtcDispatch();
-  const viewport = useViewport();
   const [text, setText] = useState(match.description);
   const [commentImageFormOpen, setCommentImageFormOpen] = useState(false);
   const [commentFormOpen, setCommentFormOpen] = useState(false);

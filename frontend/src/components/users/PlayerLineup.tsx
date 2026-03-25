@@ -22,7 +22,7 @@ type PlayerLineupProps = {
   disableBlockedMatches?: boolean;
 };
 
-const PlayerLineup = ({ playerId, teams: propTeams, disableBlockedMatches }: PlayerLineupProps) => {
+const PlayerLineup = ({ playerId, teams: propTeams, disableBlockedMatches: _disableBlockedMatches }: PlayerLineupProps) => {
   const dispatch = useTtcDispatch();
   const [filter, setFilter] = useState<string | null>(null);
   const [showCommentId, setShowCommentId] = useState(0);

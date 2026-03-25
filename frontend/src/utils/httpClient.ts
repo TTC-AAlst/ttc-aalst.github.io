@@ -7,9 +7,11 @@ const LogRequestTimes = false;
 
 function getUrl(path: string, appendApi = true): string {
   if (path[0] !== '/') {
+    // eslint-disable-next-line no-console
     console.error('HttpClient: path passed should start with a /');
   }
   if (path.substring(0, 5) === '/api/') {
+    // eslint-disable-next-line no-console
     console.error('HttpClient: path passed should not be prefixed with /api');
   }
   if (appendApi) {
@@ -34,6 +36,7 @@ const HttpClient = {
     const fullUrl = `GET ${qsStringified ? `${path}?${new URLSearchParams(qsStringified).toString()}` : path}`;
     return (async () => {
       if (LogRequestTimes) {
+        // eslint-disable-next-line no-console
         console.time(fullUrl);
       }
 
@@ -42,6 +45,7 @@ const HttpClient = {
       });
 
       if (LogRequestTimes) {
+        // eslint-disable-next-line no-console
         console.timeEnd(fullUrl);
       }
 
@@ -52,6 +56,7 @@ const HttpClient = {
     const fullUrl = `POST ${url}`;
     return (async () => {
       if (LogRequestTimes) {
+        // eslint-disable-next-line no-console
         console.time(fullUrl);
       }
 
@@ -62,6 +67,7 @@ const HttpClient = {
       });
 
       if (LogRequestTimes) {
+        // eslint-disable-next-line no-console
         console.timeEnd(fullUrl);
       }
 
@@ -81,6 +87,7 @@ const HttpClient = {
     });
 
     if (!response.ok) {
+      // eslint-disable-next-line no-console
       console.error('/upload FAIL', response.status, response.statusText);
       throw new Error(`Upload failed: ${response.status}`);
     }
@@ -95,6 +102,7 @@ const HttpClient = {
     });
 
     if (!response.ok) {
+      // eslint-disable-next-line no-console
       console.error('/upload/image', response.status, response.statusText);
       throw new Error(`Image upload failed: ${response.status}`);
     }

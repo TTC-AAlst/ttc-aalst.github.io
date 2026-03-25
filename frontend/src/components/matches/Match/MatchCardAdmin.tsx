@@ -9,11 +9,6 @@ type MatchCardAdminProps = {
 export const MatchCardAdmin = ({ match }: MatchCardAdminProps) => {
   const dispatch = useTtcDispatch();
 
-  const playerDetails = match.players
-    .slice()
-    .sort((a, b) => `${a.status}-${a.alias}`.localeCompare(`${b.status}-${b.alias}`))
-    .map(ply => `${ply.status}: ${ply.alias}`);
-
   return (
     <div style={{ padding: 7 }}>
       <button type="button" onClick={() => dispatch(frenoyMatchSync({ match, forceSync: true }))} className="btn btn-outline-secondary pull-right">

@@ -10,7 +10,7 @@ type PlayersCardGalleryProps = {
   competition?: Competition;
 };
 
-export const PlayersCardGallery = ({ players, competition }: PlayersCardGalleryProps) => {
+export const PlayersCardGallery = ({ players, competition: _competition }: PlayersCardGalleryProps) => {
   const viewWidth = useViewport().width;
   if (viewWidth > 360) {
     return (

@@ -27,6 +27,7 @@ export const getOpponentMatches = createAsyncThunk(
         dispatch(frenoyReadOnlyMatchSync(m));
       });
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('getOpponentMatches', err);
     }
   },
@@ -41,6 +42,7 @@ export const frenoyReadOnlyMatchSync = createAsyncThunk('matches/FrenoyOtherMatc
     const newMatch = await http.post<IMatch>('/matches/FrenoyOtherMatchSync', { id: match.id });
     dispatch(simpleLoaded(newMatch));
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('frenoyReadOnlyMatchSync', match, err);
   }
 });

@@ -11,14 +11,12 @@ export function getClutchMaster(competition: Competition, playerStats: ITeamPlay
 
     if (match.score.home === requiredPoints) {
       let ourPoints = 0;
-      let theirPoints = 0;
       const games = [...match.games].sort((a, b) => a.matchNumber - b.matchNumber);
 
       for (const game of games) {
         const weWon = game.outcome === 'Won';
 
         if (weWon) ourPoints++;
-        else theirPoints++;
 
         if (ourPoints === requiredPoints) {
           const ourPlayers = match.getOwnPlayers().map(ply => ply.uniqueIndex);

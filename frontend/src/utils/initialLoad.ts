@@ -22,24 +22,21 @@ export const useInitialLoad = () => {
       }
 
       const token = localStorage.getItem('token');
-      console.log(`InitialLoadEffect: ${config.initialLoad} for PlayerId=${playerId} with Token=${!!token}`);
 
       if (token && !playerId) {
-        console.log('Validating Token');
         try {
           localStorage.removeItem('token');
           await dispatch(validateToken(token)).unwrap();
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.error('Token validation failed', e);
         }
       }
 
       if (token && config.initialLoad === 'evaluating-start') {
-        console.log('Skipping Initial Load');
         return;
       }
 
-      console.log('Start Initial Load', playerId);
       try {
         await Promise.all([
           dispatch(fetchClubs()).unwrap(),
@@ -48,8 +45,8 @@ export const useInitialLoad = () => {
           dispatch(fetchTeams()).unwrap(),
           dispatch(fetchMatches()).unwrap(),
         ]);
-        console.log('Initial Load Done');
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('Initial Load failed', err);
       }
 
@@ -60,18 +57,18 @@ export const useInitialLoad = () => {
       initialLoad().then(
         () => {},
         err => {
+          // eslint-disable-next-line no-console
           console.error('Initial Load failed (promise)', err);
         },
       );
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Initial Load failed (catch block)', err);
     }
   }, [playerId, config.initialLoad, dispatch]);
 
   useEffect(() => {
     if (config.initialLoad === 'done') {
-      console.log('Secondary load started');
-      console.log('Teams', teams.length);
       teams.forEach(team => {
         dispatch(loadTeamRanking({ team }));
       });
@@ -88,7 +85,6 @@ export const useInitialLoad = () => {
           });
         });
 
-      console.log('Matches', matches.length);
       matches.forEach(match => {
         dispatch(frenoyMatchSync({ match }));
       });

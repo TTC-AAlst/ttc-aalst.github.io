@@ -25,7 +25,7 @@ export const frenoyMatchSync = createAsyncThunk('matches/FrenoyMatchSync', async
     try {
       const newMatch = await http.post<IFullStoreMatchOwn>(`/matches/FrenoyMatchSync?forceSync=${data.forceSync || false}`, { id: data.match.id });
       dispatch(simpleLoaded(newMatch));
-    } catch (err) {
+    } catch (_err) {
       if (data.forceSync) {
         dispatch(showSnackbar(t('common.apiFail')));
       }
@@ -37,7 +37,7 @@ export const updateScore = createAsyncThunk('matches/UpdateScore', async (data: 
   try {
     const newMatch = await http.post<IFullStoreMatchOwn>('/matches/UpdateScore', data);
     dispatch(simpleLoaded(newMatch));
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('common.apiFail')));
   }
 });
@@ -47,7 +47,7 @@ export const postReport = createAsyncThunk('matches/Report', async (report: { ma
     const newMatch = await http.post<IFullStoreMatchOwn>('/matches/Report', report);
     dispatch(simpleLoaded(newMatch));
     dispatch(showSnackbar(t('match.report.reportPosted')));
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('common.apiFail')));
   }
 });
@@ -57,7 +57,7 @@ export const postComment = createAsyncThunk('matches/Comment', async (comment: I
     const newMatch = await http.post<IFullStoreMatchOwn>('/matches/Comment', comment);
     dispatch(simpleLoaded(newMatch));
     dispatch(showSnackbar(t('match.report.commentPosted')));
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('common.apiFail')));
   }
 });
@@ -67,7 +67,7 @@ export const deleteComment = createAsyncThunk('matches/DeleteComment', async (da
     const newMatch = await http.post<IFullStoreMatchOwn>('/matches/DeleteComment', data);
     dispatch(simpleLoaded(newMatch));
     dispatch(showSnackbar(t('match.report.commentDeleted')));
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('common.apiFail')));
   }
 });
@@ -112,6 +112,7 @@ export const selectPlayer = createAsyncThunk(
       const newMatch = await http.post<IFullStoreMatchOwn>(`/matches/${isMyFormation ? 'SetMyFormation' : 'TogglePlayer'}`, matchPlayer);
       dispatch(simpleLoaded(newMatch));
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('selectPlayer', data, err);
     }
   },
@@ -131,6 +132,7 @@ export const editMatchPlayers = createAsyncThunk('matches/EditMatchPlayers', asy
     dispatch(simpleLoaded(result));
     dispatch(showSnackbar(t('common.apiSuccess')));
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('editMatchPlayers', data, err);
   }
 });
@@ -140,7 +142,7 @@ export const frenoyTeamSync = createAsyncThunk('matches/FrenoyTeamSync', async (
   try {
     await http.post('/matches/FrenoyTeamSync', { id: data.teamId });
     dispatch(showSnackbar(`${t('common.apiSuccess')}: Duw F5 om de wijzigingen te zien`));
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('common.apiFail')));
   }
 });
@@ -151,7 +153,7 @@ export const emailFormation = createAsyncThunk(
     try {
       await http.post('/matches/WeekCompetitionEmail', data);
       dispatch(showSnackbar(t('week.formationMailed')));
-    } catch (err) {
+    } catch (_err) {
       dispatch(showSnackbar('Fout bij versturen email!?'));
     }
   },

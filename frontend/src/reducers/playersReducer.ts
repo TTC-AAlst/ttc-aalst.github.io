@@ -39,7 +39,7 @@ export const deletePlayer = createAsyncThunk('players/DeletePlayer', async (data
     await http.post<IStorePlayer>(`/players/DeletePlayer/${data.playerId}`);
     dispatch(showSnackbar(t('player.deletePlaterSuccess')));
     return data.playerId;
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('player.deletePlayerFail')));
     return null;
   }
@@ -49,7 +49,7 @@ export const frenoySync = createAsyncThunk('players/FrenoySync', async (_, { dis
   try {
     await http.post('/players/FrenoySync');
     dispatch(showSnackbar(t('common.apiSuccess')));
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('common.apiFail')));
   }
 });
@@ -71,7 +71,7 @@ export const updatePlayer = createAsyncThunk('players/UpdatePlayer', async (data
     const response = await http.post<IStorePlayer>('/players/UpdatePlayer', data.player);
     dispatch(showSnackbar(t('player.updatePlayerSuccess')));
     return { player: response, switchActive: data.switchActive };
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('player.updatePlayerFail')));
     return null;
   }
@@ -81,7 +81,7 @@ export const saveBoardMember = createAsyncThunk('clubs/Board/save', async (data:
   try {
     await http.post('/clubs/Board', data);
     dispatch(showSnackbar(t('common.apiSuccess')));
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('common.apiFail')));
   }
 });
@@ -90,7 +90,7 @@ export const deleteBoardMember = createAsyncThunk('clubs/Board/delete', async (d
   try {
     await http.post(`/clubs/Board/${data.playerId}`);
     dispatch(showSnackbar(t('common.apiSuccess')));
-  } catch (err) {
+  } catch (_err) {
     dispatch(showSnackbar(t('common.apiFail')));
   }
 });
@@ -108,7 +108,7 @@ export const updateStyle = createAsyncThunk(
       //   newStyle: data.newStyle.name + ': ' + data.newStyle.bestStroke
       // }));
       return response;
-    } catch (err) {
+    } catch (_err) {
       dispatch(showSnackbar(t('common.apiFail')));
       return null;
     }

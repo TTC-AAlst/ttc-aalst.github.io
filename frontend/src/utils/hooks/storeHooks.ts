@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
-import dayjs from 'dayjs';
 import type { RootState, AppDispatch } from '../../store';
 import UserModel from '../../models/UserModel';
 import MatchModel from '../../models/MatchModel';

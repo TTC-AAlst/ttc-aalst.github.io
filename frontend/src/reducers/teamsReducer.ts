@@ -25,7 +25,7 @@ export const toggleTeamPlayer = createAsyncThunk(
       dispatch(simpleLoaded(response));
       dispatch(showSnackbar(t('common.apiSuccess')));
       return response;
-    } catch (err) {
+    } catch (_err) {
       dispatch(showSnackbar(t('common.apiFail')));
       return null;
     }
@@ -38,6 +38,7 @@ export const loadTeamRanking = createAsyncThunk('teams/Ranking', async ({ team }
     const response = await http.get<ITeamRanking[]>(url);
     dispatch(teamRankingsSlice.actions.rankingLoaded({ teamId: team.id, rankings: response }));
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(url, err);
   }
 });

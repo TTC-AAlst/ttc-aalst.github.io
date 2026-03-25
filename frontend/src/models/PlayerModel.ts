@@ -1,4 +1,4 @@
-import { config, getStaticFileUrl } from '../config';
+import { getStaticFileUrl } from '../config';
 import storeUtil from '../storeUtil';
 import { IPlayer, IPlayerContact, IPlayerCompetition, IPlayerStyle, Competition, ITeam, MatchPlayerStatus } from './model-interfaces';
 import { UserRoles } from './UserModel';
@@ -143,24 +143,5 @@ export function getPlayingStatusClass(playingStatus?: MatchPlayerStatus | ''): u
       return 'info';
     default:
       return undefined;
-  }
-}
-
-function getPlayingStatusColor(playingStatus?: { status: MatchPlayerStatus }): null | string {
-  if (!playingStatus) {
-    return null;
-  }
-
-  switch (playingStatus.status) {
-    case 'Play':
-    case 'Major':
-    case 'Captain':
-      return '#FFB00F';
-    case 'NotPlay':
-      return '#c9302c';
-    case 'Maybe':
-      return '#31b0d5';
-    default:
-      return null;
   }
 }
