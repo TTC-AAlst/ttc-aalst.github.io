@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Box, Button, Grid2, IconButton, TextField, Typography } from '@mui/material';
-import Add from '@mui/icons-material/Add';
-import Delete from '@mui/icons-material/Delete';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { t } from '../../locales';
@@ -19,7 +17,7 @@ export const AdminEvents = () => {
         <Grid2 size={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3>Beheer Events</h3>
-            <Button variant="contained" startIcon={<Add />} onClick={() => setEvents([...events, ''])} size="small">
+            <Button variant="contained" startIcon={<i className="fa fa-plus" />} onClick={() => setEvents([...events, ''])} size="small">
               Voeg Event Toe
             </Button>
           </Box>
@@ -45,7 +43,7 @@ export const AdminEvents = () => {
               />
             </Grid2>
             <IconButton onClick={() => setEvents(events.filter((_, i) => i !== index))} color="error" size="small">
-              <Delete />
+              <i className="fa fa-trash-o" />
             </IconButton>
           </>
         ))}

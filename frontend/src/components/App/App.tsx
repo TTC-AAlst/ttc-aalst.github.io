@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Header } from '../skeleton/Header/Header';
 import { Footer } from '../skeleton/Footer/Footer';
@@ -69,7 +68,7 @@ export const App = ({ Component }: { Component: React.ComponentType }) => {
             onClose={() => dispatch(clearSnackbar())}
             action={
               <IconButton size="small" aria-label="close" color="inherit" onClick={() => dispatch(clearSnackbar())}>
-                <CloseIcon fontSize="small" />
+                <i className="fa fa-times" />
               </IconButton>
             }
           />

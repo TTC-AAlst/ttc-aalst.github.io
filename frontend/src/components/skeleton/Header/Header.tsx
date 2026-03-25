@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import { Navigation } from './HeaderNavigation';
 import { HeaderScoreCarousel } from './HeaderScoreCarousel';
 import { Icon } from '../../controls/Icons/Icon';
@@ -38,7 +37,7 @@ export const Header = ({ navOpen, setNavOpen }: HeaderProps) => {
       <AppBar position="sticky">
         <Toolbar variant="dense">
           <IconButton style={{ marginLeft: -12, marginRight: 20 }} color="inherit" aria-label="Menu" onClick={() => setNavOpen(!navOpen)}>
-            <MenuIcon />
+            <i className="fa fa-bars" />
           </IconButton>
 
           <Typography variant="subtitle1" color="inherit" style={{ flexGrow: 1, fontSize: '1.7rem' }}>

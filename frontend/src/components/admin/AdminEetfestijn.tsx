@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import { Box, Button, Grid2, IconButton, Paper, TextField, Typography } from '@mui/material';
-import Add from '@mui/icons-material/Add';
-import Delete from '@mui/icons-material/Delete';
 import { useTtcDispatch, useTtcSelector } from '../../utils/hooks/storeHooks';
 import { MaterialButton } from '../controls/Buttons/MaterialButton';
 import { saveConfig } from '../../reducers/configReducer';
@@ -113,7 +111,7 @@ const AdminEetfestijnForm = ({ eetfestijn, setEetfestijn }: AdminEetfestijnFormP
             <Typography variant="h6">Menu Items</Typography>
             <Button
               variant="contained"
-              startIcon={<Add />}
+              startIcon={<i className="fa fa-plus" />}
               onClick={() => setEetfestijn({ ...eetfestijn, menu: [...eetfestijn.menu, { name: '', desc: '', price: 0 }] })}
               size="small"
             >
@@ -128,7 +126,7 @@ const AdminEetfestijnForm = ({ eetfestijn, setEetfestijn }: AdminEetfestijnFormP
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="subtitle1">Menu Item {index + 1}</Typography>
                 <IconButton onClick={() => setEetfestijn({ ...eetfestijn, menu: eetfestijn.menu.filter((_, i) => i !== index) })} color="error" size="small">
-                  <Delete />
+                  <i className="fa fa-trash-o" />
                 </IconButton>
               </Box>
 
