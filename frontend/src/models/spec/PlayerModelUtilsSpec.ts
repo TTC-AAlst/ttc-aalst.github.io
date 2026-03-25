@@ -1,5 +1,82 @@
-import { displayMobile, createFrenoyLink, createFrenoyLinkByUniqueId, getPlayingStatusClass } from '../PlayerModel';
+import PlayerModel, { displayMobile, createFrenoyLink, createFrenoyLinkByUniqueId, getPlayingStatusClass } from '../PlayerModel';
 import { IPlayerCompetition } from '../model-interfaces';
+
+describe('PlayerModel', () => {
+  it('constructs with defaults', () => {
+    const player = new PlayerModel();
+    expect(player.id).toBe(0);
+    expect(player.alias).toBe('');
+    expect(player.firstName).toBe('');
+    expect(player.lastName).toBe('');
+    expect(player.active).toBe(false);
+    expect(player.security).toBe('Player');
+    expect(player.hasKey).toBeNull();
+    expect(player.quitYear).toBeNull();
+    expect(player.imageVersion).toBe(0);
+    expect(player.style).toEqual({ playerId: 0, name: '', bestStroke: '' });
+  });
+
+  it('constructs from json', () => {
+    const player = new PlayerModel({
+      id: 42,
+      alias: 'Dirk',
+      firstName: 'Dirk',
+      lastName: 'De Smansen',
+      active: true,
+      security: 'Board',
+      hasKey: true,
+      quitYear: null,
+      imageVersion: 3,
+    });
+    expect(player.id).toBe(42);
+    expect(player.alias).toBe('Dirk');
+    expect(player.active).toBe(true);
+    expect(player.security).toBe('Board');
+    expect(player.hasKey).toBe(true);
+    expect(player.imageVersion).toBe(3);
+  });
+
+  it('computes name from firstName and lastName', () => {
+    const player = new PlayerModel({ firstName: 'Dirk', lastName: 'De Smansen' });
+    expect(player.name).toBe('Dirk De Smansen');
+  });
+
+  it('computes slug from name', () => {
+    const player = new PlayerModel({ firstName: 'Dirk', lastName: 'De Smansen' });
+    expect(player.slug).toBe('dirk-de-smansen');
+  });
+
+  it('getCompetition returns vttl for Vttl', () => {
+    const vttl = { competition: 'Vttl', ranking: 'B4' } as IPlayerCompetition;
+    const player = new PlayerModel({ vttl });
+    expect(player.getCompetition('Vttl')).toBe(vttl);
+  });
+
+  it('getCompetition returns vttl for Jeugd', () => {
+    const vttl = { competition: 'Vttl', ranking: 'C0' } as IPlayerCompetition;
+    const player = new PlayerModel({ vttl });
+    expect(player.getCompetition('Jeugd')).toBe(vttl);
+  });
+
+  it('getCompetition returns sporta for Sporta', () => {
+    const sporta = { competition: 'Sporta', ranking: 'D2' } as IPlayerCompetition;
+    const player = new PlayerModel({ sporta });
+    expect(player.getCompetition('Sporta')).toBe(sporta);
+  });
+
+  it('getCompetition returns empty object when competition is missing', () => {
+    const player = new PlayerModel();
+    const result = player.getCompetition('Vttl');
+    expect(result).toEqual({});
+  });
+
+  it('contact has getMobile method', () => {
+    const player = new PlayerModel({
+      contact: { playerId: 1, email: 'test@test.com', mobile: '0476123456', address: 'Street 1', city: 'Aalst' },
+    });
+    expect(player.contact.getMobile()).toBe('0476/12 34 56');
+  });
+});
 
 describe('displayMobile', () => {
   it('formats a 10-digit Belgian mobile number', () => {
