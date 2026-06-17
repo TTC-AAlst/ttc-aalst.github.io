@@ -2,8 +2,8 @@ import { config, devUrl, isDev, getSignalRUrl, getStaticFileUrl } from '../../co
 
 describe('config', () => {
   it('has expected properties', () => {
-    expect(config.backend).toContain('https://');
-    expect(config.images).toContain('https://');
+    expect(config.backend).toBe('');
+    expect(config.images).toBe('');
     expect(config.ga).toBeTruthy();
     expect(config.version).toBeTruthy();
   });
