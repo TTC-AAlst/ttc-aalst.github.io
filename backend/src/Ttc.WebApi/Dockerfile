@@ -3,6 +3,9 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /source
 
 COPY *.slnx .
+# Central Package Management: restore needs these at the solution root to resolve
+# the versionless <PackageReference>s in each csproj.
+COPY Directory.Packages.props Directory.Build.props ./
 COPY src/Ttc.WebApi/*.csproj ./src/Ttc.WebApi/
 COPY src/Frenoy.Api/*.csproj ./src/Frenoy.Api/
 COPY src/Ttc.DataAccess/*.csproj ./src/Ttc.DataAccess/
