@@ -11,6 +11,9 @@ internal static class LoadSettings
             // .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+            // Lets per-tier overrides (e.g. TtcSettings__StartSyncJob=false on dev/PRs so they
+            // don't burn the Frenoy API quota) take effect from the container environment.
+            .AddEnvironmentVariables()
             .Build();
 
         configuration
