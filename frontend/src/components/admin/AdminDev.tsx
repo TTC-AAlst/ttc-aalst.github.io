@@ -13,7 +13,7 @@ const AdminDev = () => {
   return (
     <div style={{ padding: 5 }}>
       <div className="pull-right">
-        <a href="https://itenium-test.synology.me:1709" target="_blank" rel="noopener noreferrer">
+        <a href="https://ttc-tabt.sangu.be/" target="_blank" rel="noopener noreferrer">
           Goto TabT test site
         </a>
         <br />
