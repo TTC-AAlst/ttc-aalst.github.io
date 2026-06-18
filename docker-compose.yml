@@ -7,10 +7,12 @@ services:
       MYSQL_DATABASE: ttc_aalst
     volumes:
       - mysql-data:/var/lib/mysql
-      # Optional seed: dev/PR set TTC_SEED_DIR to a host dir holding *.sql; MySQL runs
-      # initdb scripts ONLY on a fresh datadir, so prod (persistent volume, TTC_SEED_DIR
-      # unset → empty default dir) never re-seeds. NOT /dev/null (char device fails a dir mount).
-      - ${TTC_SEED_DIR:-./docker/empty-seed}:/docker-entrypoint-initdb.d:ro
+      # Seed for dev/PR previews (and disaster-restore for prod): a fixed apps-01 host dir the
+      # ttc-seed job fills with the nightly prod dump (01-seed.sql). MySQL runs initdb scripts
+      # ONLY on a fresh datadir, so prod's persistent volume means a normal redeploy never
+      # re-imports — only a first/wiped datadir seeds. Static bind, not parameterised: Coolify
+      # ignores ${VAR} in compose volume paths. Absent locally → auto-created empty → empty DB.
+      - /data/ttc-aalst/seed:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
       interval: 10s
