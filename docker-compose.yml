@@ -7,6 +7,10 @@ services:
       MYSQL_DATABASE: ttc_aalst
     volumes:
       - mysql-data:/var/lib/mysql
+      # Optional seed: dev/PR set TTC_SEED_DIR to a host dir holding *.sql; MySQL runs
+      # initdb scripts ONLY on a fresh datadir, so prod (persistent volume, TTC_SEED_DIR
+      # unset → empty default dir) never re-seeds. NOT /dev/null (char device fails a dir mount).
+      - ${TTC_SEED_DIR:-./docker/empty-seed}:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
       interval: 10s
