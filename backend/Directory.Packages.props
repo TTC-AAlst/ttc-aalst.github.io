@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <!-- CoreWCF -->
-    <PackageVersion Include="CoreWCF.Http" Version="1.8.0" />
-    <PackageVersion Include="CoreWCF.Primitives" Version="1.8.0" />
+    <PackageVersion Include="CoreWCF.Http" Version="1.8.1" />
+    <PackageVersion Include="CoreWCF.Primitives" Version="1.8.1" />
 
     <!-- Entity Framework -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
