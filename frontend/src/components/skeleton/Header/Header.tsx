@@ -36,7 +36,7 @@ export const Header = ({ navOpen, setNavOpen }: HeaderProps) => {
 
   return (
     <div style={{ flexGrow: 1 }}>
-      <Navbar bg="primary" sticky="top" data-bs-theme="dark" style={nonProd ? { backgroundColor: '#b45309' } : undefined}>
+      <Navbar bg="primary" sticky="top" data-bs-theme="dark" className={nonProd ? 'Header-nonprod' : undefined}>
         <Container fluid>
           <button className="btn btn-link text-white" style={{ marginLeft: -12, marginRight: 20 }} aria-label="Menu" onClick={() => setNavOpen(!navOpen)}>
             <i className="fa fa-bars" />

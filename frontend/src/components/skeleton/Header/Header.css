@@ -4,6 +4,11 @@
   --brand-color: #fff;
 }
 
+/* Non-prod warning bar. Must beat Bootstrap's .bg-primary, which is !important. */
+.Header-nonprod {
+  background-color: #b45309 !important;
+}
+
 .Header-link {
   font-size: 1em !important;
   color: var(--brand-color);

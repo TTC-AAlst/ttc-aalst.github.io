@@ -32,8 +32,9 @@ describe('Header', () => {
     linkButtons.forEach(btn => expect(btn.classList.contains('text-decoration-none')).toBe(true));
   });
 
-  it('shows a DEV badge off production (test host is non-prod)', () => {
-    renderHeader();
+  it('shows a DEV badge and amber bar off production (test host is non-prod)', () => {
+    const { container } = renderHeader();
     expect(screen.getByText('DEV')).toBeInTheDocument();
+    expect(container.querySelector('.Header-nonprod')).not.toBeNull();
   });
 });
