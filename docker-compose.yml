@@ -5,6 +5,15 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-my-secret-pw}
       MYSQL_DATABASE: ttc_aalst
+      # dev/PR only (manifest envByTier.dev): gates the seed dir's 02-scrub.sh, which resets all
+      # logins + emails. Prod never sets it → empty here → scrub no-ops (disaster-restore safe).
+      SCRUB_DEV: ${SCRUB_DEV:-}
+    ports:
+      # Prod MySQL published on the LAN for DB clients. DB_PORT is set per-tier in the Coolify
+      # manifest (envByTier.prod -> "3306:3306", binds 0.0.0.0 on apps-01). Unset on dev/PR ->
+      # the default below = a random LOOPBACK port: not LAN-exposed, and unique so dev + every PR
+      # preview (all on apps-01) never collide. WARNING: prod exposes MySQL root to the whole VLAN.
+      - "${DB_PORT:-127.0.0.1::3306}"
     volumes:
       - mysql-data:/var/lib/mysql
       # Seed for dev/PR previews (and disaster-restore for prod): a fixed apps-01 host dir the

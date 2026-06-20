@@ -11,7 +11,6 @@ bun run test       # vitest
 bun run lint       # eslint
 bun run format     # prettier --write
 bun run knip       # find dead code
-bun run deploy     # build + gh-pages
 ```
 
 ## Architecture

@@ -73,7 +73,7 @@ const Links = () => (
         </tr>
         <tr>
           <td>
-            <a href="https://github.com/TTC-AAlst/ttc-aalst.github.io" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/TTC-AAlst/TTC-Aalst" target="_blank" rel="noopener noreferrer">
               Github Source Code
             </a>
           </td>
