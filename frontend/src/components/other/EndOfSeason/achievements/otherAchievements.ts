@@ -1,6 +1,6 @@
 import { Competition, IMatch, IPlayer, ITeamPlayerStats } from '../../../../models/model-interfaces';
 import { getRankingValue } from '../../../../models/utils/playerRankingValueMapper';
-import rankingSorter, { PlayerRanking } from '../../../../models/utils/rankingSorter';
+import { PlayerRanking } from '../../../../models/utils/rankingSorter';
 import storeUtil from '../../../../storeUtil';
 
 const getPerGames = (cur: ITeamPlayerStats) => Math.floor((cur.victories / cur.games) * 1000) / 10;
@@ -31,10 +31,10 @@ export function getMostMatchesWon(playerStats: ITeamPlayerStats[]): AchievementI
 }
 
 export function getHighestJumper(competition: Competition, playerStats: ITeamPlayerStats[]): AchievementInfo {
-  const calculateRankingJump = (currentRanking: PlayerRanking, nextRanking: PlayerRanking): number => {
-    const rankDiff = rankingSorter(currentRanking, nextRanking);
-    return rankDiff;
-  };
+  // Step count must use the per-competition ladder: Vttl has no "F" (Sporta does),
+  // so e.g. NG -> E6 is one classification in Vttl but two in Sporta.
+  const calculateRankingJump = (currentRanking: PlayerRanking, nextRanking: PlayerRanking): number =>
+    getRankingValue(competition, nextRanking) - getRankingValue(competition, currentRanking);
 
   const playersWithJumps = playerStats.map(player => {
     const { ranking, nextRanking } = player.ply.getCompetition(competition);
