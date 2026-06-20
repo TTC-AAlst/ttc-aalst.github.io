@@ -14,6 +14,9 @@ export const Kampioenen = ({ topTeams }: KampioenenProps) => {
     return null;
   }
 
+  // A lone champion would sit in the left grid column; center it instead.
+  const colClass = `col-md-4 col-sm-6${topTeams.length === 1 ? ' mx-auto' : ''}`;
+
   return (
     <div className="row kampioen">
       <h2>
@@ -22,7 +25,7 @@ export const Kampioenen = ({ topTeams }: KampioenenProps) => {
         <TrophyIcon style={{ marginLeft: 15 }} />
       </h2>
       {topTeams.map(team => (
-        <div key={team.id} className="col-md-4 col-sm-6">
+        <div key={team.id} className={colClass}>
           <div className="content">
             <h3>
               <Link to={`${t.route('teams').replace(':competition', team.competition)}/${team.teamCode}`} className="link-hover-underline">
