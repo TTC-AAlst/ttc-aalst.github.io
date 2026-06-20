@@ -11,7 +11,7 @@ import './Header.css';
 
 const HeaderButton = ({ label, href }: { label: string; href: string }) => (
   <Link to={href}>
-    <Button variant="link" style={{ color: 'white' }}>
+    <Button variant="link" className="text-decoration-none" style={{ color: 'white' }}>
       {label}
     </Button>
   </Link>
