@@ -34,7 +34,7 @@ describe('Kampioenen', () => {
     const { container } = renderKampioenen([makeTeam(1)]);
     const cols = container.querySelectorAll('.col-md-4');
     expect(cols).toHaveLength(1);
-    expect(cols[0].classList.contains('mx-auto')).toBe(true);
+    cols.forEach(col => expect(col.classList.contains('mx-auto')).toBe(true));
   });
 
   it('does not center the team boxes when there are multiple champions', () => {
