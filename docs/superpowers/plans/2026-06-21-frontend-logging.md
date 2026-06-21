@@ -571,17 +571,13 @@ git commit -m "feat(logging): breadcrumb on route change (non-prod)"
 
 **Files:**
 - Modify: `frontend/Dockerfile`
+- Modify: `docker-compose.yml`
 
-- [ ] **Step 1: Implement**
+**Context:** The Coolify apps (`ttc-aalst:dev`, `ttc-aalst:main`) use the **docker-compose build pack**. Coolify exposes the commit as the predefined variable `SOURCE_COMMIT`, available for `${...}` interpolation in `docker-compose.yml`. So the sha flows: Coolify `SOURCE_COMMIT` → compose `frontend.build.args` → Dockerfile `ARG` → `VITE_APP_VERSION` → `import.meta.env`. The `:-dev` fallback keeps local `docker compose build` and bare `vite build` working.
 
-In `frontend/Dockerfile`, before `RUN bun run build`, add:
+- [ ] **Step 1: Implement the Dockerfile change**
 
-```dockerfile
-ARG SOURCE_COMMIT=dev
-ENV VITE_APP_VERSION=$SOURCE_COMMIT
-```
-
-So the build stage reads (full context):
+In `frontend/Dockerfile`, before `RUN bun run build`, add `ARG`/`ENV`. Full build stage:
 
 ```dockerfile
 FROM oven/bun:1 AS build
@@ -594,19 +590,37 @@ ENV VITE_APP_VERSION=$SOURCE_COMMIT
 RUN bun run build
 ```
 
-- [ ] **Step 2: Verify locally**
+- [ ] **Step 2: Pass the build arg in compose**
+
+In `docker-compose.yml`, change the `frontend` service `build` block to forward Coolify's `SOURCE_COMMIT`:
+
+```yaml
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        SOURCE_COMMIT: ${SOURCE_COMMIT:-dev}
+    restart: unless-stopped
+    expose:
+      - "80"
+    depends_on:
+      - backend
+```
+
+- [ ] **Step 3: Verify locally**
 
 Run: `cd frontend && VITE_APP_VERSION=test123 bun run build && grep -rl "test123" dist/assets/*.js`
 Expected: at least one bundle contains `test123` (the injected version).
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/Dockerfile
-git commit -m "build(frontend): inject git sha as VITE_APP_VERSION"
+git add frontend/Dockerfile docker-compose.yml
+git commit -m "build(frontend): inject git sha as VITE_APP_VERSION via SOURCE_COMMIT"
 ```
 
-> **Note:** Coolify must pass the commit as the `SOURCE_COMMIT` build arg. If Coolify's variable differs, update the `ARG` name; the `=dev` default keeps builds working regardless.
+> **Note:** `SOURCE_COMMIT` is Coolify's documented predefined commit variable (confirmed: these apps use the docker-compose build pack). The `:-dev` fallback means a wrong/absent value never breaks the build — it just yields `appVersion: "dev"`.
 
 ---
 
