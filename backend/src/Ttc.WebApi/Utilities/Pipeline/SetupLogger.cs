@@ -37,7 +37,7 @@ public static class SetupLogger
                 ttcSettings.Loki,
                 [
                     new LokiLabel() { Key = "service_name", Value = "ttc-backend" },
-                    new LokiLabel() { Key = "app", Value = ResolveAppLabel() },
+                    new LokiLabel() { Key = "app", Value = AppLabelForOrigin(ttcSettings.Origins) },
                 ],
                 [
                     "level",
@@ -50,20 +50,28 @@ public static class SetupLogger
             .CreateLogger();
     }
 
-    private static string ResolveAppLabel() =>
-        AppLabelForBranch(Environment.GetEnvironmentVariable("COOLIFY_BRANCH"));
-
-    // Loki `app` label per environment so dev/preview logs don't commingle with prod:
-    // main (or absent, i.e. local) → "ttc", dev → "ttc-dev", PR-preview branches → "ttc-<branch>".
-    // COOLIFY_BRANCH is injected by Coolify per deploy.
-    public static string AppLabelForBranch(string? branch)
+    // Loki `app` label per environment so dev/preview logs don't commingle with prod.
+    // Derived from the public origin (set per Coolify tier) because Coolify does NOT
+    // expose COOLIFY_BRANCH to the running container — neither via compose env (it
+    // pre-substitutes ${...} to empty) nor as a build-arg value:
+    //   https://ttc-aalst.be → "ttc", https://dev-ttc-aalst.sangu.be → "ttc-dev",
+    //   https://pr-7-ttc-aalst.sangu.be → "ttc-pr-7".
+    public static string AppLabelForOrigin(string? origins)
     {
-        if (string.IsNullOrWhiteSpace(branch) || branch == "main")
+        var host = origins?.Split(',')[0].Trim();
+        if (string.IsNullOrWhiteSpace(host))
         {
             return "ttc";
         }
 
-        var slug = Regex.Replace(branch.ToLowerInvariant(), "[^a-z0-9]+", "-").Trim('-');
-        return $"ttc-{slug}";
+        host = Regex.Replace(host, @"^\w+://", "").Split('/')[0];
+
+        var pr = Regex.Match(host, @"^pr-(\d+)-");
+        if (pr.Success)
+        {
+            return $"ttc-pr-{pr.Groups[1].Value}";
+        }
+
+        return host.StartsWith("dev-") ? "ttc-dev" : "ttc";
     }
 }
