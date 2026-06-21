@@ -18,7 +18,7 @@ public class RequestLoggingFilter
     public async Task Invoke(HttpContext context)
     {
         if (!context.Request.Path.ToString().StartsWith("/api") || context.Request.Method == HttpMethods.Options
-            || context.Request.Path.ToString() == "/api/config/Log")
+            || context.Request.Path.ToString() == "/api/log")
         {
             await _next(context);
             return;
