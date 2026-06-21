@@ -71,7 +71,10 @@ type ReadOnlyMatchPlayersProps = {
 };
 
 export const ReadOnlyMatchPlayers = ({ match, displayNonBlocked }: ReadOnlyMatchPlayersProps) => {
-  if (match.isSyncedWithFrenoy) {
+  // A walkover syncs with no games, so getOwnPlayers() still holds every pre-match selection
+  // (not the played 4). Fall through to render the blocked formation instead, like an
+  // unplayed-but-blocked match.
+  if (match.isSyncedWithFrenoy && match.scoreType !== 'WalkOver') {
     return (
       <div style={{ marginBottom: 4 }}>
         {match.getOwnPlayers().map(ply => (

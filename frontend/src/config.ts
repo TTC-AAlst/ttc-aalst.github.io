@@ -11,6 +11,13 @@ export function isDev() {
   return window.location.hostname === 'localhost' || window.location.hostname.startsWith('192.168.');
 }
 
+// Production is only the public apex. Everything else (local, 192.168.*, dev-*.sangu.be,
+// pr-N-*.sangu.be previews) is non-prod and gets a visible header warning.
+export function isProd() {
+  const { hostname } = window.location;
+  return hostname === 'ttc-aalst.be' || hostname === 'www.ttc-aalst.be';
+}
+
 export function getSignalRUrl() {
   return isDev() ? `${devUrl}/hubs/ttc` : `${config.backend}/hubs/ttc`;
 }

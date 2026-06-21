@@ -33,6 +33,10 @@ type MobileLiveMatchInProgressProps = {
   compact?: boolean;
 };
 
+// Players can only be picked before the match is decided (Frenoy-synced — incl. walkovers, which
+// have a final result but no games) and before any games have been entered.
+const canPickPlayers = (match: IMatch) => !match.isSyncedWithFrenoy && match.games.length === 0;
+
 export const MobileLiveMatchInProgress = ({ match, compact = false }: MobileLiveMatchInProgressProps) => {
   const hasPlayersOrGames = match.games.length || match.getTheirPlayers().length;
   const hasStarted = match.date.isBefore(dayjs());
@@ -71,7 +75,7 @@ const FormationsWithResults = ({ match }: { match: IMatch }) => {
   const [showEditOpponents, setShowEditOpponents] = useState(false);
   const [showEditOwn, setShowEditOwn] = useState(false);
   const user = useTtcSelector(selectUser);
-  const canEditPlayers = match.games.length === 0;
+  const canEditPlayers = canPickPlayers(match);
 
   return (
     <div style={{ padding: 8 }}>
@@ -293,7 +297,7 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
           <SectionTitle>{t('match.tabs.playersTitle')}</SectionTitle>
-          {playingPlayers.length > 0 && user.playerId > 0 && match.games.length === 0 && (
+          {playingPlayers.length > 0 && user.playerId > 0 && canPickPlayers(match) && (
             <EditIcon style={{ cursor: 'pointer' }} onClick={() => setShowEditOwn(!showEditOwn)} />
           )}
         </div>
@@ -305,7 +309,7 @@ const OurFormationPreStart = ({ match }: { match: IMatch }) => {
           </OverlayTrigger>
         )}
       </div>
-      {playingPlayers.length === 0 && user.playerId > 0 && <OwnPlayerSelector match={match} />}
+      {playingPlayers.length === 0 && user.playerId > 0 && canPickPlayers(match) && <OwnPlayerSelector match={match} />}
       {playingPlayers.length === 0 && user.playerId <= 0 && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#666' }}>
           <Icon fa="fa fa-question-circle" />
@@ -414,7 +418,7 @@ const AwayMatchDetails = ({ match }: { match: IMatch }) => {
 };
 
 const OpponentPlayersPreStart = ({ match }: { match: IMatch }) => {
-  const canEdit = match.games.length === 0;
+  const canEdit = canPickPlayers(match);
 
   return (
     <div>

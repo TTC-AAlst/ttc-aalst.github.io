@@ -73,6 +73,16 @@
   background-color: #ff8b2d;
 }
 
+// Walkover: neutral grey, distinct from the won(blue)/lost(red)/draw(orange) set and
+// readable on the light row backgrounds (the won/lost colours carry no result meaning here).
+.match-wo {
+  background-color: #6c757d;
+  color: #fff;
+}
+.match-wo.clickable:hover {
+  background-color: #5a6268;
+}
+
 .match-opponent-team {
   color: #707070;
 }

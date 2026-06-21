@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Button, Container, Navbar } from 'react-bootstrap';
+import { Badge, Button, Container, Navbar } from 'react-bootstrap';
+import { isProd } from '../../../config';
 import { Navigation } from './HeaderNavigation';
 import { HeaderScoreCarousel } from './HeaderScoreCarousel';
 import { Icon } from '../../controls/Icons/Icon';
@@ -11,7 +12,7 @@ import './Header.css';
 
 const HeaderButton = ({ label, href }: { label: string; href: string }) => (
   <Link to={href}>
-    <Button variant="link" style={{ color: 'white' }}>
+    <Button variant="link" className="text-decoration-none" style={{ color: 'white' }}>
       {label}
     </Button>
   </Link>
@@ -29,13 +30,23 @@ export const Header = ({ navOpen, setNavOpen }: HeaderProps) => {
   const showExtraNavigationButtons = viewport.width > 700;
   const showCarousel = matchesToday.length > 0;
 
+  // Non-prod (dev/PR previews) gets a colourblind-safe amber bar + label so it's never
+  // mistaken for the live site. Label, not colour alone.
+  const nonProd = !isProd();
+
   return (
     <div style={{ flexGrow: 1 }}>
-      <Navbar bg="primary" sticky="top" data-bs-theme="dark">
+      <Navbar bg="primary" sticky="top" data-bs-theme="dark" className={nonProd ? 'Header-nonprod' : undefined}>
         <Container fluid>
           <button className="btn btn-link text-white" style={{ marginLeft: -12, marginRight: 20 }} aria-label="Menu" onClick={() => setNavOpen(!navOpen)}>
             <i className="fa fa-bars" />
           </button>
+
+          {nonProd ? (
+            <Badge bg="dark" className="me-2" style={{ letterSpacing: 1 }}>
+              DEV
+            </Badge>
+          ) : null}
 
           <span style={{ flexGrow: 1, fontSize: '1.7rem' }}>
             {showCarousel && !navOpen ? (
