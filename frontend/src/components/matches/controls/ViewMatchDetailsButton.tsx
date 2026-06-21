@@ -20,9 +20,14 @@ export const ViewMatchDetailsButton = ({ match, size }: ViewMatchDetailsButtonPr
   }
 
   const score = match.renderScore();
+  // A walkover has no numeric score but is a decided result: show its "WO" badge, not "Details".
+  const showBadge = !!score || match.scoreType === 'WalkOver';
   return (
-    <Link className={cn({ 'btn btn-outline-secondary': !score, clickable: !!score, [`btn-${size}`]: !!size })} to={t.route('match', { matchId: match.id })}>
-      {score ? <MatchScore match={match} style={{ fontSize: size === 'sm' ? 12 : 16 }} showComments noLink /> : t('match.details')}
+    <Link
+      className={cn({ 'btn btn-outline-secondary': !showBadge, clickable: showBadge, [`btn-${size}`]: !!size })}
+      to={t.route('match', { matchId: match.id })}
+    >
+      {showBadge ? <MatchScore match={match} style={{ fontSize: size === 'sm' ? 12 : 16 }} showComments noLink /> : t('match.details')}
     </Link>
   );
 };

@@ -35,6 +35,19 @@ export const MatchScore = ({ showThrophy = true, noLink = false, ...props }: Mat
 
   let match: IMatch | undefined;
   match = props.match;
+
+  // A walkover/forfait has no numeric score (0-0). Show "WO" rather than "0 - 0" or the
+  // previous-encounter fallback. Neutral colour: the winning side isn't reliably known and
+  // red/green would exclude colourblind readers.
+  if (match.scoreType === 'WalkOver') {
+    const woBadge = (
+      <span className={cn('badge label-as-badge', props.className)} style={props.style}>
+        WO
+      </span>
+    );
+    return noLink ? woBadge : <Link to={t.route('match', { matchId: match.id })}>{woBadge}</Link>;
+  }
+
   if (!props.forceDisplay) {
     if (!match.score || (match.score.home === 0 && match.score.out === 0)) {
       match = match.getPreviousMatch();
