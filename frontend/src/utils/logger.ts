@@ -1,8 +1,8 @@
 import { config, getApiUrl, isDev, isProd } from '../config';
 
-export type LogLevel = 'info' | 'warn' | 'error';
+type LogLevel = 'info' | 'warn' | 'error';
 
-export interface LogEntry {
+interface LogEntry {
   level: LogLevel;
   message: string;
   route: string;
