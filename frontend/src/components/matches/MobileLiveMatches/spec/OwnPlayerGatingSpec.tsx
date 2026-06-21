@@ -162,6 +162,29 @@ describe('OwnPlayerSelector gating (AC9: login, AC10: games played)', () => {
     });
   });
 
+  describe('walkover (synced — decided, not editable)', () => {
+    const walkoverMatch = () =>
+      createMockMatch({
+        isSyncedWithFrenoy: true,
+        scoreType: 'WalkOver',
+        block: 'Major',
+        getPlayerFormation: () =>
+          [
+            { id: 1, player: { id: 1, alias: 'Jean', getCompetition: () => ({ ranking: 'B6', position: 1 }) }, matchPlayer: { status: 'Major' } },
+          ] as unknown as IMatchPlayerInfo[],
+      });
+
+    it('shows no edit icon for our formation', () => {
+      renderMatch(walkoverMatch(), 1);
+      expect(getEditIcons().length).toBe(0);
+    });
+
+    it('shows no "Selecteer tegenstanders" button', () => {
+      renderMatch(walkoverMatch(), 1);
+      expect(screen.queryByRole('button', { name: /selecteer tegenstanders/i })).not.toBeInTheDocument();
+    });
+  });
+
   describe('in-progress mode with games played (AC10)', () => {
     const inProgressWithGames = () =>
       createMockMatch({
