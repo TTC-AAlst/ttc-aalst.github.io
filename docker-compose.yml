@@ -57,6 +57,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        SOURCE_COMMIT: ${SOURCE_COMMIT:-dev}
     restart: unless-stopped
     expose:
       - "80"
