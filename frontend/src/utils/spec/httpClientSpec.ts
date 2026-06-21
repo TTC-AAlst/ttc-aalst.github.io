@@ -1,5 +1,5 @@
 import http from '../httpClient';
-import { sessionId } from '../logger';
+import { sessionId, logger } from '../logger';
 
 describe('httpClient.post', () => {
   afterEach(() => {
@@ -60,5 +60,17 @@ describe('httpClient logging + correlation', () => {
     vi.stubGlobal('fetch', fetchMock);
     await http.post('/log', {});
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('logs a warn on a failed (non-2xx) response', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve({ ok: false, status: 404, json: () => Promise.resolve(null), text: () => Promise.resolve('') } as unknown as Response)),
+    );
+    const warnSpy = vi.spyOn(logger, 'warn');
+
+    await http.get('/players');
+
+    expect(warnSpy).toHaveBeenCalledWith('api', expect.objectContaining({ status: 404 }));
   });
 });

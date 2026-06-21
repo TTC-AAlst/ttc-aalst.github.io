@@ -31,6 +31,9 @@ function baseHeaders(extra: Record<string, string> = {}): Record<string, string>
   return { 'X-Session-Id': sessionId, ...authHeaders(), ...extra };
 }
 
+// API-call logging is non-prod only by design: warn (failures) and breadcrumb (successes) are both
+// dropped on prod by the logger gate. Routine prod 4xx (e.g. ValidateToken 401s) would be pure noise;
+// genuine prod crashes are still captured by the error sources (ErrorBoundary/onerror/unhandledrejection).
 function logApiCall(method: string, path: string, status: number, ms: number, ok: boolean) {
   if (path === '/log') return; // never log the logging endpoint
   const fields = { method, path, status, ms: Math.round(ms) };
