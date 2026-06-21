@@ -58,6 +58,10 @@ export const Header = ({ navOpen, setNavOpen }: HeaderProps) => {
             )}
           </span>
 
+          <span className="Header-claude me-3" style={{ fontSize: '1rem', whiteSpace: 'nowrap' }}>
+            <i className="fa fa-heart" style={{ color: '#e25555' }} aria-hidden="true" /> Claude
+          </span>
+
           <div>
             {showExtraNavigationButtons ? (
               <div style={{ display: 'inline-block', textAlign: 'center', width: 300 }}>
