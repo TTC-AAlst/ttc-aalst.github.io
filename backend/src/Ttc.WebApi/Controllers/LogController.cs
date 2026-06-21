@@ -23,6 +23,7 @@ public class LogController : ControllerBase
             using (LogContext.PushProperty("Route", entry.Route))
             using (LogContext.PushProperty("AppVersion", batch.AppVersion))
             using (LogContext.PushProperty("Env", batch.Env))
+            using (LogContext.PushProperty("UserAgent", batch.UserAgent))
             using (LogContext.PushProperty("IsMobile", batch.IsMobile))
             using (LogContext.PushProperty("Fields", entry.Fields?.GetRawText()))
             using (LogContext.PushProperty("ClientTs", entry.Ts))
@@ -50,6 +51,7 @@ public class FrontendLogBatch
     public string SessionId { get; set; } = "";
     public string AppVersion { get; set; } = "";
     public string Env { get; set; } = "";
+    public string UserAgent { get; set; } = "";
     public bool IsMobile { get; set; }
     public List<FrontendLogEntry> Entries { get; set; } = new();
 }
