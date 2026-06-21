@@ -22,7 +22,6 @@ export const GeneralInfo = () => {
           {params.competitionDays}
           <br />
           {params.trainingDays}
-          Hello?
           <br />
           {params.trainingDays2}
           <br />
