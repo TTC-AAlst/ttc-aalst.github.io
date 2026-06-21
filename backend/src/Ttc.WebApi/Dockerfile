@@ -29,5 +29,10 @@ RUN dotnet publish -c Release -o /app
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
+# Coolify injects COOLIFY_BRANCH as a build ARG (not via compose env, which it
+# pre-substitutes to empty). Bake it into a runtime ENV so SetupLogger can read
+# it to derive the Loki `app` label (ttc / ttc-dev / ttc-<pr-branch>).
+ARG COOLIFY_BRANCH=
+ENV COOLIFY_BRANCH=$COOLIFY_BRANCH
 COPY --from=build /app .
 ENTRYPOINT [ "dotnet", "/app/Ttc.WebApi.dll" ]

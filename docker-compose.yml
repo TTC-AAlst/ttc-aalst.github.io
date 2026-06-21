@@ -42,8 +42,6 @@ services:
     restart: unless-stopped
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Release}
-      # Coolify injects COOLIFY_BRANCH per deploy; SetupLogger derives the Loki `app` label from it.
-      COOLIFY_BRANCH: ${COOLIFY_BRANCH:-}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-my-secret-pw}
       MAILKIT_PASSWORD: ${MAILKIT_PASSWORD:-unused}
       TtcSettings__StartSyncJob: ${TtcSettings__StartSyncJob:-false}
