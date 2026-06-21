@@ -2,6 +2,12 @@ services:
   db:
     image: mysql:8.4
     restart: unless-stopped
+    # MySQL 8 idles ~470M; the bulk is performance_schema (allocated up front, never freed) +
+    # the default buffer pool. This is a small club DB — trim both. ~470M → ~250M per instance.
+    command:
+      - --performance-schema=OFF
+      - --innodb-buffer-pool-size=64M
+      - --innodb-buffer-pool-instances=1
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-my-secret-pw}
       MYSQL_DATABASE: ttc_aalst
