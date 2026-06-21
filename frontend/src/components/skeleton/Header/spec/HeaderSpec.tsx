@@ -37,4 +37,12 @@ describe('Header', () => {
     expect(screen.getByText('DEV')).toBeInTheDocument();
     expect(container.querySelector('.Header-nonprod')).not.toBeNull();
   });
+
+  it('shows a heart + Claude label in the header', () => {
+    const { container } = renderHeader();
+    const claude = container.querySelector('.Header-claude');
+    expect(claude).not.toBeNull();
+    expect(claude).toHaveTextContent('Claude');
+    expect(claude?.querySelector('.fa-heart')).not.toBeNull();
+  });
 });
