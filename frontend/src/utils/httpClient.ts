@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import t from '../locales';
 import { IMatch } from '../models/model-interfaces';
-import { config, devUrl, isDev } from '../config';
+import { config, devUrl, isDev, isProd } from '../config';
+import { sessionId, logger } from './logger';
 
 const LogRequestTimes = false;
 
@@ -26,6 +27,20 @@ function authHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+function baseHeaders(extra: Record<string, string> = {}): Record<string, string> {
+  return { 'X-Session-Id': sessionId, ...authHeaders(), ...extra };
+}
+
+function logApiCall(method: string, path: string, status: number, ms: number, ok: boolean) {
+  if (path === '/log') return; // never log the logging endpoint
+  const fields = { method, path, status, ms: Math.round(ms) };
+  if (!ok) {
+    logger.warn('api', fields);
+  } else if (!isProd()) {
+    logger.breadcrumb('api', fields);
+  }
+}
+
 const HttpClient = {
   get: <T>(path: string, qs?: Record<string, string | number | boolean>): Promise<T> => {
     let url = getUrl(path);
@@ -40,9 +55,11 @@ const HttpClient = {
         console.time(fullUrl);
       }
 
+      const start = performance.now();
       const response = await fetch(url, {
-        headers: { Accept: 'application/json', ...authHeaders() },
+        headers: baseHeaders({ Accept: 'application/json' }),
       });
+      logApiCall('GET', path, response.status, performance.now() - start, response.ok);
 
       if (LogRequestTimes) {
         // eslint-disable-next-line no-console
@@ -60,11 +77,13 @@ const HttpClient = {
         console.time(fullUrl);
       }
 
+      const start = performance.now();
       const response = await fetch(getUrl(url), {
         method: 'POST',
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...authHeaders() },
+        headers: baseHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
         body: data !== undefined ? JSON.stringify(data) : undefined,
       });
+      logApiCall('POST', url, response.status, performance.now() - start, response.ok);
 
       if (LogRequestTimes) {
         // eslint-disable-next-line no-console

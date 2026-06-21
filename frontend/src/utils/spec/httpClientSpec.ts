@@ -1,4 +1,5 @@
 import http from '../httpClient';
+import { sessionId } from '../logger';
 
 describe('httpClient.post', () => {
   afterEach(() => {
@@ -34,5 +35,30 @@ describe('httpClient.post', () => {
     );
 
     await expect(http.post('/something')).resolves.toEqual({ id: 42 });
+  });
+});
+
+describe('httpClient logging + correlation', () => {
+  beforeEach(() => {
+    Object.defineProperty(window, 'location', { value: { hostname: 'dev-ttc-aalst.sangu.be', pathname: '/x' }, writable: true });
+    vi.restoreAllMocks();
+  });
+
+  it('attaches the X-Session-Id header to requests', async () => {
+    const fetchMock = vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve(null), text: () => Promise.resolve('') } as unknown as Response));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await http.get('/players');
+
+    const callArgs = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    const init = callArgs[1];
+    expect((init.headers as Record<string, string>)['X-Session-Id']).toBe(sessionId);
+  });
+
+  it('does not throw or recurse when posting to /log', async () => {
+    const fetchMock = vi.fn(() => Promise.resolve({ ok: true, text: () => Promise.resolve('') } as unknown as Response));
+    vi.stubGlobal('fetch', fetchMock);
+    await http.post('/log', {});
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
