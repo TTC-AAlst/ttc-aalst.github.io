@@ -41,7 +41,7 @@ export const MatchScore = ({ showThrophy = true, noLink = false, ...props }: Mat
   // red/green would exclude colourblind readers.
   if (match.scoreType === 'WalkOver') {
     const woBadge = (
-      <span className={cn('badge label-as-badge', props.className)} style={props.style}>
+      <span className={cn('badge label-as-badge match-wo', { clickable: !noLink }, props.className)} style={props.style}>
         WO
       </span>
     );

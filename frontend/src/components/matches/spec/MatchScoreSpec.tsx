@@ -29,8 +29,11 @@ const render = (match: IMatch, forceDisplay = false) =>
 describe('MatchScore — walkover', () => {
   it('shows a "WO" badge instead of 0 - 0 (forceDisplay, e.g. match detail header)', () => {
     render(woMatch(), true);
-    expect(screen.getByText('WO')).toBeInTheDocument();
+    const badge = screen.getByText('WO');
+    expect(badge).toBeInTheDocument();
     expect(screen.queryByText('0 - 0')).not.toBeInTheDocument();
+    // Must carry a background class — a bare label-as-badge is invisible on the row background.
+    expect(badge.classList.contains('match-wo')).toBe(true);
   });
 
   it('shows "WO" without forceDisplay (does not fall back to the previous encounter)', () => {
