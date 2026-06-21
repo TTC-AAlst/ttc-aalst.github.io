@@ -17,6 +17,11 @@ public class RequestLoggingFilter
 
     public async Task Invoke(HttpContext context)
     {
+        var sessionId = context.Request.Headers["X-Session-Id"].ToString();
+        using var _ = string.IsNullOrEmpty(sessionId)
+            ? (IDisposable)NullScope.Instance
+            : Serilog.Context.LogContext.PushProperty("SessionId", sessionId);
+
         if (!context.Request.Path.ToString().StartsWith("/api") || context.Request.Method == HttpMethods.Options
             || context.Request.Path.ToString() == "/api/log")
         {
@@ -66,4 +71,11 @@ public class RequestLoggingFilter
 
         _logger.Information("{Method} {Path} - in {Elapsed}", request.Method, request.Path, timer.Elapsed.ToString("g"));
     }
+}
+
+internal sealed class NullScope : IDisposable
+{
+    public static readonly NullScope Instance = new();
+    private NullScope() { }
+    public void Dispose() { }
 }

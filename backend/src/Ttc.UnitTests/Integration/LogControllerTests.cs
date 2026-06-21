@@ -46,4 +46,15 @@ public class LogControllerTests : IntegrationTestBase
         var response = await Client.PostAsJsonAsync("/api/log", batch);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
+
+    [Fact]
+    public async Task Request_WithSessionHeader_StillSucceeds()
+    {
+        Client.DefaultRequestHeaders.Remove("X-Session-Id");
+        Client.DefaultRequestHeaders.Add("X-Session-Id", "sess-789");
+
+        var response = await Client.GetAsync("/api/config");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
 }
