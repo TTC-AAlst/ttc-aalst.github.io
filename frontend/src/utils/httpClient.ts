@@ -71,7 +71,9 @@ const HttpClient = {
         console.timeEnd(fullUrl);
       }
 
-      return response.json();
+      // Void backend actions (e.g. POST /config) return 200 with an empty body; response.json() would throw.
+      const text = await response.text();
+      return text ? JSON.parse(text) : (undefined as T);
     })();
   },
   upload: async (file: File, type = 'temp', typeId = 0): Promise<{ fileName?: string }> => {
