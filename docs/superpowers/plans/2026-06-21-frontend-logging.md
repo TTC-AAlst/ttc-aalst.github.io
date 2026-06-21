@@ -839,17 +839,17 @@ git commit -m "feat(api): enrich request logs with X-Session-Id for correlation"
 **Files:**
 - Modify: `backend/src/Ttc.WebApi/Controllers/ConfigController.cs`
 
-- [ ] **Step 1: Verify the old endpoint is unused**
+- [ ] **Step 1: Verify the POST endpoint is unused**
 
-Run: `cd frontend && grep -rn "config/Log\|config/log\|ComponentError" src`
-Expected: no matches (all migrated in Tasks 4).
+Run: `cd frontend && grep -rn "config/Log" src`
+Expected: ONLY `AdminDev.tsx` referencing `/api/config/Log/Get` (the server-log-file viewer — a GET to `GetLogging`, which we KEEP). No `httpClient.post('/config/Log', ...)` callers remain (all migrated in Tasks 4 + 4b).
 
-Run: `cd backend && grep -rn "ComponentError\|GetLogging\|Log/Get" src --include=*.cs`
-Expected: only the definitions in `ConfigController.cs`.
+Run: `cd backend && grep -rn "ComponentError" src --include=*.cs`
+Expected: only the `Log` action + `ComponentError` class in `ConfigController.cs`.
 
-- [ ] **Step 2: Remove dead code**
+- [ ] **Step 2: Remove dead code (POST Log + ComponentError only)**
 
-In `backend/src/Ttc.WebApi/Controllers/ConfigController.cs`, delete the `Log` action, the `GetLogging` action, the `ComponentError` class, and the now-unused `TtcLogger`/`Environment` usings if they become unreferenced. Keep `Get`, `Post`, `ClearCache`. (If `GetLogging` is referenced by a frontend admin screen, leave it — re-run the grep from Step 1 to confirm before deleting.)
+In `backend/src/Ttc.WebApi/Controllers/ConfigController.cs`, delete ONLY the `Log` action (the `[HttpPost] Log([FromBody] ComponentError ...)`) and the `ComponentError` class. **KEEP `GetLogging` (the `Log/Get` GET)** — `AdminDev.tsx` links to it as a log-file viewer. Keep `Get`, `Post`, `ClearCache`, `GetLogging`. Remove only `using` directives that become unreferenced after deleting `Log` (verify each before removing — `GetLogging` still uses `TtcLogger`/`Directory`/`File`).
 
 - [ ] **Step 3: Full verification**
 
